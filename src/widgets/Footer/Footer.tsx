@@ -1,27 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import SocialLink from "./SocialLink";
-
-const ACADEMIA_LINKS = [
-  { label: "Sobre Nosotros", href: "/about" },
-  { label: "Nuestros Profesores", href: "/teachers" },
-  { label: "Instalaciones", href: "/about" },
-  { label: "Blog de Música", href: "/about" },
-];
-
-const COURSE_LINKS = [
-  { label: "Piano y Teclado", href: "/courses" },
-  { label: "Cuerdas (Violín, Guitarra)", href: "/courses" },
-  { label: "Canto y Coral", href: "/courses" },
-  { label: "Iniciación Musical (Niños)", href: "/courses" },
-];
-
-const SOCIAL_LINKS = [
-  { href: "https://www.facebook.com/profile.php?id=61572503284978", icon: "mdi:facebook", label: "Facebook" },
-  { href: "https://www.instagram.com/gosmel_arte", icon: "mdi:instagram", label: "Instagram" },
-  { href: "https://www.tiktok.com/@gosmel_arte?is_from_webapp=1&sender_device=pc", icon: "simple-icons:tiktok", label: "TikTok" },
-  { href: "https://api.whatsapp.com/message/SCDDJ5TZHMUBN1?autoload=1&app_absent=0", icon: "mdi:whatsapp", label: "WhatsApp" },
-];
+import { ACADEMIA_LINKS, COURSE_LINKS, SOCIAL_LINKS } from "./Footer.constants";
 
 export default function Footer() {
   return (
