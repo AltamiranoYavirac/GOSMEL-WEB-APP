@@ -1,0 +1,30 @@
+# Dependencias
+node_modules/
+.yarn/
+yarn.lock
+
+# Build outputs
+.next/
+out/
+dist/
+
+# Archivos de entorno
+.env*
+
+# Assets binarios
+public/images/
+public/fonts/
+
+# Caché y temporales
+.turbo/
+*.log
+coverage/
+
+# Supabase local
+supabase/.temp/
+supabase/migrations/
+
+# Docs archivados (cargar bajo demanda)
+docs/archive/
+.claude/sessions/
+.claude/completions/
