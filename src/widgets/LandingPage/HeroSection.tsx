@@ -21,14 +21,13 @@ export default function HeroSection() {
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight text-cocoa dark:text-cream">
               GOSMEL
               <span className="text-brand-gradient block mt-2 text-4xl lg:text-6xl font-light italic">
-                Tu Pasión, Nuestra Música
+                “Lo bello de la teoría en la práctica”
               </span>
             </h1>
 
             <p className="text-lg text-cocoa/70 dark:text-cream/70 max-w-lg leading-relaxed font-light border-l-2 border-ginger/40 pl-6">
-              Descubre tu pasión por la música con clases personalizadas para
-              todas las edades. Aprende de los mejores y alcanza la excelencia
-              artística en un entorno cálido y profesional.
+                En Gosmel Academia de Música creemos que la formación musical nace del equilibrio entre el conocimiento y la experiencia. A través de una enseñanza cercana, estructurada y práctica, desarrollamos las habilidades técnicas, artísticas y creativas de cada estudiante, respetando su ritmo y objetivos. 
+                Transformamos el aprendizaje en una experiencia significativa que forma músicos y artistas preparados para expresarse con seguridad, sensibilidad y excelencia.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-5 pt-4">
