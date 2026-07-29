@@ -4,7 +4,7 @@ import { Piano, Guitar, Music2, Mic, ArrowRight } from "lucide-react";
 const COURSES = [
   {
     icon: Piano,
-    title: "Piano Clásico",
+    title: "Piano",
     description:
       "Domina las teclas con técnica y expresión. Desde Mozart hasta jazz contemporáneo.",
   },
@@ -22,7 +22,7 @@ const COURSES = [
   },
   {
     icon: Mic,
-    title: "Canto y Voz",
+    title: "Canto",
     description:
       "Entrena tu voz, mejora tu respiración y encuentra tu propio estilo interpretativo.",
   },
