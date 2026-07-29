@@ -15,9 +15,9 @@ const WHY_FEATURES = [
   },
   {
     icon: BadgeCheck,
-    title: "Diplomas Certificados",
+    title: "Vive la Experiencia del Escenario",
     description:
-      "Al finalizar cada nivel, recibirás un certificado que acredita tus conocimientos y progreso musical.",
+      "Cerramos cada etapa con una presentación en público. Es la oportunidad perfecta para consolidar lo aprendido, ganar confianza y celebrar tu evolución musical.",
   },
 ];
 
@@ -49,7 +49,7 @@ export default function WhySection() {
             </h2>
             <p className="text-cocoa/60 dark:text-cream/60 mb-12 text-lg font-light leading-relaxed">
               Nos dedicamos a crear un ambiente donde la música florece.
-              Nuestra metodología combina la tradición conservadora con un
+              Nuestra metodología combina lo tradicional con un
               enfoque moderno y humano.
             </p>
 
