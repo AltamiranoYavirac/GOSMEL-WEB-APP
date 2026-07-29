@@ -6,7 +6,8 @@ export const ACADEMIA_LINKS = [
 export const COURSE_LINKS = [
   { label: "Piano", href: "/courses" },
   { label: "Guitarra", href: "/courses" },
-  { label: "Canto ", href: "/courses" },
+  { label: "Violin", href: "/courses" },
+  { label: "Canto", href: "/courses" },
 ];
 
 export const SOCIAL_LINKS = [
