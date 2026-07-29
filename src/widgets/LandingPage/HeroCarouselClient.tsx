@@ -25,15 +25,15 @@ const SLIDE_META: Omit<IHeroSlide, "image" | "alt">[] = [
     badge: "Clases personalizadas",
     title: "Aprende con",
     subtitle: "los Mejores Maestros",
-    cta: { label: "Conoce al Equipo", href: "/about" },
+    cta: { label: "Inscríbete Ahora", href: "#contacto"  },
     ctaSecondary: { label: "Ver Cursos", href: "#cursos" },
   },
   {
     badge: "Piano · Guitarra · Violín · Chelo",
     title: "Todos los",
     subtitle: "Instrumentos, Un Solo Lugar",
-    cta: { label: "Ver Instrumentos", href: "#cursos" },
-    ctaSecondary: { label: "Inscríbete", href: "#contacto" },
+    cta: { label: "Inscríbete Ahora", href: "#contacto" },
+    ctaSecondary: { label: "Ver Cursos", href: "#cursos" },
   },
   {
     badge: "Para todas las edades",
@@ -145,17 +145,7 @@ export default function HeroCarouselClient({ images }: IHeroCarouselClientProps)
                       </Link>
                     </div>
 
-                    <div className="flex items-center gap-3 pt-4 border-t border-foreground/10 mt-6">
-                      <div className="flex gap-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star key={i} size={14} className="text-primary fill-primary" />
-                        ))}
-                      </div>
-                      <p className="text-foreground/70 text-sm font-light">
-                        Más de{" "}
-                        <span className="font-bold text-foreground">500+</span>{" "}
-                        estudiantes felices
-                      </p>
+                    <div className="flex items-center gap-3 pt-4 border-t border-foreground/10 mt-6"> 
                     </div>
                   </div>
                 </div>
