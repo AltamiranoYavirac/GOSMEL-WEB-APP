@@ -15,7 +15,7 @@ import type { IHeroSlide } from "./HeroCarouselSection.types";
 
 const SLIDE_META: Omit<IHeroSlide, "image" | "alt">[] = [
   {
-    badge: "Matrículas abiertas 2024",
+    badge: `Matrículas abiertas ${new Date().getFullYear()}`,
     title: "GOSMEL",
     subtitle: "Tu Pasión, Nuestra Música",
     cta: { label: "Inscríbete Ahora", href: "/contact" },
