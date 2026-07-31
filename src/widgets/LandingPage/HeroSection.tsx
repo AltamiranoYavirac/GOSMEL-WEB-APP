@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Star } from "lucide-react";
+import { Icon } from "@iconify/react";
 import { AppImages } from "@/shared/config";
 
 export default function HeroSection() {
@@ -36,7 +36,13 @@ export default function HeroSection() {
                 className="inline-flex justify-center items-center px-8 py-4 bg-ginger text-cream font-bold hover:bg-burnt hover:scale-[1.02] transition-all duration-300 uppercase tracking-widest text-xs rounded-lg"
               >
                 Inscríbete Ahora
-                <ArrowRight size={16} className="ml-2" />
+                <Icon
+                  icon="ph:arrow-right"
+                  width={16}
+                  height={16}
+                  className="ml-2"
+                  aria-hidden="true"
+                />
               </Link>
               <Link
                 href="#cursos"
