@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Icon } from "@iconify/react";
 import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
 
@@ -52,7 +52,16 @@ export default function Navbar() {
               onClick={() => setOpen((v) => !v)}
               aria-label="Toggle menu"
             >
-              {open ? <X size={28} /> : <Menu size={28} />}
+              {open ? (
+                <Icon icon="ph:x" width={28} height={28} aria-hidden="true" />
+              ) : (
+                <Icon
+                  icon="ph:list"
+                  width={28}
+                  height={28}
+                  aria-hidden="true"
+                />
+              )}
             </button>
           </div>
         </div>

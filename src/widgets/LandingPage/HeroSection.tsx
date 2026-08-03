@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Star } from "lucide-react";
+import { Icon } from "@iconify/react";
 import { AppImages } from "@/shared/config";
+import { getCurrentYear } from "@/shared/lib";
 
 export default function HeroSection() {
   return (
@@ -15,7 +16,7 @@ export default function HeroSection() {
           <div className="space-y-10">
             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-peach/30 dark:bg-neutral-800 text-burnt dark:text-butter font-medium text-xs border border-peach/50 dark:border-neutral-700 tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-ginger" />
-              Matrículas abiertas {new Date().getFullYear()}
+              Matrículas abiertas {getCurrentYear()}
             </div>
 
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight text-cocoa dark:text-cream">
@@ -36,7 +37,13 @@ export default function HeroSection() {
                 className="inline-flex justify-center items-center px-8 py-4 bg-ginger text-cream font-bold hover:bg-burnt hover:scale-[1.02] transition-all duration-300 uppercase tracking-widest text-xs rounded-lg"
               >
                 Inscríbete Ahora
-                <ArrowRight size={16} className="ml-2" />
+                <Icon
+                  icon="ph:arrow-right"
+                  width={16}
+                  height={16}
+                  className="ml-2"
+                  aria-hidden="true"
+                />
               </Link>
               <Link
                 href="#cursos"

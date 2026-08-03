@@ -2,7 +2,7 @@
 
 import Lottie from "lottie-react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { Icon } from "@iconify/react";
 import animationData from "./construccion.json";
 
 export default function ComingSoon() {
@@ -29,7 +29,12 @@ export default function ComingSoon() {
         href="/"
         className="mt-10 inline-flex items-center gap-2 text-sm font-semibold text-ginger hover:text-burnt transition-colors uppercase tracking-wider"
       >
-        <ArrowLeft size={16} />
+        <Icon
+          icon="ph:arrow-left"
+          width={16}
+          height={16}
+          aria-hidden="true"
+        />
         Volver al inicio
       </Link>
     </main>

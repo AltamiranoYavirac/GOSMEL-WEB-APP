@@ -1,20 +1,20 @@
-import { GraduationCap, Clock, BadgeCheck } from "lucide-react";
+import { Icon } from "@iconify/react";
 
 const WHY_FEATURES = [
   {
-    icon: GraduationCap,
+    icon: "ph:graduation-cap",
     title: "Maestros Profesionales",
     description:
       "Instructores graduados de conservatorios de prestigio con años de experiencia pedagógica y artística.",
   },
   {
-    icon: Clock,
+    icon: "ph:clock",
     title: "Horarios Flexibles",
     description:
       "Clases disponibles de lunes a sábado, adaptadas a tu ritmo de vida y compromisos.",
   },
   {
-    icon: BadgeCheck,
+    icon: "ph:seal-check",
     title: "Vive la Experiencia del Escenario",
     description:
       "Cerramos cada etapa con una presentación en público. Es la oportunidad perfecta para consolidar lo aprendido, ganar confianza y celebrar tu evolución musical.",
@@ -54,10 +54,15 @@ export default function WhySection() {
             </p>
 
             <div className="space-y-10">
-              {WHY_FEATURES.map(({ icon: Icon, title, description }) => (
+              {WHY_FEATURES.map(({ icon, title, description }) => (
                 <div key={title} className="flex gap-6 group">
                   <div className="shrink-0 w-14 h-14 bg-peach/30 dark:bg-neutral-800 flex items-center justify-center text-ginger shadow-sm border border-peach/50 dark:border-neutral-700/40 group-hover:border-ginger group-hover:bg-ginger/10 transition-colors rounded-xl">
-                    <Icon size={22} />
+                    <Icon
+                      icon={icon}
+                      width={22}
+                      height={22}
+                      aria-hidden="true"
+                    />
                   </div>
                   <div>
                     <h4 className="text-xl font-bold text-cocoa dark:text-cream mb-2 group-hover:text-ginger transition-colors">
