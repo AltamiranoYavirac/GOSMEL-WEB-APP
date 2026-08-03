@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 import SocialLink from "./SocialLink";
 import { ACADEMIA_LINKS, COURSE_LINKS, SOCIAL_LINKS } from "./Footer.constants";
+import { getCurrentYear } from "@/shared/lib";
 
 export default function Footer() {
   return (
@@ -80,7 +81,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-neutral-700/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-neutral-300/40 uppercase tracking-wide">
-          <p>© {new Date().getFullYear()} GOSMEL Music Academy. Todos los derechos reservados.</p>
+          <p>© {getCurrentYear()} GOSMEL Music Academy. Todos los derechos reservados.</p>
           <div className="flex gap-6">
             <Link href="/about" className="hover:text-ginger transition-colors">
               Privacidad

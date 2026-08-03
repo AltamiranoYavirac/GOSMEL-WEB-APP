@@ -14,12 +14,11 @@ export default function CTASection() {
               ¿Listo para comenzar?
             </h2>
             <p className="text-cocoa/60 dark:text-cream/60 text-lg mb-12 max-w-2xl mx-auto font-light">
-              Agenda tu primera clase de prueba gratuita hoy mismo y conoce
-              las instalaciones de GOSMEL. ¡Tu viaje musical empieza aquí!
+              Asegura tu lugar en nuestra academia. Solicita tu matrícula hoy mismo e inicia tu formación en nuestro programa ¡Tu viaje musical empieza aquí!.
             </p>
             <CTAForm />
             <p className="mt-6 text-xs text-cocoa/40 dark:text-cream/40 uppercase tracking-wide">
-              Sin compromiso. Te contactaremos en menos de 24h.
+              Contáctanos sin ningun compromiso.
             </p>
           </div>
         </div>
