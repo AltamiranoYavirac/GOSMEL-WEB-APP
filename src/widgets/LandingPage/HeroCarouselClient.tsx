@@ -11,11 +11,12 @@ import {
   type CarouselApi,
 } from "@/shared/ui/carousel";
 import type { ICarouselImage } from "@/features/carousel";
+import { getCurrentYear } from "@/shared/lib";
 import type { IHeroSlide } from "./HeroCarouselSection.types";
 
 const SLIDE_META: Omit<IHeroSlide, "image" | "alt">[] = [
   {
-    badge: `Matrículas abiertas ${new Date().getFullYear()}`,
+    badge: `Matrículas abiertas ${getCurrentYear()}`,
     title: "GOSMEL",
     subtitle: "Tu Pasión, Nuestra Música",
     cta: { label: "Inscríbete Ahora", href: "/contact" },
