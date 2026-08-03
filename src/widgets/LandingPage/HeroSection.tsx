@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Star } from "lucide-react";
+import { Icon } from "@iconify/react";
 import { AppImages } from "@/shared/config";
+import { getCurrentYear } from "@/shared/lib";
 
 export default function HeroSection() {
   return (
@@ -15,20 +16,19 @@ export default function HeroSection() {
           <div className="space-y-10">
             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-peach/30 dark:bg-neutral-800 text-burnt dark:text-butter font-medium text-xs border border-peach/50 dark:border-neutral-700 tracking-wider uppercase">
               <span className="w-1.5 h-1.5 rounded-full bg-ginger" />
-              Matrículas abiertas 2024
+              Matrículas abiertas {getCurrentYear()}
             </div>
 
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight text-cocoa dark:text-cream">
               GOSMEL
               <span className="text-brand-gradient block mt-2 text-4xl lg:text-6xl font-light italic">
-                Tu Pasión, Nuestra Música
+                “Lo bello de la teoría en la práctica”
               </span>
             </h1>
 
             <p className="text-lg text-cocoa/70 dark:text-cream/70 max-w-lg leading-relaxed font-light border-l-2 border-ginger/40 pl-6">
-              Descubre tu pasión por la música con clases personalizadas para
-              todas las edades. Aprende de los mejores y alcanza la excelencia
-              artística en un entorno cálido y profesional.
+                En Gosmel Academia de Música creemos que la formación musical nace del equilibrio entre el conocimiento y la experiencia. A través de una enseñanza cercana, estructurada y práctica, desarrollamos las habilidades técnicas, artísticas y creativas de cada estudiante, respetando su ritmo y objetivos. 
+                Transformamos el aprendizaje en una experiencia significativa que forma músicos y artistas preparados para expresarse con seguridad, sensibilidad y excelencia.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-5 pt-4">
@@ -37,7 +37,13 @@ export default function HeroSection() {
                 className="inline-flex justify-center items-center px-8 py-4 bg-ginger text-cream font-bold hover:bg-burnt hover:scale-[1.02] transition-all duration-300 uppercase tracking-widest text-xs rounded-lg"
               >
                 Inscríbete Ahora
-                <ArrowRight size={16} className="ml-2" />
+                <Icon
+                  icon="ph:arrow-right"
+                  width={16}
+                  height={16}
+                  className="ml-2"
+                  aria-hidden="true"
+                />
               </Link>
               <Link
                 href="#cursos"
@@ -48,21 +54,6 @@ export default function HeroSection() {
             </div>
 
             <div className="pt-8 flex items-center gap-6 text-sm text-cocoa/50 dark:text-cream/50 border-t border-peach/40 dark:border-neutral-700/40 mt-8">
-              <div className="flex -space-x-4">
-                {["A", "B", "C"].map((initial) => (
-                  <div
-                    key={initial}
-                    className="w-12 h-12 rounded-full border-2 border-cream dark:border-neutral-700 ring-2 ring-peach/30 dark:ring-neutral-700/30 bg-sand dark:bg-neutral-800 flex items-center justify-center text-cocoa/70 dark:text-cream/70 text-sm font-medium"
-                  >
-                    {initial}
-                  </div>
-                ))}
-              </div>
-              <p className="font-light">
-                Más de{" "}
-                <span className="font-bold text-ginger">500+</span>{" "}
-                estudiantes felices
-              </p>
             </div>
           </div>
 
@@ -79,16 +70,6 @@ export default function HeroSection() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 priority
               />
-              <div className="absolute bottom-12 left-8 bg-cream/80 dark:bg-neutral-900/80 backdrop-blur-md p-5 shadow-lg border border-peach/50 dark:border-neutral-700/40 border-l-4 border-l-ginger max-w-[240px] z-20 rounded-xl">
-                <div className="flex items-center gap-1 mb-2">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} size={14} className="text-ginger fill-ginger" />
-                  ))}
-                </div>
-                <p className="text-xs font-medium text-cocoa/80 dark:text-cream/80 uppercase tracking-wider">
-                  Excelencia Académica
-                </p>
-              </div>
             </div>
           </div>
         </div>

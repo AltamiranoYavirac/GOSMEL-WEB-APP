@@ -1,7 +1,7 @@
 const STATS = [
-  { value: "12+", label: "Años de Experiencia" },
-  { value: "500+", label: "Alumnos Graduados" },
-  { value: "25", label: "Profesores Expertos" },
+  { value: "5+", label: "Años de Experiencia" },
+  { value: "10+", label: "Programas Instrumentales" },
+  { value: "100%", label: "Clases Personalizadas" },
   { value: "100%", label: "Pasión por la Música" },
 ];
 

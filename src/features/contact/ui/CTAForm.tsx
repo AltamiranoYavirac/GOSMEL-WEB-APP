@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail } from "lucide-react";
+import { Icon } from "@iconify/react";
 
 import { Button, Input } from "@/shared/ui";
 import { cn } from "@/shared/lib/utils";
@@ -44,7 +44,7 @@ export default function CTAForm({ className }: ICTAFormProps) {
       <Input
         type="email"
         placeholder="Tu correo electrónico"
-        icon={<Mail />}
+        icon={<Icon icon="ph:envelope" aria-hidden="true" />}
         error={!!errors.email}
         {...register("email")}
       />
