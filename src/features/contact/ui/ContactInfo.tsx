@@ -6,7 +6,6 @@ export default function ContactInfo({
   address,
   addressDetail,
   phone,
-  schedule,
   emails,
   mapImageUrl,
   mapsUrl,
@@ -35,7 +34,6 @@ export default function ContactInfo({
           <div>
             <p className="text-cocoa dark:text-white font-semibold">Teléfono</p>
             <p className="text-cocoa/70 dark:text-neutral-300 text-sm">{phone}</p>
-            <p className="text-cocoa/50 dark:text-neutral-400 text-sm">{schedule}</p>
           </div>
         </div>
 
