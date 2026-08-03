@@ -1,5 +1,12 @@
-import { ComingSoon } from "@/widgets/ComingSoon";
+import { Footer } from "@/widgets/Footer";
+import { Navbar } from "@/widgets/Navbar";
+
 
 export default function ContactPage() {
-  return <ComingSoon />;
+  return (<>
+    <Navbar />
+  
+  
+    <Footer />
+  </>);
 }
