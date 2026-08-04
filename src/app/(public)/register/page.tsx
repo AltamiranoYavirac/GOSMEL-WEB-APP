@@ -2,6 +2,11 @@ import { RegisterForm } from "@/features/register";
 import { Navbar } from "@/widgets/Navbar";
 import { Footer } from "@/widgets/Footer";
 
+export const metadata = {
+  title: "Registro",
+  description: "Únete a la élite musical. Crea tu cuenta en GOSMEL.",
+};
+
 export default function RegisterPage() {
   return (
     <>
