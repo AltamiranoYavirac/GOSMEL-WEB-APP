@@ -18,6 +18,9 @@ export const AppImages = {
   ABOUT_PASSION: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
   ABOUT_DISCIPLINE: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
   ABOUT_INNOVATION: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
+
+  WHY_GUITAR: `${CLOUDINARY_BASE}/v1785808073/Guitarra3_ddqqt8.png`,
+  WHY_PIANO: `${CLOUDINARY_BASE}/a_90/v1785808073/Gosmel3_o0fase.png`,
 } as const;
 
 export type AppImageKey = keyof typeof AppImages;

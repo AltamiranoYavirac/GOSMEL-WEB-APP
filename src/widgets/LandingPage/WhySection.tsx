@@ -1,5 +1,7 @@
 import { Icon } from "@iconify/react";
 
+import { AppImages } from "@/shared/config";
+
 const WHY_FEATURES = [
   {
     icon: "ph:graduation-cap",
@@ -27,17 +29,21 @@ export default function WhySection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="order-2 lg:order-1 relative">
-            <div className="grid grid-cols-2 gap-6">
-              <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1nqrahYmmMGKIDgAW_403eHVGAm7PHWUwhCEPJvmcRLoWvfxXSw3mqYbcePc4Gc1R7QkCAuSC9SWpDymLR0l1SyLjUjfhsZwY4YeH5dAAfgQoal22_sHBz90XrxrHLv_-wvmyQYApqlmLS9C0A8P-dG9kZU5Mo-c-OZD8uvdxsLf-ssMNr2zRqtMOcJDnVtgK5KfbW4F4IrJ3hpOVUdWexkqVeVQbwakfFzJiiIodWTvnZFs-sS4KmZO0GaI87cou11RNRctWH6yB"
-                alt="Profesor explicando acordes de guitarra"
-                className="rounded-2xl shadow-lg mt-10 border border-peach/30 dark:border-neutral-700/30 hover:shadow-xl transition-all duration-500"
-              />
-              <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4mv-UY21Q1fK1WCjV_rq4qbvNc7eZryStU_JSyF_eYJJ4CLfdWiPSeMsBr7BY3wZbpAiaPQJs8DnW4uX7mW35J7TazB3CerWJpRwgrphXZG9Ga7MHxXT05AAcH382YRoehiXFETrqT95rVBUwjTkfYHI7NlkS4fsVx0fLjvxSKQFyF15HQX3Khg7rwO0pBM34n2hZDBdupZP6NDPqpAhjAw02cx-Ht1PVBdv3MWwoT3zxji8YmNVzYNzxzhqSHMphY-GojjIGCrAV"
-                alt="Manos tocando teclas de piano"
-                className="rounded-2xl shadow-lg mb-10 border border-peach/30 dark:border-neutral-700/30 hover:shadow-xl transition-all duration-500"
-              />
+            <div className="flex flex-col gap-6">
+              <div className="aspect-[16/9] w-full">
+                <img
+                  src={AppImages.WHY_GUITAR}
+                  alt="Profesor explicando acordes de guitarra"
+                  className="w-full h-full object-cover rounded-2xl shadow-lg border border-peach/30 dark:border-neutral-700/30 hover:shadow-xl transition-all duration-500"
+                />
+              </div>
+              <div className="aspect-[16/9] w-full">
+                <img
+                  src={AppImages.WHY_PIANO}
+                  alt="Manos tocando teclas de piano"
+                  className="w-full h-full object-cover rounded-2xl shadow-lg border border-peach/30 dark:border-neutral-700/30 hover:shadow-xl transition-all duration-500"
+                />
+              </div>
             </div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-ginger rounded-full mix-blend-multiply blur-[80px] opacity-15 pointer-events-none" />
           </div>
