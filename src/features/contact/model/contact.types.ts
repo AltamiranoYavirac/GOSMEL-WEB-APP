@@ -1,14 +1,11 @@
-import type { z } from "zod";
-import type { contactLeadSchema } from "./schemas";
-
-export type TContactLeadValues = z.infer<typeof contactLeadSchema>;
-
-export interface IContactLead {
-  id: string;
+export interface IContactFormValues {
+  fullName: string;
   email: string;
+  instrument: string;
+  message: string;
 }
 
-export interface IApiResult<T> {
-  data: T | null;
-  error: string | null;
-}
+export type TInstrumentOption = {
+  label: string;
+  value: string;
+};
