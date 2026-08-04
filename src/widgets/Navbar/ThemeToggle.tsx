@@ -13,13 +13,15 @@ export default function ThemeToggle({ className }: IThemeToggleProps) {
 
   if (!mounted) return <div className="w-9 h-9" />;
 
+  const resolvedTheme = theme ?? "light";
+
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       aria-label="Cambiar tema"
       className={`w-9 h-9 flex items-center justify-center rounded-lg text-cocoa dark:text-cream hover:text-ginger dark:hover:text-ginger transition-colors ${className ?? ""}`}
     >
-      {theme === "dark" ? (
+      {resolvedTheme === "dark" ? (
         <Icon icon="ph:sun" width={18} height={18} aria-hidden="true" />
       ) : (
         <Icon icon="ph:moon" width={18} height={18} aria-hidden="true" />
