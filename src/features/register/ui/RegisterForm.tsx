@@ -9,21 +9,9 @@ import type { IRegisterFormValues } from "../model/register.types";
 import type { IRegisterFormProps } from "./RegisterForm.types";
 
 const SOCIAL_PROVIDERS = [
-  {
-    id: "google",
-    icon: "mdi:google",
-    label: "Google",
-  },
-  {
-    id: "facebook",
-    icon: "mdi:facebook",
-    label: "Facebook",
-  },
-  {
-    id: "apple",
-    icon: "mdi:apple",
-    label: "Apple",
-  },
+  { id: "google", icon: "mdi:google", label: "Google" },
+  { id: "facebook", icon: "mdi:facebook", label: "Facebook" },
+  { id: "apple", icon: "mdi:apple", label: "Apple" },
 ];
 
 export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
@@ -45,14 +33,14 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-neutral-900/80 dark:bg-neutral-900 border border-cocoa/10 dark:border-neutral-800 rounded-2xl p-8 flex flex-col gap-6 backdrop-blur-sm">
+    <div className="w-full max-w-md mx-auto bg-sand dark:bg-neutral-900/80 border border-cocoa/10 dark:border-neutral-800 rounded-2xl p-8 flex flex-col gap-6 backdrop-blur-sm">
 
       {/* Header */}
       <div className="text-center flex flex-col gap-1">
         <h1 className="text-3xl font-black text-ginger uppercase tracking-wide">
           ¡Regístrate!
         </h1>
-        <p className="text-neutral-400 text-xs uppercase tracking-widest">
+        <p className="text-cocoa/50 dark:text-neutral-400 text-xs uppercase tracking-widest">
           Iniciación Artística
         </p>
       </div>
@@ -63,13 +51,13 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
         {/* Nombre y Apellido */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col gap-1">
-            <label className="text-neutral-400 text-xs uppercase tracking-widest">
+            <label className="text-cocoa/50 dark:text-neutral-400 text-xs uppercase tracking-widest">
               Nombre
             </label>
             <input
               {...register("firstName")}
               placeholder="Tu nombre"
-              className="bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
+              className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
             />
             {errors.firstName && (
               <span className="text-red-400 text-xs">{errors.firstName.message}</span>
@@ -77,13 +65,13 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-neutral-400 text-xs uppercase tracking-widest">
+            <label className="text-cocoa/50 dark:text-neutral-400 text-xs uppercase tracking-widest">
               Apellido
             </label>
             <input
               {...register("lastName")}
               placeholder="Tu apellido"
-              className="bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
+              className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
             />
             {errors.lastName && (
               <span className="text-red-400 text-xs">{errors.lastName.message}</span>
@@ -93,14 +81,14 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
 
         {/* Email */}
         <div className="flex flex-col gap-1">
-          <label className="text-neutral-400 text-xs uppercase tracking-widest">
+          <label className="text-cocoa/50 dark:text-neutral-400 text-xs uppercase tracking-widest">
             Correo Electrónico
           </label>
           <input
             {...register("email")}
             placeholder="tu@correo.com"
             type="email"
-            className="bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
+            className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
           />
           {errors.email && (
             <span className="text-red-400 text-xs">{errors.email.message}</span>
@@ -109,14 +97,14 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
 
         {/* Teléfono */}
         <div className="flex flex-col gap-1">
-          <label className="text-neutral-400 text-xs uppercase tracking-widest">
+          <label className="text-cocoa/50 dark:text-neutral-400 text-xs uppercase tracking-widest">
             Número de Celular
           </label>
           <input
             {...register("phone")}
             placeholder="+XX XXX XXXX XXXX"
             type="tel"
-            className="bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
+            className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
           />
           {errors.phone && (
             <span className="text-red-400 text-xs">{errors.phone.message}</span>
@@ -125,7 +113,7 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
 
         {/* Contraseña */}
         <div className="flex flex-col gap-1">
-          <label className="text-neutral-400 text-xs uppercase tracking-widest">
+          <label className="text-cocoa/50 dark:text-neutral-400 text-xs uppercase tracking-widest">
             Contraseña
           </label>
           <div className="relative">
@@ -133,12 +121,12 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
               {...register("password")}
               placeholder="••••••••"
               type={showPassword ? "text" : "password"}
-              className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition pr-12"
+              className="w-full bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition pr-12"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-ginger transition"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-cocoa/40 dark:text-neutral-500 hover:text-ginger transition"
             >
               <Icon
                 icon={showPassword ? "mdi:eye-off" : "mdi:eye"}
@@ -156,7 +144,7 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-ginger text-black font-bold uppercase tracking-widest text-sm px-8 py-4 rounded-lg hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+          className="w-full bg-ginger text-white dark:text-black font-bold uppercase tracking-widest text-sm px-8 py-4 rounded-lg hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed mt-2"
         >
           {isSubmitting ? "Procesando..." : "Unirse a la Academia"}
         </button>
@@ -165,11 +153,11 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
 
       {/* Divisor */}
       <div className="flex items-center gap-4">
-        <div className="flex-1 h-px bg-neutral-800" />
-        <span className="text-neutral-500 text-xs uppercase tracking-widest">
+        <div className="flex-1 h-px bg-cocoa/10 dark:bg-neutral-800" />
+        <span className="text-cocoa/40 dark:text-neutral-500 text-xs uppercase tracking-widest">
           O registrarse con
         </span>
-        <div className="flex-1 h-px bg-neutral-800" />
+        <div className="flex-1 h-px bg-cocoa/10 dark:bg-neutral-800" />
       </div>
 
       {/* Botones sociales */}
@@ -179,7 +167,7 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
             key={id}
             type="button"
             aria-label={`Registrarse con ${label}`}
-            className="w-12 h-12 rounded-xl bg-neutral-800 border border-neutral-700 flex items-center justify-center text-neutral-400 hover:text-ginger hover:border-ginger transition"
+            className="w-12 h-12 rounded-xl bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 flex items-center justify-center text-cocoa/40 dark:text-neutral-400 hover:text-ginger dark:hover:text-ginger hover:border-ginger transition"
           >
             <Icon icon={icon} width={22} height={22} />
           </button>
