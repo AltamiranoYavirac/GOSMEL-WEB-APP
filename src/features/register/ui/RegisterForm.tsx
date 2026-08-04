@@ -60,19 +60,35 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
       {/* Formulario */}
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
-        {/* Nombre */}
-        <div className="flex flex-col gap-1">
-          <label className="text-neutral-400 text-xs uppercase tracking-widest">
-            Nombre y Apellido
-          </label>
-          <input
-            {...register("fullName")}
-            placeholder="Introduce tu nombre completo"
-            className="bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
-          />
-          {errors.fullName && (
-            <span className="text-red-400 text-xs">{errors.fullName.message}</span>
-          )}
+        {/* Nombre y Apellido */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-neutral-400 text-xs uppercase tracking-widest">
+              Nombre
+            </label>
+            <input
+              {...register("firstName")}
+              placeholder="Tu nombre"
+              className="bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
+            />
+            {errors.firstName && (
+              <span className="text-red-400 text-xs">{errors.firstName.message}</span>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-neutral-400 text-xs uppercase tracking-widest">
+              Apellido
+            </label>
+            <input
+              {...register("lastName")}
+              placeholder="Tu apellido"
+              className="bg-neutral-800 border border-neutral-700 rounded-lg px-4 py-3 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
+            />
+            {errors.lastName && (
+              <span className="text-red-400 text-xs">{errors.lastName.message}</span>
+            )}
+          </div>
         </div>
 
         {/* Email */}

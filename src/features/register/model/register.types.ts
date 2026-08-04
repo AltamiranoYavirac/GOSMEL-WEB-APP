@@ -1,5 +1,6 @@
 export interface IRegisterFormValues {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   password: string;

@@ -1,9 +1,12 @@
 import { z } from "zod";
 
 export const registerSchema = z.object({
-  fullName: z
+  firstName: z
     .string()
     .min(2, "El nombre debe tener al menos 2 caracteres"),
+  lastName: z
+    .string()
+    .min(2, "El apellido debe tener al menos 2 caracteres"),
   email: z
     .string()
     .email("Ingresa un correo electrónico válido"),

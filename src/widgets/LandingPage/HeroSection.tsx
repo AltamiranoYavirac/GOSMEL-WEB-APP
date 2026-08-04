@@ -33,7 +33,7 @@ export default function HeroSection() {
 
             <div className="flex flex-col sm:flex-row gap-5 pt-4">
               <Link
-                href="#contacto"
+                href="/register"
                 className="inline-flex justify-center items-center px-8 py-4 bg-ginger text-cream font-bold hover:bg-burnt hover:scale-[1.02] transition-all duration-300 uppercase tracking-widest text-xs rounded-lg"
               >
                 Inscríbete Ahora
