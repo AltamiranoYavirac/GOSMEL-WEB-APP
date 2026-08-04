@@ -15,6 +15,9 @@ const CLOUDINARY_BASE =
 export const AppImages = {
   HERO_COVER: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
 
+  ABOUT_PASSION: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
+  ABOUT_DISCIPLINE: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
+  ABOUT_INNOVATION: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
 } as const;
 
 export type AppImageKey = keyof typeof AppImages;
