@@ -58,14 +58,14 @@ const TESTIMONIALS: IAboutTestimonial[] = [
   {
     quote:
       "GOSMEL no solo me enseñó técnica, me enseñó a encontrar mi propia voz en un mundo saturado de ruido. Fue un punto de inflexión en mi carrera.",
-    author: "Elena Rodríguez",
-    role: "Concertino",
+    author: "El Mau",
+    role: "Estudiante de Violin",
   },
   {
     quote:
       "La disciplina que aprendí aquí es la base de todo lo que he logrado hoy en los escenarios internacionales. Una experiencia transformadora.",
-    author: "Marc Valls",
-    role: "Productor y Pianista",
+    author: "El Fify",
+    role: "Estudiante de Guitarra",
   },
 ];
 
@@ -83,9 +83,9 @@ export default function AboutPage() {
         <AboutValues values={VALUES} />
         <AboutTestimonials testimonials={TESTIMONIALS} />
         <AboutCTA
-          title="¿Estás listo para escribir tu propia historia?"
+          title="¿Estás listo para encontrar tu esencia?"
           description="Las inscripciones para el próximo semestre están abiertas. Únete a la élite musical."
-          primaryLabel="¡Regístrate ahora!"
+          primaryLabel="¡Inscribete ahora!"
           primaryHref="/contact"
           secondaryLabel="Ver Cursos"
           secondaryHref="/courses"
