@@ -38,8 +38,8 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
             <Link
-              href="/contact"
-              className="bg-ginger hover:bg-burnt text-cream px-7 py-2.5 font-semibold transition-all uppercase tracking-wider text-xs rounded-lg"
+            href="/register"
+            className="bg-ginger hover:bg-burnt text-cream px-7 py-2.5 font-semibold transition-all uppercase tracking-wider text-xs rounded-lg"
             >
               Inscríbete Ahora
             </Link>
@@ -80,7 +80,7 @@ export default function Navbar() {
             </Link>
           ))}
           <Link
-            href="/contact"
+            href="/register"
             onClick={() => setOpen(false)}
             className="block bg-ginger hover:bg-burnt text-cream text-center py-3 font-bold uppercase tracking-wider text-xs mt-4 rounded-lg transition-colors"
           >
