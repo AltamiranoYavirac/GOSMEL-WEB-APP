@@ -3,7 +3,7 @@ import { Navbar } from "@/widgets/Navbar";
 import { Footer } from "@/widgets/Footer";
 
 export const metadata = {
-  title: "Iniciar Sesión | GOSMEL Academia de Música",
+  title: "Iniciar Sesión",
   description: "Accede a tu estudio en GOSMEL Academia de Música.",
 };
 
