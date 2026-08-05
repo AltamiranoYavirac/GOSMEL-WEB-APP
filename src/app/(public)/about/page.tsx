@@ -27,7 +27,7 @@ export default function AboutPage() {
           title="¿Estás listo para encontrar tu esencia?"
           description="Las inscripciones para el próximo semestre están abiertas. Únete a la élite musical."
           primaryLabel="¡Inscribete ahora!"
-          primaryHref="/contact"
+          primaryHref="/register"
           secondaryLabel="Ver Cursos"
           secondaryHref="/courses"
         />
