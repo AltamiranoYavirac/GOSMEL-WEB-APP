@@ -44,3 +44,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /screensPrototypes
+
+# local opencode config (contains API keys)
+opencode.json
