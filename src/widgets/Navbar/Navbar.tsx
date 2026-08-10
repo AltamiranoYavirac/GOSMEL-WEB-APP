@@ -37,9 +37,18 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
+
             <Link
-            href="/register"
-            className="bg-ginger hover:bg-burnt text-cream px-7 py-2.5 font-semibold transition-all uppercase tracking-wider text-xs rounded-lg"
+              href="/login"
+              className="flex items-center gap-2 border border-cocoa/20 dark:border-neutral-700 text-cocoa/80 dark:text-cream/80 hover:text-ginger dark:hover:text-ginger hover:border-ginger px-5 py-2.5 font-semibold transition-all uppercase tracking-wider text-xs rounded-lg"
+            >
+              <Icon icon="mdi:login" width={16} height={16} />
+              Iniciar Sesión
+            </Link>
+
+            <Link
+              href="/register"
+              className="bg-ginger hover:bg-burnt text-cream px-7 py-2.5 font-semibold transition-all uppercase tracking-wider text-xs rounded-lg"
             >
               Inscríbete Ahora
             </Link>
@@ -55,12 +64,7 @@ export default function Navbar() {
               {open ? (
                 <Icon icon="ph:x" width={28} height={28} aria-hidden="true" />
               ) : (
-                <Icon
-                  icon="ph:list"
-                  width={28}
-                  height={28}
-                  aria-hidden="true"
-                />
+                <Icon icon="ph:list" width={28} height={28} aria-hidden="true" />
               )}
             </button>
           </div>
@@ -79,10 +83,20 @@ export default function Navbar() {
               {label}
             </Link>
           ))}
+
+          <Link
+            href="/login"
+            onClick={() => setOpen(false)}
+            className="flex items-center justify-center gap-2 border border-cocoa/20 dark:border-neutral-700 text-cocoa/80 dark:text-cream/80 hover:text-ginger hover:border-ginger text-center py-3 font-bold uppercase tracking-wider text-xs rounded-lg transition-all"
+          >
+            <Icon icon="mdi:login" width={16} height={16} />
+            Iniciar Sesión
+          </Link>
+
           <Link
             href="/register"
             onClick={() => setOpen(false)}
-            className="block bg-ginger hover:bg-burnt text-cream text-center py-3 font-bold uppercase tracking-wider text-xs mt-4 rounded-lg transition-colors"
+            className="block bg-ginger hover:bg-burnt text-cream text-center py-3 font-bold uppercase tracking-wider text-xs rounded-lg transition-colors"
           >
             Inscríbete Ahora
           </Link>
