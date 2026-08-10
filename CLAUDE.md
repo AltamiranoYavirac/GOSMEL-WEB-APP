@@ -188,6 +188,38 @@ Esto aplica también en `entities/`, `widgets/` y `shared/`.
   `[Componente].variants.ts` junto a su `.types.ts`. Mientras tanto, `cn()` + clases directas.
 - `cn()` solo para overrides puntuales no-variante (márgenes externos, layout).
 
+### Paleta de colores — tokens semánticos OBLIGATORIOS
+
+**Escalas (definidas en `@theme inline`, `src/app/globals.css`):**
+- `primary` — Naranja Jengibre (#E19246 @ 500), escala 50→950
+- `secondary` — Mantequilla Pastel (#F6CF86 @ 500)
+- `accent` — Melocotón Suave (#EBC29D @ 300)
+- `warm` — Crema→Cocoa cálido (50→950). **Nota:** `warm` reemplazó a `neutral` en esta codebase; `neutral` no existe.
+
+**Semánticos shadcn (mapeados a `--color-*` en `@theme inline`):**
+`background, foreground, card, popover, primary, secondary, muted, accent, destructive, border, input, ring, chart-1..5, sidebar-*`
+
+**Semánticos adicionales (propios del proyecto):**
+| Token | Uso | Light | Dark |
+|---|---|---|---|
+| `surface-dark / surface-dark-foreground / surface-dark-muted / surface-dark-border` | Secciones oscuras (Footer, AboutCTA) | warm-900/warm-50/warm-300/warm-700 | warm-950/warm-50/warm-400/warm-600 |
+| `scrim` | Overlay transparente (modales, sheets) | warm-900/10% | black/30% |
+| `scrim-strong` | Overlay intenso (scrims sobre imágenes) | warm-900/60% | black/80% |
+| `accent-muted` | Fondo/borde muted que se adapta al tema | warm-100 | warm-800 |
+| `primary-tint / primary-tint-strong` | Versión clara del primary (bubble tinted) | derivado primary-500 | derivado primary-dark |
+
+**Alias conservados:** solo `cream` (=warm-50) y `ginger` (=primary-500), exclusivo para `selection:` en `layout.tsx`. El resto (`sand, peach, butter, burnt, copper, cocoa, taupe`) están eliminados.
+
+**Dark mode — diseño intencional:** `--primary` en `.dark` cambia a `secondary-500` (butter) para mejor contraste sobre cocoa. No corregir; es decisión de diseño documentada.
+
+**`chart-1..5`** usan `var(--color-primary-500)` etc (no duplican OKLCH). Si la paleta cambia, charts se actualizan automáticamente.
+
+**CONVENCIÓN ESTRICTA — nunca usar en componentes:**
+- `bg-black`, `text-white`, `bg-neutral-*`, `text-neutral-*` (la escala se llama `warm`)
+- `oklch(...)` hardcoded en className (ni con `bg-[oklch(...)]`)
+- Colores Tailwind default (red, blue, slate, zinc, etc.)
+- Siempre usar el token semántico correspondiente: `bg-background`, `text-primary`, `border-accent-muted/40`, `bg-scrim`, etc.
+
 ### Formularios — React Hook Form + Zod
 - `useForm` con `zodResolver`. Schema en `features/[nombre]/model/schemas.ts`.
 - Nunca `useState` para campos — RHF lo gestiona.

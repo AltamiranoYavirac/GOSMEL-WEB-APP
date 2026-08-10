@@ -7,14 +7,14 @@ import { getCurrentYear } from "@/shared/lib";
 
 export default function Footer() {
   return (
-    <footer className="bg-neutral-900 border-t border-neutral-700/30 pt-20 pb-10">
+    <footer className="bg-surface-dark border-t border-surface-dark-border/30 pt-20 pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div>
-            <Link href="/" className="font-heading font-bold text-xl tracking-wider text-neutral-50 block mb-8">
+            <Link href="/" className="font-heading font-bold text-xl tracking-wider text-surface-dark-foreground block mb-8">
               GOSMEL
             </Link>
-            <p className="text-neutral-300/70 text-sm leading-relaxed mb-8 font-light">
+            <p className="text-surface-dark-muted/70 text-sm leading-relaxed mb-8 font-light">
               En Gosmel Academia de Música creemos que la formación musical nace del equilibrio entre el conocimiento y la experiencia.Inspirados por nuestro lema, &ldquo;Lo bello de la teoría en la práctica&rdquo;
             </p>
             <div className="flex gap-4">
@@ -27,10 +27,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-neutral-50 mb-6 uppercase tracking-wider text-sm">
+            <h3 className="font-bold text-surface-dark-foreground mb-6 uppercase tracking-wider text-sm">
               Academia
             </h3>
-            <ul className="space-y-4 text-sm text-neutral-300/70 font-light">
+            <ul className="space-y-4 text-sm text-surface-dark-muted/70 font-light">
               {ACADEMIA_LINKS.map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href} className="hover:text-primary transition-colors">
@@ -42,10 +42,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-neutral-50 mb-6 uppercase tracking-wider text-sm">
+            <h3 className="font-bold text-surface-dark-foreground mb-6 uppercase tracking-wider text-sm">
               Cursos
             </h3>
-            <ul className="space-y-4 text-sm text-neutral-300/70 font-light">
+            <ul className="space-y-4 text-sm text-surface-dark-muted/70 font-light">
               {COURSE_LINKS.map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href} className="hover:text-primary transition-colors">
@@ -57,10 +57,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-neutral-50 mb-6 uppercase tracking-wider text-sm">
+            <h3 className="font-bold text-surface-dark-foreground mb-6 uppercase tracking-wider text-sm">
               Contacto
             </h3>
-            <ul className="space-y-4 text-sm text-neutral-300/70 font-light">
+            <ul className="space-y-4 text-sm text-surface-dark-muted/70 font-light">
               <li className="flex items-start gap-3">
                 <Icon icon="mdi:map-marker" className="w-[18px] h-[18px] text-primary shrink-0 mt-0.5" aria-hidden="true" />
                 <span>
@@ -81,7 +81,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-neutral-700/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-neutral-300/40 uppercase tracking-wide">
+        <div className="border-t border-surface-dark-border/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-surface-dark-muted/40 uppercase tracking-wide">
           <p>© {getCurrentYear()} GOSMEL Music Academy. Todos los derechos reservados.</p>
           <div className="flex gap-6">
             <Link href="/about" className="hover:text-primary transition-colors">

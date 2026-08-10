@@ -28,7 +28,7 @@ export default function AboutSecondaryVideo({
               <Badge
                 key={label}
                 variant="outline"
-                className="gap-2 px-4 py-2 h-auto rounded-full border-accent/30 dark:border-neutral-700/40"
+                className="gap-2 px-4 py-2 h-auto rounded-full border-accent-muted/40"
               >
                 <Icon icon={icon} width={22} height={22} className="text-primary" aria-hidden="true" />
                 <span className="text-base font-medium text-foreground">{label}</span>

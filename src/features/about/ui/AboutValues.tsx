@@ -26,7 +26,7 @@ export default function AboutValues({ values }: IAboutValuesProps) {
               aspect="tall"
               className="w-full"
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-scrim-strong to-transparent" />
             </MediaFrame>
 
             <div className="flex flex-col gap-2">

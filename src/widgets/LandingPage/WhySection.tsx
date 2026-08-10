@@ -55,7 +55,7 @@ export default function WhySection() {
                     icon={icon}
                     size="md"
                     iconSize={22}
-                    className="bg-accent/30 dark:bg-neutral-800 border border-accent/50 dark:border-neutral-700/40 group-hover:border-primary group-hover:bg-primary/10 transition-colors shadow-sm"
+                    className="bg-accent-muted/30 border border-accent-muted/40 group-hover:border-primary group-hover:bg-primary/10 transition-colors shadow-sm"
                   />
                   <div>
                     <h4 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">

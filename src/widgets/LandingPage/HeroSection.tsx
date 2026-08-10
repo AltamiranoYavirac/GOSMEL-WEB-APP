@@ -10,7 +10,7 @@ export default function HeroSection() {
   return (
     <section className="relative pt-24 pb-24 lg:pt-32 lg:pb-36 overflow-hidden bg-background">
       <div className="absolute inset-0 bg-dot-pattern pointer-events-none" />
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-accent/20 dark:from-neutral-800/40 to-transparent pointer-events-none" />
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-accent-muted/20 to-transparent pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-full h-1/4 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
@@ -18,7 +18,7 @@ export default function HeroSection() {
           <div className="space-y-10">
             <Badge
               variant="outline"
-              className="h-auto gap-3 px-4 py-1.5 rounded-full bg-accent/30 dark:bg-neutral-800 text-primary font-medium text-xs uppercase tracking-wider"
+              className="h-auto gap-3 px-4 py-1.5 rounded-full bg-accent-muted/30 text-primary font-medium text-xs uppercase tracking-wider"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-primary" />
               Matrículas abiertas {getCurrentYear()}
@@ -56,8 +56,8 @@ export default function HeroSection() {
 
           <div className="relative lg:h-[700px] w-full flex justify-center lg:justify-end">
             <div className="absolute top-10 right-10 w-80 h-80 bg-primary/10 rounded-full blur-[100px] -z-10 animate-pulse" style={{ animationDuration: "4s" }} />
-            <div className="absolute bottom-10 left-10 w-80 h-80 bg-accent/20 dark:bg-neutral-800/40 rounded-full blur-[100px] -z-10" />
-            <div className="relative w-full max-w-md lg:max-w-full h-full min-h-[400px] overflow-hidden shadow-xl border border-accent/40 dark:border-neutral-700/40 rounded-2xl group">
+            <div className="absolute bottom-10 left-10 w-80 h-80 bg-accent-muted/20 rounded-full blur-[100px] -z-10" />
+            <div className="relative w-full max-w-md lg:max-w-full h-full min-h-[400px] overflow-hidden shadow-xl border border-accent-muted/40 rounded-2xl group">
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 via-transparent to-transparent z-10" />
               <Image
                 src={AppImages.HERO_COVER}

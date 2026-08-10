@@ -68,7 +68,7 @@ export default function ContactInfo({
           href={mapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute bottom-3 left-3 bg-black/60 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 hover:bg-black/80 transition"
+          className="absolute bottom-3 left-3 bg-scrim-strong text-background text-xs px-3 py-1 rounded-full flex items-center gap-1 transition"
         >
           <Icon icon="mdi:map-marker" width={12} height={12} aria-hidden="true" />
           Ver en Google Maps

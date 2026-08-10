@@ -27,7 +27,7 @@ export default function CoursesSection() {
               className="group relative rounded-2xl hover:-translate-y-2 transition-all duration-500 h-full"
             >
               <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl rounded-2xl" />
-              <Card className="relative h-full p-6 border border-accent/50 dark:border-neutral-700/40 group-hover:border-primary/50 transition-colors duration-300 overflow-hidden rounded-2xl">
+              <Card className="relative h-full p-6 border border-accent-muted/40 group-hover:border-primary/50 transition-colors duration-300 overflow-hidden rounded-2xl">
                 <div className="absolute top-0 right-0 w-20 h-20 bg-primary/8 rounded-bl-[4rem] transition-all duration-500 group-hover:bg-primary/15" />
                 <IconTile
                   icon={icon}

@@ -13,13 +13,13 @@ export default function AboutCTA({
   secondaryHref,
 }: IAboutCTAProps) {
   return (
-    <section className="w-full rounded-3xl bg-neutral-900 px-8 py-16 flex flex-col items-center gap-6 text-center">
+    <section className="w-full rounded-3xl bg-surface-dark px-8 py-16 flex flex-col items-center gap-6 text-center">
 
-      <h2 className="text-3xl md:text-4xl font-bold text-neutral-50 max-w-lg leading-tight">
+      <h2 className="text-3xl md:text-4xl font-bold text-surface-dark-foreground max-w-lg leading-tight">
         {title}
       </h2>
 
-      <p className="text-neutral-300 text-sm max-w-md leading-relaxed">
+      <p className="text-surface-dark-muted text-sm max-w-md leading-relaxed">
         {description}
       </p>
 
@@ -31,7 +31,7 @@ export default function AboutCTA({
           asChild
           size="2xl"
           variant="outline"
-          className="border-neutral-50/40 text-neutral-50 uppercase tracking-widest text-sm hover:bg-neutral-50/10 hover:text-neutral-50"
+          className="border-surface-dark-foreground/40 text-surface-dark-foreground uppercase tracking-widest text-sm hover:bg-surface-dark-foreground/10 hover:text-surface-dark-foreground"
         >
           <Link href={secondaryHref}>{secondaryLabel}</Link>
         </Button>
