@@ -92,29 +92,33 @@
   --color-accent-950: oklch(0.188 0.028 48);
   --color-accent-foreground: oklch(0.228 0.030 20);
 
-  /* ─── neutral — cálido crema→cocoa ──────────────────────────────── */
-  --color-neutral-50:  oklch(0.974 0.006 85);
-  --color-neutral-100: oklch(0.950 0.014 80);
-  --color-neutral-200: oklch(0.912 0.018 75);
-  --color-neutral-300: oklch(0.842 0.022 65);
-  --color-neutral-400: oklch(0.730 0.026 50);
-  --color-neutral-500: oklch(0.510 0.028 30);
-  --color-neutral-600: oklch(0.410 0.032 25);
-  --color-neutral-700: oklch(0.330 0.030 22);
-  --color-neutral-800: oklch(0.265 0.028 20);
-  --color-neutral-900: oklch(0.228 0.030 20);
-  --color-neutral-950: oklch(0.168 0.022 18);
+  /* ─── warm — crema → cocoa cálido ───────────────────────────────── */
+  --color-warm-50:  oklch(0.974 0.006 85);
+  --color-warm-100: oklch(0.950 0.014 80);
+  --color-warm-200: oklch(0.912 0.018 75);
+  --color-warm-300: oklch(0.842 0.022 65);
+  --color-warm-400: oklch(0.730 0.026 50);
+  --color-warm-500: oklch(0.510 0.028 30);
+  --color-warm-600: oklch(0.410 0.032 25);
+  --color-warm-700: oklch(0.330 0.030 22);
+  --color-warm-800: oklch(0.265 0.028 20);
+  --color-warm-900: oklch(0.228 0.030 20);
+  --color-warm-950: oklch(0.168 0.022 18);
 
-  /* ─── alias de marca ─────────────────────────────────────────────── */
-  --color-cream:  oklch(0.974 0.006 85);
-  --color-sand:   oklch(0.950 0.014 80);
-  --color-peach:  oklch(0.808 0.080 65);
-  --color-butter: oklch(0.865 0.108 83);
-  --color-ginger: oklch(0.700 0.135 52);
-  --color-burnt:  oklch(0.575 0.128 52);
-  --color-copper: oklch(0.515 0.118 52);
-  --color-cocoa:  oklch(0.228 0.030 20);
-  --color-taupe:  oklch(0.510 0.028 30);
+  /* ─── brand aliases kept for specific use ───────────────────────── */
+  --color-cream:  var(--color-warm-50);
+  --color-ginger: var(--color-primary-500);
+
+  /* ─── new semantic surface tokens ───────────────────────────────── */
+  --color-surface-dark:            var(--surface-dark);
+  --color-surface-dark-foreground: var(--surface-dark-foreground);
+  --color-surface-dark-muted:      var(--surface-dark-muted);
+  --color-surface-dark-border:     var(--surface-dark-border);
+  --color-scrim:                   var(--scrim);
+  --color-scrim-strong:            var(--scrim-strong);
+  --color-accent-muted:            var(--accent-muted);
+  --color-primary-tint:            var(--primary-tint);
+  --color-primary-tint-strong:     var(--primary-tint-strong);
 }
 
 :root {
@@ -136,11 +140,11 @@
   --border:                oklch(0.880 0.035 70);
   --input:                 oklch(0.880 0.035 70);
   --ring:                  oklch(0.700 0.135 52);
-  --chart-1:               oklch(0.700 0.135 52);
-  --chart-2:               oklch(0.865 0.108 83);
-  --chart-3:               oklch(0.808 0.080 65);
-  --chart-4:               oklch(0.575 0.128 52);
-  --chart-5:               oklch(0.510 0.028 30);
+  --chart-1:               var(--color-primary-500);
+  --chart-2:               var(--color-secondary-500);
+  --chart-3:               var(--color-accent-300);
+  --chart-4:               var(--color-primary-600);
+  --chart-5:               var(--color-warm-500);
   --radius: 0.75rem;
   --sidebar:               oklch(0.974 0.006 85);
   --sidebar-foreground:    oklch(0.228 0.030 20);
@@ -150,6 +154,16 @@
   --sidebar-accent-foreground: oklch(0.228 0.030 20);
   --sidebar-border:        oklch(0.880 0.035 70);
   --sidebar-ring:          oklch(0.700 0.135 52);
+
+  --surface-dark:            oklch(0.228 0.030 20);
+  --surface-dark-foreground: oklch(0.974 0.006 85);
+  --surface-dark-muted:      oklch(0.842 0.022 65);
+  --surface-dark-border:     oklch(0.330 0.030 22);
+  --scrim:                   oklch(0.228 0.030 20 / 0.10);
+  --scrim-strong:            oklch(0.228 0.030 20 / 0.60);
+  --accent-muted:            oklch(0.950 0.014 80);
+  --primary-tint:            oklch(0.93 0.054 52);
+  --primary-tint-strong:     oklch(0.88 0.068 52);
 }
 
 .dark {
@@ -171,11 +185,12 @@
   --border:                oklch(0.410 0.032 25 / 60%);
   --input:                 oklch(0.410 0.032 25 / 40%);
   --ring:                  oklch(0.865 0.108 83);
-  --chart-1:               oklch(0.865 0.108 83);
-  --chart-2:               oklch(0.700 0.135 52);
-  --chart-3:               oklch(0.808 0.080 65);
-  --chart-4:               oklch(0.575 0.128 52);
-  --chart-5:               oklch(0.510 0.028 30);
+  --chart-1:               var(--color-secondary-500);
+  --chart-2:               var(--color-primary-500);
+  --chart-3:               var(--color-accent-300);
+  --chart-4:               var(--color-primary-600);
+  --chart-5:               var(--color-warm-500);
+  --radius: 0.75rem;
   --sidebar:               oklch(0.265 0.028 20);
   --sidebar-foreground:    oklch(0.974 0.006 85);
   --sidebar-primary:       oklch(0.865 0.108 83);
@@ -184,6 +199,16 @@
   --sidebar-accent-foreground: oklch(0.974 0.006 85);
   --sidebar-border:        oklch(0.410 0.032 25 / 60%);
   --sidebar-ring:          oklch(0.865 0.108 83);
+
+  --surface-dark:            oklch(0.168 0.022 18);
+  --surface-dark-foreground: oklch(0.974 0.006 85);
+  --surface-dark-muted:      oklch(0.730 0.026 50);
+  --surface-dark-border:     oklch(0.410 0.032 25);
+  --scrim:                   oklch(0 0 0 / 0.30);
+  --scrim-strong:            oklch(0 0 0 / 0.80);
+  --accent-muted:            oklch(0.265 0.028 20);
+  --primary-tint:            oklch(0.30 0.043 83);
+  --primary-tint-strong:     oklch(0.35 0.054 83);
 }
 
 @layer base {
@@ -209,7 +234,7 @@
 }
 
 .text-brand-gradient {
-  background: linear-gradient(to right, oklch(0.700 0.135 52), oklch(0.865 0.108 83), oklch(0.700 0.135 52));
+  background: linear-gradient(to right, var(--color-primary-500), var(--color-secondary-500), var(--color-primary-500));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% auto;
@@ -217,15 +242,15 @@
 }
 
 .bg-dot-pattern {
-  background-image: radial-gradient(oklch(0.700 0.135 52) 0.5px, transparent 0.5px);
+  background-image: radial-gradient(var(--color-primary-500) 0.5px, transparent 0.5px);
   background-size: 24px 24px;
   opacity: 0.10;
 }
 
 .bg-card-gradient {
-  background: linear-gradient(135deg, oklch(0.950 0.014 80 / 0.6) 0%, oklch(0.974 0.006 85) 100%);
+  background: linear-gradient(135deg, color-mix(in oklch, var(--color-warm-100) 60%, transparent) 0%, var(--color-warm-50) 100%);
 }
 
 .dark .bg-card-gradient {
-  background: linear-gradient(135deg, oklch(0.330 0.030 22 / 0.6) 0%, oklch(0.265 0.028 20) 100%);
+  background: linear-gradient(135deg, color-mix(in oklch, var(--color-warm-700) 60%, transparent) 0%, var(--color-warm-800) 100%);
 }

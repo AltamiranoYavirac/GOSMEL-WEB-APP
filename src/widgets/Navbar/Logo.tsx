@@ -1,7 +1,9 @@
+import Link from "next/link";
+
 export default function Logo() {
   return (
-    <span className="font-heading font-bold text-2xl tracking-tight text-cocoa dark:text-cream">
+    <Link href="/" className="font-heading font-bold text-2xl tracking-tight text-foreground">
       GOSMEL
-    </span>
+    </Link>
   );
 }

@@ -3,22 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
+
+import { Button, Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/shared/ui";
+
 import Logo from "./Logo";
 import ThemeToggle from "./ThemeToggle";
-
-const NAV_ITEMS = [
-  { href: "/", label: "Inicio" },
-  { href: "/courses", label: "Cursos" },
-  { href: "/about", label: "Nosotros" },
-  { href: "/contact", label: "Contacto" },
-];
+import { NAV_ITEMS } from "./Navbar.constants";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed w-full z-50 bg-cream/90 dark:bg-neutral-900/90 backdrop-blur-md border-b border-peach/40 dark:border-neutral-700/40 shadow-sm shadow-neutral-200/50 dark:shadow-neutral-900/50">
-      <div className="absolute bottom-0 left-0 w-full h-8 translate-y-full bg-gradient-to-b from-cream/60 to-transparent pointer-events-none dark:hidden" />
+    <nav className="fixed w-full z-50 bg-background/90 backdrop-blur-md border-b border-border shadow-sm">
+      <div className="absolute bottom-0 left-0 w-full h-8 translate-y-full bg-gradient-to-b from-background/60 to-transparent pointer-events-none dark:hidden" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
           <Logo />
@@ -28,7 +25,7 @@ export default function Navbar() {
               <Link
                 key={href}
                 href={href}
-                className="text-cocoa/80 dark:text-cream/80 hover:text-ginger dark:hover:text-ginger transition-colors font-medium tracking-wide text-sm uppercase"
+                className="text-muted-foreground hover:text-primary transition-colors font-medium tracking-wide text-sm uppercase"
               >
                 {label}
               </Link>
@@ -38,70 +35,75 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
 
-            <Link
-              href="/login"
-              className="flex items-center gap-2 border border-cocoa/20 dark:border-neutral-700 text-cocoa/80 dark:text-cream/80 hover:text-ginger dark:hover:text-ginger hover:border-ginger px-5 py-2.5 font-semibold transition-all uppercase tracking-wider text-xs rounded-lg"
-            >
-              <Icon icon="mdi:login" width={16} height={16} />
-              Iniciar Sesión
-            </Link>
+            <Button asChild variant="outline" className="gap-2 px-5 uppercase tracking-wider text-xs font-semibold">
+              <Link href="/login">
+                <Icon icon="mdi:login" width={16} height={16} aria-hidden="true" />
+                Iniciar Sesión
+              </Link>
+            </Button>
 
-            <Link
-              href="/register"
-              className="bg-ginger hover:bg-burnt text-cream px-7 py-2.5 font-semibold transition-all uppercase tracking-wider text-xs rounded-lg"
-            >
-              Inscríbete Ahora
-            </Link>
+            <Button asChild size="lg" className="px-7 uppercase tracking-wider text-xs font-semibold">
+              <Link href="/register">Inscríbete Ahora</Link>
+            </Button>
           </div>
 
           <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
-            <button
-              className="text-cocoa dark:text-cream hover:text-ginger"
-              onClick={() => setOpen((v) => !v)}
-              aria-label="Toggle menu"
-            >
-              {open ? (
-                <Icon icon="ph:x" width={28} height={28} aria-hidden="true" />
-              ) : (
-                <Icon icon="ph:list" width={28} height={28} aria-hidden="true" />
-              )}
-            </button>
+            <Sheet open={open} onOpenChange={setOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon-lg"
+                  aria-label="Abrir menú"
+                >
+                  <Icon
+                    icon={open ? "ph:x" : "ph:list"}
+                    width={28}
+                    height={28}
+                    aria-hidden="true"
+                  />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-72 bg-background">
+                <SheetTitle className="sr-only">Menú de navegación</SheetTitle>
+                <div className="flex flex-col gap-1 mt-10">
+                  {NAV_ITEMS.map(({ href, label }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setOpen(false)}
+                      className="block text-muted-foreground hover:text-primary py-2 uppercase tracking-wide text-sm font-medium"
+                    >
+                      {label}
+                    </Link>
+                  ))}
+
+                  <Button
+                    asChild
+                    variant="outline"
+                    onClick={() => setOpen(false)}
+                    className="mt-4 w-full gap-2 py-3 uppercase tracking-wider text-xs font-bold"
+                  >
+                    <Link href="/login">
+                      <Icon icon="mdi:login" width={16} height={16} aria-hidden="true" />
+                      Iniciar Sesión
+                    </Link>
+                  </Button>
+
+                  <Button
+                    asChild
+                    size="lg"
+                    onClick={() => setOpen(false)}
+                    className="mt-2 w-full uppercase tracking-wider text-xs font-bold"
+                  >
+                    <Link href="/register">Inscríbete Ahora</Link>
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>
-
-      {open && (
-        <div className="md:hidden bg-cream dark:bg-neutral-900 border-t border-peach/30 dark:border-neutral-700/30 px-4 pb-6 pt-4 space-y-4">
-          {NAV_ITEMS.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setOpen(false)}
-              className="block text-cocoa/80 dark:text-cream/80 hover:text-ginger py-2 uppercase tracking-wide text-sm font-medium"
-            >
-              {label}
-            </Link>
-          ))}
-
-          <Link
-            href="/login"
-            onClick={() => setOpen(false)}
-            className="flex items-center justify-center gap-2 border border-cocoa/20 dark:border-neutral-700 text-cocoa/80 dark:text-cream/80 hover:text-ginger hover:border-ginger text-center py-3 font-bold uppercase tracking-wider text-xs rounded-lg transition-all"
-          >
-            <Icon icon="mdi:login" width={16} height={16} />
-            Iniciar Sesión
-          </Link>
-
-          <Link
-            href="/register"
-            onClick={() => setOpen(false)}
-            className="block bg-ginger hover:bg-burnt text-cream text-center py-3 font-bold uppercase tracking-wider text-xs rounded-lg transition-colors"
-          >
-            Inscríbete Ahora
-          </Link>
-        </div>
-      )}
     </nav>
   );
 }
