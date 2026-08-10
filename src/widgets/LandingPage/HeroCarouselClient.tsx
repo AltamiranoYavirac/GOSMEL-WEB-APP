@@ -4,12 +4,16 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
+
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
   type CarouselApi,
 } from "@/shared/ui/carousel";
+import { Button } from "@/shared/ui";
 import type { ICarouselImage } from "@/features/carousel";
 import { getCurrentYear } from "@/shared/lib";
 import type { IHeroSlide } from "./HeroCarouselSection.types";
@@ -30,7 +34,7 @@ const SLIDE_META: Omit<IHeroSlide, "image" | "alt">[] = [
     ctaSecondary: { label: "Ver Cursos", href: "/courses" },
   },
   {
-    badge: "Piano · Guitarra · Violín · Chelo",
+    badge: "Piano • Guitarra • Violín • Chelo",
     title: "Todos los",
     subtitle: "Instrumentos, Un Solo Lugar",
     cta: { label: "Inscríbete Ahora", href: "/register" },
@@ -58,7 +62,7 @@ const SLIDE_META: Omit<IHeroSlide, "image" | "alt">[] = [
     ctaSecondary: { label: "Ver Cursos", href: "/courses" },
   },
   {
-    badge: "Canto · Voz · Técnica vocal",
+    badge: "Canto • Voz • Técnica vocal",
     title: "También",
     subtitle: "Clases de Canto",
     cta: { label: "Inscríbete Ahora", href: "/register" },
@@ -131,28 +135,32 @@ export default function HeroCarouselClient({ images }: IHeroCarouselClientProps)
                     </div>
 
                     <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                      <Link
-                        href={slide.cta.href}
-                        className="inline-flex justify-center items-center px-8 py-4 bg-primary text-primary-foreground font-bold hover:bg-primary/90 hover:scale-[1.02] transition-all duration-300 uppercase tracking-widest text-xs rounded-lg shadow-lg shadow-primary/30"
+                      <Button
+                        asChild
+                        size="2xl"
+                        className="gap-2 uppercase tracking-widest text-xs font-bold shadow-lg shadow-primary/30 hover:scale-[1.02]"
                       >
-                        {slide.cta.label}
-                        <Icon
-                          icon="ph:arrow-right"
-                          width={16}
-                          height={16}
-                          className="ml-2"
-                          aria-hidden="true"
-                        />
-                      </Link>
-                      <Link
-                        href={slide.ctaSecondary.href}
-                        className="inline-flex justify-center items-center px-8 py-4 bg-foreground/5 backdrop-blur-sm text-foreground font-semibold border border-foreground/20 hover:bg-foreground/10 hover:border-foreground/40 transition-all duration-300 uppercase tracking-widest text-xs rounded-lg"
+                        <Link href={slide.cta.href}>
+                          {slide.cta.label}
+                          <Icon
+                            icon="ph:arrow-right"
+                            width={16}
+                            height={16}
+                            className="ml-2"
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      </Button>
+                      <Button
+                        asChild
+                        size="2xl"
+                        variant="outline"
+                        className="gap-2 uppercase tracking-widest text-xs font-semibold bg-foreground/5 backdrop-blur-sm border-foreground/20 hover:bg-foreground/10 hover:border-foreground/40"
                       >
-                        {slide.ctaSecondary.label}
-                      </Link>
-                    </div>
-
-                    <div className="flex items-center gap-3 pt-4 border-t border-foreground/10 mt-6"> 
+                        <Link href={slide.ctaSecondary.href}>
+                          {slide.ctaSecondary.label}
+                        </Link>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -161,47 +169,18 @@ export default function HeroCarouselClient({ images }: IHeroCarouselClientProps)
           ))}
         </CarouselContent>
 
-        <button
-          onClick={() => api?.scrollPrev()}
-          className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-background/50 backdrop-blur-md border border-foreground/10 flex items-center justify-center text-foreground hover:bg-background/80 hover:scale-110 transition-all duration-300"
+        <CarouselPrevious
+          size="icon-lg"
+          variant="outline"
+          className="left-4 lg:left-8 size-12 bg-background/50 backdrop-blur-md border-foreground/10 text-foreground hover:bg-background/80 hover:scale-110 transition-all duration-300"
           aria-label="Diapositiva anterior"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width={22}
-            height={22}
-            viewBox="0 0 256 256"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={32}
-            aria-hidden="true"
-          >
-            <polyline points="160 208 80 128 160 48" />
-          </svg>
-        </button>
-
-        <button
-          onClick={() => api?.scrollNext()}
-          className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-background/50 backdrop-blur-md border border-foreground/10 flex items-center justify-center text-foreground hover:bg-background/80 hover:scale-110 transition-all duration-300"
+        />
+        <CarouselNext
+          size="icon-lg"
+          variant="outline"
+          className="right-4 lg:right-8 size-12 bg-background/50 backdrop-blur-md border-foreground/10 text-foreground hover:bg-background/80 hover:scale-110 transition-all duration-300"
           aria-label="Siguiente diapositiva"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width={22}
-            height={22}
-            viewBox="0 0 256 256"
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={32}
-            aria-hidden="true"
-          >
-            <polyline points="96 208 176 128 96 48" />
-          </svg>
-        </button>
+        />
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
           {slides.map((_, index) => (

@@ -1,116 +1,82 @@
-"use client";
+"use client"
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Icon } from "@iconify/react";
-import { contactSchema } from "../model/schemas";
-import type { IContactFormValues, TInstrumentOption } from "../model/contact.types";
-import type { IContactFormProps } from "./ContactForm.types";
+import { Icon } from "@iconify/react"
+import { toast } from "sonner"
 
-const INSTRUMENTS: TInstrumentOption[] = [
-  { label: "Guitarra", value: "guitarra" },
-  { label: "Piano", value: "piano" },
-  { label: "Violín", value: "violin" },
-  { label: "Batería", value: "bateria" },
-  { label: "Canto", value: "canto" },
-  { label: "Bajo", value: "bajo" },
-  { label: "Flauta", value: "flauta" },
-];
+import { Button, Card, Spinner } from "@/shared/ui"
+import { Form, SelectField, TextareaField, TextField, useAppForm } from "@/shared/form"
+import {
+  contactFormSchema,
+  getContactFormDefaults,
+  type IContactFormValues,
+} from "../model/contactForm.config"
+import type { IContactFormProps } from "./ContactForm.types"
+import { INSTRUMENTS } from "./ContactForm.constants"
 
 export default function ContactForm({ onSubmitSuccess }: IContactFormProps) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<IContactFormValues>({
-    resolver: zodResolver(contactSchema),
-  });
+  const form = useAppForm<IContactFormValues>({
+    schema: contactFormSchema,
+    defaultValues: getContactFormDefaults(),
+  })
 
-  const onSubmit = async (data: IContactFormValues) => {
-    console.log(data);
-    reset();
-    onSubmitSuccess?.();
-  };
+  const {
+    reset,
+    formState: { isSubmitting },
+  } = form
+
+  const onSubmit = async () => {
+    toast.success("Mensaje enviado", {
+      description: "Gracias por contactarnos. Te responderemos pronto.",
+    })
+    reset()
+    onSubmitSuccess?.()
+  }
 
   return (
-    <div className="bg-cream/60 dark:bg-neutral-900 border border-cocoa/10 dark:border-neutral-800 rounded-2xl p-8 h-full">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-ginger text-sm font-medium">
-              Nombre Completo
-            </label>
-            <input
-              {...register("fullName")}
-              placeholder="Ej. Ana García"
-              className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-500 text-sm focus:outline-none focus:border-ginger transition"
-            />
-            {errors.fullName && (
-              <span className="text-red-400 text-xs">{errors.fullName.message}</span>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-1">
-            <label className="text-ginger text-sm font-medium">
-              Correo Electrónico
-            </label>
-            <input
-              {...register("email")}
-              placeholder="ana@ejemplo.com"
-              type="email"
-              className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-500 text-sm focus:outline-none focus:border-ginger transition"
-            />
-            {errors.email && (
-              <span className="text-red-400 text-xs">{errors.email.message}</span>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-ginger text-sm font-medium">
-            Instrumento de Interés
-          </label>
-          <select
-            {...register("instrument")}
-            className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa/70 dark:text-neutral-300 text-sm focus:outline-none focus:border-ginger transition appearance-none cursor-pointer"
-          >
-            <option value="">Selecciona un instrumento</option>
-            {INSTRUMENTS.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-          {errors.instrument && (
-            <span className="text-red-400 text-xs">{errors.instrument.message}</span>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-ginger text-sm font-medium">Mensaje</label>
-          <textarea
-            {...register("message")}
-            placeholder="Cuéntanos sobre tus metas musicales..."
-            rows={6}
-            className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-500 text-sm focus:outline-none focus:border-ginger transition resize-none"
+    <Card className="h-full rounded-2xl p-8">
+      <Form form={form} onSubmit={onSubmit} className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <TextField
+            name="fullName"
+            label="Nombre Completo"
+            placeholder="Ej. Ana García"
           />
-          {errors.message && (
-            <span className="text-red-400 text-xs">{errors.message.message}</span>
-          )}
+          <TextField
+            name="email"
+            label="Correo Electrónico"
+            type="email"
+            placeholder="ana@ejemplo.com"
+          />
         </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="self-start flex items-center gap-2 bg-ginger text-white dark:text-black font-semibold uppercase tracking-widest text-sm px-8 py-4 rounded-lg hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
-          <Icon icon="mdi:send" width={16} height={16} />
-        </button>
+        <SelectField
+          name="instrument"
+          label="Instrumento de Interés"
+          placeholder="Selecciona un instrumento"
+          options={INSTRUMENTS}
+        />
 
-      </form>
-    </div>
-  );
+        <TextareaField
+          name="message"
+          label="Mensaje"
+          placeholder="Cuéntanos sobre tus metas musicales..."
+          rows={6}
+        />
+
+        <Button
+          type="submit"
+          size="2xl"
+          disabled={isSubmitting}
+          className="self-start gap-2 text-sm uppercase tracking-widest"
+        >
+          {isSubmitting ? (
+            <Spinner className="size-4" />
+          ) : (
+            <Icon icon="ph:paper-plane-right" className="size-4" aria-hidden="true" />
+          )}
+          {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
+        </Button>
+      </Form>
+    </Card>
+  )
 }

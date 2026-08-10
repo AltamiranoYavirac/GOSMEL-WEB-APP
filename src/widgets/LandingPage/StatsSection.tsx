@@ -7,13 +7,13 @@ const STATS = [
 
 export default function StatsSection() {
   return (
-    <div className="bg-ginger py-16">
+    <div className="bg-primary py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-cream/20">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-primary-foreground/20">
           {STATS.map(({ value, label }) => (
             <div key={label}>
-              <div className="text-5xl font-bold text-cream mb-2">{value}</div>
-              <div className="text-cream/70 text-xs uppercase tracking-widest">
+              <div className="text-5xl font-bold text-primary-foreground mb-2">{value}</div>
+              <div className="text-primary-foreground/70 text-xs uppercase tracking-widest">
                 {label}
               </div>
             </div>
