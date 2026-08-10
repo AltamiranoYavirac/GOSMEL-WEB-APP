@@ -32,4 +32,9 @@ export const AppImages = {
   ABOUT_VIDEO_PORTRAIT_POSTER: `${CLOUDINARY_VIDEO_BASE}/so_2/v1785810504/WhatsApp_Video_2026-06-08_at_21.12.29_1_ks3fsd.jpg`,
 } as const;
 
+export const AppVideos = {
+  ABOUT_INTRO: `${CLOUDINARY_VIDEO_BASE}/v1785810578/WhatsApp_Video_2026-06-08_at_21.12.29_ai0uyh.mp4`,
+} as const;
+
 export type AppImageKey = keyof typeof AppImages;
+export type AppVideoKey = keyof typeof AppVideos;
