@@ -22,6 +22,7 @@
 - NO COMENTARIES!
 - Responsabilty Unique!, Don`t allow 2 components in unique File
 - Large constants go in their own file, following the project architecture (`features/[nombre]/model/` or `shared/config/` for global ones). Never inline large arrays/maps in components or pages.
+- use other compnents when is necessary, if not, create a new one.
 
 ### Review & Debugging
 - State the bug. Show the fix. Stop.
