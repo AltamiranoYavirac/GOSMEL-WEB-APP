@@ -118,10 +118,11 @@ src/
 │   └── CourseMaterialList/
 │
 └── shared/                       # Reutilizable sin lógica de negocio
-    ├── ui/                       # shadcn components customizados
-    ├── api/                      # Cliente Supabase singleton, fetch helpers
-    ├── lib/                      # utils, formatters, cn()
-    └── types/                    # Tipos globales compartidos
+    ├── form/                      # Sistema de formularios (useAppForm, Form, *Field)
+    ├── ui/                        # shadcn components customizados
+    ├── api/                       # Cliente Supabase singleton, fetch helpers
+    ├── lib/                       # utils, formatters, cn(), image-compression
+    └── types/                     # Tipos globales compartidos
 ```
 
 ### Estructura interna de cada feature
@@ -164,8 +165,8 @@ features/courses/ui/
 └── CourseCard.types.ts     # ICourseCardProps, TCourseCardVariant
 
 features/courses/model/
-├── schemas.ts              # schemas Zod
-└── course.types.ts         # ICourse, TCourseStatus, enums
+├── CourseForm.config.ts     # schema Zod + tipo + getDefaults() + mappers (formularios)
+└── course.types.ts          # ICourse, TCourseStatus, enums (dominio)
 ```
 
 Esto aplica también en `entities/`, `widgets/` y `shared/`.
@@ -183,10 +184,11 @@ Esto aplica también en `entities/`, `widgets/` y `shared/`.
   y `@custom-variant`. PostCSS usa `@tailwindcss/postcss`.
 - shadcn/ui está instalado con style `radix-nova` (ver `components.json`); sus componentes
   customizados viven en `shared/ui` (alias `@/shared/ui`), `cn()` en `@/shared/lib/utils`.
-- **`tv()` (tailwind-variants) aún no está instalado.** Cuando se instale: usarlo para todo
-  componente con variantes visuales (no `cn()` condicional), con las variantes en
-  `[Componente].variants.ts` junto a su `.types.ts`. Mientras tanto, `cn()` + clases directas.
-- `cn()` solo para overrides puntuales no-variante (márgenes externos, layout).
+- **`tv()` (tailwind-variants) instalado y en uso** — usarlo para todo componente con
+  variantes visuales (no `cn()` condicional), con las variantes en `[Componente].variants.ts`
+  junto a su `.types.ts`. `cn()` solo para overrides puntuales no-variante (márgenes externos,
+  layout). Los primitivos heredados de shadcn (`input`, `button`, `select`) usan `cva()` — no
+  migrarlos salvo que se toquen por otra razón.
 
 ### Paleta de colores — tokens semánticos OBLIGATORIOS
 
@@ -220,10 +222,44 @@ Esto aplica también en `entities/`, `widgets/` y `shared/`.
 - Colores Tailwind default (red, blue, slate, zinc, etc.)
 - Siempre usar el token semántico correspondiente: `bg-background`, `text-primary`, `border-accent-muted/40`, `bg-scrim`, etc.
 
-### Formularios — React Hook Form + Zod
-- `useForm` con `zodResolver`. Schema en `features/[nombre]/model/schemas.ts`.
-- Nunca `useState` para campos — RHF lo gestiona.
-- shadcn/ui via `<FormField>` + `<Controller>`. Mismo schema en server-side.
+### Formularios — sistema RHF + Zod en `src/shared/form/`
+
+Capa única de formularios en `src/shared/form/` (barrel `@/shared/form`). Todo formulario del
+proyecto se construye con ella. **El `form.tsx` estándar de shadcn fue eliminado — no
+reintroducir `<FormField>`/`<FormItem>`/`<FormControl>` clásicos.**
+
+Componentes disponibles:
+
+- `useAppForm` — wrapper de `useForm` + `zodResolver`. Modo `onTouched`, revalida `onChange`.
+- `Form` — `FormProvider` + `<form noValidate onSubmit>`. Acepta `id` para submit externo.
+- `useConnectedField` — hook interno tipado contra el schema (`FieldPath<TFieldValues>`).
+  Devuelve `fieldName`, `fieldRef`, `fieldValue`, `fieldOnChange`, `fieldOnBlur`, `error`,
+  `touched`. NUNCA devolver el objeto `field` entero (rompe la regla `react-hooks/refs` del lint).
+- 11 campos conectados por `name` (string): `TextField`, `TextareaField`, `PasswordField`,
+  `NumberField`, `SelectField`, `DateField`, `TimeField`, `CheckboxField`, `SwitchField`,
+  `FileField`, `PhotoField`. `I*FieldProps` en `.types.ts` junto a cada campo.
+
+Reglas:
+
+- **Schema + tipo + defaults + mappers** en `features/[nombre]/model/[Nombre]Form.config.ts`
+  (un solo archivo: `xFormSchema`, `IXFormValues`, `getXFormDefaults()`, y cuando edita:
+  `mapXToFormData()`, `buildXUpdatePayload()`). NO usar `schemas.ts` para formularios.
+- Campos se consumen **solo por `name`** — nunca pasar `control`.
+- `touched = fieldState.isTouched || formState.isSubmitted` — errores no se pintan hasta
+  tocar el campo o intentar submit.
+- Submit puede vivir **fuera** del `<form>` (footers de modal) con atributo HTML
+  `form="<id>"` apuntando al `id` del `<Form>`.
+- Forms de edición: `values:` (no `defaultValues:`) + `resetOptions: { keepDirtyValues: false,
+  keepErrors: false }` + `key={entityId}` en el componente para remount limpio por entidad.
+- Loading SIEMPRE de `mutation.isPending` (TanStack Query), nunca `formState.isSubmitting`.
+- Error de servidor: prop `externalError` en el campo + `onValueChange` para limpiarlo.
+  No usar `form.setError()`.
+- Primitivos extra en `shared/ui`: `FormField` (presentacional label/hint/error),
+  `DatePicker` (contrato `string 'yyyy-MM-dd'`, no `Date`), `TimeInput`, `FileUpload`
+  (drag & drop), `image-compression.ts` en `shared/lib/utils/` para `PhotoField`.
+- Iconos `ph:*` via `@iconify/react`. Tamaño `lg` por defecto en inputs de campos.
+- Valores de campos de tipo primitivo se castean al usarlos (`(fieldValue ?? "") as string`)
+  porque `useConnectedField` es genérico sobre `FieldPath<TFieldValues>`.
 
 ### Peticiones asíncronas — TanStack Query v5
 - **Todo fetch cliente pasa por React Query.** No `useEffect` + `fetch` manual.

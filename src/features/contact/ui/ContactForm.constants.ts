@@ -1,4 +1,4 @@
-import type { TInstrumentOption } from "../model/contact.types";
+import type { TInstrumentOption } from "../model/contactForm.config"
 
 export const INSTRUMENTS: TInstrumentOption[] = [
   { label: "Guitarra", value: "guitarra" },
@@ -8,4 +8,4 @@ export const INSTRUMENTS: TInstrumentOption[] = [
   { label: "Canto", value: "canto" },
   { label: "Bajo", value: "bajo" },
   { label: "Flauta", value: "flauta" },
-];
+]
