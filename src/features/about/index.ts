@@ -1,4 +1,5 @@
-export { default as AboutVideo } from "./ui/AboutVideo";
+export { default as AboutSecondaryVideo } from "./ui/AboutSecondaryVideo";
+export { default as AboutConcerts } from "./ui/AboutConcerts";
 export { default as AboutPillars } from "./ui/AboutPillars";
 export { default as AboutValues } from "./ui/AboutValues";
 export { default as AboutTestimonials } from "./ui/AboutTestimonials";
