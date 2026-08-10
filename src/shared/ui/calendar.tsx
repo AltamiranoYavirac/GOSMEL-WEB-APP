@@ -7,10 +7,11 @@ import {
   type DayButton,
   type Locale,
 } from "react-day-picker"
+import { Icon } from "@iconify/react"
 
 import { cn } from "@/shared/lib/utils"
 import { Button, buttonVariants } from "@/shared/ui/button"
-import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "lucide-react"
+import { UI_ICONS } from "@/shared/config"
 
 function Calendar({
   className,
@@ -144,21 +145,23 @@ function Calendar({
             />
           )
         },
-        Chevron: ({ className, orientation, ...props }) => {
-          if (orientation === "left") {
-            return (
-              <ChevronLeftIcon className={cn("size-4", className)} {...props} />
-            )
-          }
-
-          if (orientation === "right") {
-            return (
-              <ChevronRightIcon className={cn("size-4", className)} {...props} />
-            )
-          }
+        Chevron: ({ className, orientation, size, ...props }) => {
+          const icon =
+            orientation === "left"
+              ? UI_ICONS.caretLeft
+              : orientation === "right"
+                ? UI_ICONS.caretRight
+                : UI_ICONS.caretDown
 
           return (
-            <ChevronDownIcon className={cn("size-4", className)} {...props} />
+            <Icon
+              icon={icon}
+              width={size}
+              height={size}
+              className={cn("size-4", className)}
+              aria-hidden="true"
+              {...props}
+            />
           )
         },
         DayButton: ({ ...props }) => (

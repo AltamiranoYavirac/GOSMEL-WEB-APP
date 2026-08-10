@@ -38,13 +38,6 @@
 
 ---
 
-## Contexto del proyecto
-
-Academia de música pequeña en Ecuador. Plataforma web que combina landing público
-y sistema privado por roles. Fase 1: sin cursos online ni pagos. El proyecto está
-diseñado para escalar gradualmente hacia cursos online, pasarela de pagos y app móvil.
-
----
 
 ## Stack tecnológico
 
@@ -144,18 +137,6 @@ features/[nombre]/
 
 ---
 
-## Roles y permisos
-
-| Rol | Puede |
-|---|---|
-| `estudiante` | Ver sus materiales asignados, ver roadmap de su clase |
-| `maestro` | Crear cursos, asignar materiales, gestionar sus estudiantes |
-| `admin` | Todo lo anterior + gestión de maestros, usuarios, configuración |
-
-El rol se almacena en Supabase (tabla `profiles`, columna `role`).
-El middleware de Next.js lee el JWT de Supabase y redirige según rol.
-
----
 
 ## Convenciones de código
 

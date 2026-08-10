@@ -3,7 +3,9 @@
 import * as React from "react"
 import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
-import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
+import { Icon } from "@iconify/react"
+
+import { UI_ICONS } from "@/shared/config"
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
@@ -14,19 +16,19 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className="toaster group"
       icons={{
         success: (
-          <CircleCheckIcon className="size-4" />
+          <Icon icon={UI_ICONS.success} className="size-4" aria-hidden="true" />
         ),
         info: (
-          <InfoIcon className="size-4" />
+          <Icon icon={UI_ICONS.info} className="size-4" aria-hidden="true" />
         ),
         warning: (
-          <TriangleAlertIcon className="size-4" />
+          <Icon icon={UI_ICONS.warning} className="size-4" aria-hidden="true" />
         ),
         error: (
-          <OctagonXIcon className="size-4" />
+          <Icon icon={UI_ICONS.error} className="size-4" aria-hidden="true" />
         ),
         loading: (
-          <Loader2Icon className="size-4 animate-spin" />
+          <Icon icon={UI_ICONS.spinner} className="size-4 animate-spin" aria-hidden="true" />
         ),
       }}
       style={
