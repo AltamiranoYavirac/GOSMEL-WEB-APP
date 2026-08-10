@@ -23,7 +23,6 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-24">
           <Logo />
 
-          {/* Links desktop */}
           <div className="hidden md:flex items-center space-x-10">
             {NAV_ITEMS.map(({ href, label }) => (
               <Link
@@ -36,11 +35,9 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Acciones desktop */}
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
 
-            {/* 🆕 Botón login */}
             <Link
               href="/login"
               className="flex items-center gap-2 border border-cocoa/20 dark:border-neutral-700 text-cocoa/80 dark:text-cream/80 hover:text-ginger dark:hover:text-ginger hover:border-ginger px-5 py-2.5 font-semibold transition-all uppercase tracking-wider text-xs rounded-lg"
@@ -57,7 +54,6 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Hamburguesa mobile */}
           <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
             <button
@@ -75,7 +71,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Menú mobile */}
       {open && (
         <div className="md:hidden bg-cream dark:bg-neutral-900 border-t border-peach/30 dark:border-neutral-700/30 px-4 pb-6 pt-4 space-y-4">
           {NAV_ITEMS.map(({ href, label }) => (
@@ -89,7 +84,6 @@ export default function Navbar() {
             </Link>
           ))}
 
-          {/* 🆕 Botón login mobile */}
           <Link
             href="/login"
             onClick={() => setOpen(false)}

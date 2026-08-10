@@ -8,12 +8,7 @@ import Link from "next/link";
 import { loginSchema } from "../model/schemas";
 import type { ILoginFormValues } from "../model/login.types";
 import type { ILoginFormProps } from "./LoginForm.types";
-
-const SOCIAL_PROVIDERS = [
-  { id: "google", icon: "mdi:google", label: "Google" },
-  { id: "facebook", icon: "mdi:facebook", label: "Facebook" },
-  { id: "apple", icon: "mdi:apple", label: "Apple" },
-];
+import { SOCIAL_PROVIDERS } from "./Login.constants";
 
 export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -36,7 +31,6 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
   return (
     <div className="w-full max-w-md mx-auto bg-sand dark:bg-neutral-900/80 border border-cocoa/10 dark:border-neutral-800 rounded-2xl p-8 flex flex-col gap-6 backdrop-blur-sm">
 
-      {/* Header */}
       <div className="text-center flex flex-col gap-1">
         <h1 className="text-3xl font-black text-ginger uppercase tracking-wide">
           GOSMEL
@@ -46,10 +40,8 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
         </p>
       </div>
 
-      {/* Formulario */}
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
-        {/* Email */}
         <div className="flex flex-col gap-1">
           <label className="text-cocoa/50 dark:text-neutral-400 text-xs uppercase tracking-widest">
             Correo Electrónico
@@ -70,7 +62,6 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
           )}
         </div>
 
-        {/* Contraseña */}
         <div className="flex flex-col gap-1">
           <div className="flex items-center justify-between">
             <label className="text-cocoa/50 dark:text-neutral-400 text-xs uppercase tracking-widest">
@@ -108,7 +99,6 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
           )}
         </div>
 
-        {/* Botón submit */}
         <button
           type="submit"
           disabled={isSubmitting}
@@ -120,7 +110,6 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
 
       </form>
 
-      {/* Divisor */}
       <div className="flex items-center gap-4">
         <div className="flex-1 h-px bg-cocoa/10 dark:bg-neutral-800" />
         <span className="text-cocoa/40 dark:text-neutral-500 text-xs uppercase tracking-widest">
@@ -129,7 +118,6 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
         <div className="flex-1 h-px bg-cocoa/10 dark:bg-neutral-800" />
       </div>
 
-      {/* Botones sociales */}
       <div className="flex items-center justify-center gap-4">
         {SOCIAL_PROVIDERS.map(({ id, icon, label }) => (
           <button
@@ -143,7 +131,6 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
         ))}
       </div>
 
-      {/* Link a registro */}
       <p className="text-center text-cocoa/40 dark:text-neutral-500 text-xs">
         ¿No tienes una cuenta?{" "}
         <Link

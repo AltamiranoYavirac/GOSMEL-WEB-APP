@@ -12,6 +12,9 @@
 const CLOUDINARY_BASE =
   "https://res.cloudinary.com/dv9lm0fnm/image/upload";
 
+const CLOUDINARY_VIDEO_BASE =
+  "https://res.cloudinary.com/dv9lm0fnm/video/upload";
+
 export const AppImages = {
   HERO_COVER: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
 
@@ -20,4 +23,9 @@ export const AppImages = {
   ABOUT_INNOVATION: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
 } as const;
 
+export const AppVideos = {
+  ABOUT_INTRO: `${CLOUDINARY_VIDEO_BASE}/v1785810578/WhatsApp_Video_2026-06-08_at_21.12.29_ai0uyh.mp4`,
+} as const;
+
 export type AppImageKey = keyof typeof AppImages;
+export type AppVideoKey = keyof typeof AppVideos;

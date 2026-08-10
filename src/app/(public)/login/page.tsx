@@ -2,11 +2,6 @@ import { LoginForm } from "@/features/login";
 import { Navbar } from "@/widgets/Navbar";
 import { Footer } from "@/widgets/Footer";
 
-export const metadata = {
-  title: "Iniciar Sesión",
-  description: "Accede a tu estudio en GOSMEL Academia de Música.",
-};
-
 export default function LoginPage() {
   return (
     <>
