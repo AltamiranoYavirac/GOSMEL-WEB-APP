@@ -5,142 +5,171 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { toast } from "sonner";
+
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  SocialAuthButtons,
+  Spinner,
+} from "@/shared/ui";
+
 import { loginSchema } from "../model/schemas";
 import type { ILoginFormValues } from "../model/login.types";
 import type { ILoginFormProps } from "./LoginForm.types";
-import { SOCIAL_PROVIDERS } from "./Login.constants";
 
 export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<ILoginFormValues>({
+  const form = useForm<ILoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: ILoginFormValues) => {
-    console.log("📋 Datos del formulario:", data);
+  const {
+    reset,
+    formState: { isSubmitting },
+  } = form;
+
+  const onSubmit = async () => {
+    toast.success("Sesión iniciada", {
+      description: "Bienvenido de vuelta al Estudio GOSMEL.",
+    });
     reset();
     onSubmitSuccess?.();
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-sand dark:bg-neutral-900/80 border border-cocoa/10 dark:border-neutral-800 rounded-2xl p-8 flex flex-col gap-6 backdrop-blur-sm">
-
-      <div className="text-center flex flex-col gap-1">
-        <h1 className="text-3xl font-black text-ginger uppercase tracking-wide">
+    <Card className="w-full max-w-md mx-auto rounded-2xl bg-muted p-8 gap-6">
+      <CardHeader className="text-center gap-1">
+        <CardTitle className="text-3xl font-black text-primary uppercase tracking-wide">
           GOSMEL
-        </h1>
-        <p className="text-cocoa/50 dark:text-neutral-400 text-xs uppercase tracking-widest">
+        </CardTitle>
+        <CardDescription className="text-xs uppercase tracking-widest">
           Acceso al Estudio
-        </p>
-      </div>
+        </CardDescription>
+      </CardHeader>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-
-        <div className="flex flex-col gap-1">
-          <label className="text-cocoa/50 dark:text-neutral-400 text-xs uppercase tracking-widest">
-            Correo Electrónico
-          </label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-cocoa/40 dark:text-neutral-500">
-              <Icon icon="mdi:email-outline" width={18} height={18} />
-            </span>
-            <input
-              {...register("email")}
-              placeholder="tu@correo.com"
-              type="email"
-              className="w-full bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg pl-10 pr-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-muted-foreground text-xs uppercase tracking-widest">
+                    Correo Electrónico
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      size="lg"
+                      icon={
+                        <Icon icon="mdi:email-outline" width={18} height={18} aria-hidden="true" />
+                      }
+                      iconPosition="start"
+                      placeholder="tu@correo.com"
+                      type="email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          {errors.email && (
-            <span className="text-red-400 text-xs">{errors.email.message}</span>
-          )}
-        </div>
 
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center justify-between">
-            <label className="text-cocoa/50 dark:text-neutral-400 text-xs uppercase tracking-widest">
-              Contraseña
-            </label>
-            <span className="text-ginger text-xs uppercase tracking-widest font-semibold cursor-pointer hover:brightness-110 transition">
-              ¿Olvidaste?
-            </span>
-          </div>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-cocoa/40 dark:text-neutral-500">
-              <Icon icon="mdi:lock-outline" width={18} height={18} />
-            </span>
-            <input
-              {...register("password")}
-              placeholder="••••••••"
-              type={showPassword ? "text" : "password"}
-              className="w-full bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg pl-10 pr-12 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-600 text-sm focus:outline-none focus:border-ginger transition"
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center justify-between">
+                    <FormLabel className="text-muted-foreground text-xs uppercase tracking-widest">
+                      Contraseña
+                    </FormLabel>
+                    <span className="text-primary text-xs uppercase tracking-widest font-semibold cursor-pointer hover:brightness-110 transition">
+                      ¿Olvidaste?
+                    </span>
+                  </div>
+                  <div className="relative">
+                    <FormControl>
+                      <Input
+                        size="lg"
+                        icon={
+                          <Icon icon="mdi:lock-outline" width={18} height={18} aria-hidden="true" />
+                        }
+                        iconPosition="start"
+                        placeholder="••••••••"
+                        type={showPassword ? "text" : "password"}
+                        className="pr-12"
+                        {...field}
+                      />
+                    </FormControl>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
+                    >
+                      <Icon
+                        icon={showPassword ? "mdi:eye-off" : "mdi:eye"}
+                        width={18}
+                        height={18}
+                        aria-hidden="true"
+                      />
+                    </Button>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-cocoa/40 dark:text-neutral-500 hover:text-ginger transition"
+
+            <Button
+              type="submit"
+              size="2xl"
+              disabled={isSubmitting}
+              className="w-full gap-2 uppercase tracking-widest text-sm mt-2"
             >
-              <Icon
-                icon={showPassword ? "mdi:eye-off" : "mdi:eye"}
-                width={18}
-                height={18}
-              />
-            </button>
-          </div>
-          {errors.password && (
-            <span className="text-red-400 text-xs">{errors.password.message}</span>
-          )}
-        </div>
+              {isSubmitting ? (
+                <Spinner className="size-4" />
+              ) : (
+                <Icon icon="mdi:login" width={20} height={20} aria-hidden="true" />
+              )}
+              {isSubmitting ? "Entrando..." : "Entrar al Estudio"}
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full flex items-center justify-center gap-2 bg-ginger text-white dark:text-black font-bold uppercase tracking-widest text-sm px-8 py-4 rounded-lg hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-        >
-          <Icon icon="mdi:login" width={20} height={20} />
-          {isSubmitting ? "Entrando..." : "Entrar al Estudio"}
-        </button>
+      <SocialAuthButtons
+        dividerLabel="O continuar con"
+        ariaLabelPrefix="Continuar con"
+        className="px-4"
+      />
 
-      </form>
-
-      <div className="flex items-center gap-4">
-        <div className="flex-1 h-px bg-cocoa/10 dark:bg-neutral-800" />
-        <span className="text-cocoa/40 dark:text-neutral-500 text-xs uppercase tracking-widest">
-          O continuar con
-        </span>
-        <div className="flex-1 h-px bg-cocoa/10 dark:bg-neutral-800" />
-      </div>
-
-      <div className="flex items-center justify-center gap-4">
-        {SOCIAL_PROVIDERS.map(({ id, icon, label }) => (
-          <button
-            key={id}
-            type="button"
-            aria-label={`Continuar con ${label}`}
-            className="flex-1 h-12 rounded-xl bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 flex items-center justify-center text-cocoa/40 dark:text-neutral-400 hover:text-ginger dark:hover:text-ginger hover:border-ginger transition"
+      <CardContent>
+        <p className="text-center text-muted-foreground text-xs">
+          ¿No tienes una cuenta?{" "}
+          <Link
+            href="/register"
+            className="text-primary font-semibold uppercase tracking-widest hover:brightness-110 transition"
           >
-            <Icon icon={icon} width={22} height={22} />
-          </button>
-        ))}
-      </div>
-
-      <p className="text-center text-cocoa/40 dark:text-neutral-500 text-xs">
-        ¿No tienes una cuenta?{" "}
-        <Link
-          href="/register"
-          className="text-ginger font-semibold uppercase tracking-widest hover:brightness-110 transition"
-        >
-          Iniciar Registro
-        </Link>
-      </p>
-
-    </div>
+            Iniciar Registro
+          </Link>
+        </p>
+      </CardContent>
+    </Card>
   );
 }

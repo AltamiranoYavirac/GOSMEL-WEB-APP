@@ -1,4 +1,7 @@
 import Link from "next/link";
+
+import { Button } from "@/shared/ui";
+
 import type { IAboutCTAProps } from "./AboutCTA.types";
 
 export default function AboutCTA({
@@ -10,9 +13,9 @@ export default function AboutCTA({
   secondaryHref,
 }: IAboutCTAProps) {
   return (
-    <section className="w-full rounded-3xl bg-cocoa dark:bg-neutral-900 border border-cocoa/10 dark:border-neutral-800 px-8 py-16 flex flex-col items-center gap-6 text-center">
+    <section className="w-full rounded-3xl bg-neutral-900 px-8 py-16 flex flex-col items-center gap-6 text-center">
 
-      <h2 className="text-3xl md:text-4xl font-bold text-white max-w-lg leading-tight">
+      <h2 className="text-3xl md:text-4xl font-bold text-neutral-50 max-w-lg leading-tight">
         {title}
       </h2>
 
@@ -21,18 +24,17 @@ export default function AboutCTA({
       </p>
 
       <div className="flex flex-wrap items-center justify-center gap-4 mt-2">
-        <Link
-          href={primaryHref}
-          className="bg-ginger text-white font-bold uppercase tracking-widest text-sm px-8 py-4 rounded-lg hover:brightness-110 transition"
+        <Button asChild size="2xl" className="uppercase tracking-widest text-sm">
+          <Link href={primaryHref}>{primaryLabel}</Link>
+        </Button>
+        <Button
+          asChild
+          size="2xl"
+          variant="outline"
+          className="border-neutral-50/40 text-neutral-50 uppercase tracking-widest text-sm hover:bg-neutral-50/10 hover:text-neutral-50"
         >
-          {primaryLabel}
-        </Link>
-        <Link
-          href={secondaryHref}
-          className="border border-white/40 text-white font-bold uppercase tracking-widest text-sm px-8 py-4 rounded-lg hover:bg-white/10 transition"
-        >
-          {secondaryLabel}
-        </Link>
+          <Link href={secondaryHref}>{secondaryLabel}</Link>
+        </Button>
       </div>
 
     </section>

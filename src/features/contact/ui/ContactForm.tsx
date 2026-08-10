@@ -3,114 +3,143 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Icon } from "@iconify/react";
-import { contactSchema } from "../model/schemas";
-import type { IContactFormValues, TInstrumentOption } from "../model/contact.types";
-import type { IContactFormProps } from "./ContactForm.types";
+import { toast } from "sonner";
 
-const INSTRUMENTS: TInstrumentOption[] = [
-  { label: "Guitarra", value: "guitarra" },
-  { label: "Piano", value: "piano" },
-  { label: "Violín", value: "violin" },
-  { label: "Batería", value: "bateria" },
-  { label: "Canto", value: "canto" },
-  { label: "Bajo", value: "bajo" },
-  { label: "Flauta", value: "flauta" },
-];
+import {
+  Button,
+  Card,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Spinner,
+  Textarea,
+} from "@/shared/ui";
+
+import { contactSchema } from "../model/schemas";
+import type { IContactFormValues } from "../model/contact.types";
+import type { IContactFormProps } from "./ContactForm.types";
+import { INSTRUMENTS } from "./ContactForm.constants";
 
 export default function ContactForm({ onSubmitSuccess }: IContactFormProps) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<IContactFormValues>({
+  const form = useForm<IContactFormValues>({
     resolver: zodResolver(contactSchema),
   });
 
-  const onSubmit = async (data: IContactFormValues) => {
-    console.log(data);
+  const {
+    reset,
+    formState: { isSubmitting },
+  } = form;
+
+  const onSubmit = async () => {
+    toast.success("Mensaje enviado", {
+      description: "Gracias por contactarnos. Te responderemos pronto.",
+    });
     reset();
     onSubmitSuccess?.();
   };
 
   return (
-    <div className="bg-cream/60 dark:bg-neutral-900 border border-cocoa/10 dark:border-neutral-800 rounded-2xl p-8 h-full">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1">
-            <label className="text-ginger text-sm font-medium">
-              Nombre Completo
-            </label>
-            <input
-              {...register("fullName")}
-              placeholder="Ej. Ana García"
-              className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-500 text-sm focus:outline-none focus:border-ginger transition"
+    <Card className="h-full rounded-2xl p-8">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="fullName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-primary text-sm font-medium">Nombre Completo</FormLabel>
+                  <FormControl>
+                    <Input size="lg" placeholder="Ej. Ana García" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.fullName && (
-              <span className="text-red-400 text-xs">{errors.fullName.message}</span>
-            )}
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-primary text-sm font-medium">Correo Electrónico</FormLabel>
+                  <FormControl>
+                    <Input size="lg" type="email" placeholder="ana@ejemplo.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="text-ginger text-sm font-medium">
-              Correo Electrónico
-            </label>
-            <input
-              {...register("email")}
-              placeholder="ana@ejemplo.com"
-              type="email"
-              className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-500 text-sm focus:outline-none focus:border-ginger transition"
-            />
-            {errors.email && (
-              <span className="text-red-400 text-xs">{errors.email.message}</span>
+          <FormField
+            control={form.control}
+            name="instrument"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-primary text-sm font-medium">Instrumento de Interés</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger size="lg" className="w-full">
+                      <SelectValue placeholder="Selecciona un instrumento" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {INSTRUMENTS.map(({ label, value }) => (
+                      <SelectItem key={value} value={value}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
             )}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-ginger text-sm font-medium">
-            Instrumento de Interés
-          </label>
-          <select
-            {...register("instrument")}
-            className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa/70 dark:text-neutral-300 text-sm focus:outline-none focus:border-ginger transition appearance-none cursor-pointer"
-          >
-            <option value="">Selecciona un instrumento</option>
-            {INSTRUMENTS.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </select>
-          {errors.instrument && (
-            <span className="text-red-400 text-xs">{errors.instrument.message}</span>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label className="text-ginger text-sm font-medium">Mensaje</label>
-          <textarea
-            {...register("message")}
-            placeholder="Cuéntanos sobre tus metas musicales..."
-            rows={6}
-            className="bg-white/80 dark:bg-neutral-800 border border-cocoa/20 dark:border-neutral-700 rounded-lg px-4 py-3 text-cocoa dark:text-white placeholder:text-cocoa/30 dark:placeholder:text-neutral-500 text-sm focus:outline-none focus:border-ginger transition resize-none"
           />
-          {errors.message && (
-            <span className="text-red-400 text-xs">{errors.message.message}</span>
-          )}
-        </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="self-start flex items-center gap-2 bg-ginger text-white dark:text-black font-semibold uppercase tracking-widest text-sm px-8 py-4 rounded-lg hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
-          <Icon icon="mdi:send" width={16} height={16} />
-        </button>
+          <FormField
+            control={form.control}
+            name="message"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-primary text-sm font-medium">Mensaje</FormLabel>
+                <FormControl>
+                  <Textarea
+                    className="px-4 py-3"
+                    placeholder="Cuéntanos sobre tus metas musicales..."
+                    rows={6}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      </form>
-    </div>
+          <Button
+            type="submit"
+            size="2xl"
+            disabled={isSubmitting}
+            className="self-start gap-2 uppercase tracking-widest text-sm"
+          >
+            {isSubmitting ? (
+              <Spinner className="size-4" />
+            ) : (
+              <Icon icon="mdi:send" width={16} height={16} aria-hidden="true" />
+            )}
+            {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
+          </Button>
+        </form>
+      </Form>
+    </Card>
   );
 }

@@ -15,6 +15,9 @@ const markerVariants = cva(
         border: "border-b border-border pb-2",
       },
     },
+    defaultVariants: {
+      variant: "default",
+    },
   }
 )
 
