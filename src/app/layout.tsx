@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Nunito_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { Toaster } from "@/shared/ui";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -38,6 +39,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-ginger selection:text-cream antialiased">
         <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );

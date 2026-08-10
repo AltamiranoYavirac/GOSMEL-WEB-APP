@@ -12,15 +12,15 @@ export default function ContactPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen bg-[#f8f6ef] dark:bg-neutral-950 px-4 py-16 pt-28">
+      <main className="min-h-screen bg-background px-4 py-16 pt-28">
 
         <section className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-cocoa dark:text-ginger mb-4">
+          <h1 className="text-4xl font-bold text-foreground mb-4">
             Contacto
           </h1>
-          <p className="text-cocoa/70 dark:text-neutral-300 max-w-xl mx-auto text-sm leading-relaxed">
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm leading-relaxed">
             Estamos aquí para acompañarte en tu viaje musical. Escríbenos para solicitar{" "}
-            <span className="text-ginger font-medium">más información</span> o resolver
+            <span className="text-primary font-medium">más información</span> o resolver
             cualquier duda sobre nuestros programas.
           </p>
         </section>

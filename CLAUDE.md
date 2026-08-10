@@ -22,6 +22,7 @@
 - NO COMENTARIES!
 - Responsabilty Unique!, Don`t allow 2 components in unique File
 - Large constants go in their own file, following the project architecture (`features/[nombre]/model/` or `shared/config/` for global ones). Never inline large arrays/maps in components or pages.
+- use other compnents when is necessary, if not, create a new one.
 
 ### Review & Debugging
 - State the bug. Show the fix. Stop.
@@ -37,13 +38,6 @@
 
 ---
 
-## Contexto del proyecto
-
-Academia de música pequeña en Ecuador. Plataforma web que combina landing público
-y sistema privado por roles. Fase 1: sin cursos online ni pagos. El proyecto está
-diseñado para escalar gradualmente hacia cursos online, pasarela de pagos y app móvil.
-
----
 
 ## Stack tecnológico
 
@@ -124,10 +118,11 @@ src/
 │   └── CourseMaterialList/
 │
 └── shared/                       # Reutilizable sin lógica de negocio
-    ├── ui/                       # shadcn components customizados
-    ├── api/                      # Cliente Supabase singleton, fetch helpers
-    ├── lib/                      # utils, formatters, cn()
-    └── types/                    # Tipos globales compartidos
+    ├── form/                      # Sistema de formularios (useAppForm, Form, *Field)
+    ├── ui/                        # shadcn components customizados
+    ├── api/                       # Cliente Supabase singleton, fetch helpers
+    ├── lib/                       # utils, formatters, cn(), image-compression
+    └── types/                     # Tipos globales compartidos
 ```
 
 ### Estructura interna de cada feature
@@ -143,18 +138,6 @@ features/[nombre]/
 
 ---
 
-## Roles y permisos
-
-| Rol | Puede |
-|---|---|
-| `estudiante` | Ver sus materiales asignados, ver roadmap de su clase |
-| `maestro` | Crear cursos, asignar materiales, gestionar sus estudiantes |
-| `admin` | Todo lo anterior + gestión de maestros, usuarios, configuración |
-
-El rol se almacena en Supabase (tabla `profiles`, columna `role`).
-El middleware de Next.js lee el JWT de Supabase y redirige según rol.
-
----
 
 ## Convenciones de código
 
@@ -182,8 +165,8 @@ features/courses/ui/
 └── CourseCard.types.ts     # ICourseCardProps, TCourseCardVariant
 
 features/courses/model/
-├── schemas.ts              # schemas Zod
-└── course.types.ts         # ICourse, TCourseStatus, enums
+├── CourseForm.config.ts     # schema Zod + tipo + getDefaults() + mappers (formularios)
+└── course.types.ts          # ICourse, TCourseStatus, enums (dominio)
 ```
 
 Esto aplica también en `entities/`, `widgets/` y `shared/`.
@@ -201,15 +184,82 @@ Esto aplica también en `entities/`, `widgets/` y `shared/`.
   y `@custom-variant`. PostCSS usa `@tailwindcss/postcss`.
 - shadcn/ui está instalado con style `radix-nova` (ver `components.json`); sus componentes
   customizados viven en `shared/ui` (alias `@/shared/ui`), `cn()` en `@/shared/lib/utils`.
-- **`tv()` (tailwind-variants) aún no está instalado.** Cuando se instale: usarlo para todo
-  componente con variantes visuales (no `cn()` condicional), con las variantes en
-  `[Componente].variants.ts` junto a su `.types.ts`. Mientras tanto, `cn()` + clases directas.
-- `cn()` solo para overrides puntuales no-variante (márgenes externos, layout).
+- **`tv()` (tailwind-variants) instalado y en uso** — usarlo para todo componente con
+  variantes visuales (no `cn()` condicional), con las variantes en `[Componente].variants.ts`
+  junto a su `.types.ts`. `cn()` solo para overrides puntuales no-variante (márgenes externos,
+  layout). Los primitivos heredados de shadcn (`input`, `button`, `select`) usan `cva()` — no
+  migrarlos salvo que se toquen por otra razón.
 
-### Formularios — React Hook Form + Zod
-- `useForm` con `zodResolver`. Schema en `features/[nombre]/model/schemas.ts`.
-- Nunca `useState` para campos — RHF lo gestiona.
-- shadcn/ui via `<FormField>` + `<Controller>`. Mismo schema en server-side.
+### Paleta de colores — tokens semánticos OBLIGATORIOS
+
+**Escalas (definidas en `@theme inline`, `src/app/globals.css`):**
+- `primary` — Naranja Jengibre (#E19246 @ 500), escala 50→950
+- `secondary` — Mantequilla Pastel (#F6CF86 @ 500)
+- `accent` — Melocotón Suave (#EBC29D @ 300)
+- `warm` — Crema→Cocoa cálido (50→950). **Nota:** `warm` reemplazó a `neutral` en esta codebase; `neutral` no existe.
+
+**Semánticos shadcn (mapeados a `--color-*` en `@theme inline`):**
+`background, foreground, card, popover, primary, secondary, muted, accent, destructive, border, input, ring, chart-1..5, sidebar-*`
+
+**Semánticos adicionales (propios del proyecto):**
+| Token | Uso | Light | Dark |
+|---|---|---|---|
+| `surface-dark / surface-dark-foreground / surface-dark-muted / surface-dark-border` | Secciones oscuras (Footer, AboutCTA) | warm-900/warm-50/warm-300/warm-700 | warm-950/warm-50/warm-400/warm-600 |
+| `scrim` | Overlay transparente (modales, sheets) | warm-900/10% | black/30% |
+| `scrim-strong` | Overlay intenso (scrims sobre imágenes) | warm-900/60% | black/80% |
+| `accent-muted` | Fondo/borde muted que se adapta al tema | warm-100 | warm-800 |
+| `primary-tint / primary-tint-strong` | Versión clara del primary (bubble tinted) | derivado primary-500 | derivado primary-dark |
+
+**Alias conservados:** solo `cream` (=warm-50) y `ginger` (=primary-500), exclusivo para `selection:` en `layout.tsx`. El resto (`sand, peach, butter, burnt, copper, cocoa, taupe`) están eliminados.
+
+**Dark mode — diseño intencional:** `--primary` en `.dark` cambia a `secondary-500` (butter) para mejor contraste sobre cocoa. No corregir; es decisión de diseño documentada.
+
+**`chart-1..5`** usan `var(--color-primary-500)` etc (no duplican OKLCH). Si la paleta cambia, charts se actualizan automáticamente.
+
+**CONVENCIÓN ESTRICTA — nunca usar en componentes:**
+- `bg-black`, `text-white`, `bg-neutral-*`, `text-neutral-*` (la escala se llama `warm`)
+- `oklch(...)` hardcoded en className (ni con `bg-[oklch(...)]`)
+- Colores Tailwind default (red, blue, slate, zinc, etc.)
+- Siempre usar el token semántico correspondiente: `bg-background`, `text-primary`, `border-accent-muted/40`, `bg-scrim`, etc.
+
+### Formularios — sistema RHF + Zod en `src/shared/form/`
+
+Capa única de formularios en `src/shared/form/` (barrel `@/shared/form`). Todo formulario del
+proyecto se construye con ella. **El `form.tsx` estándar de shadcn fue eliminado — no
+reintroducir `<FormField>`/`<FormItem>`/`<FormControl>` clásicos.**
+
+Componentes disponibles:
+
+- `useAppForm` — wrapper de `useForm` + `zodResolver`. Modo `onTouched`, revalida `onChange`.
+- `Form` — `FormProvider` + `<form noValidate onSubmit>`. Acepta `id` para submit externo.
+- `useConnectedField` — hook interno tipado contra el schema (`FieldPath<TFieldValues>`).
+  Devuelve `fieldName`, `fieldRef`, `fieldValue`, `fieldOnChange`, `fieldOnBlur`, `error`,
+  `touched`. NUNCA devolver el objeto `field` entero (rompe la regla `react-hooks/refs` del lint).
+- 11 campos conectados por `name` (string): `TextField`, `TextareaField`, `PasswordField`,
+  `NumberField`, `SelectField`, `DateField`, `TimeField`, `CheckboxField`, `SwitchField`,
+  `FileField`, `PhotoField`. `I*FieldProps` en `.types.ts` junto a cada campo.
+
+Reglas:
+
+- **Schema + tipo + defaults + mappers** en `features/[nombre]/model/[Nombre]Form.config.ts`
+  (un solo archivo: `xFormSchema`, `IXFormValues`, `getXFormDefaults()`, y cuando edita:
+  `mapXToFormData()`, `buildXUpdatePayload()`). NO usar `schemas.ts` para formularios.
+- Campos se consumen **solo por `name`** — nunca pasar `control`.
+- `touched = fieldState.isTouched || formState.isSubmitted` — errores no se pintan hasta
+  tocar el campo o intentar submit.
+- Submit puede vivir **fuera** del `<form>` (footers de modal) con atributo HTML
+  `form="<id>"` apuntando al `id` del `<Form>`.
+- Forms de edición: `values:` (no `defaultValues:`) + `resetOptions: { keepDirtyValues: false,
+  keepErrors: false }` + `key={entityId}` en el componente para remount limpio por entidad.
+- Loading SIEMPRE de `mutation.isPending` (TanStack Query), nunca `formState.isSubmitting`.
+- Error de servidor: prop `externalError` en el campo + `onValueChange` para limpiarlo.
+  No usar `form.setError()`.
+- Primitivos extra en `shared/ui`: `FormField` (presentacional label/hint/error),
+  `DatePicker` (contrato `string 'yyyy-MM-dd'`, no `Date`), `TimeInput`, `FileUpload`
+  (drag & drop), `image-compression.ts` en `shared/lib/utils/` para `PhotoField`.
+- Iconos `ph:*` via `@iconify/react`. Tamaño `lg` por defecto en inputs de campos.
+- Valores de campos de tipo primitivo se castean al usarlos (`(fieldValue ?? "") as string`)
+  porque `useConnectedField` es genérico sobre `FieldPath<TFieldValues>`.
 
 ### Peticiones asíncronas — TanStack Query v5
 - **Todo fetch cliente pasa por React Query.** No `useEffect` + `fetch` manual.
