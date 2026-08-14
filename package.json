@@ -4,8 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:prod": "dotenvx run -f .env.production.local -- next dev",
     "build": "next build",
+    "build:dev": "dotenvx run -f .env.development.local -- next build",
     "start": "next start",
+    "start:dev": "dotenvx run -f .env.development.local -- next start",
     "lint": "eslint"
   },
   "dependencies": {
@@ -13,6 +16,8 @@
     "@hookform/resolvers": "^5.4.0",
     "@iconify/react": "^6.0.2",
     "@shadcn/react": "^0.3.0",
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.112.3",
     "@tanstack/react-query": "^5.100.14",
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.10.0",
@@ -36,6 +41,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^2.21.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
