@@ -3,7 +3,7 @@
 import { Icon } from "@iconify/react"
 import { toast } from "sonner"
 
-import { Button, Card, Spinner } from "@/shared/ui"
+import { Button, Card, IconTile, Spinner } from "@/shared/ui"
 import { Form, SelectField, TextareaField, TextField, useAppForm } from "@/shared/form"
 import {
   contactFormSchema,
@@ -33,7 +33,22 @@ export default function ContactForm({ onSubmitSuccess }: IContactFormProps) {
   }
 
   return (
-    <Card className="h-full rounded-2xl p-8">
+    <Card className="h-full rounded-2xl p-8 gap-8">
+      <div className="flex items-center gap-4">
+        <IconTile icon="ph:paper-plane-tilt" size="md" iconSize={26} />
+        <div>
+          <span className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
+            Formulario
+          </span>
+          <h2 className="mt-1 font-heading text-2xl font-bold text-foreground">
+            Cuéntanos tu idea
+          </h2>
+          <p className="text-muted-foreground text-sm mt-1">
+            Completa el formulario y te responderemos en menos de 24 horas.
+          </p>
+        </div>
+      </div>
+
       <Form form={form} onSubmit={onSubmit} className="flex flex-col gap-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <TextField
@@ -67,7 +82,7 @@ export default function ContactForm({ onSubmitSuccess }: IContactFormProps) {
           type="submit"
           size="2xl"
           disabled={isSubmitting}
-          className="self-start gap-2 text-sm uppercase tracking-widest"
+          className="w-full gap-2 text-sm uppercase tracking-widest"
         >
           {isSubmitting ? (
             <Spinner className="size-4" />
