@@ -30,6 +30,11 @@ export const AppImages = {
 
   ABOUT_VIDEO_POSTER: `${CLOUDINARY_VIDEO_BASE}/so_2/v1785810578/WhatsApp_Video_2026-06-08_at_21.12.29_ai0uyh.jpg`,
   ABOUT_VIDEO_PORTRAIT_POSTER: `${CLOUDINARY_VIDEO_BASE}/so_2/v1785810504/WhatsApp_Video_2026-06-08_at_21.12.29_1_ks3fsd.jpg`,
+
+  DASHBOARD_COURSE_1: `${CLOUDINARY_BASE}/v1786821401/Piano3_ebisvx.png`,
+  DASHBOARD_COURSE_2: `${CLOUDINARY_BASE}/v1786821406/Guitarra_4_tr6yvj.png`,
+  DASHBOARD_RECOMMENDED_1: `${CLOUDINARY_BASE}/v1786821657/Solfeo_fbbxsf.png`,
+  DASHBOARD_RECOMMENDED_2: `${CLOUDINARY_BASE}/v1786821546/Guitarras_k0vwdk.png`,
 } as const;
 
 export const AppVideos = {
