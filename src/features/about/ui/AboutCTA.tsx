@@ -19,7 +19,7 @@ export default function AboutCTA({
         {title}
       </h2>
 
-      <p className="text-surface-dark-muted text-sm max-w-md leading-relaxed">
+      <p className="text-surface-dark-muted text-base max-w-md leading-relaxed">
         {description}
       </p>
 
