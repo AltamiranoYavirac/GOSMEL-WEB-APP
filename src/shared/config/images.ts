@@ -18,9 +18,9 @@ const CLOUDINARY_VIDEO_BASE =
 export const AppImages = {
   HERO_COVER: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
 
-  ABOUT_PASSION: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
-  ABOUT_DISCIPLINE: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
-  ABOUT_INNOVATION: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
+  ABOUT_PASSION: `${CLOUDINARY_BASE}/q_auto,f_auto,w_600/v1786821231/Canto_3_h0dlse.png`,
+  ABOUT_DISCIPLINE: `${CLOUDINARY_BASE}/q_auto,f_auto,w_600/v1786821231/Saludo_c6jxdq.png`,
+  ABOUT_INNOVATION: `${CLOUDINARY_BASE}/q_auto,f_auto,w_600/v1786821231/Violin_Guitarra_2_qfp5j8.png`,
 
   WHY_GUITAR: `${CLOUDINARY_BASE}/v1785808073/Guitarra3_ddqqt8.png`,
   WHY_PIANO: `${CLOUDINARY_BASE}/a_90/v1785808073/Gosmel3_o0fase.png`,
