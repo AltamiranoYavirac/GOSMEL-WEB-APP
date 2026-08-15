@@ -49,7 +49,7 @@ export default function HeroSection() {
                 variant="outline"
                 className="gap-2 uppercase tracking-widest text-xs font-semibold border-primary/50 text-primary hover:bg-primary/5"
               >
-                <Link href="#cursos">Ver Cursos</Link>
+                <Link href="/courses">Ver Cursos</Link>
               </Button>
             </div>
           </div>
