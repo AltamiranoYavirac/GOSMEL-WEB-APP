@@ -1,11 +1,13 @@
 "use client"
 
+import { useState } from "react"
 import { Icon } from "@iconify/react"
 import Link from "next/link"
 import { toast } from "sonner"
 
 import { AuthCard, Button, SocialAuthButtons, Spinner } from "@/shared/ui"
 import { CheckboxField, Form, PasswordField, TextField, useAppForm } from "@/shared/form"
+import { useLogin } from "../hooks/useLogin"
 import { getLoginFormDefaults, loginFormSchema, type ILoginFormValues } from "../model/loginForm.config"
 import type { ILoginFormProps } from "./LoginForm.types"
 
@@ -16,22 +18,21 @@ const handleForgotPassword = () => {
 }
 
 export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
+  const [serverError, setServerError] = useState<string>()
   const form = useAppForm<ILoginFormValues>({
     schema: loginFormSchema,
     defaultValues: getLoginFormDefaults(),
   })
+  const login = useLogin()
 
-  const {
-    reset,
-    formState: { isSubmitting },
-  } = form
-
-  const onSubmit = async () => {
-    toast.success("Sesión iniciada", {
-      description: "Bienvenido de vuelta al Estudio GOSMEL.",
-    })
-    reset()
-    onSubmitSuccess?.()
+  const onSubmit = async (values: ILoginFormValues) => {
+    setServerError(undefined)
+    try {
+      await login.mutateAsync(values)
+      onSubmitSuccess?.()
+    } catch (error) {
+      setServerError(error instanceof Error ? error.message : "No pudimos iniciar sesión. Intenta de nuevo.")
+    }
   }
 
   return (
@@ -66,6 +67,8 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
           autoComplete="current-password"
           placeholder="••••••••"
           startIcon={<Icon icon="ph:lock-key" className="size-[18px]" aria-hidden="true" />}
+          externalError={serverError}
+          onValueChange={() => setServerError(undefined)}
         />
 
         <div className="-mt-1 flex items-center justify-between">
@@ -83,15 +86,15 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
         <Button
           type="submit"
           size="2xl"
-          disabled={isSubmitting}
+          disabled={login.isPending}
           className="mt-1 w-full gap-2 text-sm uppercase tracking-widest"
         >
-          {isSubmitting ? (
+          {login.isPending ? (
             <Spinner className="size-4" />
           ) : (
             <Icon icon="ph:sign-in" className="size-5" aria-hidden="true" />
           )}
-          {isSubmitting ? "Entrando..." : "Entrar al Estudio"}
+          {login.isPending ? "Entrando..." : "Entrar al Estudio"}
         </Button>
       </Form>
 

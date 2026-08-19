@@ -59,7 +59,11 @@ export function PasswordField<TFieldValues extends Record<string, unknown> = Rec
           onBlur={fieldOnBlur}
           aria-invalid={showError || undefined}
           size={size}
-          className={cn(startIcon ? "pl-10" : "pl-4", "relative z-0 pr-10", inputClassName)}
+          className={cn(
+            startIcon ? "pl-10" : "pl-4",
+            "relative z-0 pr-10 [&::-ms-clear]:hidden [&::-ms-reveal]:hidden",
+            inputClassName,
+          )}
         />
         {startIcon && (
           <span className="pointer-events-none absolute left-3.5 top-1/2 z-10 -translate-y-1/2 text-muted-foreground">
