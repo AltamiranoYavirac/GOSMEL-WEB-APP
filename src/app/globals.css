@@ -233,6 +233,15 @@
   to { background-position: 200% center; }
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
 .text-brand-gradient {
   background: linear-gradient(to right, var(--color-primary-500), var(--color-secondary-500), var(--color-primary-500));
   -webkit-background-clip: text;
@@ -253,4 +262,22 @@
 
 .dark .bg-card-gradient {
   background: linear-gradient(135deg, color-mix(in oklch, var(--color-warm-700) 60%, transparent) 0%, var(--color-warm-800) 100%);
+}
+
+.bg-staff-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--color-secondary-300) 22%, transparent) 0,
+    color-mix(in oklch, var(--color-secondary-300) 22%, transparent) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+.bg-auth-canvas {
+  background: radial-gradient(circle at 50% 0%, var(--color-primary-tint) 0%, var(--color-background) 60%);
+}
+
+.dark .bg-auth-canvas {
+  background: radial-gradient(circle at 50% 0%, color-mix(in oklch, var(--color-primary-tint) 45%, var(--color-background)) 0%, var(--color-background) 60%);
 }

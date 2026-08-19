@@ -1,5 +1,7 @@
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./accordion";
 export { Alert, AlertTitle, AlertDescription, AlertAction } from "./alert";
+export { default as AuthCard } from "./AuthCard";
+export type { IAuthCardProps } from "./AuthCard.types";
 export {
   AlertDialog,
   AlertDialogAction,

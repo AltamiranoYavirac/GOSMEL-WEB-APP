@@ -1,4 +1,6 @@
 import { RegisterForm } from "@/features/register";
+import { AuthSidePanel } from "@/widgets/AuthSidePanel";
+import { AppImages } from "@/shared/config";
 
 export const metadata = {
   title: "Registro",
@@ -7,7 +9,8 @@ export const metadata = {
 
 export default function RegisterPage() {
   return (
-    <div className="flex-1 px-4 pt-28 pb-16 flex items-center justify-center">
+    <div className="grid flex-1 lg:grid-cols-2">
+      <AuthSidePanel image={AppImages.WHY_PIANO} quote="La música comienza donde las palabras terminan" />
       <RegisterForm />
     </div>
   );
