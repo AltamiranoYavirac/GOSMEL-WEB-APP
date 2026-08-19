@@ -4,7 +4,7 @@ import type { IAboutValuesProps } from "./AboutValues.types";
 
 export default function AboutValues({ values }: IAboutValuesProps) {
   return (
-    <section className="w-full max-w-4xl mx-auto flex flex-col items-center gap-10">
+    <section className="w-full max-w-5xl mx-auto flex flex-col items-center gap-10">
 
       <SectionHeader
         eyebrow="Valores Fundamentales"

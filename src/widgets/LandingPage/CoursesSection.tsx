@@ -1,15 +1,19 @@
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 
-import { Button, Card, IconTile, SectionHeader } from "@/shared/ui";
+import { Button, Card, SectionHeader } from "@/shared/ui";
 
-import { COURSES } from "./CoursesSection.constants";
+import { COURSES } from "@/features/courses";
+
+const FEATURED_COURSES = COURSES.filter(({ title }) =>
+  ["Piano", "Violín", "Guitarra", "Solfeo"].includes(title)
+);
 
 export default function CoursesSection() {
   return (
-    <section className="py-32 bg-muted relative" id="cursos">
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-32 bg-muted" id="cursos">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
           eyebrow="Educación de Calidad"
           title="Nuestros Cursos Destacados"
@@ -19,38 +23,48 @@ export default function CoursesSection() {
           className="mb-20"
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {COURSES.map(({ icon, title, description }) => (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {FEATURED_COURSES.map(({ icon, title, category, description }, index) => (
             <Link
               key={title}
               href="/courses"
-              className="group relative rounded-2xl hover:-translate-y-2 transition-all duration-500 h-full"
+              className="group block h-full"
             >
-              <div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl rounded-2xl" />
-              <Card className="relative h-full p-6 border border-accent-muted/40 group-hover:border-primary/50 transition-colors duration-300 overflow-hidden rounded-2xl">
-                <div className="absolute top-0 right-0 w-20 h-20 bg-primary/8 rounded-bl-[4rem] transition-all duration-500 group-hover:bg-primary/15" />
-                <IconTile
-                  icon={icon}
-                  size="md"
-                  iconSize={28}
-                  iconClassName="text-primary group-hover:text-primary-foreground transition-colors"
-                  className="mb-6 group-hover:bg-primary transition-all duration-300 shadow-inner"
-                />
-                <h4 className="relative z-10 text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
-                  {title}
-                </h4>
-                <p className="relative z-10 text-muted-foreground text-sm mb-8 leading-relaxed flex-grow font-light border-b border-border pb-4">
-                  {description}
-                </p>
-                <div className="relative z-10 inline-flex items-center text-primary font-bold text-xs uppercase tracking-wider group-hover:translate-x-1 transition-transform mt-auto">
-                  Ver programa
-                  <Icon
-                    icon="ph:arrow-right"
-                    width={14}
-                    height={14}
-                    className="ml-1"
-                    aria-hidden="true"
-                  />
+              <Card className="relative flex h-full flex-col overflow-hidden rounded-3xl border-border bg-card p-0 transition-all duration-500 hover:-translate-y-2 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/[0.07]">
+                <div className="flex flex-1 flex-col p-6">
+                  <div className="mb-6 flex items-start justify-between">
+                    <span className="inline-flex items-center rounded-full border border-border/60 bg-muted px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                      {category}
+                    </span>
+                    <span className="font-mono text-xs text-muted-foreground/60">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                  </div>
+
+                  <div className="mb-5 inline-flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/10 transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:ring-primary/30 group-hover:shadow-lg group-hover:shadow-primary/20">
+                    <Icon icon={icon} className="size-6" aria-hidden="true" />
+                  </div>
+
+                  <h4 className="mb-3 font-heading text-xl font-bold text-card-foreground">
+                    {title}
+                  </h4>
+
+                  <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                    {description}
+                  </p>
+                </div>
+
+                <div className="flex items-center border-t border-border/60 bg-muted/40 px-6 py-4">
+                  <span className="inline-flex items-center text-xs font-bold uppercase tracking-wider text-primary transition-transform duration-300 group-hover:translate-x-1">
+                    Ver programa
+                    <Icon
+                      icon="ph:arrow-right"
+                      width={14}
+                      height={14}
+                      className="ml-1"
+                      aria-hidden="true"
+                    />
+                  </span>
                 </div>
               </Card>
             </Link>
@@ -62,7 +76,7 @@ export default function CoursesSection() {
             asChild
             size="2xl"
             variant="outline"
-            className="uppercase tracking-widest text-xs font-bold border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+            className="border-primary text-xs font-bold uppercase tracking-widest text-primary hover:bg-primary hover:text-primary-foreground"
           >
             <Link href="/courses">
               Ver todos los cursos
