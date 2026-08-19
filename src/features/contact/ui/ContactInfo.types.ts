@@ -3,6 +3,6 @@ export interface IContactInfoProps {
   addressDetail: string;
   phone: string;
   emails: string[];
-  mapImageUrl: string;
-  mapsUrl: string;
+  lat: number;
+  lng: number;
 }

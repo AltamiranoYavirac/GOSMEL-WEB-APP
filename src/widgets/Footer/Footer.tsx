@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 
 import SocialLink from "./SocialLink";
-import { ACADEMIA_LINKS, COURSE_LINKS, SOCIAL_LINKS } from "./Footer.constants";
+import { ACADEMIA_LINKS, COURSE_LINKS } from "./Footer.constants";
+import { SOCIAL_LINKS } from "@/shared/config/social";
 import { getCurrentYear } from "@/shared/lib";
 
 export default function Footer() {
@@ -64,9 +65,11 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <Icon icon="mdi:map-marker" className="w-[18px] h-[18px] text-primary shrink-0 mt-0.5" aria-hidden="true" />
                 <span>
-                  Humberto albornoz e
+                  Av. América E5-30 e
                   <br />
-                  Ignacio de Quezada
+                  Av. Pérez Guerrero
+                  <br />
+                  Quito - Ecuador
                 </span>
               </li>
               <li className="flex items-center gap-3">
