@@ -10,7 +10,7 @@ import animationData from "./construccion.json";
 
 export default function ComingSoon() {
   return (
-    <main className="min-h-screen bg-background flex flex-col items-center justify-center px-4 text-center">
+    <div className="flex-1 min-h-screen flex flex-col items-center justify-center px-4 text-center">
       <div className="w-full max-w-lg">
         <Lottie
           animationData={animationData}
@@ -38,6 +38,6 @@ export default function ComingSoon() {
           Volver al inicio
         </Link>
       </Button>
-    </main>
+    </div>
   );
 }
