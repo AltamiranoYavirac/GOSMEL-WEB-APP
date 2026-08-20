@@ -9,6 +9,9 @@ export const registerFormSchema = z.object({
     "Ingresa un número de celular válido"
   ),
   password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+  acceptTerms: z.boolean().refine((value) => value, {
+    message: "Debes aceptar los términos y condiciones",
+  }),
 })
 
 export type IRegisterFormValues = z.infer<typeof registerFormSchema>
@@ -20,5 +23,6 @@ export function getRegisterFormDefaults(): IRegisterFormValues {
     email: "",
     phone: "",
     password: "",
+    acceptTerms: false,
   }
 }

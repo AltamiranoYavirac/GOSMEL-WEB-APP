@@ -20,6 +20,8 @@
   --color-sidebar-primary:       var(--sidebar-primary);
   --color-sidebar-foreground:    var(--sidebar-foreground);
   --color-sidebar:               var(--sidebar);
+  --color-chart-7:               var(--chart-7);
+  --color-chart-6:               var(--chart-6);
   --color-chart-5:               var(--chart-5);
   --color-chart-4:               var(--chart-4);
   --color-chart-3:               var(--chart-3);
@@ -105,9 +107,23 @@
   --color-warm-900: oklch(0.228 0.030 20);
   --color-warm-950: oklch(0.168 0.022 18);
 
+  /* ─── violet — Amatista (#8B5CF6-ish @ 500) ─────────────────────── */
+  --color-violet-50:  oklch(0.975 0.014 300);
+  --color-violet-100: oklch(0.955 0.032 300);
+  --color-violet-200: oklch(0.920 0.062 300);
+  --color-violet-300: oklch(0.870 0.095 300);
+  --color-violet-400: oklch(0.800 0.130 300);
+  --color-violet-500: oklch(0.660 0.175 300);
+  --color-violet-600: oklch(0.555 0.170 300);
+  --color-violet-700: oklch(0.465 0.145 300);
+  --color-violet-800: oklch(0.365 0.110 300);
+  --color-violet-900: oklch(0.270 0.080 300);
+  --color-violet-950: oklch(0.198 0.055 300);
+
   /* ─── brand aliases kept for specific use ───────────────────────── */
   --color-cream:  var(--color-warm-50);
   --color-ginger: var(--color-primary-500);
+  --color-viola:  var(--color-violet-500);
 
   /* ─── new semantic surface tokens ───────────────────────────────── */
   --color-surface-dark:            var(--surface-dark);
@@ -119,6 +135,8 @@
   --color-accent-muted:            var(--accent-muted);
   --color-primary-tint:            var(--primary-tint);
   --color-primary-tint-strong:     var(--primary-tint-strong);
+  --color-success:                 var(--success);
+  --color-violet-tint:             var(--violet-tint);
 }
 
 :root {
@@ -145,6 +163,8 @@
   --chart-3:               var(--color-accent-300);
   --chart-4:               var(--color-primary-600);
   --chart-5:               var(--color-warm-500);
+  --chart-6:               var(--color-violet-500);
+  --chart-7:               var(--color-violet-300);
   --radius: 0.75rem;
   --sidebar:               oklch(0.974 0.006 85);
   --sidebar-foreground:    oklch(0.228 0.030 20);
@@ -164,51 +184,57 @@
   --accent-muted:            oklch(0.950 0.014 80);
   --primary-tint:            oklch(0.93 0.054 52);
   --primary-tint-strong:     oklch(0.88 0.068 52);
+  --violet-tint:             oklch(0.945 0.03 300);
+  --success:                 oklch(0.55 0.13 155);
 }
 
 .dark {
-  --background:            oklch(0.228 0.030 20);
+  --background:            oklch(0.175 0.022 30);
   --foreground:            oklch(0.974 0.006 85);
-  --card:                  oklch(0.265 0.028 20);
+  --card:                  oklch(0.215 0.025 30);
   --card-foreground:       oklch(0.974 0.006 85);
-  --popover:               oklch(0.265 0.028 20);
+  --popover:               oklch(0.235 0.026 30);
   --popover-foreground:    oklch(0.974 0.006 85);
   --primary:               oklch(0.865 0.108 83);
   --primary-foreground:    oklch(0.228 0.030 20);
-  --secondary:             oklch(0.330 0.030 22);
+  --secondary:             oklch(0.270 0.028 30);
   --secondary-foreground:  oklch(0.974 0.006 85);
-  --muted:                 oklch(0.330 0.030 22);
-  --muted-foreground:      oklch(0.730 0.026 50);
-  --accent:                oklch(0.700 0.135 52);
+  --muted:                 oklch(0.270 0.028 30);
+  --muted-foreground:      oklch(0.730 0.024 50);
+  --accent:                oklch(0.750 0.120 52);
   --accent-foreground:     oklch(0.228 0.030 20);
   --destructive:           oklch(0.704 0.191 22.216);
-  --border:                oklch(0.410 0.032 25 / 60%);
-  --input:                 oklch(0.410 0.032 25 / 40%);
+  --border:                oklch(0.330 0.030 28 / 60%);
+  --input:                 oklch(0.330 0.030 28 / 40%);
   --ring:                  oklch(0.865 0.108 83);
   --chart-1:               var(--color-secondary-500);
   --chart-2:               var(--color-primary-500);
   --chart-3:               var(--color-accent-300);
   --chart-4:               var(--color-primary-600);
-  --chart-5:               var(--color-warm-500);
+  --chart-5:               var(--color-accent-400);
+  --chart-6:               oklch(0.72 0.16 300);
+  --chart-7:               oklch(0.62 0.16 300);
   --radius: 0.75rem;
-  --sidebar:               oklch(0.265 0.028 20);
+  --sidebar:               oklch(0.195 0.023 30);
   --sidebar-foreground:    oklch(0.974 0.006 85);
   --sidebar-primary:       oklch(0.865 0.108 83);
   --sidebar-primary-foreground: oklch(0.228 0.030 20);
-  --sidebar-accent:        oklch(0.330 0.030 22);
+  --sidebar-accent:        oklch(0.270 0.028 30);
   --sidebar-accent-foreground: oklch(0.974 0.006 85);
-  --sidebar-border:        oklch(0.410 0.032 25 / 60%);
+  --sidebar-border:        oklch(0.330 0.030 28 / 60%);
   --sidebar-ring:          oklch(0.865 0.108 83);
 
-  --surface-dark:            oklch(0.168 0.022 18);
+  --surface-dark:            oklch(0.145 0.020 30);
   --surface-dark-foreground: oklch(0.974 0.006 85);
-  --surface-dark-muted:      oklch(0.730 0.026 50);
-  --surface-dark-border:     oklch(0.410 0.032 25);
+  --surface-dark-muted:      oklch(0.730 0.024 50);
+  --surface-dark-border:     oklch(0.330 0.030 28);
   --scrim:                   oklch(0 0 0 / 0.30);
   --scrim-strong:            oklch(0 0 0 / 0.80);
-  --accent-muted:            oklch(0.265 0.028 20);
-  --primary-tint:            oklch(0.30 0.043 83);
-  --primary-tint-strong:     oklch(0.35 0.054 83);
+  --accent-muted:            oklch(0.215 0.025 30);
+  --primary-tint:            oklch(0.29 0.050 83);
+  --primary-tint-strong:     oklch(0.34 0.058 83);
+  --violet-tint:             oklch(0.30 0.06 300);
+  --success:                 oklch(0.75 0.13 155);
 }
 
 @layer base {
@@ -233,6 +259,15 @@
   to { background-position: 200% center; }
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
 .text-brand-gradient {
   background: linear-gradient(to right, var(--color-primary-500), var(--color-secondary-500), var(--color-primary-500));
   -webkit-background-clip: text;
@@ -252,5 +287,35 @@
 }
 
 .dark .bg-card-gradient {
-  background: linear-gradient(135deg, color-mix(in oklch, var(--color-warm-700) 60%, transparent) 0%, var(--color-warm-800) 100%);
+  background: linear-gradient(135deg, color-mix(in oklch, var(--secondary) 55%, transparent) 0%, var(--card) 100%);
+}
+
+.bg-surface-gradient {
+  background-image: linear-gradient(135deg, color-mix(in oklch, var(--color-warm-100) 60%, transparent) 0%, var(--color-warm-50) 100%);
+}
+
+.dark .bg-surface-gradient {
+  background-image: linear-gradient(135deg, color-mix(in oklch, var(--secondary) 45%, transparent) 0%, var(--card) 100%);
+}
+
+.bg-staff-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    color-mix(in oklch, var(--color-secondary-300) 22%, transparent) 0,
+    color-mix(in oklch, var(--color-secondary-300) 22%, transparent) 1px,
+    transparent 1px,
+    transparent 14px
+  );
+}
+
+.dark .bg-staff-lines {
+  background-image: none;
+}
+
+.bg-auth-canvas {
+  background: radial-gradient(circle at 50% 0%, var(--color-primary-tint) 0%, var(--color-background) 60%);
+}
+
+.dark .bg-auth-canvas {
+  background: radial-gradient(circle at 50% 0%, color-mix(in oklch, var(--color-primary-tint) 45%, var(--color-background)) 0%, var(--color-background) 60%);
 }

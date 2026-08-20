@@ -4,10 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 
-import { Button, Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/shared/ui";
+import { Button, Sheet, SheetContent, SheetTitle, SheetTrigger, ThemeToggle } from "@/shared/ui";
 
 import Logo from "./Logo";
-import ThemeToggle from "./ThemeToggle";
 import { NAV_ITEMS } from "./Navbar.constants";
 
 export default function Navbar() {
