@@ -1,11 +1,9 @@
 import { redirect } from "next/navigation"
 
 import { createSupabaseServerClient } from "@/shared/api/supabase/server"
-import { resolvePrimaryRole, type TRol } from "@/entities/user"
+import { resolveHomeRoute, type TRol } from "@/entities/user"
 
-import DashboardShell from "./_components/DashboardShell"
-
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createSupabaseServerClient()
   const { data, error } = await supabase.auth.getClaims()
 
@@ -14,7 +12,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   const roles = (data.claims.user_roles as TRol[] | undefined) ?? []
-  const role = resolvePrimaryRole(roles)
 
-  return <DashboardShell role={role}>{children}</DashboardShell>
+  if (!roles.includes("admin")) {
+    redirect(resolveHomeRoute(roles))
+  }
+
+  return children
 }

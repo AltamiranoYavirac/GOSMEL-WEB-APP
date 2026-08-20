@@ -105,6 +105,8 @@ export { Switch } from "./switch";
 export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption } from "./table";
 export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from "./tabs";
 export { Textarea } from "./textarea";
+export { default as ThemeToggle } from "./ThemeToggle";
+export type { IThemeToggleProps } from "./ThemeToggle.types";
 export { TimeInput } from "./time-input";
 export type { ITimeInputProps } from "./time-input";
 export { Toggle, toggleVariants } from "./toggle";

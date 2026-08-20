@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 
-import { Button } from "@/shared/ui";
-import { ThemeToggle } from "@/widgets/Navbar";
+import { Button, ThemeToggle } from "@/shared/ui";
 
 export default function AuthLayout({
   children,

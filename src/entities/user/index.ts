@@ -1,3 +1,5 @@
 export type { TRol, ISessionUser } from "./model/user.types"
-export { ROLE_HOME_ROUTE, resolveHomeRoute } from "./model/roles"
+export { ROLE_HOME_ROUTE, ROLE_LABEL, resolveHomeRoute, resolvePrimaryRole } from "./model/roles"
 export { sessionQueryKeys } from "./model/query-keys"
+export { DASHBOARD_NAV, getDashboardSectionLabel } from "./model/dashboard-nav"
+export type { IDashboardNavItem, IDashboardNavGroup } from "./model/dashboard-nav.types"
