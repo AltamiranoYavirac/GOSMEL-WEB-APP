@@ -21,7 +21,7 @@ export const kpiCardVariants = tv({
   },
   variants: {
     variant: {
-      hero: { base: "group-hover:-translate-y-0.5 group-hover:shadow-lg group-hover:shadow-foreground/5" },
+      hero: { base: "bg-surface-gradient group-hover:-translate-y-0.5 group-hover:shadow-lg group-hover:shadow-foreground/5" },
       compact: { base: "" },
     },
     tone: toneSlots,
