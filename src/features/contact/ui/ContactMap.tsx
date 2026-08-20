@@ -63,7 +63,7 @@ export default function ContactMap({ lat, lng, label }: IContactMapProps) {
   }, [lat, lng, label]);
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border border-border">
+    <div className="relative z-0 w-full overflow-hidden rounded-2xl border border-border">
       <div
         ref={containerRef}
         className="h-64 w-full md:h-80"
