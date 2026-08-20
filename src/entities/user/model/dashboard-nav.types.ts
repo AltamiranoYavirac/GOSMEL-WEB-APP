@@ -2,6 +2,7 @@ export interface IDashboardNavItem {
   label: string
   href: string
   icon: string
+  badge?: number
 }
 
 export interface IDashboardNavGroup {

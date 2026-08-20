@@ -20,6 +20,8 @@
   --color-sidebar-primary:       var(--sidebar-primary);
   --color-sidebar-foreground:    var(--sidebar-foreground);
   --color-sidebar:               var(--sidebar);
+  --color-chart-7:               var(--chart-7);
+  --color-chart-6:               var(--chart-6);
   --color-chart-5:               var(--chart-5);
   --color-chart-4:               var(--chart-4);
   --color-chart-3:               var(--chart-3);
@@ -105,9 +107,23 @@
   --color-warm-900: oklch(0.228 0.030 20);
   --color-warm-950: oklch(0.168 0.022 18);
 
+  /* ─── violet — Amatista (#8B5CF6-ish @ 500) ─────────────────────── */
+  --color-violet-50:  oklch(0.975 0.014 300);
+  --color-violet-100: oklch(0.955 0.032 300);
+  --color-violet-200: oklch(0.920 0.062 300);
+  --color-violet-300: oklch(0.870 0.095 300);
+  --color-violet-400: oklch(0.800 0.130 300);
+  --color-violet-500: oklch(0.660 0.175 300);
+  --color-violet-600: oklch(0.555 0.170 300);
+  --color-violet-700: oklch(0.465 0.145 300);
+  --color-violet-800: oklch(0.365 0.110 300);
+  --color-violet-900: oklch(0.270 0.080 300);
+  --color-violet-950: oklch(0.198 0.055 300);
+
   /* ─── brand aliases kept for specific use ───────────────────────── */
   --color-cream:  var(--color-warm-50);
   --color-ginger: var(--color-primary-500);
+  --color-viola:  var(--color-violet-500);
 
   /* ─── new semantic surface tokens ───────────────────────────────── */
   --color-surface-dark:            var(--surface-dark);
@@ -119,6 +135,8 @@
   --color-accent-muted:            var(--accent-muted);
   --color-primary-tint:            var(--primary-tint);
   --color-primary-tint-strong:     var(--primary-tint-strong);
+  --color-success:                 var(--success);
+  --color-violet-tint:             var(--violet-tint);
 }
 
 :root {
@@ -145,6 +163,8 @@
   --chart-3:               var(--color-accent-300);
   --chart-4:               var(--color-primary-600);
   --chart-5:               var(--color-warm-500);
+  --chart-6:               var(--color-violet-500);
+  --chart-7:               var(--color-violet-300);
   --radius: 0.75rem;
   --sidebar:               oklch(0.974 0.006 85);
   --sidebar-foreground:    oklch(0.228 0.030 20);
@@ -164,6 +184,8 @@
   --accent-muted:            oklch(0.950 0.014 80);
   --primary-tint:            oklch(0.93 0.054 52);
   --primary-tint-strong:     oklch(0.88 0.068 52);
+  --violet-tint:             oklch(0.945 0.03 300);
+  --success:                 oklch(0.55 0.13 155);
 }
 
 .dark {
@@ -190,6 +212,8 @@
   --chart-3:               var(--color-accent-300);
   --chart-4:               var(--color-primary-600);
   --chart-5:               var(--color-warm-500);
+  --chart-6:               oklch(0.72 0.16 300);
+  --chart-7:               oklch(0.62 0.16 300);
   --radius: 0.75rem;
   --sidebar:               oklch(0.265 0.028 20);
   --sidebar-foreground:    oklch(0.974 0.006 85);
@@ -209,6 +233,8 @@
   --accent-muted:            oklch(0.265 0.028 20);
   --primary-tint:            oklch(0.30 0.043 83);
   --primary-tint-strong:     oklch(0.35 0.054 83);
+  --violet-tint:             oklch(0.30 0.05 300);
+  --success:                 oklch(0.75 0.13 155);
 }
 
 @layer base {
@@ -272,6 +298,10 @@
     transparent 1px,
     transparent 14px
   );
+}
+
+.dark .bg-staff-lines {
+  background-image: none;
 }
 
 .bg-auth-canvas {

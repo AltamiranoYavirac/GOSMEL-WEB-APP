@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@iconify/react";
 
+import { cn } from "@/shared/lib/utils";
+
 import { dashboardNavLinkVariants, dashboardNavIconVariants } from "./DashboardNavLink.variants";
 import type { IDashboardNavLinkProps } from "./DashboardNavLink.types";
 
@@ -26,7 +28,17 @@ export default function DashboardNavLink({ item, onNavigate }: IDashboardNavLink
         aria-hidden="true"
         className={dashboardNavIconVariants({ active: isActive })}
       />
-      {item.label}
+      <span className="flex-1 truncate">{item.label}</span>
+      {item.badge !== undefined ? (
+        <span
+          className={cn(
+            "rounded-full px-1.5 py-0.5 text-[10px] font-bold leading-none tabular-nums",
+            isActive ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+          )}
+        >
+          {item.badge}
+        </span>
+      ) : null}
     </Link>
   );
 }

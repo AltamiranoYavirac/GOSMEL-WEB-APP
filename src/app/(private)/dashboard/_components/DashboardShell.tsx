@@ -26,7 +26,9 @@ export default function DashboardShell({ role, children }: IDashboardShellProps)
 
       <div className="flex min-w-0 flex-1 flex-col">
         <DashboardTopbar role={role} onMenuClick={() => setMobileNavOpen(true)} />
-        <main className="flex-1 overflow-y-auto">{children}</main>
+        <main className="flex-1 overflow-y-auto">
+          <div className="mx-auto w-full max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">{children}</div>
+        </main>
       </div>
     </div>
   );

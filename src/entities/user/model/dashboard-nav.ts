@@ -86,3 +86,20 @@ export function getDashboardSectionLabel(pathname: string, groups: IDashboardNav
 
   return bestLabel
 }
+
+export function getDashboardSectionGroup(pathname: string, groups: IDashboardNavGroup[]): string {
+  let bestGroup = ""
+  let bestLength = -1
+
+  for (const group of groups) {
+    for (const item of group.items) {
+      const matches = item.href === pathname || pathname.startsWith(`${item.href}/`)
+      if (matches && item.href.length > bestLength) {
+        bestGroup = group.label
+        bestLength = item.href.length
+      }
+    }
+  }
+
+  return bestGroup
+}
