@@ -1,24 +1,17 @@
 "use client"
 
 import { Icon } from "@iconify/react"
+import Link from "next/link"
 import { toast } from "sonner"
 
-import {
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  SocialAuthButtons,
-  Spinner,
-} from "@/shared/ui"
-import { Form, PasswordField, TextField, useAppForm } from "@/shared/form"
+import { AuthCard, Button, SocialAuthButtons, Spinner } from "@/shared/ui"
+import { CheckboxField, Form, PasswordField, TextField, useAppForm } from "@/shared/form"
 import {
   getRegisterFormDefaults,
   registerFormSchema,
   type IRegisterFormValues,
 } from "../model/registerForm.config"
+import PasswordStrengthMeter from "./PasswordStrengthMeter"
 import type { IRegisterFormProps } from "./RegisterForm.types"
 
 export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
@@ -29,8 +22,11 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
 
   const {
     reset,
+    watch,
     formState: { isSubmitting },
   } = form
+
+  const password = watch("password")
 
   const onSubmit = async () => {
     toast.success("Registro exitoso", {
@@ -41,78 +37,97 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
   }
 
   return (
-    <Card className="mx-auto w-full max-w-md gap-6 rounded-2xl bg-muted p-8">
-      <CardHeader className="gap-1 text-center">
-        <CardTitle className="text-3xl font-black uppercase tracking-wide text-primary">
-          ¡Regístrate!
-        </CardTitle>
-        <CardDescription className="text-xs uppercase tracking-widest">
-          Iniciación Artística
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent>
-        <Form form={form} onSubmit={onSubmit} className="flex flex-col gap-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <TextField
-              name="firstName"
-              label="Nombre"
-              autoComplete="given-name"
-              placeholder="Tu nombre"
-            />
-            <TextField
-              name="lastName"
-              label="Apellido"
-              autoComplete="family-name"
-              placeholder="Tu apellido"
-            />
-          </div>
-
+    <AuthCard
+      icon="ph:piano-keys"
+      title="¡Crea tu cuenta!"
+      subtitle="Iniciación Artística en el Estudio GOSMEL"
+      footer={
+        <p className="text-center text-sm text-muted-foreground">
+          ¿Ya tienes una cuenta?{" "}
+          <Link
+            href="/login"
+            className="font-semibold uppercase tracking-widest text-primary transition hover:brightness-110"
+          >
+            Iniciar Sesión
+          </Link>
+        </p>
+      }
+    >
+      <Form form={form} onSubmit={onSubmit} className="flex flex-col gap-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <TextField
-            name="email"
-            label="Correo Electrónico"
-            type="email"
-            autoComplete="email"
-            placeholder="tu@correo.com"
+            name="firstName"
+            label="Nombre"
+            autoComplete="given-name"
+            placeholder="Tu nombre"
           />
-
           <TextField
-            name="phone"
-            label="Número de Celular"
-            type="tel"
-            autoComplete="tel"
-            placeholder="+XX XXX XXXX XXXX"
+            name="lastName"
+            label="Apellido"
+            autoComplete="family-name"
+            placeholder="Tu apellido"
           />
+        </div>
 
+        <TextField
+          name="email"
+          label="Correo Electrónico"
+          type="email"
+          autoComplete="email"
+          placeholder="tu@correo.com"
+        />
+
+        <TextField
+          name="phone"
+          label="Número de Celular"
+          type="tel"
+          autoComplete="tel"
+          placeholder="+XX XXX XXXX XXXX"
+        />
+
+        <div className="flex flex-col gap-2">
           <PasswordField
             name="password"
             label="Contraseña"
             autoComplete="new-password"
             placeholder="••••••••"
           />
+          <PasswordStrengthMeter value={password} />
+        </div>
 
-          <Button
-            type="submit"
-            size="2xl"
-            disabled={isSubmitting}
-            className="mt-2 w-full gap-2 text-sm uppercase tracking-widest"
-          >
-            {isSubmitting ? (
-              <Spinner className="size-4" />
-            ) : (
-              <Icon icon="ph:user-plus" className="size-5" aria-hidden="true" />
-            )}
-            {isSubmitting ? "Procesando..." : "Unirse a la Academia"}
-          </Button>
-        </Form>
-      </CardContent>
+        <CheckboxField
+          name="acceptTerms"
+          label={
+            <>
+              Acepto los{" "}
+              <Link href="/terms" className="text-primary underline underline-offset-2">
+                términos y condiciones
+              </Link>
+            </>
+          }
+        />
+
+        <Button
+          type="submit"
+          size="2xl"
+          disabled={isSubmitting}
+          className="mt-1 w-full gap-2 text-sm uppercase tracking-widest"
+        >
+          {isSubmitting ? (
+            <Spinner className="size-4" />
+          ) : (
+            <Icon icon="ph:user-plus" className="size-5" aria-hidden="true" />
+          )}
+          {isSubmitting ? "Procesando..." : "Unirse a la Academia"}
+        </Button>
+      </Form>
 
       <SocialAuthButtons
         dividerLabel="O registrarse con"
         ariaLabelPrefix="Registrarse con"
         layout="compact"
-        className="px-4"
+        className="mt-8 !gap-4"
       />
-    </Card>
+    </AuthCard>
   )
 }
