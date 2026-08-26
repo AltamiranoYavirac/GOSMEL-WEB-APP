@@ -6,10 +6,17 @@ function requireEnv(name: string, value: string | undefined): string {
 }
 
 export const env = {
-  supabaseUrl: requireEnv("NEXT_PUBLIC_SUPABASE_URL", process.env.NEXT_PUBLIC_SUPABASE_URL),
-  supabasePublishableKey: requireEnv(
-    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  supabaseUrl: requireEnv(
+    "NEXT_PRODUCTION_SUPABASE_URL (producción) o SUPABASE_URL (staging)",
+    process.env.NEXT_PRODUCTION_SUPABASE_URL || process.env.SUPABASE_URL,
   ),
-  useMockData: process.env.NEXT_PUBLIC_USE_MOCK_DATA === "true",
+  supabasePublishableKey: requireEnv(
+    "NEXT_PRODUCTION_SUPABASE_PUBLISHABLE_KEY (producción) o SUPABASE_PUBLISHABLE_KEY (staging)",
+    process.env.NEXT_PRODUCTION_SUPABASE_PUBLISHABLE_KEY ||
+      process.env.SUPABASE_PUBLISHABLE_KEY,
+  ),
+  useMockData:
+    (process.env.NEXT_PRODUCTION_USE_MOCK_DATA ||
+      process.env.USE_MOCK_DATA ||
+      process.env.NEXT_PUBLIC_USE_MOCK_DATA) === "true",
 }
