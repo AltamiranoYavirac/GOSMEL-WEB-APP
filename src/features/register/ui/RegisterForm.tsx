@@ -139,7 +139,7 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
         dividerLabel="O registrarse con"
         ariaLabelPrefix="Registrarse con"
         onProviderSelect={(provider) => socialLogin.mutate(provider.id as TAuthProvider)}
-        disabledProviders={["facebook", "apple"]}
+        disabledProviders={["apple"]}
         isPending={socialLogin.isPending}
         layout="compact"
         className="mt-8 !gap-4"
