@@ -6,6 +6,9 @@ import { toast } from "sonner"
 
 import { AuthCard, Button, SocialAuthButtons, Spinner } from "@/shared/ui"
 import { CheckboxField, Form, PasswordField, TextField, useAppForm } from "@/shared/form"
+import { useSocialLogin, type TAuthProvider } from "@/shared/auth"
+import { useRegister } from "../hooks/useRegister"
+import { getRegisterErrorMessage } from "../model/auth-errors"
 import {
   getRegisterFormDefaults,
   registerFormSchema,
@@ -19,21 +22,31 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
     schema: registerFormSchema,
     defaultValues: getRegisterFormDefaults(),
   })
+  const register = useRegister()
+  const socialLogin = useSocialLogin()
 
-  const {
-    reset,
-    watch,
-    formState: { isSubmitting },
-  } = form
+  const { watch } = form
 
   const password = watch("password")
 
-  const onSubmit = async () => {
-    toast.success("Registro exitoso", {
-      description: "Tu cuenta fue creada. Revisa tu correo para continuar.",
-    })
-    reset()
-    onSubmitSuccess?.()
+  const onSubmit = async (values: IRegisterFormValues) => {
+    try {
+      await register.mutateAsync({
+        email: values.email,
+        password: values.password,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phone: values.phone,
+      })
+      toast.success("Revisa tu correo", {
+        description: "Te enviamos un enlace para confirmar tu cuenta.",
+      })
+      onSubmitSuccess?.()
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : getRegisterErrorMessage("unknown_error")
+      )
+    }
   }
 
   return (
@@ -110,21 +123,24 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
         <Button
           type="submit"
           size="2xl"
-          disabled={isSubmitting}
+          disabled={register.isPending}
           className="mt-1 w-full gap-2 text-sm uppercase tracking-widest"
         >
-          {isSubmitting ? (
+          {register.isPending ? (
             <Spinner className="size-4" />
           ) : (
             <Icon icon="ph:user-plus" className="size-5" aria-hidden="true" />
           )}
-          {isSubmitting ? "Procesando..." : "Unirse a la Academia"}
+          {register.isPending ? "Procesando..." : "Unirse a la Academia"}
         </Button>
       </Form>
 
       <SocialAuthButtons
         dividerLabel="O registrarse con"
         ariaLabelPrefix="Registrarse con"
+        onProviderSelect={(provider) => socialLogin.mutate(provider.id as TAuthProvider)}
+        disabledProviders={["facebook", "apple"]}
+        isPending={socialLogin.isPending}
         layout="compact"
         className="mt-8 !gap-4"
       />
