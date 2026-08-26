@@ -13,6 +13,9 @@ export default function SocialAuthButtons({
   layout = "stretch",
   iconSize = 22,
   className,
+  onProviderSelect,
+  disabledProviders = [],
+  isPending = false,
 }: ISocialAuthButtonsProps) {
   const { root, divider, dividerLine, dividerLabel: dividerLabelCls, buttons, button } =
     socialAuthButtonsVariants({ layout });
@@ -26,16 +29,25 @@ export default function SocialAuthButtons({
       </div>
 
       <div className={buttons()}>
-        {providers.map(({ id, icon, label }) => (
-          <button
-            key={id}
-            type="button"
-            aria-label={`${ariaLabelPrefix} ${label}`}
-            className={button()}
-          >
-            <Icon icon={icon} width={iconSize} height={iconSize} aria-hidden="true" />
-          </button>
-        ))}
+        {providers.map((provider) => {
+          const isDisabled = isPending || disabledProviders.includes(provider.id);
+
+          return (
+            <button
+              key={provider.id}
+              type="button"
+              aria-label={`${ariaLabelPrefix} ${provider.label}`}
+              disabled={isDisabled}
+              onClick={() => onProviderSelect?.(provider)}
+              className={cn(
+                button(),
+                isDisabled && "cursor-not-allowed opacity-50"
+              )}
+            >
+              <Icon icon={provider.icon} width={iconSize} height={iconSize} aria-hidden="true" />
+            </button>
+          );
+        })}
       </div>
     </div>
   );

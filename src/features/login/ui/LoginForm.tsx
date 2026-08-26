@@ -7,6 +7,7 @@ import { toast } from "sonner"
 
 import { AuthCard, Button, SocialAuthButtons, Spinner } from "@/shared/ui"
 import { CheckboxField, Form, PasswordField, TextField, useAppForm } from "@/shared/form"
+import { useSocialLogin, type TAuthProvider } from "@/shared/auth"
 import { useLogin } from "../hooks/useLogin"
 import { getLoginFormDefaults, loginFormSchema, type ILoginFormValues } from "../model/loginForm.config"
 import type { ILoginFormProps } from "./LoginForm.types"
@@ -24,6 +25,7 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
     defaultValues: getLoginFormDefaults(),
   })
   const login = useLogin()
+  const socialLogin = useSocialLogin()
 
   const onSubmit = async (values: ILoginFormValues) => {
     setServerError(undefined)
@@ -101,6 +103,9 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
       <SocialAuthButtons
         dividerLabel="O continuar con"
         ariaLabelPrefix="Continuar con"
+        onProviderSelect={(provider) => socialLogin.mutate(provider.id as TAuthProvider)}
+        disabledProviders={["apple"]}
+        isPending={socialLogin.isPending}
         className="mt-8 !gap-4"
       />
     </AuthCard>
