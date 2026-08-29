@@ -87,10 +87,10 @@ export default function Footer() {
         <div className="border-t border-surface-dark-border/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-surface-dark-muted/40 uppercase tracking-wide">
           <p>© {getCurrentYear()} GOSMEL Music Academy. Todos los derechos reservados.</p>
           <div className="flex gap-6">
-            <Link href="/about" className="hover:text-primary transition-colors">
+            <Link href="/privacy" className="hover:text-primary transition-colors">
               Privacidad
             </Link>
-            <Link href="/about" className="hover:text-primary transition-colors">
+            <Link href="/terms" className="hover:text-primary transition-colors">
               Términos
             </Link>
           </div>
