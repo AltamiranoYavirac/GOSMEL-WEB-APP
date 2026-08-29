@@ -1,6 +1,6 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client"
 
-export type TAuthProvider = "google" | "discord" | "spotify"
+export type TAuthProvider = "google" | "discord"
 
 interface ISignInWithProviderParams {
   provider: TAuthProvider

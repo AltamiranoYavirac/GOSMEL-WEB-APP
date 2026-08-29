@@ -7,7 +7,6 @@ export interface ISocialProvider {
 export const SOCIAL_PROVIDERS: ISocialProvider[] = [
   { id: "google", icon: "mdi:google", label: "Google" },
   { id: "discord", icon: "mdi:discord", label: "Discord" },
-  { id: "spotify", icon: "mdi:spotify", label: "Spotify" },
 ];
 
 export interface ISocialLink {
