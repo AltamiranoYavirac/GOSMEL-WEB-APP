@@ -18,7 +18,7 @@ export {
 } from "./alert-dialog";
 export { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarBadge } from "./avatar";
 export { Badge, badgeVariants } from "./badge";
-export type { TBadgeVariant } from "./badge";
+export { default as BrandLogo } from "./BrandLogo";
 export { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, BreadcrumbEllipsis } from "./breadcrumb";
 export { BubbleGroup, Bubble, BubbleContent, BubbleReactions } from "./bubble";
 export { Button, buttonVariants } from "./button";
