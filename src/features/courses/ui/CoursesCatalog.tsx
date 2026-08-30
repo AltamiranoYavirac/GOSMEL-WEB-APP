@@ -73,10 +73,10 @@ export default function CoursesCatalog() {
                   onClick={() => setFilter(value)}
                   aria-pressed={filter === value}
                   className={cn(
-                    "shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-all",
+                    "shrink-0 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-wider transition-all",
                     filter === value
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border bg-card text-muted-foreground hover:border-primary/60 hover:text-foreground"
+                      ? "border border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                      : "border border-white/60 dark:border-white/5 bg-background shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_2px_6px_rgba(169,146,125,0.18)] dark:shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),2px_2px_6px_rgba(0,0,0,0.5)] text-muted-foreground hover:text-foreground"
                   )}
                 >
                   {value}
