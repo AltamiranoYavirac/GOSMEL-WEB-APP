@@ -63,7 +63,7 @@ export default function ContactMap({ lat, lng, label }: IContactMapProps) {
   }, [lat, lng, label]);
 
   return (
-    <div className="relative z-0 w-full overflow-hidden rounded-2xl border border-border">
+    <div className="relative z-0 w-full overflow-hidden rounded-2xl border border-border/80">
       <div
         ref={containerRef}
         className="h-64 w-full md:h-80"
@@ -73,10 +73,10 @@ export default function ContactMap({ lat, lng, label }: IContactMapProps) {
         href={`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="absolute bottom-3 left-3 bg-scrim-strong text-background text-xs px-3 py-1 rounded-full flex items-center gap-1 transition"
+        className="absolute bottom-3 left-3 bg-surface-dark/90 text-surface-dark-foreground border border-surface-dark-border/60 backdrop-blur-md text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-2 shadow-lg hover:text-primary transition-all"
       >
-        <Icon icon="mdi:map-marker" width={12} height={12} aria-hidden="true" />
-        Cómo llegar
+        <Icon icon="ph:navigation-arrow-fill" className="size-3.5 text-primary" aria-hidden="true" />
+        <span>Cómo llegar</span>
       </a>
     </div>
   );

@@ -4,7 +4,6 @@ import {
   AboutPillars,
   AboutValues,
   AboutTestimonials,
-  AboutCTA,
 } from "@/features/about";
 import { AppImages } from "@/shared/config/images";
 import { PILLARS, TESTIMONIALS, VALUES } from "./about.constants";
@@ -27,14 +26,6 @@ export default function AboutPage() {
       <AboutPillars pillars={PILLARS} />
       <AboutValues values={VALUES} />
       <AboutTestimonials testimonials={TESTIMONIALS} />
-      <AboutCTA
-        title="Sube al escenario con tu propia voz"
-        description="Reserva una clase de prueba gratuita y descubre cómo suena tu camino musical junto a nuestros maestros."
-        primaryLabel="Reservar clase de prueba"
-        primaryHref="/register"
-        secondaryLabel="Conocer a los maestros"
-        secondaryHref="/about"
-      />
     </div>
   );
 }
