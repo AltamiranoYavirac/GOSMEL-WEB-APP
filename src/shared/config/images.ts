@@ -18,6 +18,17 @@ const CLOUDINARY_VIDEO_BASE =
 export const AppImages = {
   HERO_COVER: `${CLOUDINARY_BASE}/v1781123573/Gosmel-cover.jpg`,
 
+  LANDING_HERO_DESKTOP: `${CLOUDINARY_BASE}/ar_64:37,c_fill,g_auto,w_1920,q_auto,f_auto/v1786821231/Saludo_c6jxdq.png`,
+  LANDING_HERO_MOBILE: `${CLOUDINARY_BASE}/ar_13:20,c_fill,g_auto,w_960,q_auto,f_auto/v1781128616/WhatsApp_Image_2026-06-10_at_01.11.01_z4qsil.jpg`,
+  LANDING_STAGE: `${CLOUDINARY_BASE}/ar_16:10,c_fill,g_auto,w_1400,q_auto,f_auto/v1785808073/Guitarra3_ddqqt8.png`,
+  LANDING_TEACHERS: `${CLOUDINARY_BASE}/ar_16:10,c_fill,g_auto,w_1400,q_auto,f_auto/v1786821231/Canto_3_h0dlse.png`,
+  LANDING_PROGRAM_PIANO: `${CLOUDINARY_BASE}/ar_2:3,c_fill,g_auto,w_720,q_auto,f_auto/v1781128616/WhatsApp_Image_2026-06-10_at_01.10.52_w78mce.jpg`,
+  LANDING_PROGRAM_VIOLIN: `${CLOUDINARY_BASE}/ar_2:3,c_fill,g_auto,w_720,q_auto,f_auto/v1781128616/WhatsApp_Image_2026-06-10_at_01.11.01_z4qsil.jpg`,
+  LANDING_PROGRAM_GUITAR: `${CLOUDINARY_BASE}/ar_2:3,c_fill,g_auto,w_720,q_auto,f_auto/v1781128622/WhatsApp_Image_2026-06-10_at_01.23.13_ujavfi.jpg`,
+  LANDING_PROGRAM_SOLFEO: `${CLOUDINARY_BASE}/ar_2:3,c_fill,g_auto,w_720,q_auto,f_auto/v1785808073/Gosmel3_o0fase.png`,
+  LANDING_PROCESS: `${CLOUDINARY_BASE}/ar_6:5,c_fill,g_auto,w_1400,q_auto,f_auto/v1786821231/Violin_Guitarra_2_qfp5j8.png`,
+  LANDING_CTA: `${CLOUDINARY_BASE}/ar_32:15,c_fill,g_auto,w_1920,q_auto,f_auto/v1786821401/Piano3_ebisvx.png`,
+
   ABOUT_PASSION: `${CLOUDINARY_BASE}/q_auto,f_auto,w_600/v1786821231/Canto_3_h0dlse.png`,
   ABOUT_DISCIPLINE: `${CLOUDINARY_BASE}/q_auto,f_auto,w_600/v1786821231/Saludo_c6jxdq.png`,
   ABOUT_INNOVATION: `${CLOUDINARY_BASE}/q_auto,f_auto,w_600/v1786821231/Violin_Guitarra_2_qfp5j8.png`,

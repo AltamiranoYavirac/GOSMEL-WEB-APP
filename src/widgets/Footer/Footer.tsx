@@ -1,40 +1,30 @@
 import Link from "next/link";
-import { Icon } from "@iconify/react";
 
-import SocialLink from "./SocialLink";
-import { ACADEMIA_LINKS, COURSE_LINKS } from "./Footer.constants";
-import { SOCIAL_LINKS } from "@/shared/config/social";
+import { BrandLogo } from "@/shared/ui";
 import { getCurrentYear } from "@/shared/lib";
+
+import { ACADEMIA_LINKS, COURSE_LINKS } from "./Footer.constants";
 
 export default function Footer() {
   return (
-    <footer className="bg-surface-dark border-t border-surface-dark-border/30 pt-20 pb-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          <div>
-            <Link href="/" className="font-heading font-bold text-xl tracking-wider text-surface-dark-foreground block mb-8">
-              GOSMEL
-            </Link>
-            <p className="text-surface-dark-muted/70 text-sm leading-relaxed mb-8 font-light">
-              En Gosmel Academia de Música creemos que la formación musical nace del equilibrio entre el conocimiento y la experiencia.Inspirados por nuestro lema, &ldquo;Lo bello de la teoría en la práctica&rdquo;
+    <footer className="border-t border-border bg-background">
+      <div className="mx-auto w-full max-w-[1600px] px-[22px] pb-9 pt-11 md:px-14 md:pb-11 md:pt-16">
+        <div className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-[1.3fr_1fr_1fr_1fr] md:gap-11">
+          <div className="col-span-2 md:col-span-1">
+            <BrandLogo />
+            <p className="mt-5 max-w-[300px] text-sm leading-[1.65] text-muted-foreground">
+              Lo bello de la teoría en la práctica.
             </p>
-            <div className="flex gap-4">
-              {SOCIAL_LINKS.map(({ href, icon, label }) => (
-                <SocialLink key={label} href={href} aria-label={label}>
-                  <Icon icon={icon} className="w-5 h-5" aria-hidden="true" />
-                </SocialLink>
-              ))}
-            </div>
           </div>
 
           <div>
-            <h3 className="font-bold text-surface-dark-foreground mb-6 uppercase tracking-wider text-sm">
+            <h2 className="mb-4 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
               Academia
-            </h3>
-            <ul className="space-y-4 text-sm text-surface-dark-muted/70 font-light">
+            </h2>
+            <ul className="space-y-2.5 text-sm text-foreground/80">
               {ACADEMIA_LINKS.map(({ label, href }) => (
                 <li key={label}>
-                  <Link href={href} className="hover:text-primary transition-colors">
+                  <Link href={href} className="transition-colors hover:text-primary">
                     {label}
                   </Link>
                 </li>
@@ -43,13 +33,13 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-surface-dark-foreground mb-6 uppercase tracking-wider text-sm">
+            <h2 className="mb-4 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
               Cursos
-            </h3>
-            <ul className="space-y-4 text-sm text-surface-dark-muted/70 font-light">
+            </h2>
+            <ul className="space-y-2.5 text-sm text-foreground/80">
               {COURSE_LINKS.map(({ label, href }) => (
                 <li key={label}>
-                  <Link href={href} className="hover:text-primary transition-colors">
+                  <Link href={href} className="transition-colors hover:text-primary">
                     {label}
                   </Link>
                 </li>
@@ -57,40 +47,34 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div>
-            <h3 className="font-bold text-surface-dark-foreground mb-6 uppercase tracking-wider text-sm">
+          <div className="col-span-2 md:col-span-1">
+            <h2 className="mb-4 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
               Contacto
-            </h3>
-            <ul className="space-y-4 text-sm text-surface-dark-muted/70 font-light">
-              <li className="flex items-start gap-3">
-                <Icon icon="mdi:map-marker" className="w-[18px] h-[18px] text-primary shrink-0 mt-0.5" aria-hidden="true" />
-                <span>
-                  Av. América E5-30 e
-                  <br />
-                  Av. Pérez Guerrero
-                  <br />
-                  Quito - Ecuador
-                </span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Icon icon="mdi:phone" className="w-[18px] h-[18px] text-primary shrink-0" aria-hidden="true" />
-                <span>+593 98 602 3191</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Icon icon="mdi:email-outline" className="w-[18px] h-[18px] text-primary shrink-0" aria-hidden="true" />
-                <span>andymelabur@gmail.com</span>
-              </li>
-            </ul>
+            </h2>
+            <address className="flex flex-col gap-2.5 text-sm not-italic leading-normal text-foreground/80">
+              <span>
+                Av. América E5-30 e<br className="hidden md:block" /> Av. Pérez Guerrero
+                <br />
+                Quito — Ecuador
+              </span>
+              <a href="tel:+593986023191" className="transition-colors hover:text-primary">
+                +593 98 602 3191
+              </a>
+              <a href="mailto:andymelabur@gmail.com" className="transition-colors hover:text-primary">
+                andymelabur@gmail.com
+              </a>
+            </address>
           </div>
         </div>
 
-        <div className="border-t border-surface-dark-border/30 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-surface-dark-muted/40 uppercase tracking-wide">
+        <div className="mt-8 flex flex-col gap-2 border-t border-border pt-5 text-xs text-muted-foreground md:mt-12 md:flex-row md:items-center md:justify-between md:border-0 md:pt-0">
           <p>© {getCurrentYear()} GOSMEL Music Academy. Todos los derechos reservados.</p>
-          <div className="flex gap-6">
-            <Link href="/privacy" className="hover:text-primary transition-colors">
+          <div className="flex gap-2">
+            <Link href="/privacy" className="transition-colors hover:text-primary">
               Privacidad
             </Link>
-            <Link href="/terms" className="hover:text-primary transition-colors">
+            <span aria-hidden="true">·</span>
+            <Link href="/terms" className="transition-colors hover:text-primary">
               Términos
             </Link>
           </div>

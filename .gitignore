@@ -47,3 +47,6 @@ next-env.d.ts
 
 # local opencode config (contains API keys)
 opencode.json
+
+# design prototypes
+/Academia de música rediseño

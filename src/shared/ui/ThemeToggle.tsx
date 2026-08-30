@@ -17,21 +17,21 @@ export default function ThemeToggle({ className }: IThemeToggleProps) {
     () => true,
     () => false
   );
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
 
-  if (!mounted) return <Skeleton className="size-9" />;
+  if (!mounted) return <Skeleton className="size-8 rounded-full" />;
 
-  const resolvedTheme = theme ?? "light";
+  const activeTheme = resolvedTheme ?? "light";
 
   return (
     <Button
-      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-      aria-label="Cambiar tema"
+      onClick={() => setTheme(activeTheme === "dark" ? "light" : "dark")}
+      aria-label={activeTheme === "dark" ? "Activar modo claro" : "Activar modo oscuro"}
       variant="ghost"
       size="icon"
       className={className}
     >
-      {resolvedTheme === "dark" ? (
+      {activeTheme === "dark" ? (
         <Icon icon="ph:sun" width={18} height={18} aria-hidden="true" />
       ) : (
         <Icon icon="ph:moon" width={18} height={18} aria-hidden="true" />

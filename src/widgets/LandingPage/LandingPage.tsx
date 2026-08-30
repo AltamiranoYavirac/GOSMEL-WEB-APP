@@ -1,17 +1,23 @@
-import HeroCarouselSection from "./HeroCarouselSection";
+import FaqSection from "./FaqSection";
+import FinalCtaSection from "./FinalCtaSection";
 import HeroSection from "./HeroSection";
-import CoursesSection from "./CoursesSection";
-import WhySection from "./WhySection";
-import StatsSection from "./StatsSection";
+import HighlightsSection from "./HighlightsSection";
+import HowItWorksSection from "./HowItWorksSection";
+import PhilosophySection from "./PhilosophySection";
+import ProgramsSection from "./ProgramsSection";
+import TestimonialsSection from "./TestimonialsSection";
 
 export default function LandingPage() {
   return (
     <>
-      <HeroCarouselSection />
       <HeroSection />
-      <CoursesSection />
-      <WhySection />
-      <StatsSection />
+      <HighlightsSection />
+      <PhilosophySection />
+      <ProgramsSection />
+      <HowItWorksSection />
+      <TestimonialsSection />
+      <FaqSection />
+      <FinalCtaSection />
     </>
   );
 }
