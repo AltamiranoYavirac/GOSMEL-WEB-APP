@@ -104,7 +104,7 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
         dividerLabel="O continuar con"
         ariaLabelPrefix="Continuar con"
         onProviderSelect={(provider) => socialLogin.mutate(provider.id as TAuthProvider)}
-        disabledProviders={["apple"]}
+        disabledProviders={[]}
         isPending={socialLogin.isPending}
         className="mt-8 !gap-4"
       />
