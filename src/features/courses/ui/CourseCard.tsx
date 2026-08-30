@@ -36,7 +36,7 @@ export default function CourseCard({ course, index }: ICourseCardProps) {
 
       {/* Body */}
       <div className="flex flex-1 flex-col p-6">
-        <div className="mb-5 inline-flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary ring-1 ring-primary/10 transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:ring-primary/30 group-hover:shadow-lg group-hover:shadow-primary/20">
+        <div className="mb-5 inline-flex size-12 items-center justify-center rounded-2xl bg-white dark:bg-primary/25 text-primary border border-border/80 dark:border-primary/40 ring-1 ring-primary/10 dark:ring-primary/30 shadow-xs transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary group-hover:ring-primary/50 group-hover:shadow-lg group-hover:shadow-primary/30">
           <Icon icon={course.icon} className="size-6" aria-hidden="true" />
         </div>
 
