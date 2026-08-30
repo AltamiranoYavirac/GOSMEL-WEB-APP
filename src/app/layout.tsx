@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
-import { Nunito_Sans } from "next/font/google";
+import { DM_Mono, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Toaster } from "@/shared/ui";
 
-const nunitoSans = Nunito_Sans({
-  variable: "--font-nunito-sans",
+const instrumentSans = Instrument_Sans({
+  variable: "--font-instrument-sans",
   subsets: ["latin"],
+});
+
+const dmMono = DM_Mono({
+  variable: "--font-dm-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -24,7 +30,7 @@ export default function RootLayout({
     <html
       lang="es"
       suppressHydrationWarning
-      className={`${nunitoSans.variable}`}
+      className={`${instrumentSans.variable} ${dmMono.variable}`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-ginger selection:text-cream antialiased">
         <Providers>{children}</Providers>

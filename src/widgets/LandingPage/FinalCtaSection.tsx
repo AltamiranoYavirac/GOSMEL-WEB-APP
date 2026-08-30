@@ -1,32 +1,31 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { AppImages } from "@/shared/config";
-import { Button, Reveal, RevealImage } from "@/shared/ui";
+import { Button } from "@/shared/ui";
 
 export default function FinalCtaSection() {
   return (
     <section
       aria-labelledby="landing-cta-title"
-      className="relative h-[480px] overflow-hidden md:mt-[110px] md:aspect-[16/9] md:h-auto"
+      className="relative h-[480px] overflow-hidden md:mt-[110px] md:h-[600px]"
     >
-      <RevealImage
+      <Image
         src={AppImages.LANDING_CTA}
         alt="Pianista de GOSMEL interpretando en concierto"
+        fill
         sizes="100vw"
-        className="object-cover object-center"
+        className="landing-zoom-out object-cover object-center"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/95 via-surface-dark/35 to-surface-dark/15 md:bg-gradient-to-r md:from-surface-dark/90 md:via-surface-dark/55 md:to-surface-dark/25" />
       <div className="absolute inset-0 mx-auto flex w-full max-w-[1600px] flex-col justify-end px-[22px] pb-8 text-surface-dark-foreground md:justify-center md:px-14 md:pb-0">
-        <Reveal
-          as="h2"
+        <h2
+          id="landing-cta-title"
           className="max-w-[620px] text-[36px] font-semibold leading-[1.04] tracking-[-0.04em] md:text-[58px]"
         >
-          <span id="landing-cta-title">Empieza donde estás. Llega a donde quieras.</span>
-        </Reveal>
-        <Reveal
-          delay={0.12}
-          className="mt-[26px] flex flex-col gap-2.5 md:mt-9 md:flex-row md:items-center md:gap-7"
-        >
+          Empieza donde estás. Llega a donde quieras.
+        </h2>
+        <div className="mt-[26px] flex flex-col gap-2.5 md:mt-9 md:flex-row md:items-center md:gap-7">
           <Button
             asChild
             className="h-[52px] w-full rounded-full bg-surface-dark-foreground px-8 text-base font-semibold text-surface-dark hover:bg-surface-dark-foreground/85 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/85 md:h-[52px] md:w-auto md:text-[15px]"
@@ -40,7 +39,7 @@ export default function FinalCtaSection() {
           >
             <Link href="/register">Inscríbete ahora<span className="hidden md:inline"> ›</span></Link>
           </Button>
-        </Reveal>
+        </div>
       </div>
     </section>
   );
