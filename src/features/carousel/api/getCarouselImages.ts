@@ -25,10 +25,10 @@ export async function getCarouselImages(): Promise<ICarouselImage[]> {
       publicId: r.public_id,
       secureUrl: r.secure_url.replace(
         "/image/upload/",
-        "/image/upload/c_pad,b_auto:predominant,ar_16:9,w_1920,q_auto/"
+        "/image/upload/q_auto,f_auto,w_1600/"
       ),
-      width: 1920,
-      height: 1080,
+      width: 1600,
+      height: 1067,
       alt: "GOSMEL Music Academy",
     })
   );

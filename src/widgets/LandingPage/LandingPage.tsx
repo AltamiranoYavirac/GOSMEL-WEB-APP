@@ -1,17 +1,17 @@
 import HeroCarouselSection from "./HeroCarouselSection";
-import HeroSection from "./HeroSection";
-import CoursesSection from "./CoursesSection";
-import WhySection from "./WhySection";
 import StatsSection from "./StatsSection";
+import CoursesSection from "./CoursesSection";
+import InstrumentsTabsSection from "./InstrumentsTabsSection";
+import WhySection from "./WhySection";
 
 export default function LandingPage() {
   return (
     <>
       <HeroCarouselSection />
-      <HeroSection />
-      <CoursesSection />
-      <WhySection />
       <StatsSection />
+      <CoursesSection />
+      <InstrumentsTabsSection />
+      <WhySection />
     </>
   );
 }

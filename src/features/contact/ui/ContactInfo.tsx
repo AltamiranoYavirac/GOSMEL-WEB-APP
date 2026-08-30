@@ -1,8 +1,7 @@
 import { Icon } from "@iconify/react";
 
 import { SOCIAL_LINKS } from "@/shared/config/social";
-import { Button, Card, IconTile } from "@/shared/ui";
-
+import { Button } from "@/shared/ui";
 import ContactMap from "./ContactMap";
 import type { IContactInfoProps } from "./ContactInfo.types";
 
@@ -17,39 +16,29 @@ export default function ContactInfo({
   lng,
 }: IContactInfoProps) {
   return (
-    <div className="flex flex-col gap-4">
-      <Card className="rounded-2xl p-6 gap-6">
-        <div>
-          <span className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-            Información
-          </span>
-          <h2 className="mt-2 font-heading text-2xl font-bold text-foreground">
-            Estamos en Quito
+    <div className="flex flex-col gap-6">
+      <div className="relative overflow-hidden rounded-3xl bg-background border border-white/60 dark:border-white/5 shadow-[-8px_-8px_20px_rgba(255,255,255,0.9),8px_8px_20px_rgba(169,146,125,0.22)] dark:shadow-[-8px_-8px_20px_rgba(255,255,255,0.04),8px_8px_22px_rgba(0,0,0,0.65)] p-8 sm:p-10 flex flex-col gap-8">
+        <div className="space-y-2 relative z-10">
+          <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+            Canales Directos
           </h2>
+          <p className="text-xs sm:text-sm text-muted-foreground font-light leading-relaxed">
+            Estamos disponibles para asesorarte en horarios de clases, selección de instrumentos y visitas guiadas a la academia.
+          </p>
         </div>
 
-        <div className="grid gap-4">
+        <div className="space-y-6 relative z-10">
           <div className="flex items-start gap-4">
-            <IconTile
-              icon="mdi:map-marker"
-              size="sm"
-              iconSize={20}
-              className="mt-1"
-            />
-            <div>
-              <p className="text-foreground font-semibold">Dirección</p>
-              <p className="text-muted-foreground text-sm">{address}</p>
-              <p className="text-primary text-sm">{addressDetail}</p>
+            <div className="size-13 rounded-2xl bg-background border border-white/40 dark:border-white/5 shadow-[inset_-3px_-3px_7px_rgba(255,255,255,0.9),inset_3px_3px_7px_rgba(169,146,125,0.22)] dark:shadow-[inset_-3px_-3px_7px_rgba(255,255,255,0.04),inset_3px_3px_7px_rgba(0,0,0,0.6)] flex items-center justify-center text-primary shrink-0 mt-0.5">
+              <Icon icon="ph:phone-call-fill" className="size-5" aria-hidden="true" />
             </div>
-          </div>
-
-          <div className="flex items-start gap-4">
-            <IconTile icon="mdi:phone" size="sm" iconSize={20} className="mt-1" />
-            <div>
-              <p className="text-foreground font-semibold">Teléfono</p>
+            <div className="space-y-0.5">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
+                Línea Telefónica
+              </div>
               <a
                 href={`tel:${phone.replace(/\s/g, "")}`}
-                className="text-muted-foreground text-sm hover:text-primary transition-colors"
+                className="text-base font-bold text-foreground hover:text-primary transition-colors block"
               >
                 {phone}
               </a>
@@ -57,61 +46,77 @@ export default function ContactInfo({
           </div>
 
           <div className="flex items-start gap-4">
-            <IconTile icon="mdi:email" size="sm" iconSize={20} className="mt-1" />
-            <div>
-              <p className="text-foreground font-semibold">Email</p>
+            <div className="size-13 rounded-2xl bg-background border border-white/40 dark:border-white/5 shadow-[inset_-3px_-3px_7px_rgba(255,255,255,0.9),inset_3px_3px_7px_rgba(169,146,125,0.22)] dark:shadow-[inset_-3px_-3px_7px_rgba(255,255,255,0.04),inset_3px_3px_7px_rgba(0,0,0,0.6)] flex items-center justify-center text-primary shrink-0 mt-0.5">
+              <Icon icon="ph:envelope-simple-fill" className="size-5" aria-hidden="true" />
+            </div>
+            <div className="space-y-0.5">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
+                Correo Institucional
+              </div>
               {emails.map((email) => (
                 <a
                   key={email}
                   href={`mailto:${email}`}
-                  className="block text-primary text-sm hover:underline"
+                  className="text-base font-bold text-foreground hover:text-primary transition-colors block"
                 >
                   {email}
                 </a>
               ))}
             </div>
           </div>
-        </div>
 
-        <div className="flex items-center gap-3">
-          <span className="h-px flex-1 bg-border" />
-          <span className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-            Síguenos
-          </span>
-          <span className="h-px flex-1 bg-border" />
-        </div>
+          <div className="flex items-start gap-4">
+            <div className="size-13 rounded-2xl bg-background border border-white/40 dark:border-white/5 shadow-[inset_-3px_-3px_7px_rgba(255,255,255,0.9),inset_3px_3px_7px_rgba(169,146,125,0.22)] dark:shadow-[inset_-3px_-3px_7px_rgba(255,255,255,0.04),inset_3px_3px_7px_rgba(0,0,0,0.6)] flex items-center justify-center text-primary shrink-0 mt-0.5">
+              <Icon icon="ph:map-pin-fill" className="size-5" aria-hidden="true" />
+            </div>
+            <div className="space-y-0.5">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
+                Sede Central
+              </div>
+              <div className="text-sm font-bold text-foreground">
+                {address}
+              </div>
+              <div className="text-xs text-primary font-semibold">
+                {addressDetail}
+              </div>
+            </div>
+          </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {SOCIAL_LINKS.map(({ href, icon, label }) => (
-            <Button
-              key={label}
-              asChild
-              variant="ghost"
-              size="icon"
-              className="rounded-full border border-border bg-muted text-muted-foreground hover:border-primary hover:text-primary"
-            >
-              <a href={href} aria-label={label} target="_blank" rel="noopener noreferrer">
-                <Icon icon={icon} className="size-5" aria-hidden="true" />
-              </a>
-            </Button>
-          ))}
+          <div className="flex items-start gap-4">
+            <div className="size-13 rounded-2xl bg-background border border-white/40 dark:border-white/5 shadow-[inset_-3px_-3px_7px_rgba(255,255,255,0.9),inset_3px_3px_7px_rgba(169,146,125,0.22)] dark:shadow-[inset_-3px_-3px_7px_rgba(255,255,255,0.04),inset_3px_3px_7px_rgba(0,0,0,0.6)] flex items-center justify-center text-primary shrink-0 mt-0.5">
+              <Icon icon="ph:clock-fill" className="size-5" aria-hidden="true" />
+            </div>
+            <div className="space-y-0.5">
+              <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground font-bold">
+                Horario de Atención
+              </div>
+              <div className="text-sm font-bold text-foreground">
+                Lunes a Sábado: 08:00 – 19:00
+              </div>
+              <div className="text-xs text-muted-foreground font-light">
+                Domingos con cita previa
+              </div>
+            </div>
+          </div>
         </div>
 
         {WHATSAPP_LINK && (
           <Button
             asChild
-            size="xl"
-            className="w-full gap-2 bg-[#25D366] text-sm uppercase tracking-widest text-white hover:bg-[#25D366]/90"
+            size="2xl"
+            className="relative z-10 w-full gap-2 bg-[#25D366] text-xs uppercase tracking-widest font-bold text-white hover:bg-[#25D366]/90 shadow-xl shadow-[#25D366]/25 hover:scale-[1.01] transition-all h-14"
           >
             <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">
               <Icon icon="mdi:whatsapp" className="size-5" aria-hidden="true" />
-              Escríbenos por WhatsApp
+              Escribir al Asesor por WhatsApp
             </a>
           </Button>
         )}
-      </Card>
+      </div>
 
-      <ContactMap lat={lat} lng={lng} label="GOSMEL Academia Musical" />
+      <div className="rounded-3xl bg-background border border-white/60 dark:border-white/5 p-3 shadow-[-8px_-8px_20px_rgba(255,255,255,0.9),8px_8px_20px_rgba(169,146,125,0.22)] dark:shadow-[-8px_-8px_20px_rgba(255,255,255,0.04),8px_8px_22px_rgba(0,0,0,0.65)] overflow-hidden">
+        <ContactMap lat={lat} lng={lng} label="GOSMEL Academia Musical" />
+      </div>
     </div>
   );
 }
