@@ -1,0 +1,1 @@
+export { default as TestimoniosList } from "./ui/TestimoniosList";

@@ -1,0 +1,1 @@
+export { default as CobranzaList } from "./ui/CobranzaList";

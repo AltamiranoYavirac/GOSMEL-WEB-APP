@@ -1,0 +1,1 @@
+export { default as CursosList } from "./ui/CursosList";

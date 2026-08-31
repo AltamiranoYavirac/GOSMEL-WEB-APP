@@ -1,0 +1,1 @@
+export { default as SolicitudesList } from "./ui/SolicitudesList";

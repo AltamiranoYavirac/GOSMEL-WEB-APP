@@ -1,0 +1,1 @@
+export { default as MaterialesList } from "./ui/MaterialesList";

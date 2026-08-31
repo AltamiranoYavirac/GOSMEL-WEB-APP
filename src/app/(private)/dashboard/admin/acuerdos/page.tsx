@@ -1,10 +1,5 @@
-import { ComingSoon } from "@/widgets/ComingSoon";
+import { AcuerdosList } from "@/features/acuerdos";
 
 export default function AcuerdosPage() {
-  return (
-    <ComingSoon
-      title="Acuerdos de pago"
-      description="Planes de mensualidad acordados con cada estudiante."
-    />
-  );
+  return <AcuerdosList />;
 }

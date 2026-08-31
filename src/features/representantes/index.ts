@@ -1,0 +1,1 @@
+export { default as RepresentantesList } from "./ui/RepresentantesList";

@@ -1,0 +1,1 @@
+export { default as CatedrasList } from "./ui/CatedrasList";
