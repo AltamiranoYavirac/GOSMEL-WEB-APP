@@ -7,6 +7,7 @@ import { useAcuerdos } from "../hooks/useAcuerdos";
 import { ACUERDO_ESTADO_BADGE, type IAcuerdoRow } from "../model/acuerdo.types";
 import CrearAcuerdoDialog from "./CrearAcuerdoDialog";
 import EditarAcuerdoDialog from "./EditarAcuerdoDialog";
+import EliminarAcuerdoDialog from "./EliminarAcuerdoDialog";
 
 export default function AcuerdosList() {
   const { data, isPending } = useAcuerdos();
@@ -83,8 +84,9 @@ export default function AcuerdosList() {
         emptyDescription="Cuando se acuerden mensualidades aparecerán aquí."
         countLabel="acuerdos"
         rowActions={(row) => (
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end gap-1.5">
             <EditarAcuerdoDialog acuerdo={row} />
+            <EliminarAcuerdoDialog acuerdo={row} />
           </div>
         )}
       />

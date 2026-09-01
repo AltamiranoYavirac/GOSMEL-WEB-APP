@@ -217,6 +217,7 @@ export default function EstudianteDetalleSheet({ estudianteId, estudianteNombre 
       </Sheet>
 
       <AsignarCursoEstudianteDialog
+        key={estudianteId}
         estudianteId={estudianteId}
         estudianteNombre={estudianteNombre}
         open={asigOpen}

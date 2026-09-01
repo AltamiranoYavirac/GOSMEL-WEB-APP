@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@iconify/react";
@@ -15,31 +15,7 @@ export default function DashboardSidebar({ role, onNavigate }: IDashboardSidebar
   const pathname = usePathname();
   const groups = DASHBOARD_NAV[role];
 
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
-    const initial: Record<string, boolean> = {};
-    for (const group of groups) {
-      const isGroupActive = group.items.some((item) =>
-        item.href === "/dashboard/admin" || item.href === "/dashboard/teacher" || item.href === "/dashboard/student"
-          ? pathname === item.href
-          : pathname.startsWith(item.href)
-      );
-      initial[group.label] = isGroupActive || group.label === "General";
-    }
-    return initial;
-  });
-
-  useEffect(() => {
-    for (const group of groups) {
-      const isGroupActive = group.items.some((item) =>
-        item.href === "/dashboard/admin" || item.href === "/dashboard/teacher" || item.href === "/dashboard/student"
-          ? pathname === item.href
-          : pathname.startsWith(item.href)
-      );
-      if (isGroupActive) {
-        setOpenGroups((prev) => (prev[group.label] ? prev : { ...prev, [group.label]: true }));
-      }
-    }
-  }, [pathname, groups]);
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
   const handleToggleGroup = (label: string) => {
     setOpenGroups((prev) => ({
@@ -76,7 +52,7 @@ export default function DashboardSidebar({ role, onNavigate }: IDashboardSidebar
                 ? pathname === item.href
                 : pathname.startsWith(item.href)
             );
-            const isOpen = Boolean(openGroups[group.label]);
+            const isOpen = Boolean(openGroups[group.label]) || hasActiveChild || group.label === "General";
 
             return (
               <DashboardNavGroup

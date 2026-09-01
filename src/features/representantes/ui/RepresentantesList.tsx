@@ -137,6 +137,7 @@ export default function RepresentantesList() {
       />
 
       <EditarRepresentanteDialog
+        key={editTarget?.id ?? "none"}
         representante={editTarget}
         open={editOpen}
         onOpenChange={setEditOpen}

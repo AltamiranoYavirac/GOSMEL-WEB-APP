@@ -14,7 +14,9 @@ export const crearMaterialFormSchema = z
     destino: z.string().optional(),
     cursoId: z.string().optional(),
     catedraId: z.string().optional(),
-    urlExterna: z.string().trim().url("Ingresa una URL válida").optional().or(z.literal("")),
+    urlExterna: z.string().trim().optional().or(z.literal("")),
+    storagePath: z.string().optional(),
+    archivoNombre: z.string().optional(),
   })
   .superRefine((values, ctx) => {
     if (values.destino === "curso" && !values.cursoId) {
@@ -30,12 +32,14 @@ export type ICrearMaterialFormValues = z.infer<typeof crearMaterialFormSchema>;
 export function getCrearMaterialFormDefaults(): ICrearMaterialFormValues {
   return {
     titulo: "",
-    tipo: "enlace",
+    tipo: "pdf",
     visibilidad: "docentes",
     destino: "",
     cursoId: "",
     catedraId: "",
     urlExterna: "",
+    storagePath: "",
+    archivoNombre: "",
   };
 }
 

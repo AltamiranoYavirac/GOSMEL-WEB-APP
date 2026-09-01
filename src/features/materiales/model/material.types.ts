@@ -11,6 +11,8 @@ export interface IMaterialRow {
   visibilidad: TVisibilidadMaterial;
   destino: string | null;
   subidoPor: string | null;
+  storagePath: string | null;
+  urlExterna: string | null;
 }
 
 export const TIPO_MATERIAL_BADGE: Record<TTipoMaterial, { label: string; variant: TBadgeVariant }> = {

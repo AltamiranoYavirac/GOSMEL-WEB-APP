@@ -142,6 +142,7 @@ export default function CatedrasList() {
       />
 
       <EditarCatedraDialog
+        key={editTarget?.id ?? "none"}
         catedra={editTarget}
         open={editOpen}
         onOpenChange={setEditOpen}

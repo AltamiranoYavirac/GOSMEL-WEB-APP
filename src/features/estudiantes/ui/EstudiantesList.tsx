@@ -164,6 +164,7 @@ export default function EstudiantesList() {
       />
 
       <AsignarCursoEstudianteDialog
+        key={asigTarget?.id ?? "none"}
         estudianteId={asigTarget?.id}
         estudianteNombre={asigTarget?.nombreCompleto}
         open={asigOpen}

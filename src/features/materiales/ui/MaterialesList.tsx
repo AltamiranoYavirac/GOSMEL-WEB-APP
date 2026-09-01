@@ -2,7 +2,7 @@
 
 import { Icon } from "@iconify/react";
 
-import { AdminDataTable, AdminPageHeader, Badge, type IAdminColumn, type IAdminDataTableFilter } from "@/shared/ui";
+import { AdminDataTable, AdminPageHeader, Badge, Button, type IAdminColumn, type IAdminDataTableFilter } from "@/shared/ui";
 
 import { useMateriales } from "../hooks/useMateriales";
 import { TIPO_MATERIAL_BADGE, VISIBILIDAD_MATERIAL_BADGE, type IMaterialRow } from "../model/material.types";
@@ -52,6 +52,28 @@ export default function MaterialesList() {
       key: "destino",
       label: "Destino",
       render: (row) => row.destino ?? <span className="text-muted-foreground">—</span>,
+    },
+    {
+      key: "recurso",
+      label: "Recurso",
+      render: (row) => {
+        const url = row.storagePath || row.urlExterna;
+        if (!url) return <span className="text-muted-foreground">—</span>;
+
+        return (
+          <Button size="xs" variant="outline" asChild>
+            <a
+              href={url.startsWith("http") ? url : `/api/storage?path=${encodeURIComponent(url)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
+            >
+              <Icon icon={TIPO_ICON[row.tipo] ?? "ph:file"} className="size-3.5" aria-hidden="true" />
+              {row.storagePath ? "Ver / Descargar" : "Abrir enlace"}
+            </a>
+          </Button>
+        );
+      },
     },
     {
       key: "subidoPor",

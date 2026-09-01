@@ -1,3 +1,5 @@
+drop function if exists public.aprobar_matricula(uuid, numeric, smallint, text);
+
 create or replace function public.aprobar_matricula(
   p_inscripcion_id     uuid,
   p_monto_mensual      numeric,

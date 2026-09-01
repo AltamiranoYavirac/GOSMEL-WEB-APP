@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import Image from "next/image"
 import { Icon } from "@iconify/react"
 
 import { cn } from "@/shared/lib/utils"
@@ -147,7 +148,13 @@ export function FileUpload({
           isImage && previewUrl ? (
             <div className="relative flex w-full flex-col items-center gap-3">
               <div className="relative h-40 w-40 overflow-hidden rounded-lg ring-1 ring-input">
-                <img src={previewUrl} alt={value?.name ?? "Vista previa"} className="h-full w-full object-cover" />
+                <Image
+                  src={previewUrl}
+                  alt={value?.name ?? "Vista previa"}
+                  fill
+                  unoptimized
+                  className="object-cover"
+                />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-opacity group-hover:bg-black/40 group-hover:opacity-100">
                   <span className="flex items-center gap-1.5 text-sm font-semibold text-white">
                     <Icon icon="ph:pencil-simple" className="size-3.5" aria-hidden="true" /> Cambiar

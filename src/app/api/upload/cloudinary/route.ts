@@ -28,9 +28,10 @@ export async function POST(req: NextRequest) {
       width: result.width,
       height: result.height,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Error al subir imagen a Cloudinary";
     return NextResponse.json(
-      { error: err.message || "Error al subir imagen a Cloudinary" },
+      { error: message },
       { status: 500 }
     );
   }

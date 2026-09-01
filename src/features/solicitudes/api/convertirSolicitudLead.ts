@@ -5,20 +5,27 @@ export interface IConvertirSolicitudLeadInput {
   catedraId?: string | null;
 }
 
+export interface IConvertirSolicitudLeadResult {
+  solicitud_id: string;
+  estudiante_id: string;
+  representante_id: string | null;
+  inscripcion_id: string | null;
+}
+
 export async function convertirSolicitudLead(input: IConvertirSolicitudLeadInput): Promise<{
-  data: any | null;
+  data: IConvertirSolicitudLeadResult | null;
   error: string | null;
 }> {
   const supabase = createSupabaseBrowserClient();
 
-  const { data, error } = await supabase.rpc("convertir_solicitud_lead" as any, {
+  const { data, error } = await supabase.rpc("convertir_solicitud_lead", {
     p_solicitud_id: input.solicitudId,
-    p_catedra_id: input.catedraId || null,
+    p_catedra_id: input.catedraId || undefined,
   });
 
   if (error) {
     return { data: null, error: error.message };
   }
 
-  return { data, error: null };
+  return { data: data as unknown as IConvertirSolicitudLeadResult, error: null };
 }

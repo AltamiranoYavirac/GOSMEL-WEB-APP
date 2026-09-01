@@ -32,18 +32,18 @@ export async function getCuotasPendientesFamilia(representanteId: string): Promi
   }
 
   const { data: viewData, error: viewError } = await supabase
-    .from("v_estado_cuenta" as any)
+    .from("v_estado_cuenta")
     .select("cuota_id, estudiante_id, estudiante, periodo_mes, monto, monto_pagado, saldo, fecha_vencimiento, estado_efectivo")
     .in("estudiante_id", studentIds)
     .in("estado_efectivo", ["pendiente", "parcial", "vencida"])
     .order("periodo_mes", { ascending: true });
 
   if (!viewError && viewData && viewData.length >= 0) {
-    const items: ICuotaPendienteItem[] = (viewData as any[])
+    const items: ICuotaPendienteItem[] = (viewData)
       .filter((row) => Boolean(row.cuota_id && row.estudiante_id))
       .map((row) => ({
-        cuotaId: row.cuota_id,
-        estudianteId: row.estudiante_id,
+        cuotaId: row.cuota_id!,
+        estudianteId: row.estudiante_id!,
         estudianteNombre: row.estudiante ?? "Estudiante",
         periodoMes: row.periodo_mes ?? "",
         monto: Number(row.monto) || 0,

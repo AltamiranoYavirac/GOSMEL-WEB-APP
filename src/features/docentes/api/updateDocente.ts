@@ -1,11 +1,13 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 
+import type { Json } from "@/shared/api/supabase/database.types";
+
 export interface IUpdateDocentePatch {
   titulo_profesional?: string | null;
   biografia?: string | null;
   frase_destacada?: string | null;
   anios_experiencia?: number | null;
-  redes_sociales?: Record<string, any>;
+  redes_sociales?: Json;
   publicado?: boolean;
   destacado?: boolean;
   orden?: number;

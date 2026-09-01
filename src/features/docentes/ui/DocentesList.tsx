@@ -139,6 +139,7 @@ export default function DocentesList() {
       />
 
       <EditarDocenteDialog
+        key={editTarget?.id ?? "none"}
         docente={editTarget}
         open={editOpen}
         onOpenChange={setEditOpen}

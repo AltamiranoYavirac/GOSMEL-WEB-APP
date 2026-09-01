@@ -10,7 +10,7 @@ export async function getMateriales(): Promise<{
   const { data, error } = await supabase
     .from("materiales")
     .select(
-      "id, titulo, tipo, visible_para, curso_id, cursos(nombre), catedra_id, catedras(codigo, cursos(nombre)), subido_por, perfiles!materiales_subido_por_fkey(nombres, apellidos)"
+      "id, titulo, tipo, visible_para, storage_path, url_externa, curso_id, cursos(nombre), catedra_id, catedras(codigo, cursos(nombre)), subido_por, perfiles!materiales_subido_por_fkey(nombres, apellidos)"
     )
     .order("created_at", { ascending: false })
     .limit(300);
@@ -33,6 +33,8 @@ export async function getMateriales(): Promise<{
       visibilidad: material.visible_para as TVisibilidadMaterial,
       destino,
       subidoPor,
+      storagePath: material.storage_path,
+      urlExterna: material.url_externa,
     };
   });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 import {
   AlertDialog,
@@ -22,7 +22,7 @@ import {
   SelectValue,
   Spinner,
 } from "@/shared/ui";
-import { useCatedras } from "@/features/catedras";
+import { useCatedras } from "@/entities/catedra";
 import { useEstudiantes } from "../hooks/useEstudiantes";
 import { useInscribirEstudianteCatedra } from "../hooks/useInscribirEstudianteCatedra";
 import type { IAsignarCursoEstudianteDialogProps } from "./AsignarCursoEstudianteDialog.types";
@@ -48,11 +48,11 @@ export default function AsignarCursoEstudianteDialog({
   const [diaCobro, setDiaCobro] = useState("5");
   const [motivoAjuste, setMotivoAjuste] = useState("");
 
-  useEffect(() => {
-    if (initialEstudianteId) {
-      setSelectedEstudianteId(initialEstudianteId);
-    }
-  }, [initialEstudianteId]);
+  const [prevInitialEstudianteId, setPrevInitialEstudianteId] = useState(initialEstudianteId ?? "");
+  if (initialEstudianteId !== prevInitialEstudianteId) {
+    setPrevInitialEstudianteId(initialEstudianteId ?? "");
+    setSelectedEstudianteId(initialEstudianteId ?? "");
+  }
 
   const activeCatedras = (catedrasList ?? []).filter(
     (c) => c.estado === "planificada" || c.estado === "en_curso"

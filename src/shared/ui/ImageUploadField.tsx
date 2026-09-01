@@ -64,8 +64,9 @@ export function ImageUploadField({
 
       onChange(json.public_id || json.secure_url);
       toast.success("Foto subida a Cloudinary correctamente");
-    } catch (err: any) {
-      toast.error(err.message || "Error al subir la foto");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Error al subir la foto";
+      toast.error(message);
     } finally {
       setUploading(false);
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 
 import {
@@ -37,26 +37,20 @@ const ESTADO_ASISTENCIA_OPCIONES: { value: TEstadoAsistencia; label: string; bad
   { value: "ausente", label: "Ausente", badge: "destructive" },
 ];
 
-export default function TomarAsistenciaDialog({ sesion }: ITomarAsistenciaDialogProps) {
-  const [open, setOpen] = useState(false);
-  const { data, isPending } = useAsistenciasSesion(sesion.id, open);
-  const mutation = useGuardarAsistenciasSesion(sesion.id);
+interface IAsistenciasEditorProps {
+  data: NonNullable<ReturnType<typeof useAsistenciasSesion>["data"]>;
+  mutation: ReturnType<typeof useGuardarAsistenciasSesion>;
+  onSaved: () => void;
+}
 
-  const [asistencias, setAsistencias] = useState<
-    Array<{ inscripcionId: string; estado: TEstadoAsistencia; observacion: string }>
-  >([]);
-
-  useEffect(() => {
-    if (data?.estudiantes) {
-      setAsistencias(
-        data.estudiantes.map((e) => ({
-          inscripcionId: e.inscripcionId,
-          estado: e.estado,
-          observacion: e.observacion ?? "",
-        }))
-      );
-    }
-  }, [data]);
+function AsistenciasEditor({ data, mutation, onSaved }: IAsistenciasEditorProps) {
+  const [asistencias, setAsistencias] = useState(() =>
+    (data.estudiantes ?? []).map((e) => ({
+      inscripcionId: e.inscripcionId,
+      estado: e.estado,
+      observacion: e.observacion ?? "",
+    }))
+  );
 
   const onChangeEstado = (inscripcionId: string, estado: TEstadoAsistencia) => {
     setAsistencias((prev) =>
@@ -72,9 +66,83 @@ export default function TomarAsistenciaDialog({ sesion }: ITomarAsistenciaDialog
 
   const onGuardar = () => {
     mutation.mutate(asistencias, {
-      onSuccess: () => setOpen(false),
+      onSuccess: onSaved,
     });
   };
+
+  return (
+    <>
+      <div className="space-y-3 py-2">
+        {data.estudiantes.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-border/70 p-6 text-center">
+            <p className="text-sm text-muted-foreground">No hay estudiantes matriculados en esta cátedra.</p>
+          </div>
+        ) : (
+          <ul className="max-h-80 space-y-2 overflow-y-auto pr-1">
+            {data.estudiantes.map((est) => {
+              const item = asistencias.find((a) => a.inscripcionId === est.inscripcionId);
+              const estado = item?.estado ?? est.estado;
+              const observacion = item?.observacion ?? "";
+
+              return (
+                <li
+                  key={est.inscripcionId}
+                  className="flex flex-col gap-2 rounded-lg border border-border/60 bg-muted/30 p-3 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{est.estudiante}</p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Select
+                      value={estado}
+                      onValueChange={(val) => onChangeEstado(est.inscripcionId, val as TEstadoAsistencia)}
+                    >
+                      <SelectTrigger className="h-8 w-32 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ESTADO_ASISTENCIA_OPCIONES.map((op) => (
+                          <SelectItem key={op.value} value={op.value} className="text-xs">
+                            <span className="flex items-center gap-1.5">
+                              <Badge variant={op.badge} className="px-1.5 py-0 text-[10px]">
+                                {op.label}
+                              </Badge>
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Input
+                      value={observacion}
+                      onChange={(e) => onChangeObservacion(est.inscripcionId, e.target.value)}
+                      placeholder="Nota u obs."
+                      className="h-8 w-36 text-xs"
+                    />
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+        <Button onClick={onGuardar} disabled={mutation.isPending || data.estudiantes.length === 0}>
+          {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:check" aria-hidden="true" />}
+          Guardar asistencia
+        </Button>
+      </AlertDialogFooter>
+    </>
+  );
+}
+
+export default function TomarAsistenciaDialog({ sesion }: ITomarAsistenciaDialogProps) {
+  const [open, setOpen] = useState(false);
+  const { data, isPending } = useAsistenciasSesion(sesion.id, open);
+  const mutation = useGuardarAsistenciasSesion(sesion.id);
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -93,77 +161,19 @@ export default function TomarAsistenciaDialog({ sesion }: ITomarAsistenciaDialog
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <div className="space-y-3 py-2">
-          {isPending ? (
-            <div className="space-y-2">
-              <Skeleton className="h-10 w-full" />
-              <Skeleton className="h-10 w-full" />
-            </div>
-          ) : !data?.estudiantes.length ? (
-            <div className="rounded-xl border border-dashed border-border/70 p-6 text-center">
-              <p className="text-sm text-muted-foreground">No hay estudiantes matriculados en esta cátedra.</p>
-            </div>
-          ) : (
-            <ul className="max-h-80 space-y-2 overflow-y-auto pr-1">
-              {data.estudiantes.map((est) => {
-                const item = asistencias.find((a) => a.inscripcionId === est.inscripcionId);
-                const estado = item?.estado ?? est.estado;
-                const observacion = item?.observacion ?? "";
-
-                return (
-                  <li
-                    key={est.inscripcionId}
-                    className="flex flex-col gap-2 rounded-lg border border-border/60 bg-muted/30 p-3 sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{est.estudiante}</p>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Select
-                        value={estado}
-                        onValueChange={(val) => onChangeEstado(est.inscripcionId, val as TEstadoAsistencia)}
-                      >
-                        <SelectTrigger className="h-8 w-32 text-xs">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {ESTADO_ASISTENCIA_OPCIONES.map((op) => (
-                            <SelectItem key={op.value} value={op.value} className="text-xs">
-                              <span className="flex items-center gap-1.5">
-                                <Badge variant={op.badge} className="px-1.5 py-0 text-[10px]">
-                                  {op.label}
-                                </Badge>
-                              </span>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
-                      <Input
-                        value={observacion}
-                        onChange={(e) => onChangeObservacion(est.inscripcionId, e.target.value)}
-                        placeholder="Nota u obs."
-                        className="h-8 w-36 text-xs"
-                      />
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </div>
-
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <Button
-            onClick={onGuardar}
-            disabled={mutation.isPending || isPending || !data?.estudiantes.length}
-          >
-            {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:check" aria-hidden="true" />}
-            Guardar asistencia
-          </Button>
-        </AlertDialogFooter>
+        {isPending ? (
+          <div className="space-y-2">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        ) : data ? (
+          <AsistenciasEditor
+            key={sesion.id}
+            data={data}
+            mutation={mutation}
+            onSaved={() => setOpen(false)}
+          />
+        ) : null}
       </AlertDialogContent>
     </AlertDialog>
   );

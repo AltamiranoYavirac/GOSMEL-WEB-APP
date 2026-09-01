@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 
 import {
@@ -23,26 +23,21 @@ import { useGuardarCalificaciones } from "../hooks/useGuardarCalificaciones";
 import { TIPO_EVALUACION_BADGE } from "../model/evaluacion.types";
 import type { ICalificarEvaluacionSheetProps } from "./CalificarEvaluacionSheet.types";
 
-export default function CalificarEvaluacionSheet({ evaluacion }: ICalificarEvaluacionSheetProps) {
-  const [open, setOpen] = useState(false);
-  const { data, isPending } = useCalificacionesEvaluacion(evaluacion.id, open);
-  const mutation = useGuardarCalificaciones(evaluacion.id);
+interface ICalificacionesEditorProps {
+  data: NonNullable<ReturnType<typeof useCalificacionesEvaluacion>["data"]>;
+  notaMaxima: number;
+  mutation: ReturnType<typeof useGuardarCalificaciones>;
+  onSaved: () => void;
+}
 
-  const [calificaciones, setCalificaciones] = useState<
-    Array<{ inscripcionId: string; nota: number | null; observacion: string }>
-  >([]);
-
-  useEffect(() => {
-    if (data?.estudiantes) {
-      setCalificaciones(
-        data.estudiantes.map((e) => ({
-          inscripcionId: e.inscripcionId,
-          nota: e.nota,
-          observacion: e.observacion ?? "",
-        }))
-      );
-    }
-  }, [data]);
+function CalificacionesEditor({ data, notaMaxima, mutation, onSaved }: ICalificacionesEditorProps) {
+  const [calificaciones, setCalificaciones] = useState(() =>
+    (data.estudiantes ?? []).map((e) => ({
+      inscripcionId: e.inscripcionId,
+      nota: e.nota,
+      observacion: e.observacion ?? "",
+    }))
+  );
 
   const onChangeNota = (inscripcionId: string, value: string) => {
     const num = value === "" ? null : Number(value);
@@ -59,9 +54,79 @@ export default function CalificarEvaluacionSheet({ evaluacion }: ICalificarEvalu
 
   const onGuardar = () => {
     mutation.mutate(calificaciones, {
-      onSuccess: () => setOpen(false),
+      onSuccess: onSaved,
     });
   };
+
+  return (
+    <>
+      <ScrollArea className="max-h-[60vh]">
+        <div className="space-y-3 pr-3">
+          {data.estudiantes.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-border/70 p-6 text-center">
+              <p className="text-sm text-muted-foreground">No hay estudiantes matriculados en esta cátedra.</p>
+            </div>
+          ) : (
+            <ul className="space-y-2">
+              {data.estudiantes.map((est) => {
+                const item = calificaciones.find((c) => c.inscripcionId === est.inscripcionId);
+                const notaValue = item?.nota != null ? String(item.nota) : "";
+                const obsValue = item?.observacion ?? "";
+
+                return (
+                  <li
+                    key={est.inscripcionId}
+                    className="flex flex-col gap-2 rounded-lg border border-border/60 bg-background p-3 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{est.estudiante}</p>
+                      {est.calificadaEn ? (
+                        <span className="text-[10px] text-muted-foreground">
+                          Calificado el {new Date(est.calificadaEn).toLocaleDateString("es")}
+                        </span>
+                      ) : null}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max={notaMaxima}
+                        value={notaValue}
+                        onChange={(e) => onChangeNota(est.inscripcionId, e.target.value)}
+                        placeholder="0.0"
+                        className="h-8 w-20 text-center font-mono text-xs font-semibold"
+                      />
+                      <Input
+                        value={obsValue}
+                        onChange={(e) => onChangeObs(est.inscripcionId, e.target.value)}
+                        placeholder="Comentario..."
+                        className="h-8 w-32 text-xs"
+                      />
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      </ScrollArea>
+
+      <div className="flex justify-end gap-2 pt-2">
+        <Button onClick={onGuardar} disabled={mutation.isPending || data.estudiantes.length === 0}>
+          {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:check" aria-hidden="true" />}
+          Guardar calificaciones
+        </Button>
+      </div>
+    </>
+  );
+}
+
+export default function CalificarEvaluacionSheet({ evaluacion }: ICalificarEvaluacionSheetProps) {
+  const [open, setOpen] = useState(false);
+  const { data, isPending } = useCalificacionesEvaluacion(evaluacion.id, open);
+  const mutation = useGuardarCalificaciones(evaluacion.id);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -97,73 +162,20 @@ export default function CalificarEvaluacionSheet({ evaluacion }: ICalificarEvalu
             </div>
           </div>
 
-          <ScrollArea className="max-h-[60vh]">
-            <div className="space-y-3 pr-3">
-              {isPending ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-14 w-full" />
-                  <Skeleton className="h-14 w-full" />
-                </div>
-              ) : !data?.estudiantes.length ? (
-                <div className="rounded-xl border border-dashed border-border/70 p-6 text-center">
-                  <p className="text-sm text-muted-foreground">No hay estudiantes matriculados en esta cátedra.</p>
-                </div>
-              ) : (
-                <ul className="space-y-2">
-                  {data.estudiantes.map((est) => {
-                    const item = calificaciones.find((c) => c.inscripcionId === est.inscripcionId);
-                    const notaValue = item?.nota != null ? String(item.nota) : "";
-                    const obsValue = item?.observacion ?? "";
-
-                    return (
-                      <li
-                        key={est.inscripcionId}
-                        className="flex flex-col gap-2 rounded-lg border border-border/60 bg-background p-3 sm:flex-row sm:items-center sm:justify-between"
-                      >
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-medium">{est.estudiante}</p>
-                          {est.calificadaEn ? (
-                            <span className="text-[10px] text-muted-foreground">
-                              Calificado el {new Date(est.calificadaEn).toLocaleDateString("es")}
-                            </span>
-                          ) : null}
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <Input
-                            type="number"
-                            step="0.1"
-                            min="0"
-                            max={data.notaMaxima}
-                            value={notaValue}
-                            onChange={(e) => onChangeNota(est.inscripcionId, e.target.value)}
-                            placeholder="0.0"
-                            className="h-8 w-20 text-center font-mono text-xs font-semibold"
-                          />
-                          <Input
-                            value={obsValue}
-                            onChange={(e) => onChangeObs(est.inscripcionId, e.target.value)}
-                            placeholder="Comentario..."
-                            className="h-8 w-32 text-xs"
-                          />
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
+          {isPending ? (
+            <div className="space-y-2">
+              <Skeleton className="h-14 w-full" />
+              <Skeleton className="h-14 w-full" />
             </div>
-          </ScrollArea>
-
-          <div className="flex justify-end gap-2 pt-2">
-            <Button
-              onClick={onGuardar}
-              disabled={mutation.isPending || isPending || !data?.estudiantes.length}
-            >
-              {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:check" aria-hidden="true" />}
-              Guardar calificaciones
-            </Button>
-          </div>
+          ) : data ? (
+            <CalificacionesEditor
+              key={evaluacion.id}
+              data={data}
+              notaMaxima={evaluacion.notaMaxima}
+              mutation={mutation}
+              onSaved={() => setOpen(false)}
+            />
+          ) : null}
         </div>
       </SheetContent>
     </Sheet>

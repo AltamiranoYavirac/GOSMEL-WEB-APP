@@ -22,10 +22,19 @@ import {
   SelectValue,
   Spinner,
 } from "@/shared/ui";
-import { useRepresentantes } from "@/features/representantes";
+import { useRepresentantes } from "@/entities/representante";
 import { useCreateEstudiante } from "../hooks/useCreateEstudiante";
 import type { TNivelCurso } from "../model/estudiante.types";
 import type { ICrearEstudianteDialogProps } from "./CrearEstudianteDialog.types";
+
+type TParentesco =
+  | "madre"
+  | "padre"
+  | "abuelo"
+  | "tio"
+  | "hermano"
+  | "tutor_legal"
+  | "otro";
 
 export default function CrearEstudianteDialog({
   open: controlledOpen,
@@ -49,7 +58,7 @@ export default function CrearEstudianteDialog({
   const [nivel, setNivel] = useState<TNivelCurso>("iniciacion");
   const [esMenor, setEsMenor] = useState(true);
   const [representanteId, setRepresentanteId] = useState(defaultRepresentanteId || "");
-  const [parentesco, setParentesco] = useState<"madre" | "padre" | "abuelo" | "tio" | "hermano" | "tutor_legal" | "otro">("madre");
+  const [parentesco, setParentesco] = useState<TParentesco>("madre");
 
   const resetForm = () => {
     setNombres("");
@@ -222,7 +231,7 @@ export default function CrearEstudianteDialog({
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="parentesco-select">Parentesco</Label>
-                    <Select value={parentesco} onValueChange={(v) => setParentesco(v as any)}>
+                    <Select value={parentesco} onValueChange={(v) => setParentesco(v as TParentesco)}>
                       <SelectTrigger id="parentesco-select" className="h-10">
                         <SelectValue />
                       </SelectTrigger>

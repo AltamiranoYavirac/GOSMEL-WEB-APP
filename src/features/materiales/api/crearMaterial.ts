@@ -21,7 +21,8 @@ export async function crearMaterial(
 
   if (values.destino === "curso" && values.cursoId) material.curso_id = values.cursoId;
   if (values.destino === "catedra" && values.catedraId) material.catedra_id = values.catedraId;
-  if (values.urlExterna) material.url_externa = values.urlExterna;
+  if (values.urlExterna) material.url_externa = values.urlExterna.trim();
+  if (values.storagePath) material.storage_path = values.storagePath.trim();
 
   const { data, error } = await supabase.from("materiales").insert(material).select("id").single();
 
