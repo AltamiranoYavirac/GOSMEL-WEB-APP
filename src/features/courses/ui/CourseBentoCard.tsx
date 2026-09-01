@@ -11,11 +11,11 @@ export default function CourseBentoCard({
   spanClass,
   featured = false,
 }: ICourseBentoCardProps) {
-  const { slug, title, category, description, image, imageAlt, learns } = course;
+  const { title, category, description, image, imageAlt, learns } = course;
 
   return (
     <Link
-      href={`/courses/${slug}`}
+      href="/contact"
       className={cn(
         "group relative flex h-full min-h-[260px] flex-col justify-end overflow-hidden rounded-[18px] p-6 text-surface-dark-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:rounded-[22px] md:p-7",
         spanClass,
