@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.15"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -74,6 +74,13 @@ export type Database = {
             foreignKeyName: "actividades_estudiante_id_fkey"
             columns: ["estudiante_id"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "actividades_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
             referencedRelation: "v_solicitudes_matricula"
             referencedColumns: ["estudiante_id"]
           },
@@ -83,6 +90,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "perfiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actividades_perfil_id_fkey"
+            columns: ["perfil_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
           },
           {
             foreignKeyName: "actividades_perfil_id_fkey"
@@ -154,6 +168,13 @@ export type Database = {
             foreignKeyName: "acuerdos_pago_acordado_por_fkey"
             columns: ["acordado_por"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "acuerdos_pago_acordado_por_fkey"
+            columns: ["acordado_por"]
+            isOneToOne: false
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -177,6 +198,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_estudiantes"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "acuerdos_pago_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
           },
           {
             foreignKeyName: "acuerdos_pago_estudiante_id_fkey"
@@ -293,6 +321,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "perfiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calificaciones_calificada_por_fkey"
+            columns: ["calificada_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
           },
           {
             foreignKeyName: "calificaciones_calificada_por_fkey"
@@ -521,6 +556,13 @@ export type Database = {
             foreignKeyName: "configuracion_sitio_actualizado_por_fkey"
             columns: ["actualizado_por"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "configuracion_sitio_actualizado_por_fkey"
+            columns: ["actualizado_por"]
+            isOneToOne: false
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -725,6 +767,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_estudiantes"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curso_resenas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
           },
           {
             foreignKeyName: "curso_resenas_estudiante_id_fkey"
@@ -1026,6 +1075,13 @@ export type Database = {
             foreignKeyName: "docentes_perfil_id_fkey"
             columns: ["perfil_id"]
             isOneToOne: true
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "docentes_perfil_id_fkey"
+            columns: ["perfil_id"]
+            isOneToOne: true
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -1068,6 +1124,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_estudiantes"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estudiante_instrumento_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
           },
           {
             foreignKeyName: "estudiante_instrumento_estudiante_id_fkey"
@@ -1128,6 +1191,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_estudiantes"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "estudiante_representante_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
           },
           {
             foreignKeyName: "estudiante_representante_estudiante_id_fkey"
@@ -1230,6 +1300,13 @@ export type Database = {
             foreignKeyName: "estudiantes_perfil_id_fkey"
             columns: ["perfil_id"]
             isOneToOne: true
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "estudiantes_perfil_id_fkey"
+            columns: ["perfil_id"]
+            isOneToOne: true
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -1294,6 +1371,13 @@ export type Database = {
             foreignKeyName: "evaluaciones_creada_por_fkey"
             columns: ["creada_por"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "evaluaciones_creada_por_fkey"
+            columns: ["creada_por"]
+            isOneToOne: false
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -1336,6 +1420,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "perfiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "favoritos_perfil_id_fkey"
+            columns: ["perfil_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
           },
           {
             foreignKeyName: "favoritos_perfil_id_fkey"
@@ -1390,6 +1481,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "perfiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "galeria_medios_actualizado_por_fkey"
+            columns: ["actualizado_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
           },
           {
             foreignKeyName: "galeria_medios_actualizado_por_fkey"
@@ -1462,6 +1560,13 @@ export type Database = {
             foreignKeyName: "inscripciones_aprobada_por_fkey"
             columns: ["aprobada_por"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "inscripciones_aprobada_por_fkey"
+            columns: ["aprobada_por"]
+            isOneToOne: false
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -1497,6 +1602,13 @@ export type Database = {
             foreignKeyName: "inscripciones_estudiante_id_fkey"
             columns: ["estudiante_id"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "inscripciones_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
             referencedRelation: "v_solicitudes_matricula"
             referencedColumns: ["estudiante_id"]
           },
@@ -1506,6 +1618,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "perfiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inscripciones_solicitada_por_fkey"
+            columns: ["solicitada_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
           },
           {
             foreignKeyName: "inscripciones_solicitada_por_fkey"
@@ -1620,6 +1739,13 @@ export type Database = {
             foreignKeyName: "materiales_subido_por_fkey"
             columns: ["subido_por"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "materiales_subido_por_fkey"
+            columns: ["subido_por"]
+            isOneToOne: false
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -1666,6 +1792,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "perfiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "metricas_academia_actualizado_por_fkey"
+            columns: ["actualizado_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
           },
           {
             foreignKeyName: "metricas_academia_actualizado_por_fkey"
@@ -1739,6 +1872,13 @@ export type Database = {
             foreignKeyName: "pagos_registrado_por_fkey"
             columns: ["registrado_por"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "pagos_registrado_por_fkey"
+            columns: ["registrado_por"]
+            isOneToOne: false
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -1775,6 +1915,13 @@ export type Database = {
             foreignKeyName: "perfil_rol_asignado_por_fkey"
             columns: ["asignado_por"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "perfil_rol_asignado_por_fkey"
+            columns: ["asignado_por"]
+            isOneToOne: false
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -1784,6 +1931,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "perfiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "perfil_rol_perfil_id_fkey"
+            columns: ["perfil_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
           },
           {
             foreignKeyName: "perfil_rol_perfil_id_fkey"
@@ -2023,6 +2177,13 @@ export type Database = {
             foreignKeyName: "registros_practica_estudiante_id_fkey"
             columns: ["estudiante_id"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "registros_practica_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
             referencedRelation: "v_solicitudes_matricula"
             referencedColumns: ["estudiante_id"]
           },
@@ -2101,6 +2262,13 @@ export type Database = {
             foreignKeyName: "representantes_perfil_id_fkey"
             columns: ["perfil_id"]
             isOneToOne: true
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "representantes_perfil_id_fkey"
+            columns: ["perfil_id"]
+            isOneToOne: true
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -2147,6 +2315,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "perfiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "secciones_institucionales_actualizado_por_fkey"
+            columns: ["actualizado_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
           },
           {
             foreignKeyName: "secciones_institucionales_actualizado_por_fkey"
@@ -2277,6 +2452,13 @@ export type Database = {
             foreignKeyName: "solicitudes_atendida_por_fkey"
             columns: ["atendida_por"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "solicitudes_atendida_por_fkey"
+            columns: ["atendida_por"]
+            isOneToOne: false
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -2358,6 +2540,13 @@ export type Database = {
             foreignKeyName: "testimonios_actualizado_por_fkey"
             columns: ["actualizado_por"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "testimonios_actualizado_por_fkey"
+            columns: ["actualizado_por"]
+            isOneToOne: false
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
@@ -2381,6 +2570,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_estudiantes"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "testimonios_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
           },
           {
             foreignKeyName: "testimonios_estudiante_id_fkey"
@@ -2490,10 +2686,31 @@ export type Database = {
             foreignKeyName: "estudiantes_perfil_id_fkey"
             columns: ["perfil_id"]
             isOneToOne: true
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "estudiantes_perfil_id_fkey"
+            columns: ["perfil_id"]
+            isOneToOne: true
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
           },
         ]
+      }
+      v_estudiantes_emancipables: {
+        Row: {
+          cedula: string | null
+          edad: number | null
+          email_estudiante: string | null
+          estudiante: string | null
+          estudiante_id: string | null
+          fecha_nacimiento: string | null
+          perfil_email: string | null
+          perfil_nombre: string | null
+          perfil_sugerido: string | null
+        }
+        Relationships: []
       }
       v_promedio_academico: {
         Row: {
@@ -2536,6 +2753,13 @@ export type Database = {
             foreignKeyName: "inscripciones_estudiante_id_fkey"
             columns: ["estudiante_id"]
             isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "inscripciones_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
             referencedRelation: "v_solicitudes_matricula"
             referencedColumns: ["estudiante_id"]
           },
@@ -2552,6 +2776,62 @@ export type Database = {
           representante_id: string | null
         }
         Relationships: []
+      }
+      v_resenas_pendientes: {
+        Row: {
+          comentario: string | null
+          created_at: string | null
+          curso_id: string | null
+          curso_nombre: string | null
+          estudiante_id: string | null
+          estudiante_nombre: string | null
+          puntuacion: number | null
+          resena_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curso_resenas_curso_id_fkey"
+            columns: ["curso_id"]
+            isOneToOne: false
+            referencedRelation: "cursos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curso_resenas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "estudiantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curso_resenas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estado_cuenta"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "curso_resenas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "curso_resenas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "curso_resenas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_solicitudes_matricula"
+            referencedColumns: ["estudiante_id"]
+          },
+        ]
       }
       v_solicitudes_matricula: {
         Row: {
@@ -2575,16 +2855,56 @@ export type Database = {
           p_dia_cobro?: number
           p_inscripcion_id: string
           p_monto_mensual: number
+          p_monto_primer_mes?: number
           p_motivo_ajuste?: string
         }
         Returns: undefined
       }
+      convertir_solicitud_lead: {
+        Args: { p_catedra_id?: string; p_solicitud_id: string }
+        Returns: Json
+      }
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
+      dar_de_baja_estudiante: {
+        Args: {
+          p_condonar_cuotas_pendientes?: boolean
+          p_inscripcion_id: string
+          p_motivo?: string
+        }
+        Returns: undefined
+      }
+      emitir_certificado: {
+        Args: { p_forzar?: boolean; p_inscripcion_id: string }
+        Returns: string
+      }
       es_admin: { Args: never; Returns: boolean }
       es_docente: { Args: never; Returns: boolean }
       estudiantes_accesibles: { Args: never; Returns: string[] }
       generar_cuotas_mes: { Args: { p_mes: string }; Returns: number }
+      generar_sesiones_catedra: {
+        Args: {
+          p_catedra_id: string
+          p_fecha_desde: string
+          p_fecha_hasta: string
+        }
+        Returns: number
+      }
       matriculado_en: { Args: { p_catedra: string }; Returns: boolean }
+      matricular_estudiante_directo: {
+        Args: {
+          p_catedra_id: string
+          p_dia_cobro?: number
+          p_estudiante_id: string
+          p_monto_mensual: number
+          p_monto_primer_mes?: number
+          p_motivo_ajuste?: string
+        }
+        Returns: string
+      }
+      rechazar_matricula: {
+        Args: { p_inscripcion_id: string; p_motivo: string }
+        Returns: undefined
+      }
       roles_actuales: { Args: never; Returns: string[] }
       solicitar_matricula: {
         Args: {
@@ -2599,6 +2919,10 @@ export type Database = {
       }
       tiene_matricula_activa: { Args: never; Returns: boolean }
       tiene_rol: { Args: { p: string }; Returns: boolean }
+      vincular_cuenta_estudiante: {
+        Args: { p_estudiante_id: string; p_perfil_id: string }
+        Returns: undefined
+      }
       vincular_cuenta_representante: {
         Args: { p_perfil_id: string; p_representante_id: string }
         Returns: undefined

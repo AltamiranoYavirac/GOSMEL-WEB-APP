@@ -21,8 +21,12 @@ export const kpiCardVariants = tv({
   },
   variants: {
     variant: {
-      hero: { base: "bg-surface-gradient group-hover:-translate-y-0.5 group-hover:shadow-lg group-hover:shadow-foreground/5" },
-      compact: { base: "" },
+      hero: {
+        base: "bg-background border border-white/60 dark:border-white/5 shadow-[-8px_-8px_20px_rgba(255,255,255,0.9),8px_8px_20px_rgba(169,146,125,0.22)] dark:shadow-[-8px_-8px_20px_rgba(255,255,255,0.04),8px_8px_22px_rgba(0,0,0,0.65)] rounded-3xl hover:-translate-y-1 hover:shadow-[-4px_-4px_12px_rgba(255,255,255,0.95),4px_4px_14px_rgba(169,146,125,0.28)] dark:hover:shadow-[-4px_-4px_14px_rgba(255,255,255,0.06),4px_4px_16px_rgba(0,0,0,0.8)]",
+      },
+      compact: {
+        base: "bg-background border border-white/60 dark:border-white/5 shadow-[-4px_-4px_12px_rgba(255,255,255,0.9),4px_4px_12px_rgba(169,146,125,0.2)] dark:shadow-[-4px_-4px_12px_rgba(255,255,255,0.03),4px_4px_14px_rgba(0,0,0,0.6)] rounded-2xl hover:-translate-y-0.5",
+      },
     },
     tone: toneSlots,
   },

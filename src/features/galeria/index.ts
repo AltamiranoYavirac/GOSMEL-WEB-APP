@@ -1,0 +1,1 @@
+export { default as GaleriaList } from "./ui/GaleriaList";

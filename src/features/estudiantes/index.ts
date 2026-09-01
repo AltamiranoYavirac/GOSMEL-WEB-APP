@@ -1,0 +1,13 @@
+export { default as EstudiantesList } from "./ui/EstudiantesList";
+export { default as CrearEstudianteDialog } from "./ui/CrearEstudianteDialog";
+export { default as EditarEstudianteDialog } from "./ui/EditarEstudianteDialog";
+export { default as EliminarEstudianteDialog } from "./ui/EliminarEstudianteDialog";
+export { default as EstudianteDetalleSheet } from "./ui/EstudianteDetalleSheet";
+export { default as BajaEstudianteDialog } from "./ui/BajaEstudianteDialog";
+export { default as AsignarCursoEstudianteDialog } from "./ui/AsignarCursoEstudianteDialog";
+export * from "./model/estudiante.types";
+export * from "./hooks/useEstudiantes";
+export * from "./hooks/useEstudianteDetalle";
+export * from "./hooks/useCreateEstudiante";
+export * from "./hooks/useDarDeBajaEstudiante";
+export * from "./hooks/useInscribirEstudianteCatedra";

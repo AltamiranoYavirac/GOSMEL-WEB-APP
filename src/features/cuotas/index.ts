@@ -1,0 +1,1 @@
+export { default as CuotasList } from "./ui/CuotasList";

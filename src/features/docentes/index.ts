@@ -1,0 +1,11 @@
+export { default as DocentesList } from "./ui/DocentesList";
+export { default as CrearDocenteDialog } from "./ui/CrearDocenteDialog";
+export { default as EditarDocenteDialog } from "./ui/EditarDocenteDialog";
+export { default as DocenteDetalleSheet } from "./ui/DocenteDetalleSheet";
+export { default as EliminarDocenteDialog } from "./ui/EliminarDocenteDialog";
+export * from "./model/docente.types";
+export * from "./hooks/useDocentes";
+export * from "./hooks/useDocenteDetalle";
+export * from "./hooks/useCreateDocente";
+export * from "./hooks/useUpdateDocente";
+export * from "./hooks/useEliminarDocente";
