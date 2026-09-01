@@ -1,8 +1,3 @@
--- ============================================================================
--- 20260829000000_init_schema.sql
--- Esquema base de la base de datos GOSMEL Music Academy.
--- Squash generado desde el proyecto remoto dyndeppailmhdvzyiseb.
--- ============================================================================
 
 -- Extensiones requeridas por el esquema public
 create extension if not exists citext with schema public;
