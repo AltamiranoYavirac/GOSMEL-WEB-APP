@@ -1,7 +1,7 @@
-export { default as AboutSecondaryVideo } from "./ui/AboutSecondaryVideo";
+export { default as AboutHero } from "./ui/AboutHero";
 export { default as AboutConcerts } from "./ui/AboutConcerts";
-export { default as AboutPillars } from "./ui/AboutPillars";
+export { default as AboutBehindScenes } from "./ui/AboutBehindScenes";
 export { default as AboutValues } from "./ui/AboutValues";
 export { default as AboutTestimonials } from "./ui/AboutTestimonials";
-export { default as AboutCTA } from "./ui/AboutCTA";
-export type { IAboutPillar, IAboutValue, IAboutTestimonial } from "./model/about.types";
+export { ABOUT_VALUES, ABOUT_TESTIMONIALS } from "./model/about.constants";
+export type { IAboutValue, IAboutTestimonial } from "./model/about.types";

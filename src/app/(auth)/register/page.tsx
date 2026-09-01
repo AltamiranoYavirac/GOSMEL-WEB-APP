@@ -1,16 +1,20 @@
 import { RegisterForm } from "@/features/register";
-import { AuthSidePanel } from "@/widgets/AuthSidePanel";
 import { AppImages } from "@/shared/config";
+import { AuthSidePanel } from "@/widgets/AuthSidePanel";
 
 export const metadata = {
   title: "Registro",
-  description: "Únete a la élite musical. Crea tu cuenta en GOSMEL.",
+  description: "Únete a GOSMEL y empieza tu camino musical.",
 };
 
 export default function RegisterPage() {
   return (
     <div className="grid flex-1 lg:grid-cols-2">
-      <AuthSidePanel image={AppImages.WHY_PIANO} quote="La música comienza donde las palabras terminan" />
+      <AuthSidePanel
+        image={AppImages.AUTH_REGISTER}
+        imageAlt="Estudiante de canto en una clase de GOSMEL"
+        quote="La música comienza donde las palabras terminan."
+      />
       <RegisterForm />
     </div>
   );
