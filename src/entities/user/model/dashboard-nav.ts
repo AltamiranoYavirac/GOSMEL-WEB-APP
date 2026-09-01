@@ -27,6 +27,8 @@ const ADMIN_NAV: IDashboardNavGroup[] = [
       { label: "Horarios y sesiones", href: "/dashboard/admin/horarios", icon: "ph:calendar-check" },
       { label: "Evaluaciones", href: "/dashboard/admin/evaluaciones", icon: "ph:exam" },
       { label: "Materiales", href: "/dashboard/admin/materiales", icon: "ph:file-audio" },
+      { label: "Instrumentos", href: "/dashboard/admin/instrumentos", icon: "ph:guitar" },
+      { label: "Certificados", href: "/dashboard/admin/certificados", icon: "ph:certificate" },
     ],
   },
   {
@@ -35,12 +37,14 @@ const ADMIN_NAV: IDashboardNavGroup[] = [
       { label: "Acuerdos de pago", href: "/dashboard/admin/acuerdos", icon: "ph:handshake" },
       { label: "Cuotas", href: "/dashboard/admin/cuotas", icon: "ph:receipt" },
       { label: "Pagos", href: "/dashboard/admin/pagos", icon: "ph:credit-card" },
+      { label: "Cobranza", href: "/dashboard/admin/cobranza", icon: "ph:coins" },
     ],
   },
   {
     label: "Sitio",
     items: [
       { label: "Testimonios", href: "/dashboard/admin/testimonios", icon: "ph:chat-centered-text" },
+      { label: "Reseñas", href: "/dashboard/admin/resenas", icon: "ph:chat-centered-dots" },
       { label: "Galería", href: "/dashboard/admin/galeria", icon: "ph:image" },
       { label: "Secciones", href: "/dashboard/admin/secciones", icon: "ph:layout" },
       { label: "Métricas", href: "/dashboard/admin/metricas", icon: "ph:chart-line-up" },

@@ -1,10 +1,5 @@
-import { ComingSoon } from "@/widgets/ComingSoon";
+import { MetricasList } from "@/features/metricas";
 
 export default function MetricasPage() {
-  return (
-    <ComingSoon
-      title="Métricas"
-      description="Cifras destacadas de la academia que se muestran en la página de inicio."
-    />
-  );
+  return <MetricasList />;
 }

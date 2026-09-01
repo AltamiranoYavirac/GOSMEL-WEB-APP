@@ -1,0 +1,1 @@
+export { default as AcuerdosList } from "./ui/AcuerdosList";

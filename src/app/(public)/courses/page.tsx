@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { CoursesCatalog } from "@/features/courses";
+import { PublicCoursesCatalog } from "@/features/courses";
 
 export const metadata: Metadata = {
   title: "Cursos | GOSMEL Music Academy",
@@ -9,5 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function CoursesPage() {
-  return <CoursesCatalog />;
+  return <PublicCoursesCatalog />;
 }

@@ -1,5 +1,5 @@
-import { ComingSoon } from "@/widgets/ComingSoon";
+import { TeacherDashboard } from "@/features/teacher-portal";
 
 export default function TeacherDashboardPage() {
-  return <ComingSoon />;
+  return <TeacherDashboard />;
 }

@@ -1,11 +1,11 @@
 import { tv } from "tailwind-variants";
 
 export const dashboardNavLinkVariants = tv({
-  base: "relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors before:absolute before:inset-y-1 before:left-0 before:w-0.5 before:rounded-full before:bg-primary before:transition-opacity",
+  base: "relative flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs uppercase tracking-wider font-bold transition-all duration-200",
   variants: {
     active: {
-      true: "bg-primary/12 text-foreground shadow-sm before:opacity-100",
-      false: "text-muted-foreground before:opacity-0 hover:bg-sidebar-accent hover:text-foreground",
+      true: "bg-background text-primary border border-white/60 dark:border-white/5 shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_2px_6px_rgba(169,146,125,0.18)] dark:shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),2px_2px_6px_rgba(0,0,0,0.5)]",
+      false: "text-muted-foreground hover:text-foreground hover:bg-background/50 hover:shadow-xs",
     },
   },
   defaultVariants: {
@@ -14,11 +14,11 @@ export const dashboardNavLinkVariants = tv({
 });
 
 export const dashboardNavIconVariants = tv({
-  base: "shrink-0",
+  base: "shrink-0 size-4.5 transition-transform duration-200 group-hover:scale-110",
   variants: {
     active: {
       true: "text-primary",
-      false: "text-muted-foreground/70 group-hover:text-foreground",
+      false: "text-muted-foreground group-hover:text-primary",
     },
   },
   defaultVariants: {

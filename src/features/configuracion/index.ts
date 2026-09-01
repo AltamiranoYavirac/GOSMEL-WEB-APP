@@ -1,0 +1,1 @@
+export { default as ConfiguracionView } from "./ui/ConfiguracionView";

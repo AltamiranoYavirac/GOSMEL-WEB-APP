@@ -1,10 +1,5 @@
-import { ComingSoon } from "@/widgets/ComingSoon";
+import { MaterialesList } from "@/features/materiales";
 
 export default function MaterialesPage() {
-  return (
-    <ComingSoon
-      title="Materiales"
-      description="Partituras, audios, videos y enlaces compartidos con estudiantes y docentes."
-    />
-  );
+  return <MaterialesList />;
 }

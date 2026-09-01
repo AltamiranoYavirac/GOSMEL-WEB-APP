@@ -1,22 +1,30 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 
 import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui";
 
-import { COURSE_BENEFITS, COURSE_FILTERS, COURSES, type TCourseFilter } from "../model/courses.constants";
+import { COURSE_BENEFITS } from "../model/courses.constants";
+import type { IPublicCourse } from "../model/public-course.types";
 import CourseCard from "./CourseCard";
 
 const ROMAN_NUMERALS = ["I", "II", "III"] as const;
 
-export default function CoursesCatalog() {
-  const [filter, setFilter] = useState<TCourseFilter>("Todos");
+interface ICoursesCatalogProps {
+  courses: IPublicCourse[];
+}
+
+export default function CoursesCatalog({ courses }: ICoursesCatalogProps) {
+  const categorias = useMemo(
+    () => ["Todos", ...Array.from(new Set(courses.map((course) => course.categoria)))],
+    [courses]
+  );
+  const [filter, setFilter] = useState<string>("Todos");
 
   const filtered =
-    filter === "Todos" ? COURSES : COURSES.filter((course) => course.category === filter);
+    filter === "Todos" ? courses : courses.filter((course) => course.categoria === filter);
+  const total = String(courses.length).padStart(2, "0");
 
   return (
     <div className="relative flex-1 overflow-hidden bg-background">
@@ -40,14 +48,14 @@ export default function CoursesCatalog() {
               </h1>
 
               <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-muted-foreground">
-                Siete disciplinas, una academia y una sola convicción: aprender se disfruta cuando el
-                proceso te representa.
+                {courses.length} disciplinas, una academia y una sola convicción: aprender se
+                disfruta cuando el proceso te representa.
               </p>
             </div>
 
             <div className="flex items-end gap-3 self-start lg:flex-col lg:items-end lg:self-end">
               <span className="font-mono text-7xl font-light leading-none text-accent-muted md:text-8xl">
-                07
+                {total}
               </span>
               <span className="pb-2 font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground lg:pb-0">
                 disciplinas
@@ -66,7 +74,7 @@ export default function CoursesCatalog() {
             </span>
             <span className="h-px w-8 shrink-0 bg-border" />
             <div className="flex shrink-0 items-center gap-2">
-              {COURSE_FILTERS.map((value) => (
+              {categorias.map((value) => (
                 <button
                   key={value}
                   type="button"
@@ -96,7 +104,7 @@ export default function CoursesCatalog() {
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((course, index) => (
-                <CourseCard key={course.title} course={course} index={index} />
+                <CourseCard key={course.id} course={course} index={index} />
               ))}
             </div>
           )}
@@ -150,4 +158,3 @@ export default function CoursesCatalog() {
     </div>
   );
 }
-
