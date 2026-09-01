@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 
 import { COURSES } from "@/features/courses";
+import { Reveal } from "@/shared/ui";
 
 import {
   LANDING_PROGRAM_DESCRIPTIONS,
@@ -26,7 +27,7 @@ const LANDING_PROGRAMS = LANDING_PROGRAM_ORDER.map((title) => {
 export default function ProgramsSection() {
   return (
     <section id="programas" className="overflow-hidden bg-background pb-[70px] md:pb-[110px]">
-      <div className="mx-auto flex w-full max-w-[1600px] items-end justify-between px-[22px] pb-5 md:px-14 md:pb-[30px]">
+      <Reveal className="mx-auto flex w-full max-w-[1600px] items-end justify-between px-[22px] pb-5 md:px-14 md:pb-[30px]">
         <h2 className="text-[31px] font-semibold tracking-[-0.035em] md:text-[44px]">
           Programas
         </h2>
@@ -36,15 +37,18 @@ export default function ProgramsSection() {
         >
           Ver todos ›
         </Link>
-      </div>
+      </Reveal>
 
       <div className="landing-scroll mx-auto flex w-full max-w-[1600px] snap-x snap-mandatory gap-3 overflow-x-auto px-[22px] pb-1 md:gap-3.5 md:px-14">
-        {LANDING_PROGRAMS.map(({ title, category, description, icon, image, imageAlt, number }) => (
-          <Link
+        {LANDING_PROGRAMS.map(({ title, category, description, icon, image, imageAlt, number }, index) => (
+          <Reveal
             key={title}
+            delay={index * 0.08}
+            className={`shrink-0 snap-start${image ? "" : " hidden md:block"}`}
+          >
+          <Link
             href="/courses"
-            data-image={image ? "available" : "unavailable"}
-            className="group relative h-[380px] w-[250px] shrink-0 snap-start overflow-hidden rounded-[18px] outline-none data-[image=unavailable]:hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:h-[430px] md:w-[286px] md:rounded-[20px] md:data-[image=unavailable]:block"
+            className="group relative block h-[380px] w-[250px] overflow-hidden rounded-[18px] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:h-[430px] md:w-[286px] md:rounded-[20px]"
           >
             {image ? (
               <>
@@ -87,6 +91,7 @@ export default function ProgramsSection() {
               </div>
             )}
           </Link>
+          </Reveal>
         ))}
       </div>
     </section>
