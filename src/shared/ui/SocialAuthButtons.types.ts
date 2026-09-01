@@ -2,6 +2,7 @@ export interface ISocialProvider {
   id: string;
   icon: string;
   label: string;
+  color?: string;
 }
 
 export interface ISocialAuthButtonsProps {

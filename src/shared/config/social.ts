@@ -2,11 +2,12 @@ export interface ISocialProvider {
   id: string;
   icon: string;
   label: string;
+  color?: string;
 }
 
 export const SOCIAL_PROVIDERS: ISocialProvider[] = [
-  { id: "google", icon: "mdi:google", label: "Google" },
-  { id: "discord", icon: "mdi:discord", label: "Discord" },
+  { id: "google", icon: "logos:google-icon", label: "Google" },
+  { id: "discord", icon: "mdi:discord", label: "Discord", color: "#5865F2" },
 ];
 
 export interface ISocialLink {
