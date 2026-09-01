@@ -72,6 +72,10 @@ export { InputGroup, InputGroupAddon, InputGroupButton, InputGroupText, InputGro
 export { Label } from "./label";
 export { Marker, MarkerIcon, MarkerContent, markerVariants } from "./marker";
 export { default as MediaFrame } from "./MediaFrame";
+export { default as Reveal } from "./Reveal";
+export type { IRevealProps } from "./Reveal.types";
+export { default as RevealImage } from "./RevealImage";
+export type { IRevealImageProps } from "./RevealImage.types";
 export { default as SectionHeader } from "./SectionHeader";
 export { default as SocialAuthButtons } from "./SocialAuthButtons";
 export { default as IconTile } from "./IconTile";
