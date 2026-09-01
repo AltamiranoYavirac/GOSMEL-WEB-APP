@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 
-import { loadDashboardOverview } from "../api/loadDashboardOverview";
+import { getDashboardOverview } from "../api/getDashboardOverview";
 import DashboardWelcome from "./DashboardWelcome";
 import InstrumentDemandChart from "./InstrumentDemandChart";
 import KpiCardGrid from "./KpiCardGrid";
@@ -9,7 +9,7 @@ import RevenueChart from "./RevenueChart";
 import SolicitudesStatusChart from "./SolicitudesStatusChart";
 
 export default async function DashboardOverview() {
-  const { data, error } = await loadDashboardOverview();
+  const { data, error } = await getDashboardOverview();
 
   if (error || !data) {
     return (

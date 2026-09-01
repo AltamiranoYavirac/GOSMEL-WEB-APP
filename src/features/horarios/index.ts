@@ -1,0 +1,1 @@
+export { default as HorariosList } from "./ui/HorariosList";

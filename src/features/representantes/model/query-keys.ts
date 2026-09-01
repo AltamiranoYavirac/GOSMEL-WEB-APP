@@ -1,0 +1,1 @@
+export { representantesQueryKeys } from "@/entities/representante";

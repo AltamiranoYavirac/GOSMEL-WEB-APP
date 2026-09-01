@@ -1,4 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
 
 # dependencies
 /node_modules
@@ -50,3 +50,6 @@ opencode.json
 
 # design prototypes
 /Academia de música rediseño
+
+# supabase CLI local state (linked project metadata)
+supabase/.temp/

@@ -1,0 +1,1 @@
+export { useRepresentantes } from "@/entities/representante";
