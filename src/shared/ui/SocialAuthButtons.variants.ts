@@ -14,6 +14,11 @@ export const socialAuthButtonsVariants = tv({
     layout: {
       stretch: { buttons: "gap-4", button: "flex-1 h-12" },
       compact: { buttons: "gap-6", button: "size-12" },
+      stacked: {
+        root: "flex flex-col-reverse gap-6",
+        buttons: "flex-col gap-3",
+        button: "w-full h-[52px] gap-3 rounded-[14px] text-sm font-semibold",
+      },
     },
   },
   defaultVariants: {

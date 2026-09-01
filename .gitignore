@@ -48,5 +48,8 @@ next-env.d.ts
 # local opencode config (contains API keys)
 opencode.json
 
+# design prototypes
+/Academia de música rediseño
+
 # supabase CLI local state (linked project metadata)
 supabase/.temp/

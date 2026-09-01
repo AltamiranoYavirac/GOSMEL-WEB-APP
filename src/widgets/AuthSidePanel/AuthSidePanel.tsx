@@ -1,51 +1,48 @@
-"use client";
-
 import Image from "next/image";
-import { Icon } from "@iconify/react";
 
-import { AppImages } from "@/shared/config";
-
-import { PANEL_FEATURES } from "./authSidePanel.constants";
+import { AUTH_PANEL_CHIPS } from "./authSidePanel.constants";
 import type { IAuthSidePanelProps } from "./AuthSidePanel.types";
 
-export default function AuthSidePanel({
-  image = AppImages.HERO_COVER,
-  quote = "Lo bello de la teoría en la práctica",
-}: IAuthSidePanelProps) {
+export default function AuthSidePanel({ image, imageAlt, quote }: IAuthSidePanelProps) {
   return (
-    <aside className="relative hidden overflow-hidden bg-surface-dark rounded-r-3xl lg:block lg:min-h-[640px]">
+    <aside className="relative hidden overflow-hidden bg-surface-dark text-surface-dark-foreground lg:block">
       <Image
         src={image}
-        alt="Estudiante de GOSMEL Academia de Música"
+        alt={imageAlt}
         fill
         priority
         sizes="50vw"
         className="object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/95 via-surface-dark/55 to-transparent" />
-      <div className="absolute inset-x-0 top-0 h-40 bg-staff-lines opacity-30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/95 via-surface-dark/55 to-surface-dark/25" />
 
-      <div className="relative z-10 flex h-full flex-col justify-end p-12 pb-16 xl:p-16 xl:pb-20">
-        <p className="mb-3 text-xs font-semibold tracking-[0.3em] text-secondary-300 uppercase">
-          GOSMEL · Academia de Música
+      <div className="absolute inset-x-0 top-0 flex items-center gap-3 p-11 xl:p-14">
+        <span className="flex h-[18px] items-end gap-[3px]">
+          <span className="w-[3px] bg-surface-dark-foreground" style={{ height: "9px" }} />
+          <span className="w-[3px] bg-surface-dark-foreground" style={{ height: "16px" }} />
+          <span className="w-[3px] bg-surface-dark-foreground" style={{ height: "12px" }} />
+          <span className="w-[3px] bg-surface-dark-foreground" style={{ height: "18px" }} />
+        </span>
+        <span className="text-[15px] font-semibold tracking-[0.24em]">GOSMEL</span>
+      </div>
+
+      <div className="absolute inset-x-0 bottom-0 p-11 xl:p-14">
+        <p className="mb-4 font-mono text-[11px] font-medium uppercase tracking-[0.22em] text-stage-accent">
+          Academia de música
         </p>
-        <h2 className="font-heading text-5xl font-black tracking-tight text-warm-50 xl:text-6xl">
-          GOSMEL
-        </h2>
-        <p className="text-brand-gradient mt-4 max-w-md font-heading text-2xl font-light italic xl:text-3xl">
+        <p className="max-w-[420px] text-[28px] font-light italic leading-[1.3] xl:text-[30px]">
           &ldquo;{quote}&rdquo;
         </p>
-        <div className="mt-10 h-px w-full max-w-sm bg-gradient-to-r from-primary-400/60 to-transparent" />
-        <ul className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
-          {PANEL_FEATURES.map(({ icon, label }) => (
-            <li key={label} className="flex items-center gap-2.5 text-sm font-medium text-warm-200">
-              <span className="grid size-9 place-items-center rounded-full bg-primary-400/15 ring-1 ring-primary-300/30">
-                <Icon icon={icon} className="size-5 text-secondary-200" aria-hidden="true" />
-              </span>
-              {label}
-            </li>
+        <div className="mt-8 flex flex-wrap gap-2.5">
+          {AUTH_PANEL_CHIPS.map((chip) => (
+            <span
+              key={chip}
+              className="rounded-full bg-surface-dark-foreground/10 px-4 py-2 text-[12.5px] font-medium"
+            >
+              {chip}
+            </span>
           ))}
-        </ul>
+        </div>
       </div>
     </aside>
   );

@@ -1,4 +1,5 @@
 export interface IAuthSidePanelProps {
-  image?: string;
-  quote?: string;
+  image: string;
+  imageAlt: string;
+  quote: string;
 }
