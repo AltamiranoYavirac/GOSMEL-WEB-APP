@@ -1,10 +1,5 @@
-import { ComingSoon } from "@/widgets/ComingSoon";
+import { PagosList } from "@/features/pagos";
 
 export default function PagosPage() {
-  return (
-    <ComingSoon
-      title="Pagos"
-      description="Registro de pagos realizados contra cada cuota, con su comprobante."
-    />
-  );
+  return <PagosList />;
 }

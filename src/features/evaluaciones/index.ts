@@ -1,0 +1,1 @@
+export { default as EvaluacionesList } from "./ui/EvaluacionesList";

@@ -1,0 +1,1 @@
+export { useCatedras } from "@/entities/catedra";

@@ -1,0 +1,1 @@
+export { catedrasQueryKeys } from "@/entities/catedra";

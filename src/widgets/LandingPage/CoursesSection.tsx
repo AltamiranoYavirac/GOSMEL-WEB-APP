@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 
-import { Button, Card, SectionHeader } from "@/shared/ui";
+import { Button, SectionHeader } from "@/shared/ui";
 
 import { COURSES } from "@/features/courses";
 
