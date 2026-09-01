@@ -1,12 +1,8 @@
-export interface IAboutPillar {
-  tag: string;
-  description: string;
-}
-
 export interface IAboutValue {
   title: string;
   description: string;
   imageUrl: string;
+  imageAlt: string;
 }
 
 export interface IAboutTestimonial {

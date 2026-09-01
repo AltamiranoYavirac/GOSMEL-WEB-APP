@@ -1,10 +1,9 @@
 "use client"
 
-import { Icon } from "@iconify/react"
 import Link from "next/link"
 import { toast } from "sonner"
 
-import { AuthCard, Button, SocialAuthButtons, Spinner } from "@/shared/ui"
+import { Button, SocialAuthButtons, Spinner } from "@/shared/ui"
 import { CheckboxField, Form, PasswordField, TextField, useAppForm } from "@/shared/form"
 import { useSocialLogin, type TAuthProvider } from "@/shared/auth"
 import { useRegister } from "../hooks/useRegister"
@@ -25,9 +24,7 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
   const register = useRegister()
   const socialLogin = useSocialLogin()
 
-  const { watch } = form
-
-  const password = watch("password")
+  const password = form.watch("password")
 
   const onSubmit = async (values: IRegisterFormValues) => {
     try {
@@ -50,100 +47,97 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
   }
 
   return (
-    <AuthCard
-      icon="ph:piano-keys"
-      title="¡Crea tu cuenta!"
-      subtitle="Iniciación Artística en el Estudio GOSMEL"
-      footer={
-        <p className="text-center text-sm text-muted-foreground">
-          ¿Ya tienes una cuenta?{" "}
-          <Link
-            href="/login"
-            className="font-semibold uppercase tracking-widest text-primary transition hover:brightness-110"
-          >
-            Iniciar Sesión
-          </Link>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-20">
+      <div className="w-full max-w-[400px]">
+        <h1 className="text-[36px] font-semibold leading-[1.1] tracking-[-0.03em]">
+          Crea tu cuenta.
+        </h1>
+        <p className="mt-3 text-[15px] leading-[1.55] text-muted-foreground">
+          Únete a GOSMEL y empieza tu camino musical.
         </p>
-      }
-    >
-      <Form form={form} onSubmit={onSubmit} className="flex flex-col gap-5">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <TextField
-            name="firstName"
-            label="Nombre"
-            autoComplete="given-name"
-            placeholder="Tu nombre"
-          />
-          <TextField
-            name="lastName"
-            label="Apellido"
-            autoComplete="family-name"
-            placeholder="Tu apellido"
-          />
-        </div>
 
-        <TextField
-          name="email"
-          label="Correo Electrónico"
-          type="email"
-          autoComplete="email"
-          placeholder="tu@correo.com"
+        <SocialAuthButtons
+          dividerLabel="O con tu correo"
+          ariaLabelPrefix="Continuar con"
+          layout="stacked"
+          onProviderSelect={(provider) => socialLogin.mutate(provider.id as TAuthProvider)}
+          disabledProviders={["apple"]}
+          isPending={socialLogin.isPending}
+          className="mt-8"
         />
 
-        <TextField
-          name="phone"
-          label="Número de Celular"
-          type="tel"
-          autoComplete="tel"
-          placeholder="+XX XXX XXXX XXXX"
-        />
+        <Form form={form} onSubmit={onSubmit} className="mt-7 flex flex-col gap-5">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <TextField name="firstName" label="Nombre" autoComplete="given-name" placeholder="Tu nombre" />
+            <TextField name="lastName" label="Apellido" autoComplete="family-name" placeholder="Tu apellido" />
+          </div>
 
-        <div className="flex flex-col gap-2">
+          <TextField
+            name="email"
+            label="Correo electrónico"
+            type="email"
+            autoComplete="email"
+            placeholder="tucorreo@ejemplo.com"
+          />
+
+          <TextField
+            name="phone"
+            label="Teléfono"
+            type="tel"
+            autoComplete="tel"
+            placeholder="+593 99 999 9999"
+          />
+
+          <div className="flex flex-col gap-2">
+            <PasswordField
+              name="password"
+              label="Contraseña"
+              autoComplete="new-password"
+              placeholder="••••••••"
+            />
+            <PasswordStrengthMeter value={password} />
+          </div>
+
           <PasswordField
-            name="password"
-            label="Contraseña"
+            name="confirmPassword"
+            label="Confirmar contraseña"
             autoComplete="new-password"
             placeholder="••••••••"
           />
-          <PasswordStrengthMeter value={password} />
-        </div>
 
-        <CheckboxField
-          name="acceptTerms"
-          label={
-            <>
-              Acepto los{" "}
-              <Link href="/terms" className="text-primary underline underline-offset-2">
-                términos y condiciones
-              </Link>
-            </>
-          }
-        />
+          <CheckboxField
+            name="acceptTerms"
+            label={
+              <>
+                Acepto los{" "}
+                <Link href="/terms" className="text-primary underline underline-offset-2">
+                  términos y condiciones
+                </Link>{" "}
+                y la{" "}
+                <Link href="/privacy" className="text-primary underline underline-offset-2">
+                  política de privacidad
+                </Link>
+              </>
+            }
+          />
 
-        <Button
-          type="submit"
-          size="2xl"
-          disabled={register.isPending}
-          className="mt-1 w-full gap-2 text-sm uppercase tracking-widest"
-        >
-          {register.isPending ? (
-            <Spinner className="size-4" />
-          ) : (
-            <Icon icon="ph:user-plus" className="size-5" aria-hidden="true" />
-          )}
-          {register.isPending ? "Procesando..." : "Unirse a la Academia"}
-        </Button>
-      </Form>
+          <Button
+            type="submit"
+            disabled={register.isPending}
+            className="mt-1 h-[52px] w-full gap-2 rounded-full text-[15px] font-semibold"
+          >
+            {register.isPending ? <Spinner className="size-4" /> : null}
+            {register.isPending ? "Procesando…" : "Crear cuenta"}
+          </Button>
+        </Form>
 
-      <SocialAuthButtons
-        dividerLabel="O registrarse con"
-        ariaLabelPrefix="Registrarse con"
-        onProviderSelect={(provider) => socialLogin.mutate(provider.id as TAuthProvider)}
-        disabledProviders={[]}
-        isPending={socialLogin.isPending}
-        layout="compact"
-        className="mt-8 !gap-4"
-      />
-    </AuthCard>
+        <p className="mt-7 text-center text-sm text-muted-foreground">
+          ¿Ya tienes cuenta?{" "}
+          <Link href="/login" className="font-semibold text-primary transition hover:brightness-110">
+            Iniciar sesión
+          </Link>
+        </p>
+      </div>
+    </div>
   )
 }
