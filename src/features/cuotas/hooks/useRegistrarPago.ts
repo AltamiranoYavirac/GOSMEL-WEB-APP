@@ -18,7 +18,9 @@ export function useRegistrarPago() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: cuotasQueryKeys.list() });
-      queryClient.invalidateQueries({ queryKey: ["pagos", "list"] });
+      queryClient.invalidateQueries({ queryKey: ["pagos"] });
+      queryClient.invalidateQueries({ queryKey: ["cobranza"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-overview"] });
       toast.success("Pago registrado");
     },
     onError: (error) => toast.error(error.message),

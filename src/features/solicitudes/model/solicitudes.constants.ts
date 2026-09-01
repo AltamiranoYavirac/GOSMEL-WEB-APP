@@ -13,9 +13,9 @@ export const SOLICITUD_ESTADO_BADGE: Record<
   TSolicitudEstado,
   { label: string; variant: TBadgeVariant }
 > = {
-  nueva: { label: "Nueva", variant: "secondary" },
+  nueva: { label: "Nueva", variant: "warning" },
   contactada: { label: "Contactada", variant: "outline" },
-  convertida: { label: "Convertida", variant: "default" },
+  convertida: { label: "Convertida", variant: "success" },
   descartada: { label: "Descartada", variant: "destructive" },
 };
 

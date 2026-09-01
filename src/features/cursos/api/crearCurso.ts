@@ -1,4 +1,5 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import { ensureDocenteRecord } from "@/shared/api/ensureDocenteRecord";
 import type { TablesInsert } from "@/shared/api/supabase/database.types";
 
 import type { ICrearCursoFormValues } from "../model/CrearCursoForm.config";
@@ -49,6 +50,7 @@ export async function crearCurso(
   if (values.instrumentoId) curso.instrumento_id = values.instrumentoId;
   if (values.duracionSemanas != null) curso.duracion_semanas = values.duracionSemanas;
   if (values.horasTotales != null) curso.horas_totales = values.horasTotales;
+  if (values.portadaPublicId?.trim()) curso.portada_public_id = values.portadaPublicId.trim();
 
   const { data, error } = await supabase.from("cursos").insert(curso).select("id").single();
   if (error) {
@@ -56,6 +58,8 @@ export async function crearCurso(
   }
 
   if (values.asignarDocente && values.docenteId) {
+    await ensureDocenteRecord(supabase, values.docenteId);
+
     const prefix = slugify(values.nombre).slice(0, 5).toUpperCase() || "CAT";
     const catedra: TablesInsert<"catedras"> = {
       codigo: `${prefix}-${data.id.slice(0, 5).toUpperCase()}`,

@@ -27,6 +27,7 @@ import {
   SESION_ESTADO_BADGE,
   type ITeacherCatedra,
   type ITeacherDashboard,
+  type ITeacherEstudiante,
   type ITeacherEvaluacion,
   type ITeacherMaterial,
   type ITeacherSesion,
@@ -92,17 +93,21 @@ export default function TeacherDashboard() {
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard icon="ph:chalkboard" label="Mis cátedras" value={data.counts.catedrasActivas} />
         <StatCard icon="ph:calendar-check" label="Sesiones de hoy" value={data.counts.sesionesHoy} />
-        <StatCard icon="ph:students" label="Estudiantes inscritos" value={data.counts.inscritos} />
+        <StatCard icon="ph:student" label="Mis estudiantes" value={data.counts.inscritos} />
       </div>
 
-      <Tabs defaultValue="catedras">
+      <Tabs defaultValue="estudiantes">
         <TabsList>
+          <TabsTrigger value="estudiantes">Mis Estudiantes</TabsTrigger>
           <TabsTrigger value="catedras">Cátedras</TabsTrigger>
           <TabsTrigger value="sesiones">Sesiones</TabsTrigger>
           <TabsTrigger value="materiales">Materiales</TabsTrigger>
           <TabsTrigger value="evaluaciones">Evaluaciones</TabsTrigger>
         </TabsList>
 
+        <TabsContent value="estudiantes" className="pt-2">
+          <EstudiantesTab estudiantes={data.estudiantes} />
+        </TabsContent>
         <TabsContent value="catedras" className="pt-2">
           <CatedrasTab data={data} />
         </TabsContent>
@@ -117,6 +122,54 @@ export default function TeacherDashboard() {
         </TabsContent>
       </Tabs>
     </div>
+  );
+}
+
+function EstudiantesTab({ estudiantes }: { estudiantes: ITeacherEstudiante[] }) {
+  const columns: IAdminColumn<ITeacherEstudiante>[] = [
+    {
+      key: "nombre",
+      label: "Estudiante",
+      render: (row) => (
+        <div className="flex min-w-0 flex-col">
+          <span className="font-semibold text-foreground">{row.nombre}</span>
+          {row.email ? <span className="truncate text-xs text-muted-foreground">{row.email}</span> : null}
+        </div>
+      ),
+    },
+    {
+      key: "curso",
+      label: "Curso / Cátedra",
+      render: (row) => (
+        <div className="flex flex-col">
+          <span className="font-medium text-xs text-foreground">{row.cursoNombre}</span>
+          <span className="font-mono text-[10px] text-primary">{row.catedraCodigo}</span>
+        </div>
+      ),
+    },
+    {
+      key: "contacto",
+      label: "Contacto",
+      render: (row) => row.celular ?? <span className="text-muted-foreground">—</span>,
+    },
+    {
+      key: "fecha",
+      label: "Fecha Inscripción",
+      render: (row) => <span className="text-xs text-muted-foreground">{formatDate(row.fechaInscripcion)}</span>,
+    },
+  ];
+
+  return (
+    <AdminDataTable
+      data={estudiantes}
+      columns={columns}
+      loading={false}
+      keyId={(row) => `${row.id}-${row.catedraCodigo}`}
+      searchKeys={[(row) => row.nombre, (row) => row.cursoNombre, (row) => row.catedraCodigo]}
+      emptyTitle="Sin estudiantes inscritos"
+      emptyDescription="Cuando la administración asigne estudiantes a tus cátedras aparecerán aquí."
+      countLabel="estudiantes"
+    />
   );
 }
 
@@ -207,16 +260,12 @@ function SesionesTab({ sesiones }: { sesiones: ITeacherSesion[] }) {
     {
       key: "fecha",
       label: "Fecha",
-      render: (row) => <span className="text-muted-foreground">{formatDate(row.fecha)}</span>,
+      render: (row) => formatDate(row.fecha),
     },
     {
-      key: "hora",
-      label: "Hora",
-      render: (row) => (
-        <span className="font-mono text-sm text-muted-foreground">
-          {row.inicio} – {row.fin}
-        </span>
-      ),
+      key: "horario",
+      label: "Horario",
+      render: (row) => `${row.inicio}–${row.fin}`,
     },
     {
       key: "tema",
@@ -229,10 +278,10 @@ function SesionesTab({ sesiones }: { sesiones: ITeacherSesion[] }) {
       render: (row) =>
         row.totalAsistencia > 0 ? (
           <span className="text-muted-foreground">
-            {row.presentes} / {row.totalAsistencia}
+            {row.presentes}/{row.totalAsistencia}
           </span>
         ) : (
-          <span className="text-muted-foreground">Sin registro</span>
+          <span className="text-muted-foreground">—</span>
         ),
     },
     {
@@ -251,8 +300,8 @@ function SesionesTab({ sesiones }: { sesiones: ITeacherSesion[] }) {
       loading={false}
       keyId={(row) => row.id}
       searchKeys={[(row) => row.catedra, (row) => row.curso, (row) => row.tema ?? ""]}
-      emptyTitle="Sin sesiones"
-      emptyDescription="Cuando se registren sesiones de tus cátedras aparecerán aquí."
+      emptyTitle="Sin sesiones programadas"
+      emptyDescription="Las sesiones del calendario aparecerán aquí."
       countLabel="sesiones"
     />
   );
@@ -262,7 +311,7 @@ function MaterialesTab({ materiales }: { materiales: ITeacherMaterial[] }) {
   const columns: IAdminColumn<ITeacherMaterial>[] = [
     {
       key: "titulo",
-      label: "Material",
+      label: "Título",
       render: (row) => <span className="font-medium">{row.titulo}</span>,
     },
     {
@@ -273,14 +322,14 @@ function MaterialesTab({ materiales }: { materiales: ITeacherMaterial[] }) {
       ),
     },
     {
-      key: "visibilidad",
-      label: "Visibilidad",
-      render: (row) => <span className="text-muted-foreground capitalize">{row.visibilidad}</span>,
+      key: "destino",
+      label: "Curso / Cátedra",
+      render: (row) => row.destino ?? <span className="text-muted-foreground">General</span>,
     },
     {
-      key: "destino",
-      label: "Asociado a",
-      render: (row) => row.destino ?? <span className="text-muted-foreground">—</span>,
+      key: "visibilidad",
+      label: "Visibilidad",
+      render: (row) => <span className="capitalize text-muted-foreground">{row.visibilidad}</span>,
     },
   ];
 
@@ -292,7 +341,7 @@ function MaterialesTab({ materiales }: { materiales: ITeacherMaterial[] }) {
       keyId={(row) => row.id}
       searchKeys={[(row) => row.titulo, (row) => row.destino ?? ""]}
       emptyTitle="Sin materiales"
-      emptyDescription="Los materiales compartidos contigo aparecerán aquí."
+      emptyDescription="Los materiales que subas para tus clases aparecerán aquí."
       countLabel="materiales"
     />
   );
@@ -302,7 +351,7 @@ function EvaluacionesTab({ evaluaciones }: { evaluaciones: ITeacherEvaluacion[] 
   const columns: IAdminColumn<ITeacherEvaluacion>[] = [
     {
       key: "titulo",
-      label: "Evaluación",
+      label: "Título",
       render: (row) => <span className="font-medium">{row.titulo}</span>,
     },
     {
@@ -318,21 +367,23 @@ function EvaluacionesTab({ evaluaciones }: { evaluaciones: ITeacherEvaluacion[] 
       render: (row) => <span className="font-mono text-xs font-semibold text-primary">{row.catedra}</span>,
     },
     {
+      key: "fecha",
+      label: "Fecha",
+      render: (row) => (row.fecha ? formatDate(row.fecha) : <span className="text-muted-foreground">—</span>),
+    },
+    {
       key: "ponderacion",
       label: "Ponderación",
       render: (row) => `${row.ponderacion}%`,
-    },
-    {
-      key: "notaMaxima",
-      label: "Nota máx.",
-      render: (row) => row.notaMaxima,
     },
     {
       key: "promedio",
       label: "Promedio",
       render: (row) =>
         row.promedio != null ? (
-          <span className="font-semibold text-primary">{row.promedio.toFixed(2)}</span>
+          <span className="font-medium">
+            {row.promedio}/{row.notaMaxima}
+          </span>
         ) : (
           <span className="text-muted-foreground">Sin calificar</span>
         ),
@@ -347,7 +398,7 @@ function EvaluacionesTab({ evaluaciones }: { evaluaciones: ITeacherEvaluacion[] 
       keyId={(row) => row.id}
       searchKeys={[(row) => row.titulo, (row) => row.catedra]}
       emptyTitle="Sin evaluaciones"
-      emptyDescription="Las evaluaciones de tus cátedras aparecerán aquí."
+      emptyDescription="Las evaluaciones que programes para tus cursos aparecerán aquí."
       countLabel="evaluaciones"
     />
   );

@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
+  ImageUploadField,
   Spinner,
 } from "@/shared/ui";
 import { Form, NumberField, SelectField, SwitchField, TextareaField, TextField, useAppForm } from "@/shared/form";
@@ -55,7 +56,7 @@ export default function CrearCursoDialog() {
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="max-w-lg">
+      <AlertDialogContent className="w-full max-w-2xl sm:max-w-3xl max-h-[90vh] overflow-y-auto p-6 sm:p-8">
         <AlertDialogHeader>
           <AlertDialogTitle>Crear curso</AlertDialogTitle>
           <AlertDialogDescription>
@@ -64,6 +65,13 @@ export default function CrearCursoDialog() {
         </AlertDialogHeader>
 
         <Form form={form} onSubmit={onSubmit} id="crear-curso" className="flex flex-col gap-4">
+          <ImageUploadField
+            label="Foto de portada para la web pública"
+            value={form.watch("portadaPublicId")}
+            onChange={(val) => form.setValue("portadaPublicId", val)}
+            folder="gosmel/cursos"
+          />
+
           <TextField name="nombre" label="Nombre" placeholder="Ej. Guitarra eléctrica I" />
           <TextareaField name="descripcion" label="Descripción" rows={3} placeholder="Qué aprenderá el estudiante…" />
           <TextField name="resumen" label="Resumen (opcional)" />

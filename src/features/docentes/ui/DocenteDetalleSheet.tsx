@@ -41,7 +41,7 @@ export default function DocenteDetalleSheet({ docenteId, docenteNombre }: IDocen
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="sm:max-w-xl">
+      <SheetContent className="w-full sm:max-w-2xl md:max-w-3xl">
         <SheetHeader>
           <SheetTitle>Detalle · {docenteNombre}</SheetTitle>
           <SheetDescription>Formación, reconocimientos, portafolio y cátedras asignadas.</SheetDescription>

@@ -60,7 +60,7 @@ export default function EditarAcuerdoDialog({ acuerdo }: IEditarAcuerdoDialogPro
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="max-w-lg">
+      <AlertDialogContent className="w-full max-w-2xl sm:max-w-3xl max-h-[90vh] overflow-y-auto p-6 sm:p-8">
         <AlertDialogHeader>
           <AlertDialogTitle>Editar acuerdo de pago</AlertDialogTitle>
           <AlertDialogDescription>

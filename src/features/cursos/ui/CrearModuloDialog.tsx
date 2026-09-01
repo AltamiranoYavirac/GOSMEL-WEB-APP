@@ -51,7 +51,7 @@ export default function CrearModuloDialog({ cursoId, nextOrden = 0 }: ICrearModu
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="max-w-md">
+      <AlertDialogContent className="w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-8">
         <AlertDialogHeader>
           <AlertDialogTitle>Nuevo módulo</AlertDialogTitle>
           <AlertDialogDescription>Agrega un bloque temático al temario del curso.</AlertDialogDescription>

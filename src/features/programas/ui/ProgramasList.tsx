@@ -7,6 +7,7 @@ import { useUpdateProgramaPublicado } from "../hooks/useUpdateProgramaPublicado"
 import { NIVEL_BADGE, type IProgramaRow } from "../model/programa.types";
 import CrearProgramaDialog from "./CrearProgramaDialog";
 import EditarProgramaDialog from "./EditarProgramaDialog";
+import EliminarProgramaDialog from "./EliminarProgramaDialog";
 import ProgramaCursosSheet from "./ProgramaCursosSheet";
 
 export default function ProgramasList() {
@@ -90,6 +91,7 @@ export default function ProgramasList() {
           <div className="flex items-center justify-end gap-2">
             <ProgramaCursosSheet programaId={row.id} programaNombre={row.nombre} />
             <EditarProgramaDialog programa={row} />
+            <EliminarProgramaDialog programa={row} />
           </div>
         )}
       />

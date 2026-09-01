@@ -17,6 +17,7 @@ import type { IInstrumentoRow } from "../model/instrumento.types";
 import CrearInstrumentoDialog from "./CrearInstrumentoDialog";
 import EditarInstrumentoDialog from "./EditarInstrumentoDialog";
 import CrearTipoInstrumentoDialog from "./CrearTipoInstrumentoDialog";
+import EliminarInstrumentoDialog from "./EliminarInstrumentoDialog";
 
 export default function InstrumentosList() {
   const { data, isPending } = useInstrumentos();
@@ -110,8 +111,9 @@ export default function InstrumentosList() {
         emptyDescription="Cuando se creen instrumentos aparecerán aquí."
         countLabel="instrumentos"
         rowActions={(row) => (
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end gap-1.5">
             <EditarInstrumentoDialog instrumento={row} />
+            <EliminarInstrumentoDialog instrumento={row} />
           </div>
         )}
       />

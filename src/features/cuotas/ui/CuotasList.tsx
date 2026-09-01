@@ -18,13 +18,19 @@ import { formatCurrency, formatDate, formatMonthPeriod } from "@/shared/lib/form
 
 import { useCuotas } from "../hooks/useCuotas";
 import { useCondonarCuota } from "../hooks/useCondonarCuota";
+import { useReactivarCuota } from "../hooks/useReactivarCuota";
+import { useEliminarCuota } from "../hooks/useEliminarCuota";
 import { CUOTA_ESTADO_BADGE, type ICuotaRow } from "../model/cuota.types";
 import GenerarCuotasDialog from "./GenerarCuotasDialog";
+import CrearCuotaDialog from "./CrearCuotaDialog";
+import EditarCuotaDialog from "./EditarCuotaDialog";
 import RegistrarPagoDialog from "./RegistrarPagoDialog";
 
 export default function CuotasList() {
   const { data, isPending } = useCuotas();
   const condonar = useCondonarCuota();
+  const reactivar = useReactivarCuota();
+  const eliminar = useEliminarCuota();
   const rows = data ?? [];
 
   const columns: IAdminColumn<ICuotaRow>[] = [
@@ -83,10 +89,13 @@ export default function CuotasList() {
       <AdminPageHeader
         eyebrow="Finanzas · GOSMEL"
         title="Cuotas"
-        description="Cuotas mensuales generadas a partir de los acuerdos de pago."
+        description="Cuotas mensuales generadas y extraordinarias a partir de los acuerdos de pago."
         icon="ph:receipt"
       >
-        <GenerarCuotasDialog />
+        <div className="flex flex-wrap items-center gap-2">
+          <CrearCuotaDialog />
+          <GenerarCuotasDialog />
+        </div>
       </AdminPageHeader>
 
       <AdminDataTable
@@ -97,25 +106,37 @@ export default function CuotasList() {
         searchKeys={[(row) => row.estudiante, (row) => row.periodo]}
         filters={filters}
         emptyTitle="Sin cuotas"
-        emptyDescription="Usa «Generar cuotas» para crearlas a partir de los acuerdos vigentes."
+        emptyDescription="Usa «Generar cuotas» o «Nueva cuota manual» para crear cuotas."
         countLabel="cuotas"
         rowActions={(row) => {
           const conSaldo = row.saldo > 0 && row.estado !== "condonada";
 
           return (
-            <div className="flex items-center justify-end gap-2">
+            <div className="flex items-center justify-end gap-1.5">
               {conSaldo ? (
-                <RegistrarPagoDialog cuota={{ id: row.id, estudiante: row.estudiante, saldo: row.saldo }} />
+                <RegistrarPagoDialog cuota={row} />
               ) : null}
 
-              {row.estado === "pendiente" || row.estado === "parcial" ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon-xs" aria-label="Acciones de cuota">
-                      <Icon icon="ph:dots-three-vertical" className="size-4" aria-hidden="true" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
+              <EditarCuotaDialog cuota={row} />
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon-xs" aria-label="Más acciones">
+                    <Icon icon="ph:dots-three-vertical" className="size-4" aria-hidden="true" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {row.estado === "condonada" ? (
+                    <DropdownMenuItem
+                      disabled={reactivar.isPending}
+                      onSelect={() => reactivar.mutate(row.id)}
+                    >
+                      <Icon icon="ph:arrow-counter-clockwise" className="mr-2 size-4 text-primary" aria-hidden="true" />
+                      Volver a cobrar (Reactivar)
+                    </DropdownMenuItem>
+                  ) : null}
+
+                  {row.estado === "pendiente" || row.estado === "parcial" ? (
                     <DropdownMenuItem
                       disabled={condonar.isPending}
                       onSelect={() => condonar.mutate(row.id)}
@@ -123,9 +144,20 @@ export default function CuotasList() {
                       <Icon icon="ph:hand-heart" className="mr-2 size-4 text-accent" aria-hidden="true" />
                       Condonar cuota
                     </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : null}
+                  ) : null}
+
+                  {row.montoPagado === 0 ? (
+                    <DropdownMenuItem
+                      variant="destructive"
+                      disabled={eliminar.isPending}
+                      onSelect={() => eliminar.mutate(row.id)}
+                    >
+                      <Icon icon="ph:trash" className="mr-2 size-4" aria-hidden="true" />
+                      Eliminar cuota
+                    </DropdownMenuItem>
+                  ) : null}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           );
         }}

@@ -65,6 +65,7 @@ export { DatePicker } from "./DatePicker";
 export type { IDatePickerProps } from "./DatePicker.types";
 export { FileUpload } from "./FileUpload";
 export type { IFileUploadProps } from "./FileUpload.types";
+export { ImageUploadField } from "./ImageUploadField";
 export { FormField } from "./form-field";
 export type { IFormFieldProps } from "./form-field";
 export { Input, inputVariants } from "./input";

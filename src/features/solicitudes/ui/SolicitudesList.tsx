@@ -22,6 +22,14 @@ export default function SolicitudesList() {
   const [solicitudMatricula, setSolicitudMatricula] = useState<ISolicitudRow | null>(null);
   const rows = data ?? [];
 
+  const getWhatsAppUrl = (row: ISolicitudRow) => {
+    if (!row.telefono) return null;
+    const clean = row.telefono.replace(/\D/g, "");
+    const num = clean.startsWith("0") ? `593${clean.slice(1)}` : clean;
+    const msg = `Hola ${row.nombre}, le saludamos de GOSMEL Music Academy respecto a su solicitud de información para ${row.interes ?? "nuestros cursos"}.`;
+    return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
+  };
+
   const columns: IAdminColumn<ISolicitudRow>[] = [
     {
       key: "fecha",
@@ -91,40 +99,49 @@ export default function SolicitudesList() {
         emptyDescription="Cuando lleguen solicitudes aparecerán aquí."
         countLabel="solicitudes"
         rowActions={(row) => {
+          const waUrl = getWhatsAppUrl(row);
           const esDescartada = row.estado === "descartada";
           const gestionable = row.estado === "nueva" || row.estado === "contactada";
           const siguiente = SOLICITUD_ESTADO_SIGUIENTE[row.estado];
 
-          if (esDescartada) {
-            return <span className="text-xs text-muted-foreground">Cerrada</span>;
-          }
-
           return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon-sm" aria-label="Gestionar solicitud">
-                  <Icon icon="ph:dots-three-vertical" aria-hidden="true" />
+            <div className="flex items-center justify-end gap-1.5">
+              {waUrl && (
+                <Button asChild variant="ghost" size="sm" className="size-8 p-0 text-emerald-600 dark:text-emerald-400">
+                  <a href={waUrl} target="_blank" rel="noopener noreferrer" title="Contactar por WhatsApp">
+                    <Icon icon="ph:whatsapp-logo" width={16} height={16} aria-hidden="true" />
+                  </a>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onSelect={() => setSolicitudMatricula(row)}>
-                  <Icon icon="ph:user-plus" aria-hidden="true" />
-                  Crear matrícula
-                </DropdownMenuItem>
-                {siguiente ? (
-                  <DropdownMenuItem onSelect={() => mutation.mutate({ id: row.id, estado: siguiente })}>
-                    <Icon icon="ph:arrow-right" aria-hidden="true" />
-                    {SOLICITUD_ESTADO_BADGE[siguiente].label}
-                  </DropdownMenuItem>
-                ) : null}
-                {gestionable ? (
-                  <DropdownMenuItem onSelect={() => mutation.mutate({ id: row.id, estado: "descartada" })}>
-                    <Icon icon="ph:x" aria-hidden="true" />
-                    Descartar
-                  </DropdownMenuItem>
-                ) : null}
-              </DropdownMenuContent>
-            </DropdownMenu>
+              )}
+
+              {!esDescartada && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon-sm" aria-label="Gestionar solicitud">
+                      <Icon icon="ph:dots-three-vertical" aria-hidden="true" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onSelect={() => setSolicitudMatricula(row)}>
+                      <Icon icon="ph:user-plus" aria-hidden="true" />
+                      Convertir a Matrícula
+                    </DropdownMenuItem>
+                    {siguiente ? (
+                      <DropdownMenuItem onSelect={() => mutation.mutate({ id: row.id, estado: siguiente })}>
+                        <Icon icon="ph:arrow-right" aria-hidden="true" />
+                        Marcar como {SOLICITUD_ESTADO_BADGE[siguiente].label}
+                      </DropdownMenuItem>
+                    ) : null}
+                    {gestionable ? (
+                      <DropdownMenuItem onSelect={() => mutation.mutate({ id: row.id, estado: "descartada" })}>
+                        <Icon icon="ph:x" aria-hidden="true" />
+                        Descartar
+                      </DropdownMenuItem>
+                    ) : null}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+            </div>
           );
         }}
       />

@@ -26,6 +26,16 @@ export interface ITeacherCatedra {
   horarios: ITeacherHorario[];
 }
 
+export interface ITeacherEstudiante {
+  id: string;
+  nombre: string;
+  email: string | null;
+  celular: string | null;
+  catedraCodigo: string;
+  cursoNombre: string;
+  fechaInscripcion: string;
+}
+
 export interface ITeacherSesion {
   id: string;
   catedra: string;
@@ -67,6 +77,7 @@ export interface ITeacherDashboard {
     inscritos: number;
   };
   catedras: ITeacherCatedra[];
+  estudiantes: ITeacherEstudiante[];
   sesiones: ITeacherSesion[];
   materiales: ITeacherMaterial[];
   evaluaciones: ITeacherEvaluacion[];
@@ -103,18 +114,18 @@ export const SESION_ESTADO_BADGE: Record<TEstadoSesion, { label: string; variant
 };
 
 export const MATERIAL_TIPO_BADGE: Record<TTipoMaterial, { label: string; variant: TBadgeVariant }> = {
-  pdf: { label: "PDF", variant: "outline" },
-  audio: { label: "Audio", variant: "secondary" },
-  video: { label: "Video", variant: "default" },
   partitura: { label: "Partitura", variant: "default" },
-  enlace: { label: "Enlace", variant: "ghost" },
+  audio: { label: "Audio", variant: "secondary" },
+  video: { label: "Video", variant: "outline" },
+  pdf: { label: "PDF", variant: "default" },
+  enlace: { label: "Enlace", variant: "outline" },
 };
 
 export const EVALUACION_TIPO_BADGE: Record<TTipoEvaluacion, { label: string; variant: TBadgeVariant }> = {
   diagnostica: { label: "Diagnóstica", variant: "outline" },
   formativa: { label: "Formativa", variant: "secondary" },
   sumativa: { label: "Sumativa", variant: "default" },
-  recital: { label: "Recital", variant: "ghost" },
-  examen_practico: { label: "Examen práctico", variant: "default" },
-  examen_teorico: { label: "Examen teórico", variant: "outline" },
+  recital: { label: "Recital", variant: "default" },
+  examen_practico: { label: "Examen Práctico", variant: "default" },
+  examen_teorico: { label: "Examen Teórico", variant: "outline" },
 };

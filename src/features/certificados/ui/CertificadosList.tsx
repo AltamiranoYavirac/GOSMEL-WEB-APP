@@ -11,13 +11,13 @@ import {
 } from "@/shared/ui";
 import { formatDate } from "@/shared/lib/formatters";
 
-import { useCertificados, useEliminarCertificado } from "../hooks/useCertificados";
+import { useCertificados } from "../hooks/useCertificados";
 import type { ICertificadoRow } from "../model/certificado.types";
 import EmitirCertificadoDialog from "./EmitirCertificadoDialog";
+import EliminarCertificadoDialog from "./EliminarCertificadoDialog";
 
 export default function CertificadosList() {
   const { data, isPending } = useCertificados();
-  const eliminar = useEliminarCertificado();
   const rows = data ?? [];
 
   const columns: IAdminColumn<ICertificadoRow>[] = [
@@ -102,15 +102,7 @@ export default function CertificadosList() {
         countLabel="certificados"
         rowActions={(row) => (
           <div className="flex items-center justify-end">
-            <Button
-              size="icon-xs"
-              variant="ghost"
-              disabled={eliminar.isPending}
-              onClick={() => eliminar.mutate(row.id)}
-              aria-label={`Eliminar certificado ${row.codigoVerificacion}`}
-            >
-              <Icon icon="ph:trash" className="size-4 text-muted-foreground hover:text-destructive" aria-hidden="true" />
-            </Button>
+            <EliminarCertificadoDialog certificado={row} />
           </div>
         )}
       />

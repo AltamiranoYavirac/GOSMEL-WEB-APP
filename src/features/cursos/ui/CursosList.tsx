@@ -1,19 +1,30 @@
 "use client";
 
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 
-import { AdminDataTable, AdminPageHeader, Badge, Switch, type IAdminColumn, type IAdminDataTableFilter } from "@/shared/ui";
+import { AdminDataTable, AdminPageHeader, Badge, Button, Switch, type IAdminColumn, type IAdminDataTableFilter } from "@/shared/ui";
 
 import { useCursos } from "../hooks/useCursos";
 import { useUpdateCurso } from "../hooks/useUpdateCurso";
 import { MODALIDAD_BADGE, NIVEL_BADGE, type ICursoRow } from "../model/curso.types";
 import CrearCursoDialog from "./CrearCursoDialog";
 import CursoGuiaSheet from "./CursoGuiaSheet";
+import EditarCursoDialog from "./EditarCursoDialog";
+import EliminarCursoDialog from "./EliminarCursoDialog";
 
 export default function CursosList() {
   const { data, isPending } = useCursos();
   const mutation = useUpdateCurso();
   const rows = data ?? [];
+
+  const [editTarget, setEditTarget] = useState<ICursoRow | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+
+  const handleOpenEdit = (curso: ICursoRow) => {
+    setEditTarget(curso);
+    setEditOpen(true);
+  };
 
   const columns: IAdminColumn<ICursoRow>[] = [
     {
@@ -113,7 +124,27 @@ export default function CursosList() {
         emptyTitle="Sin cursos"
         emptyDescription="Cuando se creen cursos aparecerán aquí."
         countLabel="cursos"
-        rowActions={(row) => <CursoGuiaSheet cursoId={row.id} cursoNombre={row.nombre} />}
+        rowActions={(row) => (
+          <div className="flex items-center justify-end gap-1.5">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleOpenEdit(row)}
+              title="Editar datos del curso"
+              className="size-8 p-0"
+            >
+              <Icon icon="ph:pencil-simple" width={16} height={16} aria-hidden="true" />
+            </Button>
+            <CursoGuiaSheet cursoId={row.id} cursoNombre={row.nombre} />
+            <EliminarCursoDialog curso={row} />
+          </div>
+        )}
+      />
+
+      <EditarCursoDialog
+        curso={editTarget}
+        open={editOpen}
+        onOpenChange={setEditOpen}
       />
     </div>
   );

@@ -8,34 +8,19 @@ export async function getCobranza(): Promise<{
 }> {
   const supabase = createSupabaseBrowserClient();
 
-  const [rolesRol, estudiantes] = await Promise.all([
-    supabase.from("perfil_rol").select("perfil_id").eq("rol", "estudiante"),
-    supabase.from("estudiantes").select("id, perfil_id").limit(2000),
-  ]);
-
-  const perfilIdsConRol = (rolesRol.data ?? []).map((rol) => rol.perfil_id);
-  const perfilIdsConRolSet = new Set(perfilIdsConRol);
-  const studentIds = (estudiantes.data ?? [])
-    .filter((estudiante) => estudiante.perfil_id && perfilIdsConRolSet.has(estudiante.perfil_id))
-    .map((estudiante) => estudiante.id);
-
-  const [vinculos, representantes, acuerdos] = await Promise.all([
-    supabase
-      .from("estudiante_representante")
-      .select("representante_id, estudiante_id")
-      .in("estudiante_id", studentIds)
-      .limit(500),
-    supabase.from("representantes").select("id, nombres, apellidos, celular").limit(500),
+  const [estudiantes, vinculos, representantes, acuerdos] = await Promise.all([
+    supabase.from("estudiantes").select("id, perfil_id, nombres, apellidos").limit(2000),
+    supabase.from("estudiante_representante").select("representante_id, estudiante_id").limit(2000),
+    supabase.from("representantes").select("id, nombres, apellidos, celular").limit(1000),
     supabase
       .from("acuerdos_pago")
       .select(
         "estudiante_id, cuotas!cuotas_acuerdo_id_fkey(periodo_mes, monto, monto_pagado, fecha_vencimiento, estado)"
       )
-      .in("estudiante_id", studentIds)
-      .limit(2000),
+      .limit(3000),
   ]);
 
-  const firstError = [rolesRol, estudiantes, vinculos, representantes, acuerdos]
+  const firstError = [estudiantes, vinculos, representantes, acuerdos]
     .map((result) => result.error)
     .find(Boolean);
   if (firstError) {
@@ -66,8 +51,8 @@ export async function getCobranza(): Promise<{
     for (const cuota of acuerdo.cuotas ?? []) {
       list.push({
         periodo: cuota.periodo_mes,
-        monto: cuota.monto,
-        montoPagado: cuota.monto_pagado,
+        monto: Number(cuota.monto) || 0,
+        montoPagado: Number(cuota.monto_pagado) || 0,
         vencimiento: cuota.fecha_vencimiento,
         estado: cuota.estado,
       });
@@ -76,13 +61,13 @@ export async function getCobranza(): Promise<{
   }
 
   const rows: ICobranzaRow[] = representantesRelevantes.map((representante) => {
-    const estudiantes = estudiantesPorRepresentante.get(representante.id) ?? new Set();
+    const estudiantesList = estudiantesPorRepresentante.get(representante.id) ?? new Set();
     let saldoTotal = 0;
     let totalMes = 0;
     let diasMoraMax: number | null = null;
     const estudiantesConCuota = new Set<string>();
 
-    for (const estudianteId of estudiantes) {
+    for (const estudianteId of estudiantesList) {
       const cuotas = cuotasPorEstudiante.get(estudianteId) ?? [];
       if (cuotas.length > 0) estudiantesConCuota.add(estudianteId);
 
@@ -90,7 +75,7 @@ export async function getCobranza(): Promise<{
         if (cuota.estado !== "pendiente" && cuota.estado !== "parcial") continue;
         const saldo = cuota.monto - cuota.montoPagado;
         saldoTotal += saldo;
-        if (cuota.periodo === periodoActual) totalMes += saldo;
+        if (cuota.periodo?.startsWith(periodoActual)) totalMes += saldo;
 
         if (cuota.vencimiento) {
           const vencimiento = new Date(`${cuota.vencimiento}T00:00:00`);
@@ -102,13 +87,13 @@ export async function getCobranza(): Promise<{
 
     return {
       id: representante.id,
-      representante: `${representante.nombres ?? ""} ${representante.apellidos ?? ""}`.trim(),
+      representante: `${representante.nombres} ${representante.apellidos}`.trim(),
       celular: representante.celular,
       hijosConCuota: estudiantesConCuota.size,
       saldoTotal,
       totalMes,
       diasMoraMax,
-      periodoMes: periodoActual,
+      periodoMes: `${periodoActual}-01`,
     };
   });
 

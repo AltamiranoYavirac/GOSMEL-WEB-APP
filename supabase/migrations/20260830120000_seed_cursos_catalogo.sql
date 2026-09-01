@@ -1,5 +1,3 @@
--- Seed del catálogo público (cursos) basado en la landing de GOSMEL.
--- Idempotente: solo inserta si el slug/por clave no existe.
 DO $$
 DECLARE
   v_teclados  UUID;
@@ -13,7 +11,6 @@ DECLARE
   v_quena     UUID;
   v_curso     UUID;
 BEGIN
-  -- ── Tipos de instrumento ──────────────────────────────────────────────
   SELECT id INTO v_teclados FROM tipos_instrumento WHERE nombre = 'Teclados';
   IF v_teclados IS NULL THEN
     INSERT INTO tipos_instrumento (nombre, orden, activo) VALUES ('Teclados', 1, true) RETURNING id INTO v_teclados;
@@ -29,7 +26,6 @@ BEGIN
     INSERT INTO tipos_instrumento (nombre, orden, activo) VALUES ('Viento madera', 3, true) RETURNING id INTO v_viento;
   END IF;
 
-  -- ── Instrumentos ──────────────────────────────────────────────────────
   SELECT id INTO v_piano FROM instrumentos WHERE slug = 'piano';
   IF v_piano IS NULL THEN
     INSERT INTO instrumentos (nombre, slug, icono, tipo_instrumento_id, orden, activo)
@@ -67,7 +63,6 @@ BEGIN
     VALUES ('Quena', 'quena', 'mdi:flute', v_viento, 6, true) RETURNING id INTO v_quena;
   END IF;
 
-  -- ── Cursos ────────────────────────────────────────────────────────────
   SELECT id INTO v_curso FROM cursos WHERE slug = 'piano';
   IF v_curso IS NULL THEN
     INSERT INTO cursos (nombre, slug, descripcion, resumen, nivel, modalidad, publicado, destacado, orden, portada_public_id, instrumento_id)

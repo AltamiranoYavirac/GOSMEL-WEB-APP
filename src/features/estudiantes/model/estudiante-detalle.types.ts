@@ -8,6 +8,7 @@ export interface IInscripcionDetalle {
   id: string;
   catedra: string;
   curso: string;
+  docenteNombre?: string | null;
   estado: TEstadoInscripcion;
 }
 
@@ -36,16 +37,16 @@ export interface IEstudianteDetalle {
 }
 
 export const INSCRIPCION_ESTADO_BADGE: Record<TEstadoInscripcion, { label: string; variant: TBadgeVariant }> = {
-  pendiente: { label: "Pendiente", variant: "secondary" },
-  activa: { label: "Activa", variant: "default" },
+  pendiente: { label: "Pendiente", variant: "warning" },
+  activa: { label: "Activa", variant: "success" },
   finalizada: { label: "Finalizada", variant: "ghost" },
   cancelada: { label: "Cancelada", variant: "destructive" },
   retirada: { label: "Retirada", variant: "destructive" },
 };
 
 export const CUOTA_ESTADO_BADGE: Record<TEstadoCuota, { label: string; variant: TBadgeVariant }> = {
-  pendiente: { label: "Pendiente", variant: "secondary" },
+  pendiente: { label: "Pendiente", variant: "warning" },
   parcial: { label: "Parcial", variant: "outline" },
-  pagada: { label: "Pagada", variant: "default" },
+  pagada: { label: "Pagada", variant: "success" },
   condonada: { label: "Condonada", variant: "ghost" },
 };

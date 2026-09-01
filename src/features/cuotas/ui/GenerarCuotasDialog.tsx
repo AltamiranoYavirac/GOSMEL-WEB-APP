@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 
 import {
@@ -25,18 +26,29 @@ import {
 } from "../model/GenerarCuotasForm.config";
 
 export default function GenerarCuotasDialog() {
+  const [open, setOpen] = useState(false);
   const mutation = useGenerarCuotasMes();
   const form = useAppForm<IGenerarCuotasFormValues>({
     schema: generarCuotasFormSchema,
-    defaultValues: getGenerarCuotasFormDefaults(),
+    values: getGenerarCuotasFormDefaults(),
+    resetOptions: { keepDirtyValues: false, keepErrors: false },
   });
 
+  const handleOpenChange = (next: boolean) => {
+    setOpen(next);
+    if (next) {
+      form.reset(getGenerarCuotasFormDefaults());
+    }
+  };
+
   const onSubmit = (values: IGenerarCuotasFormValues) => {
-    mutation.mutate(values.mes);
+    mutation.mutate(values.mes, {
+      onSuccess: () => setOpen(false),
+    });
   };
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogTrigger asChild>
         <Button>
           <Icon icon="ph:plus" aria-hidden="true" />
@@ -44,7 +56,7 @@ export default function GenerarCuotasDialog() {
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="max-w-sm">
+      <AlertDialogContent className="w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 sm:p-8">
         <AlertDialogHeader>
           <AlertDialogTitle>Generar cuotas del mes</AlertDialogTitle>
           <AlertDialogDescription>

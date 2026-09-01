@@ -1,7 +1,12 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 
 import type {
+  ITeacherCatedra,
   ITeacherDashboard,
+  ITeacherEstudiante,
+  ITeacherEvaluacion,
+  ITeacherMaterial,
+  ITeacherSesion,
   TEstadoCatedra,
   TEstadoSesion,
   TModalidadCurso,
@@ -36,7 +41,7 @@ export async function getTeacherDashboard(): Promise<{
 
   const catedraIds = (catedras.data ?? []).map((catedra) => catedra.id);
 
-  const [sesiones, materiales, evaluaciones, inscritos] = await Promise.all([
+  const [sesiones, materiales, evaluaciones, inscripcionesData] = await Promise.all([
     supabase
       .from("sesiones")
       .select(
@@ -61,12 +66,20 @@ export async function getTeacherDashboard(): Promise<{
       .limit(100),
     supabase
       .from("inscripciones")
-      .select("id", { count: "exact", head: true })
+      .select(`
+        id,
+        fecha_inscripcion,
+        estado,
+        estudiantes(id, nombres, apellidos, email, celular),
+        catedras(codigo, cursos(nombre))
+      `)
       .in("catedra_id", catedraIds)
-      .eq("estado", "activa"),
+      .eq("estado", "activa")
+      .order("fecha_inscripcion", { ascending: false })
+      .limit(200),
   ]);
 
-  const firstError = [perfil, catedras, sesiones, materiales, evaluaciones, inscritos]
+  const firstError = [perfil, catedras, sesiones, materiales, evaluaciones, inscripcionesData]
     .map((result) => result.error)
     .find(Boolean);
   if (firstError) {
@@ -75,7 +88,7 @@ export async function getTeacherDashboard(): Promise<{
 
   const hoy = new Date().toISOString().slice(0, 10);
 
-  const catedraRows = (catedras.data ?? []).map((catedra) => ({
+  const catedraRows: ITeacherCatedra[] = (catedras.data ?? []).map((catedra) => ({
     id: catedra.id,
     codigo: catedra.codigo,
     curso: catedra.cursos?.nombre ?? "Sin curso",
@@ -91,7 +104,21 @@ export async function getTeacherDashboard(): Promise<{
     })),
   }));
 
-  const sesionRows = (sesiones.data ?? []).map((sesion) => {
+  const estudianteRows: ITeacherEstudiante[] = (inscripcionesData.data ?? []).flatMap((inscripcion) => {
+    const est = inscripcion.estudiantes;
+    if (!est) return [];
+    return [{
+      id: est.id,
+      nombre: `${est.nombres} ${est.apellidos}`.trim(),
+      email: est.email,
+      celular: est.celular,
+      catedraCodigo: inscripcion.catedras?.codigo ?? "—",
+      cursoNombre: inscripcion.catedras?.cursos?.nombre ?? "—",
+      fechaInscripcion: inscripcion.fecha_inscripcion,
+    }];
+  });
+
+  const sesionRows: ITeacherSesion[] = (sesiones.data ?? []).map((sesion) => {
     const asistencias = sesion.asistencias ?? [];
     return {
       id: sesion.id,
@@ -107,7 +134,7 @@ export async function getTeacherDashboard(): Promise<{
     };
   });
 
-  const materialRows = (materiales.data ?? []).map((material) => ({
+  const materialRows: ITeacherMaterial[] = (materiales.data ?? []).map((material) => ({
     id: material.id,
     titulo: material.titulo,
     tipo: material.tipo as TTipoMaterial,
@@ -115,10 +142,12 @@ export async function getTeacherDashboard(): Promise<{
     destino: material.cursos?.nombre ?? "General",
   }));
 
-  const evaluacionRows = (evaluaciones.data ?? []).map((evaluacion) => {
+  const evaluacionRows: ITeacherEvaluacion[] = (evaluaciones.data ?? []).map((evaluacion) => {
     const notas = (evaluacion.calificaciones ?? [])
       .map((item) => item.nota)
-      .filter((nota): nota is number => nota != null);
+      .filter((n): n is number => typeof n === "number");
+    const promedio = notas.length > 0 ? Number((notas.reduce((a, b) => a + b, 0) / notas.length).toFixed(1)) : null;
+
     return {
       id: evaluacion.id,
       titulo: evaluacion.titulo,
@@ -127,21 +156,21 @@ export async function getTeacherDashboard(): Promise<{
       fecha: evaluacion.fecha,
       ponderacion: evaluacion.ponderacion,
       notaMaxima: evaluacion.nota_maxima,
-      promedio: notas.length > 0 ? notas.reduce((suma, nota) => suma + nota, 0) / notas.length : null,
+      promedio,
       rendidas: notas.length,
     };
   });
 
   return {
     data: {
-      nombre: perfil.data?.nombres ?? "docente",
+      nombre: perfil.data?.nombres ?? "Docente",
       counts: {
-        catedrasActivas: catedraRows.filter((catedra) => catedra.estado === "planificada" || catedra.estado === "en_curso")
-          .length,
-        sesionesHoy: sesionRows.filter((sesion) => sesion.fecha === hoy && sesion.estado === "programada").length,
-        inscritos: inscritos.count ?? 0,
+        catedrasActivas: catedraRows.filter((item) => item.estado === "en_curso" || item.estado === "planificada").length,
+        sesionesHoy: sesionRows.filter((item) => item.fecha === hoy).length,
+        inscritos: estudianteRows.length,
       },
       catedras: catedraRows,
+      estudiantes: estudianteRows,
       sesiones: sesionRows,
       materiales: materialRows,
       evaluaciones: evaluacionRows,

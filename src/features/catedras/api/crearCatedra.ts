@@ -1,4 +1,5 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import { ensureDocenteRecord } from "@/shared/api/ensureDocenteRecord";
 import type { TablesInsert } from "@/shared/api/supabase/database.types";
 
 import type { ICrearCatedraFormValues } from "../model/CrearCatedraForm.config";
@@ -23,6 +24,10 @@ export async function crearCatedra(
   }
   if (values.fechaFin) {
     catedra.fecha_fin = values.fechaFin;
+  }
+
+  if (values.docenteId) {
+    await ensureDocenteRecord(supabase, values.docenteId);
   }
 
   const { data, error } = await supabase.from("catedras").insert(catedra).select("id").single();

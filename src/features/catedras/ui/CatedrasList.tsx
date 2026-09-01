@@ -1,15 +1,43 @@
 "use client";
 
-import { AdminDataTable, AdminPageHeader, Badge, type IAdminColumn, type IAdminDataTableFilter } from "@/shared/ui";
+import { useState } from "react";
+import { Icon } from "@iconify/react";
+import {
+  AdminDataTable,
+  AdminPageHeader,
+  Badge,
+  Button,
+  type IAdminColumn,
+  type IAdminDataTableFilter,
+} from "@/shared/ui";
 
 import { useCatedras } from "../hooks/useCatedras";
 import { CATEDRA_ESTADO_BADGE, MODALIDAD_BADGE, type ICatedraRow } from "../model/catedra.types";
 import CatedraMatriculasDialog from "./CatedraMatriculasDialog";
 import CrearCatedraDialog from "./CrearCatedraDialog";
+import EditarCatedraDialog from "./EditarCatedraDialog";
+import EliminarCatedraDialog from "./EliminarCatedraDialog";
+import GenerarSesionesCatedraDialog from "./GenerarSesionesCatedraDialog";
 
 export default function CatedrasList() {
   const { data, isPending } = useCatedras();
   const rows = data ?? [];
+
+  const [editTarget, setEditTarget] = useState<ICatedraRow | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
+
+  const [genTarget, setGenTarget] = useState<ICatedraRow | null>(null);
+  const [genOpen, setGenOpen] = useState(false);
+
+  const handleOpenEdit = (catedra: ICatedraRow) => {
+    setEditTarget(catedra);
+    setEditOpen(true);
+  };
+
+  const handleOpenGen = (catedra: ICatedraRow) => {
+    setGenTarget(catedra);
+    setGenOpen(true);
+  };
 
   const columns: IAdminColumn<ICatedraRow>[] = [
     {
@@ -85,13 +113,44 @@ export default function CatedrasList() {
         emptyTitle="Sin cátedras"
         emptyDescription="Cuando se creen cátedras aparecerán aquí."
         countLabel="cátedras"
-        rowActions={(row) =>
-          row.pendientes > 0 ? (
-            <CatedraMatriculasDialog catedraId={row.id} codigo={row.codigo} curso={row.curso} />
-          ) : (
-            <span className="text-xs text-muted-foreground">—</span>
-          )
-        }
+        rowActions={(row) => (
+          <div className="flex items-center justify-end gap-1.5">
+            {row.pendientes > 0 && (
+              <CatedraMatriculasDialog catedraId={row.id} codigo={row.codigo} curso={row.curso} />
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleOpenGen(row)}
+              title="Generar sesiones del ciclo"
+              className="size-8 p-0"
+            >
+              <Icon icon="ph:calendar-plus" width={16} height={16} aria-hidden="true" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleOpenEdit(row)}
+              title="Editar condiciones de cátedra"
+              className="size-8 p-0"
+            >
+              <Icon icon="ph:pencil-simple" width={16} height={16} aria-hidden="true" />
+            </Button>
+            <EliminarCatedraDialog catedra={row} />
+          </div>
+        )}
+      />
+
+      <EditarCatedraDialog
+        catedra={editTarget}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+      />
+
+      <GenerarSesionesCatedraDialog
+        catedra={genTarget}
+        open={genOpen}
+        onOpenChange={setGenOpen}
       />
     </div>
   );

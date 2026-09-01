@@ -2,11 +2,20 @@
 
 import { Icon } from "@iconify/react";
 
-import { AdminDataTable, AdminPageHeader, Badge, Button, type IAdminColumn } from "@/shared/ui";
+import {
+  AdminDataTable,
+  AdminPageHeader,
+  Badge,
+  Button,
+  type IAdminColumn,
+  type IAdminDataTableFilter,
+} from "@/shared/ui";
 import { formatCurrency, formatDate, formatMonthPeriod } from "@/shared/lib/formatters";
 
 import { usePagos } from "../hooks/usePagos";
 import type { IPagoRow } from "../model/pago.types";
+
+import AnularPagoDialog from "./AnularPagoDialog";
 
 export default function PagosList() {
   const { data, isPending } = usePagos();
@@ -78,6 +87,13 @@ export default function PagosList() {
     },
   ];
 
+  const filters: IAdminDataTableFilter<IPagoRow>[] = [
+    { value: "transferencia", label: "Transferencia", match: (row) => (row.metodo ?? "").toLowerCase().includes("transferencia") },
+    { value: "efectivo", label: "Efectivo", match: (row) => (row.metodo ?? "").toLowerCase().includes("efectivo") },
+    { value: "tarjeta", label: "Tarjeta", match: (row) => (row.metodo ?? "").toLowerCase().includes("tarjeta") },
+    { value: "deposito", label: "Depósito", match: (row) => (row.metodo ?? "").toLowerCase().includes("deposito") || (row.metodo ?? "").toLowerCase().includes("depósito") },
+  ];
+
   return (
     <div className="space-y-6">
       <AdminPageHeader
@@ -93,9 +109,15 @@ export default function PagosList() {
         loading={isPending}
         keyId={(row) => row.id}
         searchKeys={[(row) => row.estudiante, (row) => row.metodo ?? "", (row) => row.referencia ?? "", (row) => row.periodo ?? ""]}
+        filters={filters}
         emptyTitle="Sin pagos"
         emptyDescription="Cuando se registren pagos aparecerán aquí."
         countLabel="pagos"
+        rowActions={(row) => (
+          <div className="flex items-center justify-end">
+            <AnularPagoDialog pago={row} />
+          </div>
+        )}
       />
     </div>
   );

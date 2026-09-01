@@ -17,6 +17,8 @@ export function useGenerarCuotasMes() {
     },
     onSuccess: (total) => {
       queryClient.invalidateQueries({ queryKey: cuotasQueryKeys.list() });
+      queryClient.invalidateQueries({ queryKey: ["cobranza"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-overview"] });
       toast.success(`${total} cuotas generadas`);
     },
     onError: (error) => toast.error(error.message),

@@ -5,6 +5,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { condonarCuota } from "../api/condonarCuota";
 import { cuotasQueryKeys } from "../model/query-keys";
 
+import { toast } from "sonner";
+
 export function useCondonarCuota() {
   const queryClient = useQueryClient();
 
@@ -15,6 +17,10 @@ export function useCondonarCuota() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: cuotasQueryKeys.list() });
+      queryClient.invalidateQueries({ queryKey: ["cobranza"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-overview"] });
+      toast.success("Cuota condonada exitosamente");
     },
+    onError: (error) => toast.error(error.message),
   });
 }

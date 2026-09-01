@@ -1,18 +1,25 @@
 "use client";
 
-import { AdminDataTable, AdminPageHeader, Avatar, AvatarFallback, Badge, Switch, type IAdminColumn, type IAdminDataTableFilter } from "@/shared/ui";
+import { useState } from "react";
+import { Icon } from "@iconify/react";
+import { AdminDataTable, AdminPageHeader, Avatar, AvatarFallback, Badge, Button, Switch, type IAdminColumn, type IAdminDataTableFilter } from "@/shared/ui";
 import { initialsOf } from "@/shared/lib/formatters";
 
 import { useDocentes } from "../hooks/useDocentes";
 import { useUpdateDocente } from "../hooks/useUpdateDocente";
 import { DOCENTE_DESTACADO_BADGE, type IDocenteRow } from "../model/docente.types";
+import CrearDocenteDialog from "./CrearDocenteDialog";
 import DocenteDetalleSheet from "./DocenteDetalleSheet";
+import EditarDocenteDialog from "./EditarDocenteDialog";
 import EliminarDocenteDialog from "./EliminarDocenteDialog";
 
 export default function DocentesList() {
   const { data, isPending } = useDocentes();
   const mutation = useUpdateDocente();
   const rows = data ?? [];
+
+  const [editTarget, setEditTarget] = useState<IDocenteRow | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
 
   const columns: IAdminColumn<IDocenteRow>[] = [
     {
@@ -97,29 +104,44 @@ export default function DocentesList() {
         title="Docentes"
         description="Perfiles de docentes: formación, reconocimientos, portafolio e instrumentos que enseñan."
         icon="ph:chalkboard-teacher"
-      />
+      >
+        <CrearDocenteDialog />
+      </AdminPageHeader>
 
       <AdminDataTable
         data={rows}
         columns={columns}
         loading={isPending}
         keyId={(row) => row.id}
-        searchKeys={[
-          (row) => row.nombre,
-          (row) => row.email ?? "",
-          (row) => row.titulo ?? "",
-          (row) => row.instrumentos.join(" "),
-        ]}
+        searchKeys={[(row) => row.nombre, (row) => row.email ?? "", (row) => row.titulo ?? ""]}
         filters={filters}
         emptyTitle="Sin docentes"
         emptyDescription="Cuando se registren docentes aparecerán aquí."
         countLabel="docentes"
         rowActions={(row) => (
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-1">
             <DocenteDetalleSheet docenteId={row.id} docenteNombre={row.nombre} />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setEditTarget(row);
+                setEditOpen(true);
+              }}
+              title="Editar perfil docente"
+              className="size-8 p-0"
+            >
+              <Icon icon="ph:pencil-simple" width={16} height={16} aria-hidden="true" />
+            </Button>
             <EliminarDocenteDialog perfilId={row.id} nombre={row.nombre} />
           </div>
         )}
+      />
+
+      <EditarDocenteDialog
+        docente={editTarget}
+        open={editOpen}
+        onOpenChange={setEditOpen}
       />
     </div>
   );

@@ -55,7 +55,7 @@ export default function CrearInstrumentoDialog({ onSuccess }: ICrearInstrumentoD
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="max-w-md">
+      <AlertDialogContent className="w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 sm:p-8">
         <AlertDialogHeader>
           <AlertDialogTitle>Nuevo instrumento</AlertDialogTitle>
           <AlertDialogDescription>Agrega un instrumento al catálogo de la academia.</AlertDialogDescription>

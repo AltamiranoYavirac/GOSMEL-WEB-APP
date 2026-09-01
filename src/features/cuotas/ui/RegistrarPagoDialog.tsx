@@ -16,6 +16,7 @@ import {
   Spinner,
 } from "@/shared/ui";
 import { DateField, Form, NumberField, SelectField, TextField, TextareaField, useAppForm } from "@/shared/form";
+import { formatCurrency } from "@/shared/lib/formatters";
 
 import { useRegistrarPago } from "../hooks/useRegistrarPago";
 import {
@@ -30,6 +31,8 @@ interface IRegistrarPagoDialogProps {
     id: string;
     estudiante: string;
     saldo: number;
+    monto?: number;
+    periodo?: string;
   };
 }
 
@@ -41,6 +44,10 @@ export default function RegistrarPagoDialog({ cuota }: IRegistrarPagoDialogProps
     values: getRegistrarPagoFormDefaults(cuota.saldo),
     resetOptions: { keepDirtyValues: false, keepErrors: false },
   });
+
+  const montoIngresado = form.watch("monto") || 0;
+  const saldoRestante = Math.max(0, cuota.saldo - montoIngresado);
+  const esAbonoParcial = montoIngresado > 0 && montoIngresado < cuota.saldo;
 
   const handleOpenChange = (next: boolean) => {
     setOpen(next);
@@ -67,34 +74,57 @@ export default function RegistrarPagoDialog({ cuota }: IRegistrarPagoDialogProps
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="max-w-sm">
+      <AlertDialogContent className="w-full max-w-xl sm:max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-8">
         <AlertDialogHeader>
-          <AlertDialogTitle>Registrar pago</AlertDialogTitle>
-          <AlertDialogDescription>{cuota.estudiante}</AlertDialogDescription>
+          <AlertDialogTitle>Registrar cobro / pago</AlertDialogTitle>
+          <AlertDialogDescription>
+            {cuota.estudiante}
+          </AlertDialogDescription>
         </AlertDialogHeader>
+
+        <div className="rounded-xl border border-border/70 bg-card p-4 space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">Saldo pendiente actual:</span>
+            <span className="text-base font-bold text-destructive">{formatCurrency(cuota.saldo)}</span>
+          </div>
+
+          {esAbonoParcial && (
+            <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50 text-amber-600 dark:text-amber-400">
+              <span>Saldo que quedará pendiente (Abono):</span>
+              <span className="font-bold">{formatCurrency(saldoRestante)}</span>
+            </div>
+          )}
+
+          {montoIngresado >= cuota.saldo && (
+            <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50 text-emerald-600 dark:text-emerald-400">
+              <span>Estado resultante:</span>
+              <span className="font-bold">Liquidación total (Pagada al 100%)</span>
+            </div>
+          )}
+        </div>
 
         <Form form={form} onSubmit={onSubmit} id={`registrar-pago-${cuota.id}`} className="flex flex-col gap-4">
           <NumberField
             name="monto"
-            label="Monto"
+            label="Monto recibido / cobrado ($)"
             placeholder="0.00"
             integerOnly={false}
             asNumber
             startIcon={<Icon icon="ph:currency-dollar" className="size-4" aria-hidden="true" />}
           />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <SelectField name="metodo" label="Método" options={METODO_PAGO_OPCIONES} />
-            <DateField name="fechaPago" label="Fecha" />
+            <SelectField name="metodo" label="Método de pago" options={METODO_PAGO_OPCIONES} />
+            <DateField name="fechaPago" label="Fecha de pago" />
           </div>
-          <TextField name="referencia" label="Referencia (opcional)" />
-          <TextareaField name="observacion" label="Observación (opcional)" rows={2} />
+          <TextField name="referencia" label="Número de referencia / comprobante (opcional)" />
+          <TextareaField name="observacion" label="Observación o nota (opcional)" rows={2} />
         </Form>
 
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <Button form={`registrar-pago-${cuota.id}`} type="submit" disabled={mutation.isPending}>
             {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:check" aria-hidden="true" />}
-            Registrar pago
+            {esAbonoParcial ? "Registrar abono parcial" : "Registrar pago"}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

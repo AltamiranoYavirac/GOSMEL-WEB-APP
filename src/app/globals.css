@@ -64,7 +64,6 @@
   --color-primary-800: oklch(0.287 0.059 37.7); /* #431F14 */
   --color-primary-900: oklch(0.236 0.045 37.9); /* #30160E */
   --color-primary-950: oklch(0.186 0.029 38.2); /* #1E0E09 */
-  --color-primary-foreground: oklch(0.959 0.007 80.7);
 
   /* ─── secondary — Linen & Sand Palette (#DAD3C6 / #CFC7B8) ──────── */
   --color-secondary-50:  oklch(1.000 0.000 89.9); /* #FFFFFF */
@@ -78,7 +77,6 @@
   --color-secondary-800: oklch(0.545 0.028 75.0); /* #7A6E5E */
   --color-secondary-900: oklch(0.415 0.024 72.2); /* #544A3E */
   --color-secondary-950: oklch(0.315 0.018 67.1); /* #383028 */
-  --color-secondary-foreground: oklch(0.347 0.075 38.0);
 
   /* ─── accent — Cognac & Amber Rust (#B5651D @ 500) ──────────────── */
   --color-accent-50:  oklch(0.981 0.008 65.0); /* #FCF7F3 */
@@ -92,7 +90,6 @@
   --color-accent-800: oklch(0.350 0.080 40.0); /* #632C1B */
   --color-accent-900: oklch(0.270 0.055 38.0); /* #451E14 */
   --color-accent-950: oklch(0.190 0.035 38.0); /* #2A120B */
-  --color-accent-foreground: oklch(0.347 0.075 38.0);
 
   /* ─── warm — Claro & Obscuro Spectrum ───────────────────────────── */
   --color-warm-50:  oklch(0.980 0.005 78.3); /* #FAF8F5 */
@@ -152,8 +149,8 @@
   --secondary-foreground:  oklch(0.147 0.005 60.0); /* #0a0908 - Black */
   --muted:                 oklch(0.920 0.015 68.0); /* Soft Dusty Taupe */
   --muted-foreground:      oklch(0.425 0.035 68.0); /* #5e503f - Stone Brown */
-  --accent:                oklch(0.920 0.015 68.0); /* Soft Dusty Taupe */
-  --accent-foreground:     oklch(0.285 0.095 15.0); /* #49111c - Night Bordeaux */
+  --accent:                oklch(0.935 0.012 75.0); /* Clean Warm Surface */
+  --accent-foreground:     oklch(0.147 0.005 60.0); /* Crisp Dark Charcoal */
   --destructive:           oklch(0.577 0.245 27.325);
   --border:                oklch(0.665 0.045 68.0 / 35%); /* #a9927d / 35% - Dusty Taupe Soft */
   --input:                 oklch(0.665 0.045 68.0 / 30%); /* #a9927d / 30% */
@@ -170,7 +167,7 @@
   --sidebar-foreground:    oklch(0.147 0.005 60.0); /* #0a0908 - Black */
   --sidebar-primary:       oklch(0.285 0.095 15.0); /* #49111c - Night Bordeaux */
   --sidebar-primary-foreground: oklch(0.965 0.003 160.0);
-  --sidebar-accent:        oklch(0.920 0.015 68.0);
+  --sidebar-accent:        oklch(0.935 0.012 75.0);
   --sidebar-accent-foreground: oklch(0.147 0.005 60.0);
   --sidebar-border:        oklch(0.665 0.045 68.0 / 35%);
   --sidebar-ring:          oklch(0.285 0.095 15.0);
@@ -197,12 +194,12 @@
   --popover-foreground:    oklch(0.965 0.003 160.0); /* #f2f4f3 - White Smoke */
   --primary:               oklch(0.740 0.055 68.0); /* #baa490 - Luminous Dusty Taupe */
   --primary-foreground:    oklch(0.180 0.010 65.0); /* #1b1816 */
-  --secondary:             oklch(0.330 0.095 15.0); /* #541421 - Night Bordeaux */
+  --secondary:             oklch(0.350 0.020 65.0); /* Clean Stone Secondary Surface */
   --secondary-foreground:  oklch(0.965 0.003 160.0); /* #f2f4f3 - White Smoke */
   --muted:                 oklch(0.330 0.025 65.0); /* Muted Warm Stone */
   --muted-foreground:      oklch(0.720 0.045 68.0); /* #b5a08d - Dusty Taupe */
-  --accent:                oklch(0.330 0.095 15.0); /* #541421 - Night Bordeaux */
-  --accent-foreground:     oklch(0.965 0.003 160.0); /* #f2f4f3 - White Smoke */
+  --accent:                oklch(0.380 0.022 65.0); /* Soft Crisp Stone Highlight */
+  --accent-foreground:     oklch(0.985 0.002 160.0); /* Pure White */
   --destructive:           oklch(0.704 0.191 22.216);
   --border:                oklch(0.500 0.040 68.0 / 45%); /* #7a6a58 / 45% - Stone Brown */
   --input:                 oklch(0.500 0.040 68.0 / 35%); /* #7a6a58 / 35% */

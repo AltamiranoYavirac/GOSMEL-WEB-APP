@@ -8,6 +8,7 @@ const CLOUDINARY_IMAGE_BASE = "https://res.cloudinary.com/dv9lm0fnm/image/upload
 
 function cursoImage(publicId: string | null): string {
   if (!publicId) return AppImages.HERO_COVER;
+  if (publicId.startsWith("http://") || publicId.startsWith("https://")) return publicId;
   return `${CLOUDINARY_IMAGE_BASE}/q_auto,f_auto,w_1200/${publicId}`;
 }
 

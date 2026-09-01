@@ -40,7 +40,7 @@ export default function EliminarEstudianteDialog({ estudiante }: IEliminarEstudi
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="max-w-sm">
+      <AlertDialogContent className="w-full max-w-md p-6">
         <AlertDialogHeader>
           <AlertDialogTitle>¿Eliminar a {estudiante.nombreCompleto}?</AlertDialogTitle>
           <AlertDialogDescription>

@@ -23,7 +23,18 @@ export async function getEstudianteDetalle(
       .maybeSingle(),
     supabase
       .from("inscripciones")
-      .select("id, estado, catedra_id, catedras!inscripciones_catedra_id_fkey(codigo, cursos(nombre))")
+      .select(`
+        id,
+        estado,
+        catedra_id,
+        catedras!inscripciones_catedra_id_fkey(
+          codigo,
+          cursos(nombre),
+          docentes(
+            perfiles(nombres, apellidos)
+          )
+        )
+      `)
       .eq("estudiante_id", estudianteId)
       .order("fecha_inscripcion", { ascending: false })
       .limit(50),
@@ -48,12 +59,21 @@ export async function getEstudianteDetalle(
     (vinculo) => vinculo.es_contacto_principal || vinculo.representantes
   )?.representantes;
 
-  const inscripcionRows: IInscripcionDetalle[] = (inscripciones.data ?? []).map((inscripcion) => ({
-    id: inscripcion.id,
-    catedra: inscripcion.catedras?.codigo ?? "Sin cátedra",
-    curso: inscripcion.catedras?.cursos?.nombre ?? "—",
-    estado: inscripcion.estado as TEstadoInscripcion,
-  }));
+  const inscripcionRows: IInscripcionDetalle[] = (inscripciones.data ?? []).map((inscripcion) => {
+    const cat = inscripcion.catedras;
+    const docPerfil = cat?.docentes?.perfiles;
+    const docenteNombre = docPerfil
+      ? `${docPerfil.nombres} ${docPerfil.apellidos}`.trim()
+      : null;
+
+    return {
+      id: inscripcion.id,
+      catedra: cat?.codigo ?? "Sin cátedra",
+      curso: cat?.cursos?.nombre ?? "—",
+      docenteNombre,
+      estado: inscripcion.estado as TEstadoInscripcion,
+    };
+  });
 
   const cuotaRows: ICuotaDetalle[] = (acuerdos.data ?? [])
     .flatMap((acuerdo) => acuerdo.cuotas ?? [])

@@ -62,7 +62,7 @@ export default function EditarModuloDialog({ cursoId, modulo }: IEditarModuloDia
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="max-w-md">
+      <AlertDialogContent className="w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-8">
         <AlertDialogHeader>
           <AlertDialogTitle>Editar módulo</AlertDialogTitle>
           <AlertDialogDescription>Actualiza el título o descripción del bloque.</AlertDialogDescription>

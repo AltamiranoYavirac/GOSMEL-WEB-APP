@@ -40,7 +40,7 @@ export default function EliminarDocenteDialog({ perfilId, nombre }: IEliminarDoc
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="max-w-sm">
+      <AlertDialogContent className="w-full max-w-md p-6">
         <AlertDialogHeader>
           <AlertDialogTitle>¿Eliminar a {nombre}?</AlertDialogTitle>
           <AlertDialogDescription>

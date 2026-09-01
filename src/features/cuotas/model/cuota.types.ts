@@ -15,8 +15,8 @@ export interface ICuotaRow {
 }
 
 export const CUOTA_ESTADO_BADGE: Record<TEstadoCuota, { label: string; variant: TBadgeVariant }> = {
-  pendiente: { label: "Pendiente", variant: "secondary" },
+  pendiente: { label: "Pendiente", variant: "warning" },
   parcial: { label: "Parcial", variant: "outline" },
-  pagada: { label: "Pagada", variant: "default" },
+  pagada: { label: "Pagada", variant: "success" },
   condonada: { label: "Condonada", variant: "ghost" },
 };

@@ -1,1 +1,12 @@
 export { default as CatedrasList } from "./ui/CatedrasList";
+export { default as CrearCatedraDialog } from "./ui/CrearCatedraDialog";
+export { default as EditarCatedraDialog } from "./ui/EditarCatedraDialog";
+export { default as GenerarSesionesCatedraDialog } from "./ui/GenerarSesionesCatedraDialog";
+export { default as CatedraMatriculasDialog } from "./ui/CatedraMatriculasDialog";
+export * from "./model/catedra.types";
+export * from "./hooks/useCatedras";
+export * from "./hooks/useCrearCatedra";
+export * from "./hooks/useUpdateCatedra";
+export * from "./hooks/useGenerarSesionesCatedra";
+export * from "./hooks/useCatedraOptions";
+export * from "./hooks/useInscripcionesPendientes";

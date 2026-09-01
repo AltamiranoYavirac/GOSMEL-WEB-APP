@@ -7,6 +7,7 @@ import { AdminDataTable, AdminPageHeader, Badge, type IAdminColumn, type IAdminD
 import { useMateriales } from "../hooks/useMateriales";
 import { TIPO_MATERIAL_BADGE, VISIBILIDAD_MATERIAL_BADGE, type IMaterialRow } from "../model/material.types";
 import CrearMaterialDialog from "./CrearMaterialDialog";
+import EliminarMaterialDialog from "./EliminarMaterialDialog";
 
 const TIPO_ICON: Record<string, string> = {
   pdf: "ph:file-pdf",
@@ -88,6 +89,11 @@ export default function MaterialesList() {
         emptyTitle="Sin materiales"
         emptyDescription="Cuando se compartan materiales aparecerán aquí."
         countLabel="materiales"
+        rowActions={(row) => (
+          <div className="flex items-center justify-end">
+            <EliminarMaterialDialog material={row} />
+          </div>
+        )}
       />
     </div>
   );

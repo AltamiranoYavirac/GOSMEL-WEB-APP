@@ -63,7 +63,7 @@ export default function AsignarEstudianteDialog({ usuario, onClose }: IAsignarEs
 
   return (
     <AlertDialog open={open} onOpenChange={(next) => (next ? undefined : onClose())}>
-      <AlertDialogContent className="max-w-sm">
+      <AlertDialogContent className="w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 sm:p-8">
         <AlertDialogHeader>
           <AlertDialogTitle>Asignar rol de estudiante</AlertDialogTitle>
           <AlertDialogDescription>

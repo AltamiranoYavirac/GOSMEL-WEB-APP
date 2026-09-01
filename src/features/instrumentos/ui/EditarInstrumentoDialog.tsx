@@ -67,7 +67,7 @@ export default function EditarInstrumentoDialog({ instrumento }: IEditarInstrume
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="max-w-md">
+      <AlertDialogContent className="w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 sm:p-8">
         <AlertDialogHeader>
           <AlertDialogTitle>Editar instrumento</AlertDialogTitle>
           <AlertDialogDescription>{instrumento.nombre}</AlertDialogDescription>

@@ -1,14 +1,42 @@
 "use client";
 
-import { AdminDataTable, AdminPageHeader, Badge, type IAdminColumn, type IAdminDataTableFilter } from "@/shared/ui";
+import { useState } from "react";
+import { Icon } from "@iconify/react";
+import {
+  AdminDataTable,
+  AdminPageHeader,
+  Badge,
+  Button,
+  type IAdminColumn,
+  type IAdminDataTableFilter,
+} from "@/shared/ui";
 import { formatCurrency, formatMonthPeriod } from "@/shared/lib/formatters";
 
 import { useCobranza } from "../hooks/useCobranza";
 import type { ICobranzaRow } from "../model/cobranza.types";
+import PagoFamiliarDialog from "./PagoFamiliarDialog";
 
 export default function CobranzaList() {
   const { data, isPending } = useCobranza();
   const rows = data ?? [];
+
+  const [pagoTarget, setPagoTarget] = useState<ICobranzaRow | null>(null);
+  const [pagoOpen, setPagoOpen] = useState(false);
+
+  const handleOpenPago = (row: ICobranzaRow) => {
+    setPagoTarget(row);
+    setPagoOpen(true);
+  };
+
+  const getWhatsAppUrl = (row: ICobranzaRow) => {
+    if (!row.celular) return null;
+    const clean = row.celular.replace(/\D/g, "");
+    const num = clean.startsWith("0") ? `593${clean.slice(1)}` : clean;
+    const msg = `Estimada/o ${row.representante}, le saludamos de GOSMEL Music Academy. Le recordamos el saldo pendiente de ${formatCurrency(
+      row.saldoTotal
+    )} correspondiente a la mensualidad de sus representados.`;
+    return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
+  };
 
   const columns: IAdminColumn<ICobranzaRow>[] = [
     {
@@ -72,8 +100,8 @@ export default function CobranzaList() {
     <div className="space-y-6">
       <AdminPageHeader
         eyebrow="Finanzas · GOSMEL"
-        title="Cobranza"
-        description="Resumen de saldos por representante a partir de los acuerdos de pago."
+        title="Cobranza Familiar"
+        description="Resumen consolidado de saldos por representante para gestión de cobro multicuota y avisos."
         icon="ph:coins"
       />
 
@@ -87,6 +115,37 @@ export default function CobranzaList() {
         emptyTitle="Sin cobranza"
         emptyDescription="Cuando existan representantes con cuotas aparecerán aquí."
         countLabel="representantes"
+        rowActions={(row) => {
+          const waUrl = getWhatsAppUrl(row);
+          return (
+            <div className="flex items-center justify-end gap-1.5">
+              {waUrl && row.saldoTotal > 0 && (
+                <Button asChild variant="ghost" size="sm" className="size-8 p-0 text-emerald-600 dark:text-emerald-400">
+                  <a href={waUrl} target="_blank" rel="noopener noreferrer" title="Enviar recordatorio por WhatsApp">
+                    <Icon icon="ph:whatsapp-logo" width={16} height={16} aria-hidden="true" />
+                  </a>
+                </Button>
+              )}
+              {row.saldoTotal > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 h-7 text-xs"
+                  onClick={() => handleOpenPago(row)}
+                >
+                  <Icon icon="ph:credit-card" width={14} height={14} aria-hidden="true" />
+                  Cobrar
+                </Button>
+              )}
+            </div>
+          );
+        }}
+      />
+
+      <PagoFamiliarDialog
+        representante={pagoTarget}
+        open={pagoOpen}
+        onOpenChange={setPagoOpen}
       />
     </div>
   );

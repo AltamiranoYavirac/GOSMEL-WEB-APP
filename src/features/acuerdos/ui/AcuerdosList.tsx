@@ -5,6 +5,7 @@ import { formatCurrency, formatDate } from "@/shared/lib/formatters";
 
 import { useAcuerdos } from "../hooks/useAcuerdos";
 import { ACUERDO_ESTADO_BADGE, type IAcuerdoRow } from "../model/acuerdo.types";
+import CrearAcuerdoDialog from "./CrearAcuerdoDialog";
 import EditarAcuerdoDialog from "./EditarAcuerdoDialog";
 
 export default function AcuerdosList() {
@@ -67,7 +68,9 @@ export default function AcuerdosList() {
         title="Acuerdos de pago"
         description="Planes de mensualidad acordados con cada estudiante y su histórico de ajustes."
         icon="ph:handshake"
-      />
+      >
+        <CrearAcuerdoDialog />
+      </AdminPageHeader>
 
       <AdminDataTable
         data={rows}

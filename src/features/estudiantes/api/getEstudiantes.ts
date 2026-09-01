@@ -1,6 +1,6 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 
-import type { IEstudianteRow, TNivelCurso } from "../model/estudiante.types";
+import type { IEstudianteCatedraInfo, IEstudianteRow, TNivelCurso } from "../model/estudiante.types";
 
 function calcularEdad(fechaNacimiento: string): number | null {
   const nacimiento = new Date(fechaNacimiento);
@@ -28,9 +28,33 @@ export async function getEstudiantes(): Promise<{
 
   const { data, error } = await supabase
     .from("estudiantes")
-    .select(
-      "id, perfil_id, nombres, apellidos, cedula, celular, email, fecha_nacimiento, nivel_musical, activo, estudiante_instrumento(instrumentos(nombre)), estudiante_representante(representantes(nombres, apellidos), es_contacto_principal)"
-    )
+    .select(`
+      id,
+      perfil_id,
+      nombres,
+      apellidos,
+      cedula,
+      celular,
+      email,
+      fecha_nacimiento,
+      nivel_musical,
+      activo,
+      estudiante_instrumento(instrumentos(nombre)),
+      estudiante_representante(representantes(nombres, apellidos), es_contacto_principal),
+      inscripciones(
+        id,
+        estado,
+        catedra_id,
+        catedras(
+          id,
+          codigo,
+          cursos(nombre),
+          docentes(
+            perfiles(nombres, apellidos)
+          )
+        )
+      )
+    `)
     .in("perfil_id", perfilIdsConRol)
     .order("nombres", { ascending: true })
     .limit(500);
@@ -43,6 +67,24 @@ export async function getEstudiantes(): Promise<{
     const representantePrincipal = estudiante.estudiante_representante?.find(
       (vinculo) => vinculo.es_contacto_principal || vinculo.representantes
     )?.representantes;
+
+    const catedrasActivas: IEstudianteCatedraInfo[] = (estudiante.inscripciones ?? [])
+      .filter((i) => i.estado === "activa" && i.catedras)
+      .map((i) => {
+        const cat = i.catedras;
+        const docPerfil = cat?.docentes?.perfiles;
+        const docenteNombre = docPerfil
+          ? `${docPerfil.nombres} ${docPerfil.apellidos}`.trim()
+          : null;
+
+        return {
+          id: i.id,
+          catedraId: i.catedra_id,
+          catedraCodigo: cat?.codigo ?? "—",
+          cursoNombre: cat?.cursos?.nombre ?? "—",
+          docenteNombre,
+        };
+      });
 
     return {
       id: estudiante.id,
@@ -62,6 +104,7 @@ export async function getEstudiantes(): Promise<{
       representante: representantePrincipal
         ? `${representantePrincipal.nombres} ${representantePrincipal.apellidos}`.trim()
         : null,
+      catedrasActivas,
       activo: estudiante.activo,
     };
   });

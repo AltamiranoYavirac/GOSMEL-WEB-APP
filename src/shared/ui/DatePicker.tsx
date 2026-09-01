@@ -40,17 +40,19 @@ export function DatePicker({
           variant="outline"
           disabled={disabled}
           className={cn(
-            "h-auto w-full justify-start gap-2 rounded-lg border-input bg-background px-4 py-3 text-base font-normal text-foreground hover:bg-muted",
+            "h-10 w-full min-w-0 max-w-full justify-start gap-2 rounded-lg border-input bg-background px-3 py-2 text-sm font-normal text-foreground hover:bg-muted overflow-hidden",
             !selected && "text-muted-foreground"
           )}
         >
-          <Icon icon="ph:calendar" className="size-4 text-muted-foreground" aria-hidden="true" />
-          {selected
-            ? format(selected, "d 'de' MMMM 'de' yyyy", { locale: es })
-            : placeholder}
+          <Icon icon="ph:calendar" className="size-4 text-muted-foreground shrink-0" aria-hidden="true" />
+          <span className="truncate min-w-0 flex-1 text-left">
+            {selected
+              ? format(selected, "d 'de' MMMM, yyyy", { locale: es })
+              : placeholder}
+          </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-auto p-0">
+      <PopoverContent align="start" className="w-auto p-0 z-50">
         <Calendar
           mode="single"
           locale={es}
