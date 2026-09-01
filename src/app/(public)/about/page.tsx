@@ -1,39 +1,51 @@
 import {
-  AboutSecondaryVideo,
+  AboutBehindScenes,
   AboutConcerts,
-  AboutPillars,
-  AboutValues,
+  AboutHero,
   AboutTestimonials,
-  AboutCTA,
+  AboutValues,
+  ABOUT_TESTIMONIALS,
+  ABOUT_VALUES,
 } from "@/features/about";
-import { AppImages } from "@/shared/config/images";
-import { PILLARS, TESTIMONIALS, VALUES } from "./about.constants";
+import { AppImages } from "@/shared/config";
+import { CtaPanel } from "@/widgets/CtaPanel";
+
+export const metadata = {
+  title: "Nosotros | GOSMEL Music Academy",
+  description: "Conoce la esencia, la misión y los valores de GOSMEL Music Academy.",
+};
 
 export default function AboutPage() {
   return (
-    <div className="px-4 pt-28 pb-16 flex flex-col items-center gap-16">
-      <AboutSecondaryVideo
-        videoUrl={AppImages.ABOUT_VIDEO_PORTRAIT}
-        posterUrl={AppImages.ABOUT_VIDEO_PORTRAIT_POSTER}
-        videoTitle="Una academia con alma"
-        description="En GOSMEL Music Academy formamos músicos desde 2015 con una metodología que combina la tradición de los conservatorios con un enfoque moderno y humano. Nuestros maestros, graduados de prestigiosos conservatorios, guían a cada estudiante en un viaje personal de descubrimiento musical, desde los fundamentos hasta el escenario."
+    <div className="flex-1 bg-background">
+      <AboutHero
+        image={AppImages.PAGE_HERO_ABOUT}
+        imageAlt="Estudiantes de GOSMEL agradeciendo al público al final de un concierto"
+        eyebrow="Sobre nosotros"
+        title="Una academia donde la música se vive."
+        description="Más que aprender notas, construyes herramientas para expresarte con confianza y disfrutar cada etapa del proceso."
+        chips={["Comunidad unida", "Excelencia musical"]}
       />
       <AboutConcerts
         videoUrl={AppImages.ABOUT_VIDEO}
         posterUrl={AppImages.ABOUT_VIDEO_POSTER}
-        videoTitle="Nuestros Conciertos"
-        description="En GOSMEL cada etapa culmina con un concierto en vivo. Nuestros estudiantes suben al escenario para mostrar lo aprendido y vivir la experiencia real de una presentación."
+        videoTitle="La música también se vive en escena."
+        description="Cada etapa cierra con una presentación en público: la oportunidad perfecta para consolidar lo aprendido, ganar confianza y celebrar tu evolución musical."
       />
-      <AboutPillars pillars={PILLARS} />
-      <AboutValues values={VALUES} />
-      <AboutTestimonials testimonials={TESTIMONIALS} />
-      <AboutCTA
-        title="Sube al escenario con tu propia voz"
-        description="Reserva una clase de prueba gratuita y descubre cómo suena tu camino musical junto a nuestros maestros."
-        primaryLabel="Reservar clase de prueba"
-        primaryHref="/register"
-        secondaryLabel="Conocer a los maestros"
-        secondaryHref="/about"
+      <AboutBehindScenes
+        videoUrl={AppImages.ABOUT_VIDEO_PORTRAIT}
+        posterUrl={AppImages.ABOUT_VIDEO_PORTRAIT_POSTER}
+        videoTitle="Así se prepara cada presentación."
+        description="Del salón de práctica al escenario: un vistazo cercano al proceso que viven nuestros estudiantes antes de cada concierto."
+      />
+      <AboutValues values={ABOUT_VALUES} />
+      <AboutTestimonials testimonials={ABOUT_TESTIMONIALS} />
+      <CtaPanel
+        titleId="about-cta-title"
+        title="Tu próxima canción empieza aquí."
+        description="Cuéntanos qué te gustaría aprender y te ayudamos a encontrar el curso que mejor se adapta a tu momento."
+        primary={{ label: "Reservar clase de prueba", href: "/contact" }}
+        secondary={{ label: "Hablar con nosotros", href: "/contact" }}
       />
     </div>
   );

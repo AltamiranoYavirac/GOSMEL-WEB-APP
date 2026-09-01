@@ -1,4 +1,4 @@
-export interface IAboutSecondaryVideoProps {
+export interface IAboutBehindScenesProps {
   videoUrl: string;
   posterUrl: string;
   videoTitle: string;

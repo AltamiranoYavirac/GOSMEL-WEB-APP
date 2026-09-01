@@ -45,6 +45,7 @@ export default function SocialAuthButtons({
               )}
             >
               <Icon icon={provider.icon} width={iconSize} height={iconSize} aria-hidden="true" />
+              {layout === "stacked" ? <span>Continuar con {provider.label}</span> : null}
             </button>
           );
         })}

@@ -1,46 +1,47 @@
-import { MediaFrame, SectionHeader } from "@/shared/ui";
+import Image from "next/image";
+
+import { Reveal } from "@/shared/ui";
 
 import type { IAboutValuesProps } from "./AboutValues.types";
 
 export default function AboutValues({ values }: IAboutValuesProps) {
   return (
-    <section className="w-full max-w-5xl mx-auto flex flex-col items-center gap-10">
+    <section className="bg-background pt-[80px] md:pt-[130px]">
+      <div className="mx-auto w-full max-w-[1600px] px-[22px] md:px-14">
+        <Reveal as="p" className="mb-[18px] font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-primary md:text-[11px] md:tracking-[0.24em]">
+          Valores fundamentales
+        </Reveal>
+        <Reveal as="h2" delay={0.08} className="mb-11 text-[32px] font-semibold leading-[1.08] tracking-[-0.03em] md:text-[44px]">
+          La esencia de GOSMEL.
+        </Reveal>
 
-      <SectionHeader
-        eyebrow="Valores Fundamentales"
-        title={
-          <>
-            La Esencia de <span className="text-primary">GOSMEL</span>
-          </>
-        }
-        size="sm"
-      />
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-        {values.map((value) => (
-          <div key={value.title} className="flex flex-col gap-4">
-            <MediaFrame
-              variant="image"
-              src={value.imageUrl}
-              alt={value.title}
-              aspect="tall"
-              className="w-full"
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {values.map((value, index) => (
+            <Reveal
+              key={value.title}
+              delay={index * 0.08}
+              className="relative h-[380px] overflow-hidden rounded-[22px] md:h-[440px]"
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-scrim-strong to-transparent" />
-            </MediaFrame>
-
-            <div className="flex flex-col gap-2">
-              <h3 className="text-primary font-bold text-lg uppercase tracking-widest">
-                {value.title}
-              </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {value.description}
-              </p>
-            </div>
-          </div>
-        ))}
+              <Image
+                src={value.imageUrl}
+                alt={value.imageAlt}
+                fill
+                sizes="(max-width: 639px) 100vw, 33vw"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/92 via-surface-dark/10 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-[26px] text-surface-dark-foreground">
+                <h3 className="mb-2.5 font-mono text-[13px] font-bold uppercase tracking-[0.14em] text-stage-accent">
+                  {value.title}
+                </h3>
+                <p className="text-[14.5px] leading-[1.55] text-surface-dark-muted">
+                  {value.description}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
-
     </section>
   );
 }

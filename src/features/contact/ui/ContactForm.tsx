@@ -3,7 +3,7 @@
 import { Icon } from "@iconify/react"
 import { toast } from "sonner"
 
-import { Button, Card, IconTile, Spinner } from "@/shared/ui"
+import { Button, Spinner } from "@/shared/ui"
 import { Form, SelectField, TextareaField, TextField, useAppForm } from "@/shared/form"
 import {
   contactFormSchema,
@@ -33,65 +33,48 @@ export default function ContactForm({ onSubmitSuccess }: IContactFormProps) {
   }
 
   return (
-    <Card className="h-full rounded-2xl p-8 gap-8">
-      <div className="flex items-center gap-4">
-        <IconTile icon="ph:paper-plane-tilt" size="md" iconSize={26} />
-        <div>
-          <span className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-            Formulario
-          </span>
-          <h2 className="mt-1 font-heading text-2xl font-bold text-foreground">
-            Cuéntanos tu idea
-          </h2>
-          <p className="text-muted-foreground text-sm mt-1">
-            Completa el formulario y te responderemos en menos de 24 horas.
-          </p>
-        </div>
-      </div>
+    <div className="rounded-[18px] border border-border bg-card p-6 md:rounded-[20px] md:p-9">
+      <h2 className="text-[23px] font-semibold tracking-[-0.03em] md:text-[26px]">
+        Envíanos un mensaje
+      </h2>
+      <p className="mt-1.5 text-sm text-muted-foreground">
+        Te responderemos en menos de 24 horas.
+      </p>
 
-      <Form form={form} onSubmit={onSubmit} className="flex flex-col gap-6">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <TextField
-            name="fullName"
-            label="Nombre Completo"
-            placeholder="Ej. Ana García"
-          />
-          <TextField
-            name="email"
-            label="Correo Electrónico"
-            type="email"
-            placeholder="ana@ejemplo.com"
-          />
-        </div>
-
+      <Form form={form} onSubmit={onSubmit} className="mt-7 flex flex-col gap-5">
+        <TextField name="fullName" label="Nombre completo" placeholder="Tu nombre" />
+        <TextField
+          name="email"
+          label="Correo electrónico"
+          type="email"
+          placeholder="tucorreo@ejemplo.com"
+        />
         <SelectField
           name="instrument"
-          label="Instrumento de Interés"
+          label="Instrumento de interés"
           placeholder="Selecciona un instrumento"
           options={INSTRUMENTS}
         />
-
         <TextareaField
           name="message"
           label="Mensaje"
-          placeholder="Cuéntanos sobre tus metas musicales..."
-          rows={6}
+          placeholder="Cuéntanos qué te gustaría aprender…"
+          rows={5}
         />
 
         <Button
           type="submit"
-          size="2xl"
           disabled={isSubmitting}
-          className="w-full gap-2 text-sm uppercase tracking-widest"
+          className="h-[52px] w-full gap-2 rounded-full text-[15px] font-semibold"
         >
           {isSubmitting ? (
             <Spinner className="size-4" />
           ) : (
-            <Icon icon="ph:paper-plane-right" className="size-4" aria-hidden="true" />
+            <Icon icon="ph:paper-plane-right" className="size-5" aria-hidden="true" />
           )}
-          {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
+          {isSubmitting ? "Enviando…" : "Enviar mensaje"}
         </Button>
       </Form>
-    </Card>
+    </div>
   )
 }

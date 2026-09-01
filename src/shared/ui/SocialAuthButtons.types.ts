@@ -8,7 +8,7 @@ export interface ISocialAuthButtonsProps {
   dividerLabel: string;
   ariaLabelPrefix: string;
   providers?: ISocialProvider[];
-  layout?: "stretch" | "compact";
+  layout?: "stretch" | "compact" | "stacked";
   iconSize?: number;
   className?: string;
   onProviderSelect?: (provider: ISocialProvider) => void;

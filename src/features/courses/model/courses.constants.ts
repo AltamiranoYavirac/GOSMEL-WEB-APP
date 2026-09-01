@@ -1,9 +1,5 @@
 import { AppImages } from "@/shared/config";
 
-export const COURSE_FILTERS = ["Todos", "Instrumento", "Lenguaje musical"] as const;
-
-export type TCourseFilter = (typeof COURSE_FILTERS)[number];
-
 export const COURSES = [
   {
     icon: "ph:piano-keys",
@@ -77,23 +73,8 @@ export const COURSES = [
   },
 ] as const;
 
-export const COURSE_BENEFITS = [
-  {
-    icon: "ph:chalkboard-teacher",
-    title: "Maestros que acompañan",
-    description:
-      "Aprende con orientación cercana y una metodología que se adapta a tu proceso.",
-  },
-  {
-    icon: "ph:calendar-blank",
-    title: "Un ritmo que se adapta a ti",
-    description:
-      "Avanza paso a paso, con objetivos claros y práctica que puedes llevar a tu rutina.",
-  },
-  {
-    icon: "ph:microphone-stage",
-    title: "La música también se vive",
-    description:
-      "Consolida lo aprendido compartiendo tu evolución en experiencias musicales reales.",
-  },
-] as const;
+export const COURSE_BENTO_SPANS: Record<string, string> = {
+  Piano: "sm:col-span-2 sm:row-span-2",
+  "Violín": "sm:col-span-2",
+  Solfeo: "sm:col-span-2",
+};

@@ -63,10 +63,10 @@ export default function ContactMap({ lat, lng, label }: IContactMapProps) {
   }, [lat, lng, label]);
 
   return (
-    <div className="relative z-0 w-full overflow-hidden rounded-2xl border border-border">
+    <div className="relative z-0 w-full overflow-hidden rounded-[18px] border border-border md:rounded-[20px]">
       <div
         ref={containerRef}
-        className="h-64 w-full md:h-80"
+        className="h-64 w-full md:h-72"
         aria-label={`Mapa de ubicación: ${label}`}
       />
       <a

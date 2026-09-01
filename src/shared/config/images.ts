@@ -29,6 +29,13 @@ export const AppImages = {
   LANDING_PROCESS: `${CLOUDINARY_BASE}/ar_9:10,c_fill,g_auto,w_1400,q_auto,f_auto/v1786821231/Violin_Guitarra_2_qfp5j8.png`,
   LANDING_CTA: `${CLOUDINARY_BASE}/ar_16:9,c_fill,g_south,w_1920,q_auto,f_auto/v1786821401/Piano3_ebisvx.png`,
 
+  PAGE_HERO_COURSES: `${CLOUDINARY_BASE}/ar_16:9,c_fill,g_auto,w_1920,q_auto,f_auto/v1786821401/Piano3_ebisvx.png`,
+  PAGE_HERO_ABOUT: `${CLOUDINARY_BASE}/ar_16:9,c_fill,g_auto,w_1920,q_auto,f_auto/v1786821231/Saludo_c6jxdq.png`,
+  PAGE_HERO_CONTACT: `${CLOUDINARY_BASE}/ar_16:9,c_fill,g_auto,w_1920,q_auto,f_auto/v1786821231/Canto_3_h0dlse.png`,
+
+  AUTH_LOGIN: `${CLOUDINARY_BASE}/ar_3:4,c_fill,g_auto,w_1200,q_auto,f_auto/v1786821231/Saludo_c6jxdq.png`,
+  AUTH_REGISTER: `${CLOUDINARY_BASE}/ar_3:4,c_fill,g_auto,w_1200,q_auto,f_auto/v1786821231/Canto_3_h0dlse.png`,
+
   ABOUT_PASSION: `${CLOUDINARY_BASE}/q_auto,f_auto,w_600/v1786821231/Canto_3_h0dlse.png`,
   ABOUT_DISCIPLINE: `${CLOUDINARY_BASE}/q_auto,f_auto,w_600/v1786821231/Saludo_c6jxdq.png`,
   ABOUT_INNOVATION: `${CLOUDINARY_BASE}/q_auto,f_auto,w_600/v1786821231/Violin_Guitarra_2_qfp5j8.png`,

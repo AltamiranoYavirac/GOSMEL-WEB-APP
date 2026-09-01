@@ -1,2 +1,2 @@
-export { COURSE_BENEFITS, COURSE_FILTERS, COURSES, type TCourseFilter } from "./model/courses.constants";
-export { default as CoursesCatalog } from "./ui/CoursesCatalog";
+export { COURSES, COURSE_BENTO_SPANS } from "./model/courses.constants";
+export { default as CoursesBento } from "./ui/CoursesBento";
