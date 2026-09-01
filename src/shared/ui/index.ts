@@ -1,7 +1,5 @@
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./accordion";
 export { Alert, AlertTitle, AlertDescription, AlertAction } from "./alert";
-export { default as AuthCard } from "./AuthCard";
-export type { IAuthCardProps } from "./AuthCard.types";
 export {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +17,7 @@ export {
 export { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarBadge } from "./avatar";
 export { Badge, badgeVariants } from "./badge";
 export type { TBadgeVariant } from "./badge";
+export { default as BrandLogo } from "./BrandLogo";
 export { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, BreadcrumbEllipsis } from "./breadcrumb";
 export { BubbleGroup, Bubble, BubbleContent, BubbleReactions } from "./bubble";
 export { Button, buttonVariants } from "./button";
@@ -72,12 +71,14 @@ export { Input, inputVariants } from "./input";
 export { InputGroup, InputGroupAddon, InputGroupButton, InputGroupText, InputGroupInput, InputGroupTextarea } from "./input-group";
 export { Label } from "./label";
 export { Marker, MarkerIcon, MarkerContent, markerVariants } from "./marker";
-export { default as MediaFrame } from "./MediaFrame";
+export { default as Reveal } from "./Reveal";
+export type { IRevealProps } from "./Reveal.types";
+export { default as RevealImage } from "./RevealImage";
+export type { IRevealImageProps } from "./RevealImage.types";
 export { AdminPageHeader } from "./AdminPageHeader";
 export type { IAdminPageHeaderProps } from "./AdminPageHeader";
 export { AdminDataTable } from "./AdminDataTable";
 export type { IAdminColumn, IAdminDataTableFilter, IAdminDataTableProps } from "./AdminDataTable";
-export { default as SectionHeader } from "./SectionHeader";
 export { default as SocialAuthButtons } from "./SocialAuthButtons";
 export { default as IconTile } from "./IconTile";
 export { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination";
