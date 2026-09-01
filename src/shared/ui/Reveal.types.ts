@@ -9,7 +9,9 @@ export type TRevealTag =
   | "li"
   | "span"
   | "p"
-  | "h2";
+  | "h1"
+  | "h2"
+  | "h3";
 
 export interface IRevealProps {
   children: ReactNode;

@@ -40,14 +40,14 @@ export default function ProgramsSection() {
       </Reveal>
 
       <div className="landing-scroll mx-auto flex w-full max-w-[1600px] snap-x snap-mandatory gap-3 overflow-x-auto px-[22px] pb-1 md:gap-3.5 md:px-14">
-        {LANDING_PROGRAMS.map(({ title, category, description, icon, image, imageAlt, number }, index) => (
+        {LANDING_PROGRAMS.map(({ slug, title, category, description, icon, image, imageAlt, number }, index) => (
           <Reveal
             key={title}
             delay={index * 0.08}
             className={`shrink-0 snap-start${image ? "" : " hidden md:block"}`}
           >
           <Link
-            href="/courses"
+            href={`/courses/${slug}`}
             className="group relative block h-[380px] w-[250px] overflow-hidden rounded-[18px] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background md:h-[430px] md:w-[286px] md:rounded-[20px]"
           >
             {image ? (
