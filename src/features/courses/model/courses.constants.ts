@@ -80,12 +80,6 @@ export const COURSES = [
   },
 ] as const;
 
-export const COURSE_BENTO_SPANS: Record<string, string> = {
-  Piano: "sm:col-span-2 sm:row-span-2",
-  "Violín": "sm:col-span-2",
-  Solfeo: "sm:col-span-2",
-};
-
 export interface ICourseGalleryItem {
   src: string;
   alt: string;
