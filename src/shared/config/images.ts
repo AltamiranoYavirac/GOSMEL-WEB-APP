@@ -22,7 +22,7 @@ export const AppImages = {
   PAGE_HERO_ABOUT: `${CLOUDINARY_BASE}/ar_16:9,c_fill,g_auto,w_1920,q_auto,f_auto/v1786821231/panoramicasala_get7df.webp`,
   PAGE_HERO_CONTACT: `${CLOUDINARY_BASE}/ar_16:9,c_fill,g_auto,w_1920,q_auto,f_auto/v1788563954/ChatGPT_Image_4_sept_2026_18_19_06_s32a2z.png`,
 
-  AUTH_LOGIN: `${CLOUDINARY_BASE}/ar_3:4,c_fill,g_auto,w_1200,q_auto,f_auto/v1788568654/microfono_apmuk4.avif`,
+  AUTH_LOGIN: `${CLOUDINARY_BASE}/ar_3:4,c_fill,g_auto,w_1200,q_auto,f_auto/v1788570489/retro-microphone-in-black-and-white-ecvl7feifzckcmlg_xo6s2s.jpg`,
   AUTH_REGISTER: `${CLOUDINARY_BASE}/ar_3:4,c_fill,g_auto,w_1200,q_auto,f_auto/v1788568993/photo-1670255022693-37f1be72bfcb_t4px3m.avif`,
 
   ABOUT_PASSION: `${CLOUDINARY_BASE}/q_auto,f_auto,w_600/v1788563482/8fbac9c764442353c285a941678a4fe4_imqlry.jpg`,
