@@ -48,9 +48,9 @@ export default function AsignarCursoEstudianteDialog({
   const [diaCobro, setDiaCobro] = useState("5");
   const [motivoAjuste, setMotivoAjuste] = useState("");
 
-  const [prevInitialEstudianteId, setPrevInitialEstudianteId] = useState(initialEstudianteId ?? "");
+  const [prevInitialEstudianteId, setPrevInitialEstudianteId] = useState(initialEstudianteId);
   if (initialEstudianteId !== prevInitialEstudianteId) {
-    setPrevInitialEstudianteId(initialEstudianteId ?? "");
+    setPrevInitialEstudianteId(initialEstudianteId);
     setSelectedEstudianteId(initialEstudianteId ?? "");
   }
 
