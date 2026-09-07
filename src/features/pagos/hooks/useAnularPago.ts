@@ -18,6 +18,8 @@ export function useAnularPago() {
       queryClient.invalidateQueries({ queryKey: ["cuotas"] });
       queryClient.invalidateQueries({ queryKey: ["cobranza"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-overview"] });
+      queryClient.invalidateQueries({ queryKey: ["estudiantes"] });
+      queryClient.invalidateQueries({ queryKey: ["student-portal"] });
       toast.success("Pago anulado y saldo de cuota restaurado");
     },
     onError: (error) => toast.error(error.message),

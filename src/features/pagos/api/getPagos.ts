@@ -10,7 +10,7 @@ export async function getPagos(): Promise<{
   const { data, error } = await supabase
     .from("pagos")
     .select(
-      "id, fecha_pago, monto, metodo, referencia, observacion, comprobante_storage_path, cuota_id, cuotas!pagos_cuota_id_fkey(periodo_mes, acuerdo_id, acuerdos_pago!cuotas_acuerdo_id_fkey(estudiante_id, estudiantes!acuerdos_pago_estudiante_id_fkey(nombres, apellidos)))"
+      "id, fecha_pago, monto, metodo, referencia, observacion, comprobante_storage_path, estado, cuota_id, cuotas!pagos_cuota_id_fkey(periodo_mes, acuerdo_id, acuerdos_pago!cuotas_acuerdo_id_fkey(estudiante_id, estudiantes!acuerdos_pago_estudiante_id_fkey(nombres, apellidos)))"
     )
     .order("fecha_pago", { ascending: false })
     .limit(300);
@@ -29,6 +29,7 @@ export async function getPagos(): Promise<{
     referencia: pago.referencia,
     observacion: pago.observacion,
     comprobanteStoragePath: pago.comprobante_storage_path,
+    estado: (pago.estado ?? "aprobado") as IPagoRow["estado"],
   }));
 
   return { data: rows, error: null };

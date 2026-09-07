@@ -79,7 +79,16 @@ const TEACHER_NAV: IDashboardNavGroup[] = [
 const STUDENT_NAV: IDashboardNavGroup[] = [
   {
     label: "General",
-    items: [{ label: "Resumen", href: "/dashboard/student", icon: "ph:squares-four" }],
+    items: [
+      { label: "Inicio", href: "/dashboard/student", icon: "ph:squares-four" },
+      { label: "Mis cátedras", href: "/dashboard/student/catedras", icon: "ph:chalkboard" },
+      { label: "Notas y asistencia", href: "/dashboard/student/notas", icon: "ph:exam" },
+      { label: "Práctica", href: "/dashboard/student/practica", icon: "ph:guitar" },
+      { label: "Recursos", href: "/dashboard/student/recursos", icon: "ph:books" },
+      { label: "Finanzas", href: "/dashboard/student/finanzas", icon: "ph:coins" },
+      { label: "Certificados", href: "/dashboard/student/certificados", icon: "ph:certificate" },
+      { label: "Proyección", href: "/dashboard/student/proyeccion", icon: "ph:trend-up" },
+    ],
   },
 ]
 

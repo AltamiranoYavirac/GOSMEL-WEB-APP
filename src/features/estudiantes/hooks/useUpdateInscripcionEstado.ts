@@ -17,6 +17,8 @@ export function useUpdateInscripcionEstado(estudianteId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [...estudiantesQueryKeys.all, "detalle", estudianteId] });
+      queryClient.invalidateQueries({ queryKey: estudiantesQueryKeys.all });
+      queryClient.invalidateQueries({ queryKey: ["student-portal"] });
       toast.success("Inscripción actualizada");
     },
     onError: (error) => toast.error(error.message),

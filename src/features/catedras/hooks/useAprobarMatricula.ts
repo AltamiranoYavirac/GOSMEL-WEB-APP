@@ -24,7 +24,12 @@ export function useAprobarMatricula(catedraId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: catedrasQueryKeys.list() });
       queryClient.invalidateQueries({ queryKey: catedrasQueryKeys.inscripcionesPendientes(catedraId) });
-      toast.success("Matrícula aprobada");
+      queryClient.invalidateQueries({ queryKey: ["catedras", catedraId, "estudiantes"] });
+      queryClient.invalidateQueries({ queryKey: ["estudiantes"] });
+      queryClient.invalidateQueries({ queryKey: ["student-portal"] });
+      queryClient.invalidateQueries({ queryKey: ["acuerdos"] });
+      queryClient.invalidateQueries({ queryKey: ["cuotas"] });
+      toast.success("Matrícula aprobada con éxito");
     },
     onError: (error) => toast.error(error.message),
   });

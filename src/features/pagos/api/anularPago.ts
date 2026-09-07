@@ -27,6 +27,7 @@ export async function anularPago(
       .from("pagos")
       .select("monto, fecha_pago")
       .eq("cuota_id", cuotaId)
+      .eq("estado", "aprobado")
       .order("fecha_pago", { ascending: false });
 
     const totalPagado = (remainingPagos ?? []).reduce((sum, p) => sum + Number(p.monto), 0);

@@ -21,6 +21,7 @@ import {
 } from "@/shared/ui";
 import { formatCurrency, formatDate, formatMonthPeriod } from "@/shared/lib/formatters";
 
+import { useEliminarInscripcion } from "../hooks/useEliminarInscripcion";
 import { useEstudianteDetalle } from "../hooks/useEstudianteDetalle";
 import { useUpdateInscripcionEstado } from "../hooks/useUpdateInscripcionEstado";
 import { CUOTA_ESTADO_BADGE, INSCRIPCION_ESTADO_BADGE } from "../model/estudiante-detalle.types";
@@ -36,6 +37,7 @@ export default function EstudianteDetalleSheet({ estudianteId, estudianteNombre 
   const [asigOpen, setAsigOpen] = useState(false);
   const { data, isPending } = useEstudianteDetalle(estudianteId, open);
   const mutation = useUpdateInscripcionEstado(estudianteId);
+  const eliminarMutation = useEliminarInscripcion(estudianteId);
 
   return (
     <>
@@ -136,24 +138,24 @@ export default function EstudianteDetalleSheet({ estudianteId, estudianteNombre 
                             <Badge variant={INSCRIPCION_ESTADO_BADGE[inscripcion.estado].variant}>
                               {INSCRIPCION_ESTADO_BADGE[inscripcion.estado].label}
                             </Badge>
-                            {inscripcion.estado === "activa" || inscripcion.estado === "pendiente" ? (
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon-sm" aria-label="Gestionar inscripción">
-                                    <Icon icon="ph:dots-three-vertical" aria-hidden="true" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  {inscripcion.estado === "activa" ? (
-                                    <DropdownMenuItem
-                                      onSelect={() =>
-                                        mutation.mutate({ inscripcionId: inscripcion.id, estado: "retirada" })
-                                      }
-                                    >
-                                      <Icon icon="ph:arrow-u-left" aria-hidden="true" />
-                                      Retirar
-                                    </DropdownMenuItem>
-                                  ) : null}
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon-sm" aria-label="Gestionar inscripción">
+                                  <Icon icon="ph:dots-three-vertical" aria-hidden="true" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                {inscripcion.estado === "activa" ? (
+                                  <DropdownMenuItem
+                                    onSelect={() =>
+                                      mutation.mutate({ inscripcionId: inscripcion.id, estado: "retirada" })
+                                    }
+                                  >
+                                    <Icon icon="ph:arrow-u-left" aria-hidden="true" />
+                                    Retirar
+                                  </DropdownMenuItem>
+                                ) : null}
+                                {inscripcion.estado === "activa" || inscripcion.estado === "pendiente" ? (
                                   <DropdownMenuItem
                                     onSelect={() =>
                                       mutation.mutate({ inscripcionId: inscripcion.id, estado: "cancelada" })
@@ -162,9 +164,16 @@ export default function EstudianteDetalleSheet({ estudianteId, estudianteNombre 
                                     <Icon icon="ph:x" aria-hidden="true" />
                                     Cancelar
                                   </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            ) : null}
+                                ) : null}
+                                <DropdownMenuItem
+                                  className="text-destructive focus:text-destructive"
+                                  onSelect={() => eliminarMutation.mutate(inscripcion.id)}
+                                >
+                                  <Icon icon="ph:trash" aria-hidden="true" />
+                                  Eliminar inscripción
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </div>
                         </li>
                       ))}
