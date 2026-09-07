@@ -13,9 +13,10 @@ import {
 import { formatCurrency, formatDate, formatMonthPeriod } from "@/shared/lib/formatters";
 
 import { usePagos } from "../hooks/usePagos";
-import type { IPagoRow } from "../model/pago.types";
-
+import { PAGO_ESTADO_BADGE, type IPagoRow } from "../model/pago.types";
 import AnularPagoDialog from "./AnularPagoDialog";
+import AprobarPagoDialog from "./AprobarPagoDialog";
+import RechazarPagoDialog from "./RechazarPagoDialog";
 
 export default function PagosList() {
   const { data, isPending } = usePagos();
@@ -33,7 +34,11 @@ export default function PagosList() {
       render: (row) => (
         <div className="flex flex-col">
           <span className="font-medium">{row.estudiante}</span>
-          {row.observacion ? <span className="text-xs text-muted-foreground">{row.observacion}</span> : null}
+          {row.observacion ? (
+            <span className="text-xs text-muted-foreground italic truncate max-w-[200px]" title={row.observacion}>
+              {row.observacion}
+            </span>
+          ) : null}
         </div>
       ),
     },
@@ -62,6 +67,14 @@ export default function PagosList() {
       ),
     },
     {
+      key: "estado",
+      label: "Estado",
+      render: (row) => {
+        const badge = PAGO_ESTADO_BADGE[row.estado] ?? { label: row.estado, variant: "outline" as const };
+        return <Badge variant={badge.variant}>{badge.label}</Badge>;
+      },
+    },
+    {
       key: "comprobante",
       label: "Comprobante",
       render: (row) =>
@@ -77,7 +90,7 @@ export default function PagosList() {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
             >
-              <Icon icon="ph:file-pdf" className="size-3.5" aria-hidden="true" />
+              <Icon icon="ph:file-arrow-down" className="size-3.5" aria-hidden="true" />
               Ver
             </a>
           </Button>
@@ -88,18 +101,27 @@ export default function PagosList() {
   ];
 
   const filters: IAdminDataTableFilter<IPagoRow>[] = [
+    { value: "por_verificar", label: "Por verificar", match: (row) => row.estado === "pendiente_verificacion" },
+    { value: "aprobado", label: "Aprobados", match: (row) => row.estado === "aprobado" },
+    { value: "rechazado", label: "Rechazados", match: (row) => row.estado === "rechazado" },
     { value: "transferencia", label: "Transferencia", match: (row) => (row.metodo ?? "").toLowerCase().includes("transferencia") },
     { value: "efectivo", label: "Efectivo", match: (row) => (row.metodo ?? "").toLowerCase().includes("efectivo") },
     { value: "tarjeta", label: "Tarjeta", match: (row) => (row.metodo ?? "").toLowerCase().includes("tarjeta") },
     { value: "deposito", label: "Depósito", match: (row) => (row.metodo ?? "").toLowerCase().includes("deposito") || (row.metodo ?? "").toLowerCase().includes("depósito") },
   ];
 
+  const pendientesCount = rows.filter((r) => r.estado === "pendiente_verificacion").length;
+
   return (
     <div className="space-y-6">
       <AdminPageHeader
         eyebrow="Finanzas · GOSMEL"
         title="Pagos"
-        description="Registro de pagos realizados contra cada cuota, con su comprobante."
+        description={
+          pendientesCount > 0
+            ? `Hay ${pendientesCount} comprobante${pendientesCount > 1 ? "s" : ""} pendiente${pendientesCount > 1 ? "s" : ""} de verificación.`
+            : "Registro de pagos realizados contra cada cuota, con su comprobante."
+        }
         icon="ph:credit-card"
       />
 
@@ -114,7 +136,13 @@ export default function PagosList() {
         emptyDescription="Cuando se registren pagos aparecerán aquí."
         countLabel="pagos"
         rowActions={(row) => (
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end gap-1.5">
+            {row.estado === "pendiente_verificacion" ? (
+              <>
+                <AprobarPagoDialog pago={row} />
+                <RechazarPagoDialog pago={row} />
+              </>
+            ) : null}
             <AnularPagoDialog pago={row} />
           </div>
         )}

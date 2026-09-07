@@ -1,1 +1,11 @@
-export { default as StudentDashboard } from "./ui/StudentDashboard";
+export { default as StudentPortalLayout } from "./ui/StudentPortalLayout";
+export { default as StudentOverviewView } from "./ui/StudentOverviewView";
+export { default as StudentCatedrasView } from "./ui/StudentCatedrasView";
+export { default as StudentGradesView } from "./ui/StudentGradesView";
+export { default as StudentPracticeView } from "./ui/StudentPracticeView";
+export { default as StudentMaterialsView } from "./ui/StudentMaterialsView";
+export { default as StudentFinancesView } from "./ui/StudentFinancesView";
+export { default as StudentCertificatesView } from "./ui/StudentCertificatesView";
+export { default as StudentReputationView } from "./ui/StudentReputationView";
+export * from "./model/student-dashboard.types";
+export * from "./hooks/useStudentPortal";

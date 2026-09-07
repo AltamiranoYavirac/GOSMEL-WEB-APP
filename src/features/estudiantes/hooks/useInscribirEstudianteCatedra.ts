@@ -20,6 +20,7 @@ export function useInscribirEstudianteCatedra() {
       queryClient.invalidateQueries({ queryKey: ["catedras"] });
       queryClient.invalidateQueries({ queryKey: ["acuerdos"] });
       queryClient.invalidateQueries({ queryKey: ["cobranza"] });
+      queryClient.invalidateQueries({ queryKey: ["student-portal"] });
       toast.success("Estudiante asignado y matriculado en el curso/cátedra con éxito");
     },
     onError: (error) => {
