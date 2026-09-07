@@ -35,5 +35,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "Academia de música rediseño/**"]
+  "exclude": ["node_modules", "Academia de música rediseño/**", "Academia de música rediseño v2/**"]
 }

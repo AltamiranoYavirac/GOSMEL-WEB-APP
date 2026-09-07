@@ -1,4 +1,6 @@
-import { CoursesBento } from "@/features/courses";
+import { CoursesList, COURSES } from "@/features/courses";
+import type { ICourseCardTeacher } from "@/features/courses";
+import { TEACHERS } from "@/features/teachers";
 import { AppImages } from "@/shared/config";
 import { FinalCta } from "@/widgets/FinalCta";
 import { PageHero } from "@/widgets/PageHero";
@@ -8,6 +10,18 @@ export const metadata = {
   description:
     "Siete programas de música en Quito: piano, violín, guitarra, guitarra eléctrica, solfeo, charango y quena.",
 };
+
+const teachersByCourse: Record<string, ICourseCardTeacher[]> = Object.fromEntries(
+  COURSES.map((course) => [
+    course.slug,
+    TEACHERS.filter((teacher) => teacher.courseSlug === course.slug).map((teacher) => ({
+      slug: teacher.slug,
+      name: teacher.name,
+      photo: teacher.photo,
+      photoAlt: teacher.photoAlt,
+    })),
+  ])
+);
 
 export default function CoursesPage() {
   return (
@@ -20,7 +34,7 @@ export default function CoursesPage() {
         title="Elige tu camino musical."
         description="Aprender se disfruta cuando el proceso te representa. Instrumento o lenguaje musical, a tu ritmo."
       />
-      <CoursesBento />
+      <CoursesList teachersByCourse={teachersByCourse} />
       <FinalCta
         image={AppImages.LANDING_CTA}
         imageAlt="Estudiantes de GOSMEL agradeciendo al público al final de un concierto"
