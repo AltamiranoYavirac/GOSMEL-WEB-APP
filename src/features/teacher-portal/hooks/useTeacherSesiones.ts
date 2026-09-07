@@ -2,18 +2,17 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { getTeacherDashboard } from "../api";
+import { getTeacherSesiones } from "../api";
 import { teacherQueryKeys } from "../model/query-keys";
 
-export function useTeacherDashboard() {
+export function useTeacherSesiones() {
   return useQuery({
-    queryKey: teacherQueryKeys.dashboard(),
+    queryKey: teacherQueryKeys.sesiones(),
     queryFn: async () => {
-      const { data, error } = await getTeacherDashboard();
+      const { data, error } = await getTeacherSesiones();
       if (error) throw new Error(error);
-      return data;
+      return data ?? [];
     },
     staleTime: 30_000,
-    retry: false,
   });
 }

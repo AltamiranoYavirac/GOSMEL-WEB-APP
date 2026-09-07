@@ -5,14 +5,11 @@ import type {
   ITeacherDashboard,
   ITeacherEstudiante,
   ITeacherEvaluacion,
-  ITeacherMaterial,
   ITeacherSesion,
   TEstadoCatedra,
   TEstadoSesion,
   TModalidadCurso,
   TTipoEvaluacion,
-  TTipoMaterial,
-  TVisibilidadMaterial,
 } from "../model/teacher-dashboard.types";
 
 export async function getTeacherDashboard(): Promise<{
@@ -28,152 +25,191 @@ export async function getTeacherDashboard(): Promise<{
     return { data: null, error: "No autenticado" };
   }
 
+  const { data: rolData } = await supabase
+    .from("perfil_rol")
+    .select("rol")
+    .eq("perfil_id", user.id);
+  const isAdmin = (rolData ?? []).some((r) => r.rol === "admin");
+
+  let catedrasQuery = supabase
+    .from("catedras")
+    .select(
+      "id, codigo, curso_id, aula, cupo_maximo, modalidad, estado, cursos(nombre), catedra_horarios(dia_semana, hora_inicio, hora_fin), inscripciones!inscripciones_catedra_id_fkey(estado)"
+    )
+    .limit(100);
+
+  if (!isAdmin) {
+    catedrasQuery = catedrasQuery.eq("docente_id", user.id);
+  }
+
   const [perfil, catedras] = await Promise.all([
-    supabase.from("perfiles").select("nombres").eq("id", user.id).maybeSingle(),
-    supabase
-      .from("catedras")
-      .select(
-        "id, codigo, aula, cupo_maximo, modalidad, estado, cursos(nombre), catedra_horarios(dia_semana, hora_inicio, hora_fin), inscripciones!inscripciones_catedra_id_fkey(estado)"
-      )
-      .eq("docente_id", user.id)
-      .limit(200),
+    supabase.from("perfiles").select("nombres, apellidos").eq("id", user.id).maybeSingle(),
+    catedrasQuery,
   ]);
 
-  const catedraIds = (catedras.data ?? []).map((catedra) => catedra.id);
+  if (perfil.error) return { data: null, error: perfil.error.message };
+  if (catedras.error) return { data: null, error: catedras.error.message };
 
-  const [sesiones, materiales, evaluaciones, inscripcionesData] = await Promise.all([
+  const catedraIds = (catedras.data ?? []).map((c) => c.id);
+  const nombreDocente = perfil.data ? `${perfil.data.nombres} ${perfil.data.apellidos}`.trim() : "Docente";
+
+  const catedrasList: ITeacherCatedra[] = (catedras.data ?? []).map((c) => ({
+    id: c.id,
+    codigo: c.codigo,
+    cursoId: c.curso_id,
+    curso: c.cursos?.nombre ?? "Sin curso",
+    modalidad: c.modalidad as TModalidadCurso,
+    aula: c.aula,
+    cupoMaximo: c.cupo_maximo,
+    inscritos: (c.inscripciones ?? []).filter((item) => item.estado === "activa").length,
+    estado: c.estado as TEstadoCatedra,
+    horarios: (c.catedra_horarios ?? []).map((h) => ({
+      dia: h.dia_semana,
+      inicio: h.hora_inicio,
+      fin: h.hora_fin,
+    })),
+  }));
+
+  if (catedraIds.length === 0) {
+    return {
+      data: {
+        nombre: nombreDocente || "Docente",
+        counts: {
+          catedrasActivas: 0,
+          sesionesHoy: 0,
+          inscritos: 0,
+          evaluacionesPendientes: 0,
+        },
+        catedras: [],
+        estudiantes: [],
+        sesionesHoy: [],
+        proximasSesiones: [],
+        pendientesAsistencia: [],
+        pendientesCalificar: [],
+      },
+      error: null,
+    };
+  }
+
+  const [sesionesRes, inscripcionesRes, evaluacionesRes] = await Promise.all([
     supabase
       .from("sesiones")
       .select(
         "id, fecha, hora_inicio, hora_fin, tema, estado, catedra_id, catedras!sesiones_catedra_id_fkey(codigo, cursos(nombre)), asistencias(estado)"
       )
       .in("catedra_id", catedraIds)
-      .order("fecha", { ascending: false })
-      .limit(100),
+      .order("fecha", { ascending: true })
+      .limit(200),
     supabase
-      .from("materiales")
-      .select("id, titulo, tipo, visible_para, curso_id, catedra_id, cursos(nombre)")
-      .in("visible_para", ["docentes", "publico", "registrados"])
-      .order("created_at", { ascending: false })
-      .limit(100),
+      .from("inscripciones")
+      .select(
+        "id, estudiante_id, catedra_id, fecha_inscripcion, estado, estudiantes(id, nombres, apellidos, email, celular), catedras(codigo, cursos(nombre))"
+      )
+      .in("catedra_id", catedraIds)
+      .in("estado", ["activa", "pendiente"])
+      .limit(300),
     supabase
       .from("evaluaciones")
       .select(
         "id, titulo, tipo, fecha, ponderacion, nota_maxima, catedra_id, catedras!evaluaciones_catedra_id_fkey(codigo, cursos(nombre)), calificaciones(nota)"
       )
       .in("catedra_id", catedraIds)
-      .order("created_at", { ascending: false })
+      .order("fecha", { ascending: false })
       .limit(100),
-    supabase
-      .from("inscripciones")
-      .select(`
-        id,
-        fecha_inscripcion,
-        estado,
-        estudiantes(id, nombres, apellidos, email, celular),
-        catedras(codigo, cursos(nombre))
-      `)
-      .in("catedra_id", catedraIds)
-      .eq("estado", "activa")
-      .order("fecha_inscripcion", { ascending: false })
-      .limit(200),
   ]);
 
-  const firstError = [perfil, catedras, sesiones, materiales, evaluaciones, inscripcionesData]
-    .map((result) => result.error)
-    .find(Boolean);
-  if (firstError) {
-    return { data: null, error: firstError.message };
-  }
+  if (sesionesRes.error) return { data: null, error: sesionesRes.error.message };
+  if (inscripcionesRes.error) return { data: null, error: inscripcionesRes.error.message };
+  if (evaluacionesRes.error) return { data: null, error: evaluacionesRes.error.message };
 
   const hoy = new Date().toISOString().slice(0, 10);
 
-  const catedraRows: ITeacherCatedra[] = (catedras.data ?? []).map((catedra) => ({
-    id: catedra.id,
-    codigo: catedra.codigo,
-    curso: catedra.cursos?.nombre ?? "Sin curso",
-    modalidad: catedra.modalidad as TModalidadCurso,
-    aula: catedra.aula,
-    cupoMaximo: catedra.cupo_maximo,
-    inscritos: (catedra.inscripciones ?? []).filter((item) => item.estado === "activa").length,
-    estado: catedra.estado as TEstadoCatedra,
-    horarios: (catedra.catedra_horarios ?? []).map((horario) => ({
-      dia: horario.dia_semana,
-      inicio: horario.hora_inicio,
-      fin: horario.hora_fin,
-    })),
-  }));
-
-  const estudianteRows: ITeacherEstudiante[] = (inscripcionesData.data ?? []).flatMap((inscripcion) => {
-    const est = inscripcion.estudiantes;
+  const estudiantesList: ITeacherEstudiante[] = (inscripcionesRes.data ?? []).flatMap((item) => {
+    const est = item.estudiantes;
     if (!est) return [];
     return [{
       id: est.id,
+      inscripcionId: item.id,
+      estudianteId: item.estudiante_id,
       nombre: `${est.nombres} ${est.apellidos}`.trim(),
       email: est.email,
       celular: est.celular,
-      catedraCodigo: inscripcion.catedras?.codigo ?? "—",
-      cursoNombre: inscripcion.catedras?.cursos?.nombre ?? "—",
-      fechaInscripcion: inscripcion.fecha_inscripcion,
+      catedraId: item.catedra_id,
+      catedraCodigo: item.catedras?.codigo ?? "—",
+      cursoNombre: item.catedras?.cursos?.nombre ?? "—",
+      fechaInscripcion: item.fecha_inscripcion,
+      promedioSobre10: null,
+      evaluacionesRendidas: 0,
+      porcentajeAsistencia: null,
+      asistenciasPresentes: 0,
+      totalAsistenciasRegistradas: 0,
     }];
   });
 
-  const sesionRows: ITeacherSesion[] = (sesiones.data ?? []).map((sesion) => {
-    const asistencias = sesion.asistencias ?? [];
+  const todasSesiones: ITeacherSesion[] = (sesionesRes.data ?? []).map((s) => {
+    const asistencias = s.asistencias ?? [];
     return {
-      id: sesion.id,
-      catedra: sesion.catedras?.codigo ?? "Sin cátedra",
-      curso: sesion.catedras?.cursos?.nombre ?? "—",
-      fecha: sesion.fecha,
-      inicio: sesion.hora_inicio,
-      fin: sesion.hora_fin,
-      tema: sesion.tema,
-      presentes: asistencias.filter((item) => item.estado === "presente").length,
+      id: s.id,
+      catedraId: s.catedra_id,
+      catedra: s.catedras?.codigo ?? "Sin código",
+      curso: s.catedras?.cursos?.nombre ?? "—",
+      fecha: s.fecha,
+      inicio: s.hora_inicio,
+      fin: s.hora_fin,
+      tema: s.tema,
+      presentes: asistencias.filter((a) => a.estado === "presente").length,
       totalAsistencia: asistencias.length,
-      estado: sesion.estado as TEstadoSesion,
+      estado: s.estado as TEstadoSesion,
     };
   });
 
-  const materialRows: ITeacherMaterial[] = (materiales.data ?? []).map((material) => ({
-    id: material.id,
-    titulo: material.titulo,
-    tipo: material.tipo as TTipoMaterial,
-    visibilidad: material.visible_para as TVisibilidadMaterial,
-    destino: material.cursos?.nombre ?? "General",
-  }));
-
-  const evaluacionRows: ITeacherEvaluacion[] = (evaluaciones.data ?? []).map((evaluacion) => {
-    const notas = (evaluacion.calificaciones ?? [])
+  const todasEvaluaciones: ITeacherEvaluacion[] = (evaluacionesRes.data ?? []).map((ev) => {
+    const notas = (ev.calificaciones ?? [])
       .map((item) => item.nota)
       .filter((n): n is number => typeof n === "number");
     const promedio = notas.length > 0 ? Number((notas.reduce((a, b) => a + b, 0) / notas.length).toFixed(1)) : null;
+    const inscritosCatedra = estudiantesList.filter((e) => e.catedraId === ev.catedra_id).length;
 
     return {
-      id: evaluacion.id,
-      titulo: evaluacion.titulo,
-      tipo: evaluacion.tipo as TTipoEvaluacion,
-      catedra: evaluacion.catedras?.codigo ?? "Sin cátedra",
-      fecha: evaluacion.fecha,
-      ponderacion: evaluacion.ponderacion,
-      notaMaxima: evaluacion.nota_maxima,
+      id: ev.id,
+      catedraId: ev.catedra_id,
+      titulo: ev.titulo,
+      tipo: ev.tipo as TTipoEvaluacion,
+      catedra: ev.catedras?.codigo ?? "—",
+      curso: ev.catedras?.cursos?.nombre ?? "—",
+      fecha: ev.fecha,
+      ponderacion: Number(ev.ponderacion),
+      notaMaxima: Number(ev.nota_maxima),
       promedio,
       rendidas: notas.length,
+      totalEstudiantes: inscritosCatedra,
     };
   });
 
+  const sesionesHoy = todasSesiones.filter((s) => s.fecha === hoy);
+  const proximasSesiones = todasSesiones.filter((s) => s.fecha >= hoy).slice(0, 8);
+  const pendientesAsistencia = todasSesiones
+    .filter((s) => s.fecha <= hoy && s.totalAsistencia === 0 && s.estado !== "cancelada")
+    .slice(0, 6);
+  const pendientesCalificar = todasEvaluaciones
+    .filter((ev) => ev.rendidas < ev.totalEstudiantes && ev.totalEstudiantes > 0)
+    .slice(0, 6);
+
   return {
     data: {
-      nombre: perfil.data?.nombres ?? "Docente",
+      nombre: nombreDocente || "Docente",
       counts: {
-        catedrasActivas: catedraRows.filter((item) => item.estado === "en_curso" || item.estado === "planificada").length,
-        sesionesHoy: sesionRows.filter((item) => item.fecha === hoy).length,
-        inscritos: estudianteRows.length,
+        catedrasActivas: catedrasList.filter((c) => c.estado === "en_curso" || c.estado === "planificada").length,
+        sesionesHoy: sesionesHoy.length,
+        inscritos: estudiantesList.length,
+        evaluacionesPendientes: pendientesCalificar.length,
       },
-      catedras: catedraRows,
-      estudiantes: estudianteRows,
-      sesiones: sesionRows,
-      materiales: materialRows,
-      evaluaciones: evaluacionRows,
+      catedras: catedrasList,
+      estudiantes: estudiantesList,
+      sesionesHoy,
+      proximasSesiones,
+      pendientesAsistencia,
+      pendientesCalificar,
     },
     error: null,
   };
