@@ -44,7 +44,13 @@ export default function SocialAuthButtons({
                 isDisabled && "cursor-not-allowed opacity-50"
               )}
             >
-              <Icon icon={provider.icon} width={iconSize} height={iconSize} aria-hidden="true" />
+              <Icon
+                icon={provider.icon}
+                width={iconSize}
+                height={iconSize}
+                aria-hidden="true"
+                style={provider.color ? { color: provider.color } : undefined}
+              />
               {layout === "stacked" ? <span>Continuar con {provider.label}</span> : null}
             </button>
           );
