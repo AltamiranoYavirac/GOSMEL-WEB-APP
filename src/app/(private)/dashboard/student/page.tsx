@@ -1,5 +1,5 @@
-import { StudentDashboard } from "@/features/student-portal";
+import { StudentOverviewView } from "@/features/student-portal";
 
 export default function StudentDashboardPage() {
-  return <StudentDashboard />;
+  return <StudentOverviewView />;
 }
