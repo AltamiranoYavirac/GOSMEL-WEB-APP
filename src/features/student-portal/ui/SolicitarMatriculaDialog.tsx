@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Icon } from "@iconify/react";
 
 import { Button, Spinner, AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Skeleton } from "@/shared/ui";
@@ -7,17 +8,19 @@ import { DateField, Form, SelectField, SwitchField, TextField, useAppForm } from
 
 import { useCatedrasDisponibles } from "../hooks/useCatedrasDisponibles";
 import { useSolicitarMatricula } from "../hooks/useSolicitarMatricula";
+import { useStudentPortal } from "../hooks/useStudentPortal";
 import {
   getSolicitarMatriculaFormDefaults,
   PARENTESCO_OPCIONES,
   solicitarMatriculaFormSchema,
   type ISolicitarMatriculaFormValues,
 } from "../model/SolicitarMatriculaForm.config";
+import { NIVEL_CURSO_LABEL } from "../model/student-dashboard.types";
 import type { ISolicitarMatriculaDialogProps } from "./SolicitarMatriculaDialog.types";
 
 export default function SolicitarMatriculaDialog({ open, onOpenChange }: ISolicitarMatriculaDialogProps) {
+  const { estudianteActivo } = useStudentPortal();
   const mutation = useSolicitarMatricula();
-  const { data: catedras, isPending } = useCatedrasDisponibles(open);
 
   const form = useAppForm<ISolicitarMatriculaFormValues>({
     schema: solicitarMatriculaFormSchema,
@@ -26,6 +29,14 @@ export default function SolicitarMatriculaDialog({ open, onOpenChange }: ISolici
   });
 
   const paraMenor = form.watch("paraMenor");
+  const estudianteFiltro = paraMenor ? null : (estudianteActivo?.id ?? null);
+  const { data: catedras, isPending, refetch } = useCatedrasDisponibles(estudianteFiltro, open);
+
+  useEffect(() => {
+    if (open) {
+      void refetch();
+    }
+  }, [open, refetch]);
 
   const handleOpenChange = (next: boolean) => {
     if (next) form.reset(getSolicitarMatriculaFormDefaults());
@@ -46,10 +57,14 @@ export default function SolicitarMatriculaDialog({ open, onOpenChange }: ISolici
     );
   };
 
-  const catedraOptions = (catedras ?? []).map((catedra) => ({
-    value: catedra.id,
-    label: `${catedra.codigo} — ${catedra.curso}`,
-  }));
+  const catedraOptions = (catedras ?? []).map((catedra) => {
+    const nivelLabel = catedra.nivel ? NIVEL_CURSO_LABEL[catedra.nivel] : null;
+    const detalles = [nivelLabel, catedra.modalidad].filter(Boolean).join(" · ");
+    return {
+      value: catedra.id,
+      label: detalles ? `${catedra.codigo} — ${catedra.curso} (${detalles})` : `${catedra.codigo} — ${catedra.curso}`,
+    };
+  });
 
   return (
     <AlertDialog open={open} onOpenChange={handleOpenChange}>
@@ -62,6 +77,10 @@ export default function SolicitarMatriculaDialog({ open, onOpenChange }: ISolici
         <Form form={form} onSubmit={onSubmit} id="solicitar-matricula" className="flex flex-col gap-4">
           {isPending ? (
             <Skeleton className="h-10 rounded-lg" />
+          ) : catedraOptions.length === 0 ? (
+            <p className="rounded-lg border border-accent-muted/40 bg-muted/30 p-3 text-xs text-muted-foreground">
+              Ya estás matriculado o tienes una solicitud pendiente en todas las cátedras abiertas actualmente.
+            </p>
           ) : (
             <SelectField name="catedraId" label="Cátedra" options={catedraOptions} placeholder="Selecciona la cátedra" />
           )}
@@ -79,7 +98,11 @@ export default function SolicitarMatriculaDialog({ open, onOpenChange }: ISolici
 
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <Button form="solicitar-matricula" type="submit" disabled={mutation.isPending}>
+          <Button
+            form="solicitar-matricula"
+            type="submit"
+            disabled={mutation.isPending || (!isPending && catedraOptions.length === 0)}
+          >
             {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:check" aria-hidden="true" />}
             Enviar solicitud
           </Button>

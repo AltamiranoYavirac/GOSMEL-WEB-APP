@@ -19,7 +19,12 @@ import { formatCurrency, formatDate, formatMonthPeriod } from "@/shared/lib/form
 
 import { useStudentAccountStatement } from "../hooks/useStudentAccountStatement";
 import { useStudentPortal } from "../hooks/useStudentPortal";
-import { ESTADO_EFECTIVO_BADGE, type IStudentCuotaEstado, type IStudentPago } from "../model/student-dashboard.types";
+import {
+  ESTADO_EFECTIVO_BADGE,
+  PAGO_VERIFICACION_BADGE,
+  type IStudentCuotaEstado,
+  type IStudentPago,
+} from "../model/student-dashboard.types";
 import ReportarPagoDialog from "./ReportarPagoDialog";
 import StudentNoStudents from "./StudentNoStudents";
 
@@ -65,7 +70,16 @@ function cuotaColumns(): IAdminColumn<IStudentCuotaEstado>[] {
       label: "Estado",
       render: (row) => {
         const badge = ESTADO_EFECTIVO_BADGE[row.estadoEfectivo] ?? { label: row.estadoEfectivo, variant: "outline" as const };
-        return <Badge variant={badge.variant}>{badge.label}</Badge>;
+        return (
+          <div className="flex flex-col gap-1 items-start">
+            <Badge variant={badge.variant}>{badge.label}</Badge>
+            {row.tienePagoPendiente ? (
+              <Badge variant="warning" className="text-[10px] py-0 px-1 font-normal">
+                En revisión
+              </Badge>
+            ) : null}
+          </div>
+        );
       },
     },
   ];
@@ -99,6 +113,23 @@ function pagoColumns(): IAdminColumn<IStudentPago>[] {
       render: (row) => row.referencia ?? <span className="text-muted-foreground">—</span>,
     },
     {
+      key: "estado",
+      label: "Estado",
+      render: (row) => {
+        const badge = (row.estado && PAGO_VERIFICACION_BADGE[row.estado]) ?? { label: "Aprobado", variant: "success" as const };
+        return (
+          <div className="flex flex-col gap-0.5 items-start">
+            <Badge variant={badge.variant}>{badge.label}</Badge>
+            {row.observacion && row.estado === "rechazado" ? (
+              <span className="text-[11px] text-destructive italic max-w-[160px] truncate" title={row.observacion}>
+                {row.observacion}
+              </span>
+            ) : null}
+          </div>
+        );
+      },
+    },
+    {
       key: "comprobante",
       label: "Comprobante",
       render: (row) =>
@@ -121,7 +152,7 @@ function pagoColumns(): IAdminColumn<IStudentPago>[] {
 
 export default function StudentFinancesView() {
   const { isLoading, estudianteActivo } = useStudentPortal();
-  const { data, isPending } = useStudentAccountStatement(estudianteActivo?.id ?? null);
+  const { data, isPending, isError } = useStudentAccountStatement(estudianteActivo?.id ?? null);
   const [pagoCuota, setPagoCuota] = useState<IStudentCuotaEstado | null>(null);
   const [pagoOpen, setPagoOpen] = useState(false);
 
@@ -135,6 +166,15 @@ export default function StudentFinancesView() {
         <Skeleton className="h-9 w-72 rounded-xl" />
         <Skeleton className="h-24 rounded-xl" />
         <Skeleton className="h-64 rounded-xl" />
+      </div>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="flex min-h-[40vh] flex-col items-center justify-center gap-2 text-center">
+        <Icon icon="ph:warning-circle" width={32} height={32} className="text-destructive" aria-hidden="true" />
+        <p className="text-sm text-muted-foreground">No se pudieron cargar los datos financieros.</p>
       </div>
     );
   }
@@ -192,7 +232,7 @@ export default function StudentFinancesView() {
               }}
             >
               <Icon icon="ph:currency-circle-dollar" aria-hidden="true" />
-              Reportar pago
+              {row.tienePagoPendiente ? "Reportar otro" : "Reportar pago"}
             </Button>
           ) : null
         }

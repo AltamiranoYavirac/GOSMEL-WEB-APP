@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Icon } from "@iconify/react";
+
 import {
   AdminDataTable,
   AdminPageHeader,
@@ -13,7 +14,7 @@ import {
 
 import { useCatedras } from "../hooks/useCatedras";
 import { CATEDRA_ESTADO_BADGE, MODALIDAD_BADGE, type ICatedraRow } from "../model/catedra.types";
-import CatedraMatriculasDialog from "./CatedraMatriculasDialog";
+import CatedraEstudiantesSheet from "./CatedraEstudiantesSheet";
 import CrearCatedraDialog from "./CrearCatedraDialog";
 import EditarCatedraDialog from "./EditarCatedraDialog";
 import EliminarCatedraDialog from "./EliminarCatedraDialog";
@@ -29,6 +30,10 @@ export default function CatedrasList() {
   const [genTarget, setGenTarget] = useState<ICatedraRow | null>(null);
   const [genOpen, setGenOpen] = useState(false);
 
+  const [estudiantesTarget, setEstudiantesTarget] = useState<ICatedraRow | null>(null);
+  const [estudiantesOpen, setEstudiantesOpen] = useState(false);
+  const [estudiantesDefaultTab, setEstudiantesDefaultTab] = useState<"matriculados" | "pendientes">("matriculados");
+
   const handleOpenEdit = (catedra: ICatedraRow) => {
     setEditTarget(catedra);
     setEditOpen(true);
@@ -37,6 +42,12 @@ export default function CatedrasList() {
   const handleOpenGen = (catedra: ICatedraRow) => {
     setGenTarget(catedra);
     setGenOpen(true);
+  };
+
+  const handleOpenEstudiantes = (catedra: ICatedraRow, tab: "matriculados" | "pendientes" = "matriculados") => {
+    setEstudiantesTarget(catedra);
+    setEstudiantesDefaultTab(tab);
+    setEstudiantesOpen(true);
   };
 
   const columns: IAdminColumn<ICatedraRow>[] = [
@@ -69,11 +80,31 @@ export default function CatedrasList() {
     },
     {
       key: "cupo",
-      label: "Cupo",
+      label: "Estudiantes / Cupo",
       render: (row) => (
-        <span className="text-muted-foreground">
-          {row.activos} / {row.cupoMaximo}
-        </span>
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <Button
+            type="button"
+            variant="ghost"
+            size="xs"
+            onClick={() => handleOpenEstudiantes(row, "matriculados")}
+            className="h-6 px-2 text-xs font-mono font-medium hover:bg-primary/10 hover:text-primary gap-1"
+            title="Ver estudiantes matriculados"
+          >
+            <Icon icon="ph:users" className="size-3.5" aria-hidden="true" />
+            {row.activos} / {row.cupoMaximo}
+          </Button>
+          {row.pendientes > 0 ? (
+            <Badge
+              variant="warning"
+              className="cursor-pointer text-[10px] py-0 px-1.5 font-normal hover:opacity-85"
+              onClick={() => handleOpenEstudiantes(row, "pendientes")}
+              title="Ver solicitudes pendientes"
+            >
+              +{row.pendientes} solic.
+            </Badge>
+          ) : null}
+        </div>
       ),
     },
     {
@@ -114,11 +145,32 @@ export default function CatedrasList() {
         emptyDescription="Cuando se creen cátedras aparecerán aquí."
         countLabel="cátedras"
         rowActions={(row) => (
-          <div className="flex items-center justify-end gap-1.5">
-            {row.pendientes > 0 && (
-              <CatedraMatriculasDialog catedraId={row.id} codigo={row.codigo} curso={row.curso} />
-            )}
+          <div className="flex items-center justify-end gap-1">
+            {row.pendientes > 0 ? (
+              <Button
+                type="button"
+                variant="outline"
+                size="xs"
+                onClick={() => handleOpenEstudiantes(row, "pendientes")}
+                className="h-8 text-xs font-medium border-warning/40 text-warning hover:bg-warning/10 gap-1 px-2.5"
+                title="Ver solicitudes pendientes"
+              >
+                <Icon icon="ph:clock" className="size-3.5" aria-hidden="true" />
+                {row.pendientes} solicitud{row.pendientes > 1 ? "es" : ""}
+              </Button>
+            ) : null}
             <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => handleOpenEstudiantes(row, "matriculados")}
+              title="Ver estudiantes matriculados"
+              className="size-8 p-0"
+            >
+              <Icon icon="ph:users" width={16} height={16} aria-hidden="true" />
+            </Button>
+            <Button
+              type="button"
               variant="ghost"
               size="sm"
               onClick={() => handleOpenGen(row)}
@@ -128,6 +180,7 @@ export default function CatedrasList() {
               <Icon icon="ph:calendar-plus" width={16} height={16} aria-hidden="true" />
             </Button>
             <Button
+              type="button"
               variant="ghost"
               size="sm"
               onClick={() => handleOpenEdit(row)}
@@ -152,6 +205,14 @@ export default function CatedrasList() {
         catedra={genTarget}
         open={genOpen}
         onOpenChange={setGenOpen}
+      />
+
+      <CatedraEstudiantesSheet
+        key={estudiantesTarget?.id ?? "none"}
+        catedra={estudiantesTarget}
+        open={estudiantesOpen}
+        onOpenChange={setEstudiantesOpen}
+        defaultTab={estudiantesDefaultTab}
       />
     </div>
   );

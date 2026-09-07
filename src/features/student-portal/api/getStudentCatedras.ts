@@ -13,7 +13,8 @@ export async function getStudentCatedras(estudianteId: string): Promise<{
       "id, progreso_pct, estado, catedra_id, catedras!inscripciones_catedra_id_fkey(codigo, aula, modalidad, cursos(id, nombre, nivel), catedra_horarios(dia_semana, hora_inicio, hora_fin), docentes!catedras_docente_id_fkey(perfiles!docentes_perfil_id_fkey(nombres, apellidos)))"
     )
     .eq("estudiante_id", estudianteId)
-    .order("estado", { ascending: true });
+    .in("estado", ["activa", "pendiente"])
+    .order("id", { ascending: true });
 
   if (error) {
     return { data: null, error: error.message };

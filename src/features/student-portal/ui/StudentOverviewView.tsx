@@ -4,9 +4,11 @@ import { Icon } from "@iconify/react";
 
 import { AdminPageHeader, Skeleton } from "@/shared/ui";
 
+import { useStudentCatedras } from "../hooks/useStudentCatedras";
 import { useStudentOverview } from "../hooks/useStudentOverview";
 import { useStudentPortal } from "../hooks/useStudentPortal";
 import StudentActivityFeed from "./StudentActivityFeed";
+import StudentInscripcionesSection from "./StudentInscripcionesSection";
 import StudentNextClassCard from "./StudentNextClassCard";
 import StudentNoStudents from "./StudentNoStudents";
 import StudentOverviewCards from "./StudentOverviewCards";
@@ -14,6 +16,7 @@ import StudentOverviewCards from "./StudentOverviewCards";
 export default function StudentOverviewView() {
   const { isLoading, isRegisteredOnly, estudianteActivo } = useStudentPortal();
   const { data, isPending, isError } = useStudentOverview(estudianteActivo?.id ?? null);
+  const { data: catedras, isPending: catedrasPending } = useStudentCatedras(estudianteActivo?.id ?? null);
 
   if (!isLoading && (isRegisteredOnly || !estudianteActivo)) {
     return <StudentNoStudents />;
@@ -52,6 +55,10 @@ export default function StudentOverviewView() {
         icon="ph:squares-four"
       />
       <StudentOverviewCards data={data} />
+      <StudentInscripcionesSection
+        catedras={catedras ?? []}
+        loading={catedrasPending}
+      />
       <StudentNextClassCard data={data.proximaClase} />
       <StudentActivityFeed items={data.actividades} />
     </div>

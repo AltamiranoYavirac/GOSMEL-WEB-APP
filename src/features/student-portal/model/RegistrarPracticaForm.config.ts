@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { toLocalDateString } from "@/shared/lib/date";
 
 export const registrarPracticaFormSchema = z.object({
   inscripcionId: z.string().min(1, "Selecciona la cátedra"),
@@ -12,7 +13,7 @@ export type IRegistrarPracticaFormValues = z.infer<typeof registrarPracticaFormS
 export function getRegistrarPracticaFormDefaults(): IRegistrarPracticaFormValues {
   return {
     inscripcionId: "",
-    fecha: new Date().toISOString().slice(0, 10),
+    fecha: toLocalDateString(),
     minutos: 30,
     nota: "",
   };

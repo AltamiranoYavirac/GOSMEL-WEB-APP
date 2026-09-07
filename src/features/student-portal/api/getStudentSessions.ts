@@ -1,4 +1,5 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import { toLocalDateString } from "@/shared/lib/date";
 
 import type { IStudentSessions, TEstadoSesion } from "../model/student-dashboard.types";
 
@@ -34,7 +35,7 @@ export async function getStudentSessions(estudianteId: string): Promise<{
     return { data: null, error: error.message };
   }
 
-  const hoy = new Date().toISOString().slice(0, 10);
+  const hoy = toLocalDateString();
   const mapeadas = (data ?? []).map((sesion) => ({
     id: sesion.id,
     fecha: sesion.fecha,

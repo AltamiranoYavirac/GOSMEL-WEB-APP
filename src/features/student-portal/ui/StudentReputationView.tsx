@@ -13,7 +13,6 @@ import { useStudentReviews } from "../hooks/useStudentReviews";
 import { useToggleFavorite } from "../hooks/useToggleFavorite";
 import { NIVEL_CURSO_LABEL } from "../model/student-dashboard.types";
 import CrearResenaDialog from "./CrearResenaDialog";
-import SolicitarMatriculaDialog from "./SolicitarMatriculaDialog";
 import StudentNoStudents from "./StudentNoStudents";
 
 function Stars({ value }: { value: number }) {
@@ -39,7 +38,6 @@ export default function StudentReputationView() {
   const toggleFavorito = useToggleFavorite();
 
   const [resenaOpen, setResenaOpen] = useState(false);
-  const [solicitudOpen, setSolicitudOpen] = useState(false);
 
   if (!isLoading && !estudianteActivo) {
     return <StudentNoStudents />;
@@ -63,16 +61,10 @@ export default function StudentReputationView() {
         description="Comparte tu experiencia y planifica tu siguiente paso."
         icon="ph:trend-up"
       >
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={() => setResenaOpen(true)}>
-            <Icon icon="ph:star" aria-hidden="true" />
-            Valorar curso
-          </Button>
-          <Button onClick={() => setSolicitudOpen(true)}>
-            <Icon icon="ph:plus" aria-hidden="true" />
-            Solicitar matrícula
-          </Button>
-        </div>
+        <Button variant="outline" onClick={() => setResenaOpen(true)}>
+          <Icon icon="ph:star" aria-hidden="true" />
+          Valorar curso
+        </Button>
       </AdminPageHeader>
 
       <Card>
@@ -135,8 +127,6 @@ export default function StudentReputationView() {
           onOpenChange={setResenaOpen}
         />
       ) : null}
-
-      <SolicitarMatriculaDialog open={solicitudOpen} onOpenChange={setSolicitudOpen} />
     </div>
   );
 }

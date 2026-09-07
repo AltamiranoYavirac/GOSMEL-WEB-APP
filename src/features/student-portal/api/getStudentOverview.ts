@@ -1,4 +1,5 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import { toLocalDateString } from "@/shared/lib/date";
 
 import type { IStudentOverview, IStudentProximaClase, TModalidadCurso } from "../model/student-dashboard.types";
 
@@ -7,7 +8,7 @@ function startOfWeek(): string {
   const dia = ahora.getDay() === 0 ? 7 : ahora.getDay();
   const lunes = new Date(ahora);
   lunes.setDate(ahora.getDate() - (dia - 1));
-  return lunes.toISOString().slice(0, 10);
+  return toLocalDateString(lunes);
 }
 
 export async function getStudentOverview(estudianteId: string): Promise<{
@@ -27,7 +28,7 @@ export async function getStudentOverview(estudianteId: string): Promise<{
   }
 
   const catedraIds = (inscripciones ?? []).map((item) => item.catedra_id).filter((id): id is string => Boolean(id));
-  const hoy = new Date().toISOString().slice(0, 10);
+  const hoy = toLocalDateString();
 
   const [promedio, estadoCuenta, practica, actividades, proximaClase] = await Promise.all([
     supabase

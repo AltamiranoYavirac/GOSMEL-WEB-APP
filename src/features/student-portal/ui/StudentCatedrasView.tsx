@@ -1,9 +1,13 @@
 "use client";
 
+import { useState } from "react";
+import { Icon } from "@iconify/react";
+
 import {
   AdminDataTable,
   AdminPageHeader,
   Badge,
+  Button,
   Skeleton,
   Tabs,
   TabsContent,
@@ -22,6 +26,7 @@ import {
   NIVEL_CURSO_LABEL,
   type IStudentCatedra,
 } from "../model/student-dashboard.types";
+import SolicitarMatriculaDialog from "./SolicitarMatriculaDialog";
 import StudentCurriculumView from "./StudentCurriculumView";
 import StudentNoStudents from "./StudentNoStudents";
 import StudentScheduleView from "./StudentScheduleView";
@@ -79,6 +84,7 @@ export default function StudentCatedrasView() {
   const { data: catedras, isPending: catedrasPending } = useStudentCatedras(estudianteActivo?.id ?? null);
   const { data: sesiones, isPending: sesionesPending } = useStudentSessions(estudianteActivo?.id ?? null);
   const { data: planes, isPending: planesPending } = useStudentCurriculum(estudianteActivo?.id ?? null);
+  const [solicitudOpen, setSolicitudOpen] = useState(false);
 
   if (!isLoading && !estudianteActivo) {
     return <StudentNoStudents />;
@@ -100,7 +106,12 @@ export default function StudentCatedrasView() {
         title="Mis cátedras"
         description="Tus clases, su horario y el temario de cada curso."
         icon="ph:chalkboard-teacher"
-      />
+      >
+        <Button onClick={() => setSolicitudOpen(true)}>
+          <Icon icon="ph:plus" aria-hidden="true" />
+          Solicitar matrícula
+        </Button>
+      </AdminPageHeader>
 
       <Tabs defaultValue="catedras">
         <TabsList>
@@ -109,7 +120,7 @@ export default function StudentCatedrasView() {
           <TabsTrigger value="temario">Temario</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="catedras" className="pt-2">
+        <TabsContent value="catedras" className="space-y-4 pt-2">
           <AdminDataTable
             data={catedras ?? []}
             columns={catedraColumns()}
@@ -120,6 +131,14 @@ export default function StudentCatedrasView() {
             emptyDescription="Aún no estás inscrito en ninguna cátedra."
             countLabel="cátedras"
           />
+          {(catedras ?? []).length === 0 ? (
+            <div className="flex justify-center">
+              <Button onClick={() => setSolicitudOpen(true)}>
+                <Icon icon="ph:plus" aria-hidden="true" />
+                Solicitar matrícula
+              </Button>
+            </div>
+          ) : null}
         </TabsContent>
 
         <TabsContent value="agenda" className="pt-2">
@@ -130,6 +149,10 @@ export default function StudentCatedrasView() {
           <StudentCurriculumView planes={planes ?? []} />
         </TabsContent>
       </Tabs>
+
+      {solicitudOpen ? (
+        <SolicitarMatriculaDialog open={solicitudOpen} onOpenChange={setSolicitudOpen} />
+      ) : null}
     </div>
   );
 }

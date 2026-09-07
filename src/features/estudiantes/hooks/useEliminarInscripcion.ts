@@ -3,15 +3,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { updateInscripcionEstado } from "../api/updateInscripcionEstado";
+import { eliminarInscripcion } from "../api/eliminarInscripcion";
 import { estudiantesQueryKeys } from "../model/query-keys";
 
-export function useUpdateInscripcionEstado(estudianteId: string) {
+export function useEliminarInscripcion(estudianteId: string) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ inscripcionId, estado }: { inscripcionId: string; estado: "retirada" | "cancelada" }) => {
-      const { data, error } = await updateInscripcionEstado(inscripcionId, estado);
+    mutationFn: async (inscripcionId: string) => {
+      const { data, error } = await eliminarInscripcion(inscripcionId);
       if (error) throw new Error(error);
       return data;
     },
@@ -19,7 +19,7 @@ export function useUpdateInscripcionEstado(estudianteId: string) {
       queryClient.invalidateQueries({ queryKey: [...estudiantesQueryKeys.all, "detalle", estudianteId] });
       queryClient.invalidateQueries({ queryKey: estudiantesQueryKeys.all });
       queryClient.invalidateQueries({ queryKey: ["student-portal"] });
-      toast.success("Inscripción actualizada");
+      toast.success("Inscripción eliminada");
     },
     onError: (error) => toast.error(error.message),
   });

@@ -183,7 +183,10 @@ export interface IStudentCuotaEstado {
   fechaVencimiento: string | null;
   estadoEfectivo: string;
   diasMora: number;
+  tienePagoPendiente?: boolean;
 }
+
+export type TEstadoPagoVerificacion = "pendiente_verificacion" | "aprobado" | "rechazado";
 
 export interface IStudentPago {
   id: string;
@@ -193,6 +196,9 @@ export interface IStudentPago {
   referencia: string | null;
   comprobantePath: string | null;
   periodo: string;
+  estado?: TEstadoPagoVerificacion;
+  observacion?: string | null;
+  cuotaId?: string;
 }
 
 export interface IStudentAcuerdo {
@@ -246,6 +252,8 @@ export interface ICatedraDisponible {
   id: string;
   codigo: string;
   curso: string;
+  nivel?: TNivelCurso | null;
+  precioReferencial?: number | null;
   modalidad: TModalidadCurso;
   aula: string | null;
   estado: TEstadoCatedra;
@@ -298,6 +306,12 @@ export const ESTADO_EFECTIVO_BADGE: Record<string, { label: string; variant: TBa
   pendiente: { label: "Pendiente", variant: "secondary" },
   vencida: { label: "Vencida", variant: "destructive" },
   condonada: { label: "Condonada", variant: "ghost" },
+};
+
+export const PAGO_VERIFICACION_BADGE: Record<TEstadoPagoVerificacion, { label: string; variant: TBadgeVariant }> = {
+  pendiente_verificacion: { label: "En verificación", variant: "warning" },
+  aprobado: { label: "Aprobado", variant: "success" },
+  rechazado: { label: "Rechazado", variant: "destructive" },
 };
 
 export const MATERIAL_TIPO_BADGE: Record<TTipoMaterial, { label: string; variant: TBadgeVariant }> = {

@@ -27,6 +27,15 @@ export async function solicitarMatricula(input: ISolicitarMatriculaInput): Promi
   const { data, error } = await supabase.rpc("solicitar_matricula", args);
 
   if (error) {
+    if (
+      error.message.includes("inscripciones_estudiante_id_catedra_id_key") ||
+      error.code === "23505"
+    ) {
+      return {
+        data: null,
+        error: "Ya estás matriculado o tienes una solicitud pendiente en esta cátedra",
+      };
+    }
     return { data: null, error: error.message };
   }
 

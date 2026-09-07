@@ -3,15 +3,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { anularPago } from "../api/anularPago";
+import { aprobarPago } from "../api/aprobarPago";
 
-export function useAnularPago() {
+export function useAprobarPago() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (pagoId: string) => {
-      const { error } = await anularPago(pagoId);
-      if (error) throw new Error(error);
+      const { data, error } = await aprobarPago(pagoId);
+      if (error || !data) throw new Error(error ?? "No se pudo aprobar el pago");
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pagos"] });
@@ -20,7 +21,7 @@ export function useAnularPago() {
       queryClient.invalidateQueries({ queryKey: ["dashboard-overview"] });
       queryClient.invalidateQueries({ queryKey: ["estudiantes"] });
       queryClient.invalidateQueries({ queryKey: ["student-portal"] });
-      toast.success("Pago anulado y saldo de cuota restaurado");
+      toast.success("Pago aprobado con éxito y cuota recalculada");
     },
     onError: (error) => toast.error(error.message),
   });

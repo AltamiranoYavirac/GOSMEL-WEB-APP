@@ -19,7 +19,7 @@ export async function getStudentAccountStatement(estudianteId: string): Promise<
       .select("monto_mensual, moneda, dia_cobro, estado")
       .eq("estudiante_id", estudianteId)
       .eq("estado", "vigente")
-      .maybeSingle(),
+      .order("created_at", { ascending: false }),
     supabase
       .from("configuracion_sitio")
       .select("telefono, whatsapp, email_general, horario_atencion")
@@ -27,10 +27,10 @@ export async function getStudentAccountStatement(estudianteId: string): Promise<
       .maybeSingle(),
   ]);
 
-  if (cuentas.error || acuerdos.error || contacto.error) {
+  if (cuentas.error || acuerdos.error) {
     return {
       data: null,
-      error: cuentas.error?.message ?? acuerdos.error?.message ?? contacto.error?.message ?? "Error al cargar el estado de cuenta",
+      error: cuentas.error?.message ?? acuerdos.error?.message ?? "Error al cargar el estado de cuenta",
     };
   }
 
@@ -40,7 +40,7 @@ export async function getStudentAccountStatement(estudianteId: string): Promise<
   if (cuotaIds.length > 0) {
     const { data, error } = await supabase
       .from("pagos")
-      .select("id, fecha_pago, monto, metodo, referencia, comprobante_storage_path, cuotas!pagos_cuota_id_fkey(periodo_mes)")
+      .select("id, fecha_pago, monto, metodo, referencia, comprobante_storage_path, estado, observacion, cuota_id, cuotas!pagos_cuota_id_fkey(periodo_mes)")
       .in("cuota_id", cuotaIds)
       .order("fecha_pago", { ascending: false })
       .limit(100);
@@ -57,17 +57,26 @@ export async function getStudentAccountStatement(estudianteId: string): Promise<
       referencia: pago.referencia,
       comprobantePath: pago.comprobante_storage_path,
       periodo: pago.cuotas?.periodo_mes ?? "",
+      estado: (pago.estado ?? "aprobado") as IStudentPago["estado"],
+      observacion: pago.observacion,
+      cuotaId: pago.cuota_id,
     }));
   }
 
-  const acuerdo: IStudentAcuerdo | null = acuerdos.data
-    ? {
-        montoMensual: Number(acuerdos.data.monto_mensual) || 0,
-        moneda: acuerdos.data.moneda ?? "USD",
-        diaCobro: acuerdos.data.dia_cobro,
-        estado: acuerdos.data.estado as TEstadoAcuerdo,
-      }
-    : null;
+  const cuotasConPagoPendiente = new Set(
+    pagos.filter((p) => p.estado === "pendiente_verificacion").map((p) => p.cuotaId).filter(Boolean)
+  );
+
+  const acuerdosList = acuerdos.data ?? [];
+  const acuerdo: IStudentAcuerdo | null =
+    acuerdosList.length > 0
+      ? {
+          montoMensual: acuerdosList.reduce((acc, a) => acc + (Number(a.monto_mensual) || 0), 0),
+          moneda: acuerdosList[0].moneda ?? "USD",
+          diaCobro: acuerdosList[0].dia_cobro,
+          estado: (acuerdosList[0].estado ?? "vigente") as TEstadoAcuerdo,
+        }
+      : null;
 
   const contactoRow: IContactoInstitucional = {
     telefono: contacto.data?.telefono ?? null,
@@ -88,6 +97,7 @@ export async function getStudentAccountStatement(estudianteId: string): Promise<
         fechaVencimiento: row.fecha_vencimiento,
         estadoEfectivo: row.estado_efectivo ?? "pendiente",
         diasMora: row.dias_mora ?? 0,
+        tienePagoPendiente: cuotasConPagoPendiente.has(row.cuota_id ?? ""),
       })),
       pagos,
       contacto: contactoRow,

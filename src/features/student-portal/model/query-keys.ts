@@ -13,5 +13,6 @@ export const studentQueryKeys = {
   certificados: (estudianteId: string) => [...studentQueryKeys.all, "certificados", estudianteId] as const,
   resenas: (estudianteId: string) => [...studentQueryKeys.all, "resenas", estudianteId] as const,
   favoritos: () => [...studentQueryKeys.all, "favoritos"] as const,
-  catedrasDisponibles: () => [...studentQueryKeys.all, "catedras-disponibles"] as const,
+  catedrasDisponibles: (estudianteId?: string | null) =>
+    [...studentQueryKeys.all, "catedras-disponibles", estudianteId ?? "all"] as const,
 };

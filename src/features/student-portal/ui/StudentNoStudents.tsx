@@ -1,11 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 
 import { Button } from "@/shared/ui";
 
+import SolicitarMatriculaDialog from "./SolicitarMatriculaDialog";
 import type { IStudentNoStudentsProps } from "./StudentNoStudents.types";
 
 export default function StudentNoStudents({ title = "No estás inscrito a ningún curso", description }: IStudentNoStudentsProps) {
+  const [solicitudOpen, setSolicitudOpen] = useState(false);
+
   return (
     <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 rounded-xl border border-accent-muted/40 bg-card p-8 text-center">
       <span className="flex size-14 items-center justify-center rounded-2xl bg-primary-tint text-primary">
@@ -15,15 +21,23 @@ export default function StudentNoStudents({ title = "No estás inscrito a ningú
         <p className="font-heading text-xl font-semibold text-foreground">{title}</p>
         <p className="text-sm text-muted-foreground">
           {description ??
-            "Contáctanos para conocer nuestros cursos e inscribirte. Cuando la academia te asigne como estudiante, verás aquí tu información académica."}
+            "Solicita tu matrícula en una de nuestras cátedras disponibles o contáctanos para más información."}
         </p>
       </div>
-      <Button asChild>
-        <Link href="/contact">
-          <Icon icon="ph:phone-call" aria-hidden="true" />
-          Contáctanos
-        </Link>
-      </Button>
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <Button onClick={() => setSolicitudOpen(true)}>
+          <Icon icon="ph:plus" aria-hidden="true" />
+          Solicitar matrícula
+        </Button>
+        <Button variant="outline" asChild>
+          <Link href="/contact">
+            <Icon icon="ph:phone-call" aria-hidden="true" />
+            Contáctanos
+          </Link>
+        </Button>
+      </div>
+
+      <SolicitarMatriculaDialog open={solicitudOpen} onOpenChange={setSolicitudOpen} />
     </div>
   );
 }

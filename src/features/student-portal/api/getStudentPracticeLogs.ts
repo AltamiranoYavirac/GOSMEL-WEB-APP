@@ -1,9 +1,10 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import { toLocalDateString } from "@/shared/lib/date";
 
 import type { IStudentPractice, IStudentPracticeLog } from "../model/student-dashboard.types";
 
 function fechaKey(date: Date): string {
-  return date.toISOString().slice(0, 10);
+  return toLocalDateString(date);
 }
 
 export async function getStudentPracticeLogs(estudianteId: string): Promise<{

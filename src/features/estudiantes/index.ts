@@ -11,3 +11,4 @@ export * from "./hooks/useEstudianteDetalle";
 export * from "./hooks/useCreateEstudiante";
 export * from "./hooks/useDarDeBajaEstudiante";
 export * from "./hooks/useInscribirEstudianteCatedra";
+export * from "./hooks/useEliminarInscripcion";

@@ -29,6 +29,7 @@ export async function reportStudentPayment(input: IReportStudentPaymentInput): P
       observacion: input.values.observacion?.trim() || null,
       registrado_por: user?.id ?? null,
       fecha_pago: hoy,
+      estado: "pendiente_verificacion",
     })
     .select("id")
     .single();
