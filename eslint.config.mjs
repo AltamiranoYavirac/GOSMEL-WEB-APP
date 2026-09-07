@@ -62,6 +62,7 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "Academia de música rediseño/**",
+    "Academia de música rediseño v2/**",
   ]),
 ]);
 
