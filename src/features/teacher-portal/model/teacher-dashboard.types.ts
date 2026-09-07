@@ -7,6 +7,8 @@ export type TEstadoSesion = Database["public"]["Enums"]["estado_sesion"];
 export type TTipoMaterial = Database["public"]["Enums"]["tipo_material"];
 export type TVisibilidadMaterial = Database["public"]["Enums"]["visibilidad_material"];
 export type TTipoEvaluacion = Database["public"]["Enums"]["tipo_evaluacion"];
+export type TEstadoAsistencia = Database["public"]["Enums"]["estado_asistencia"];
+export type TTipoPortafolio = Database["public"]["Enums"]["tipo_portafolio"];
 
 export interface ITeacherHorario {
   dia: number;
@@ -17,6 +19,7 @@ export interface ITeacherHorario {
 export interface ITeacherCatedra {
   id: string;
   codigo: string;
+  cursoId: string;
   curso: string;
   modalidad: TModalidadCurso;
   aula: string | null;
@@ -28,16 +31,24 @@ export interface ITeacherCatedra {
 
 export interface ITeacherEstudiante {
   id: string;
+  inscripcionId: string;
   nombre: string;
   email: string | null;
   celular: string | null;
+  catedraId: string;
   catedraCodigo: string;
   cursoNombre: string;
   fechaInscripcion: string;
+  promedioSobre10: number | null;
+  evaluacionesRendidas: number;
+  porcentajeAsistencia: number | null;
+  asistenciasPresentes: number;
+  totalAsistenciasRegistradas: number;
 }
 
 export interface ITeacherSesion {
   id: string;
+  catedraId: string;
   catedra: string;
   curso: string;
   fecha: string;
@@ -55,18 +66,27 @@ export interface ITeacherMaterial {
   tipo: TTipoMaterial;
   visibilidad: TVisibilidadMaterial;
   destino: string | null;
+  storagePath: string | null;
+  urlExterna: string | null;
+  catedraId: string | null;
+  cursoId: string | null;
+  subidoPor: string | null;
+  createdAt: string;
 }
 
 export interface ITeacherEvaluacion {
   id: string;
+  catedraId: string;
   titulo: string;
   tipo: TTipoEvaluacion;
   catedra: string;
+  curso: string;
   fecha: string | null;
   ponderacion: number;
   notaMaxima: number;
   promedio: number | null;
   rendidas: number;
+  totalEstudiantes: number;
 }
 
 export interface ITeacherDashboard {
@@ -75,12 +95,111 @@ export interface ITeacherDashboard {
     catedrasActivas: number;
     sesionesHoy: number;
     inscritos: number;
+    evaluacionesPendientes: number;
   };
   catedras: ITeacherCatedra[];
   estudiantes: ITeacherEstudiante[];
-  sesiones: ITeacherSesion[];
-  materiales: ITeacherMaterial[];
-  evaluaciones: ITeacherEvaluacion[];
+  sesionesHoy: ITeacherSesion[];
+  proximasSesiones: ITeacherSesion[];
+  pendientesAsistencia: ITeacherSesion[];
+  pendientesCalificar: ITeacherEvaluacion[];
+}
+
+export interface IEstudianteAsistenciaHistorialItem {
+  sesionId: string;
+  fecha: string;
+  horaInicio: string;
+  horaFin: string;
+  tema: string | null;
+  estado: TEstadoAsistencia;
+  observacion: string | null;
+}
+
+export interface ICursoTemarioLeccion {
+  id: string;
+  titulo: string;
+  descripcion: string | null;
+  duracionMinutos: number | null;
+  orden: number;
+  esMuestra: boolean;
+}
+
+export interface ICursoTemarioModulo {
+  id: string;
+  titulo: string;
+  descripcion: string | null;
+  orden: number;
+  lecciones: ICursoTemarioLeccion[];
+}
+
+export interface ICursoTemario {
+  cursoId: string;
+  cursoNombre: string;
+  modulos: ICursoTemarioModulo[];
+}
+
+export interface ITeacherFormacionItem {
+  id: string;
+  institucion: string;
+  titulo: string;
+  anioInicio: number | null;
+  anioFin: number | null;
+  descripcion: string | null;
+  orden: number;
+}
+
+export interface ITeacherReconocimientoItem {
+  id: string;
+  titulo: string;
+  anio: number | null;
+  entidadOtorgante: string | null;
+  descripcion: string | null;
+  orden: number;
+}
+
+export interface ITeacherPortafolioItem {
+  id: string;
+  tipo: TTipoPortafolio;
+  titulo: string;
+  urlExterna: string | null;
+  orden: number;
+}
+
+export interface ITeacherInstrumentoItem {
+  instrumentoId: string;
+  nombre: string;
+  esPrincipal: boolean;
+}
+
+export interface ITeacherPerfil {
+  id: string;
+  nombre: string;
+  email: string | null;
+  tituloProfesional: string | null;
+  biografia: string | null;
+  fraseDestacada: string | null;
+  aniosExperiencia: number | null;
+  redesSociales: Record<string, string>;
+  formacion: ITeacherFormacionItem[];
+  reconocimientos: ITeacherReconocimientoItem[];
+  portafolio: ITeacherPortafolioItem[];
+  instrumentos: ITeacherInstrumentoItem[];
+}
+
+export interface ITeacherCatalogoOption {
+  id: string;
+  codigo: string;
+  cursoNombre: string;
+}
+
+export interface ITeacherInstrumentoOption {
+  id: string;
+  nombre: string;
+}
+
+export interface ITeacherCatalogos {
+  catedras: ITeacherCatalogoOption[];
+  instrumentos: ITeacherInstrumentoOption[];
 }
 
 export const DIAS_SEMANA: Record<number, string> = {
@@ -128,4 +247,11 @@ export const EVALUACION_TIPO_BADGE: Record<TTipoEvaluacion, { label: string; var
   recital: { label: "Recital", variant: "default" },
   examen_practico: { label: "Examen Práctico", variant: "default" },
   examen_teorico: { label: "Examen Teórico", variant: "outline" },
+};
+
+export const ASISTENCIA_ESTADO_BADGE: Record<TEstadoAsistencia, { label: string; variant: TBadgeVariant }> = {
+  presente: { label: "Presente", variant: "default" },
+  ausente: { label: "Ausente", variant: "destructive" },
+  justificado: { label: "Justificado", variant: "secondary" },
+  atraso: { label: "Atraso", variant: "outline" },
 };

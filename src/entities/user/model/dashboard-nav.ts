@@ -58,6 +58,22 @@ const TEACHER_NAV: IDashboardNavGroup[] = [
     label: "General",
     items: [{ label: "Resumen", href: "/dashboard/teacher", icon: "ph:squares-four" }],
   },
+  {
+    label: "Académico",
+    items: [
+      { label: "Mis cátedras", href: "/dashboard/teacher/catedras", icon: "ph:chalkboard" },
+      { label: "Mis estudiantes", href: "/dashboard/teacher/estudiantes", icon: "ph:student" },
+      { label: "Sesiones y asistencia", href: "/dashboard/teacher/sesiones", icon: "ph:calendar-check" },
+      { label: "Evaluaciones", href: "/dashboard/teacher/evaluaciones", icon: "ph:exam" },
+      { label: "Materiales", href: "/dashboard/teacher/materiales", icon: "ph:file-audio" },
+    ],
+  },
+  {
+    label: "Mi perfil",
+    items: [
+      { label: "Perfil profesional", href: "/dashboard/teacher/perfil", icon: "ph:user-circle" },
+    ],
+  },
 ]
 
 const STUDENT_NAV: IDashboardNavGroup[] = [

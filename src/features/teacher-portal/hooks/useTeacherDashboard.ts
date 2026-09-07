@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-import { getTeacherDashboard } from "../api/getTeacherDashboard";
+import { getTeacherDashboard } from "../api";
 import { teacherQueryKeys } from "../model/query-keys";
 
 export function useTeacherDashboard() {
@@ -13,7 +13,7 @@ export function useTeacherDashboard() {
       if (error) throw new Error(error);
       return data;
     },
-    staleTime: 60_000,
+    staleTime: 30_000,
     retry: false,
   });
 }
