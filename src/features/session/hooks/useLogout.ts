@@ -3,17 +3,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 
-import { signOut } from "../api"
+import { signOut } from "../api/signOut"
 
-export function useLogout() {
+export function useLogout(redirectTo = "/login") {
   const queryClient = useQueryClient()
   const router = useRouter()
 
   return useMutation({
-    mutationFn: signOut,
+    mutationFn: async () => {
+      const { error } = await signOut()
+      if (error) throw new Error(error)
+    },
     onSuccess: () => {
       queryClient.clear()
-      router.replace("/login")
+      router.replace(redirectTo)
       router.refresh()
     },
   })

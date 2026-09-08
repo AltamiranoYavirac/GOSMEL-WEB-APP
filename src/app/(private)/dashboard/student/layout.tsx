@@ -1,25 +1,18 @@
-import { redirect } from "next/navigation";
+import { redirect } from "next/navigation"
 
-import { type TRol } from "@/entities/user";
-import { createSupabaseServerClient } from "@/shared/api/supabase/server";
-import { StudentPortalLayout } from "@/features/student-portal";
+import { getServerSession } from "@/features/session/server"
+import { resolveHomeRoute } from "@/entities/user"
+import { StudentPortalLayout } from "@/features/student-portal"
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createSupabaseServerClient();
-  const { data, error } = await supabase.auth.getClaims();
+  const sessionResult = await getServerSession()
 
-  if (error || !data) {
-    redirect("/login");
+  if (sessionResult.kind === "error") throw new Error(sessionResult.error)
+  if (sessionResult.kind === "anonymous") redirect("/login")
+  if (!sessionResult.data.isActive) redirect("/auth/signout?reason=inactive")
+  if (sessionResult.data.roles.includes("admin") || sessionResult.data.roles.includes("docente")) {
+    redirect(resolveHomeRoute(sessionResult.data.roles))
   }
 
-  const roles = (data.claims.user_roles as TRol[] | undefined) ?? [];
-
-  if (roles.includes("admin")) {
-    redirect("/dashboard/admin");
-  }
-  if (roles.includes("docente")) {
-    redirect("/dashboard/teacher");
-  }
-
-  return <StudentPortalLayout>{children}</StudentPortalLayout>;
+  return <StudentPortalLayout>{children}</StudentPortalLayout>
 }
