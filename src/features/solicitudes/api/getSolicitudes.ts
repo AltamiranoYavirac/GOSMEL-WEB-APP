@@ -10,7 +10,7 @@ export async function getSolicitudes(): Promise<{
   const { data, error } = await supabase
     .from("solicitudes")
     .select(
-      "id, created_at, nombre_completo, email, telefono, tipo, estado, curso_id, cursos(nombre), instrumento_id, instrumentos(nombre), docente_id, docentes(perfiles!docentes_perfil_id_fkey(nombres, apellidos)), estudiante_nombre, estudiante_fecha_nacimiento, para_menor, parentesco"
+      "id, created_at, nombre_completo, email, telefono, tipo, estado, mensaje, origen_url, curso_id, cursos(nombre), instrumento_id, instrumentos(nombre), docente_id, docentes(perfiles!docentes_perfil_id_fkey(nombres, apellidos)), estudiante_nombre, estudiante_fecha_nacimiento, para_menor, parentesco"
     )
     .order("created_at", { ascending: false })
     .limit(300);
@@ -34,6 +34,8 @@ export async function getSolicitudes(): Promise<{
       telefono: solicitud.telefono,
       tipo: solicitud.tipo as TSolicitudTipo,
       estado: solicitud.estado as TSolicitudEstado,
+      mensaje: solicitud.mensaje,
+      origenUrl: solicitud.origen_url,
       interes,
       estudianteNombre: solicitud.estudiante_nombre,
       estudianteFechaNacimiento: solicitud.estudiante_fecha_nacimiento,

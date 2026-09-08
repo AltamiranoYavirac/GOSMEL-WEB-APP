@@ -1,15 +1,17 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 
-import type { IConfiguracionSitio } from "../model/configuracion.types";
+import type { ISiteConfig } from "../model/site-config.types";
 
-export async function getConfiguracion(): Promise<{
-  data: IConfiguracionSitio | null;
+export async function getSiteConfig(): Promise<{
+  data: ISiteConfig | null;
   error: string | null;
 }> {
   const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("configuracion_sitio")
-    .select("ciudad, direccion, telefono, whatsapp, email_general, email_admisiones, horario_atencion, mapa_embed, redes_sociales, updated_at")
+    .select(
+      "ciudad, direccion, telefono, whatsapp, email_general, email_admisiones, horario_atencion, mapa_embed, redes_sociales, updated_at"
+    )
     .limit(1)
     .maybeSingle();
 
