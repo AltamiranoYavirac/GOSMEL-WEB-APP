@@ -19,7 +19,7 @@ molde: una tabla de Supabase, un listado con acciones, un formulario de
 crear/editar en un `Sheet`, y confirmación de borrado con `AlertDialog`.
 Esta skill arma las 5 piezas juntas y las conecta.
 
-Ejemplo de referencia completo en el repo: `features/courses-admin/`
+Ejemplo de referencia completo en el repo: `features/cursos/`
 (tabla `cursos`). Úsalo como plantilla viva — copia su forma, no
 necesariamente su contenido.
 
@@ -32,12 +32,14 @@ necesariamente su contenido.
    entity en `entities/` para poblar selects — ver regla de decisión en
    `gosmel-fsd-slice`. Si dos o más features van a necesitar ese catálogo,
    créalo como entity ANTES del feature CRUD.
-3. **Verifica el nombre del feature no choca con uno existente.** Si ya
-   existe `features/{nombre}` sirviendo otro propósito (ej. `courses` es
-   el catálogo estático de la landing, distinto de `courses-admin`),
-   elige un nombre distinto — sufijo `-admin` es la convención usada.
+3. **Verifica el nombre del feature no choca con uno existente.** Los
+   slices de admin se nombran en español, sin sufijo (`cursos`,
+   `docentes`, `estudiantes`, `catedras`, `pagos`…). Si un slice en
+   inglés sirve otro propósito (ej. `courses` es el catálogo estático de
+   la landing pública), el slice admin usa el nombre en español (`cursos`).
 4. **Revisa `entities/user/model/dashboard-nav.ts`** — si la ruta ya
-   está en `ADMIN_NAV`, no la agregues de nuevo; si no está, agrégala.
+   está en `DASHBOARD_NAV` (o `DASHBOARD_NAV_FOOTER`), no la agregues de
+   nuevo; si no está, agrégala.
 
 ## Los 5 pasos, en orden
 
@@ -50,65 +52,61 @@ necesariamente su contenido.
 - `{Entidad}Form.config.ts`: ver skill `gosmel-fsd-form`. Incluye
   `build{Entidad}Payload()` para el insert/update.
 
-### 2. `api/` — 5 funciones contra Supabase
+### 2. `api/` — funciones contra Supabase
 
 `get{Entidades}` (lista, con joins necesarios), `get{Entidad}ById`
-(detalle completo), `create{Entidad}`, `update{Entidad}`,
-`delete{Entidad}` + `index.ts` barrel. Ver skill `gosmel-fsd-api` para el
-contrato `{ data, error }` y elección de cliente Supabase.
+(detalle completo), `crear{Entidad}`, `update{Entidad}`,
+`eliminar{Entidad}`. Sin barrel de segmento. Ver skill `gosmel-fsd-api`
+para el contrato `{ data, error }` y elección de cliente Supabase.
 
 ### 3. `hooks/` — queries + mutations
 
 `use{Entidades}` (lista), `use{Entidad}` (detalle condicional por id),
-`useCreate{Entidad}`, `useUpdate{Entidad}`, `useDelete{Entidad}`. Ver
+`useCrear{Entidad}`, `useUpdate{Entidad}`, `useEliminar{Entidad}`. Ver
 skill `gosmel-fsd-hooks`.
 
-### 4. `ui/` — tres componentes con responsabilidad separada
+### 4. `ui/` — molde real del repo
 
 ```
 ui/
-  {Entidades}Table.tsx        # presentacional puro: recibe datos + callbacks
-  {Entidades}Table.types.ts
-  {Entidad}FormSheet.tsx       # Sheet con el formulario (crear o editar)
-  {Entidad}FormSheet.types.ts
-  {Entidades}View.tsx           # orquestador: estado + composición
-  {Entidades}View.types.ts
+  {Entidades}List.tsx          # AdminDataTable de @/shared/ui + estados + orquestación
+  {Entidades}List.types.ts     # solo si define types propios
+  Crear{Entidad}Dialog.tsx     # AlertDialog con el formulario de creación
+  Crear{Entidad}Dialog.types.ts
+  Editar{Entidad}Dialog.tsx    # AlertDialog de edición (precarga con use{Entidad})
+  Editar{Entidad}Dialog.types.ts
+  Eliminar{Entidad}Dialog.tsx  # AlertDialog de confirmación
+  Eliminar{Entidad}Dialog.types.ts
 ```
 
-**`{Entidades}Table`** — solo recibe `{items, isLoading, onEdit,
-onDeleteRequest}` como props. No llama hooks de datos ni mutations. Estados
-a cubrir: loading (skeletons), vacío (mensaje + ícono), con datos (tabla).
+**`{Entidades}List`** — el componente que exporta el `index.ts` del
+slice. Llama `use{Entidades}()`, arma la `AdminDataTable` de `@/shared/ui`
+y compone los diálogos de crear/editar/eliminar. Las definiciones de
+`columns` y `filters` de `AdminDataTable` se declaran **dentro** del
+componente: llevan `render: (row) => <JSX/>` y closures sobre handlers y
+estado, no son constantes de datos puras — eso **no** cuenta como "array
+grande inline" de la regla de `CLAUDE.md`.
 
-**`{Entidad}FormSheet`** — recibe `{open, onOpenChange, {entidad}Id}`
-(`null` = creando, `string` = editando). Internamente:
-- `use{Entidad}({entidad}Id)` para precargar si edita
-- `useCreate{Entidad}` / `useUpdate{Entidad}` según el modo
-- `useEffect` para `form.reset()` cuando llegan los datos o al abrir en
-  modo creación
-- Submit con `form="{entidad}-form"` en el botón del `SheetFooter` para
-  poder tener el submit fuera del `<form>` visualmente
-
-**`{Entidades}View`** — el componente que exporta el `index.ts` del
-slice. Mantiene el estado de qué está abierto/seleccionado
-(`formOpen`, `editingId`, `itemToDelete`) y compone Table + Sheet +
-AlertDialog de borrado. Header con título + botón "Nuevo {entidad}".
+**`Crear{Entidad}Dialog` / `Editar{Entidad}Dialog`** — `AlertDialog` con
+el formulario (`useAppForm` + campos de `@/shared/form`, ver
+`gosmel-fsd-form`). El de edición precarga con `use{Entidad}(id)`.
+`mutation.isPending` para el loading del submit.
 
 ### 5. Conectar la ruta
 
 En `index.ts` del slice:
 
 ```typescript
-export { default as {Entidades}View } from "./ui/{Entidades}View"
+export { default as {Entidades}List } from "./ui/{Entidades}List"
 ```
 
-En `app/(private)/dashboard/admin/{ruta}/page.tsx`, reemplazar el
-`<ComingSoon>` existente:
+En `app/(private)/dashboard/admin/{ruta}/page.tsx`:
 
 ```tsx
-import { {Entidades}View } from "@/features/{slice}-admin";
+import { {Entidades}List } from "@/features/{slice}";
 
 export default function {Entidad}Page() {
-  return <{Entidades}View />;
+  return <{Entidades}List />;
 }
 ```
 
@@ -129,7 +127,7 @@ export default function {Entidad}Page() {
 
 ```bash
 npx tsc --noEmit           # sin errores de tipos
-npx eslint "src/features/{slice}-admin/**/*.{ts,tsx}" "src/entities/**/*.{ts,tsx}"
+npx eslint "src/features/{slice}/**/*.{ts,tsx}" "src/entities/**/*.{ts,tsx}"
 ```
 
 El lint debe pasar limpio, en particular la regla `boundaries/dependencies`
@@ -141,10 +139,10 @@ El lint debe pasar limpio, en particular la regla `boundaries/dependencies`
 - [ ] ¿Alguna FK necesita entity de catálogo? Creada si aplica
 - [ ] Nombre del slice no choca con uno existente
 - [ ] `model/`: types + query-keys + FormConfig
-- [ ] `api/`: 5 funciones + barrel, contrato `{data, error}`
+- [ ] `api/`: 5 funciones, sin barrel de segmento, contrato `{data, error}`
 - [ ] `hooks/`: 2 queries + 3 mutations, invalidación correcta
-- [ ] `ui/`: Table (presentacional) + FormSheet + View (orquestador)
-- [ ] `index.ts` del slice exporta la View
-- [ ] `page.tsx` de admin reemplazado
+- [ ] `ui/`: {Entidades}List + Crear/Editar/Eliminar{Entidad}Dialog
+- [ ] `index.ts` del slice exporta {Entidades}List
+- [ ] `page.tsx` de admin conectado
 - [ ] Ítem de nav en `dashboard-nav.ts` (agregar si faltaba)
 - [ ] `tsc --noEmit` y `eslint` limpios
