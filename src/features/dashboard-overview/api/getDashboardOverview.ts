@@ -262,7 +262,7 @@ export async function getDashboardOverview(): Promise<{
           label: "Estudiantes activos",
           value: estudiantesActivos.count ?? 0,
           format: "number",
-          icon: "ph:students",
+          icon: "ph:student",
           href: "/dashboard/admin/estudiantes",
           tone: "info",
           spark: estudiantesSpark,
