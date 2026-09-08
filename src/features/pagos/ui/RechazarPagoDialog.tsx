@@ -18,11 +18,7 @@ import {
 import { formatCurrency } from "@/shared/lib/formatters";
 
 import { useRechazarPago } from "../hooks/useRechazarPago";
-import type { IPagoRow } from "../model/pago.types";
-
-interface IRechazarPagoDialogProps {
-  pago: IPagoRow;
-}
+import type { IRechazarPagoDialogProps } from "./RechazarPagoDialog.types";
 
 export default function RechazarPagoDialog({ pago }: IRechazarPagoDialogProps) {
   const [open, setOpen] = useState(false);

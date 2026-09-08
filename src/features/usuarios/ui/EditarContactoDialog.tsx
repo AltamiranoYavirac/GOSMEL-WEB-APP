@@ -23,15 +23,7 @@ import {
   getEditarContactoFormDefaults,
   type IEditarContactoFormValues,
 } from "../model/EditarContactoForm.config";
-
-interface IEditarContactoDialogProps {
-  usuario: {
-    id: string;
-    nombre: string;
-    cedula: string | null;
-    celular: string | null;
-  };
-}
+import type { IEditarContactoDialogProps } from "./EditarContactoDialog.types";
 
 export default function EditarContactoDialog({ usuario }: IEditarContactoDialogProps) {
   const [open, setOpen] = useState(false);

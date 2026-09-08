@@ -18,11 +18,7 @@ import {
 import { formatCurrency } from "@/shared/lib/formatters";
 
 import { useEliminarAcuerdo } from "../hooks/useEliminarAcuerdo";
-import type { IAcuerdoRow } from "../model/acuerdo.types";
-
-interface IEliminarAcuerdoDialogProps {
-  acuerdo: IAcuerdoRow;
-}
+import type { IEliminarAcuerdoDialogProps } from "./EliminarAcuerdoDialog.types";
 
 export default function EliminarAcuerdoDialog({ acuerdo }: IEliminarAcuerdoDialogProps) {
   const [open, setOpen] = useState(false);

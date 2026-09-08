@@ -17,11 +17,7 @@ import {
 } from "@/shared/ui";
 
 import { useEliminarCatedra } from "../hooks/useEliminarCatedra";
-import type { ICatedraRow } from "../model/catedra.types";
-
-interface IEliminarCatedraDialogProps {
-  catedra: ICatedraRow;
-}
+import type { IEliminarCatedraDialogProps } from "./EliminarCatedraDialog.types";
 
 export default function EliminarCatedraDialog({ catedra }: IEliminarCatedraDialogProps) {
   const [open, setOpen] = useState(false);

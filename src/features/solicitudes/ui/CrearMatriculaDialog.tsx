@@ -26,11 +26,7 @@ import {
   type ICrearMatriculaFormValues,
 } from "../model/CrearMatriculaForm.config";
 import type { ISolicitudRow } from "../model/solicitud.types";
-
-interface ICrearMatriculaDialogProps {
-  solicitud: ISolicitudRow | null;
-  onClose: () => void;
-}
+import type { ICrearMatriculaDialogProps } from "./CrearMatriculaDialog.types";
 
 function buildValues(solicitud: ISolicitudRow | null): ICrearMatriculaFormValues {
   if (!solicitud) return getCrearMatriculaFormDefaults();

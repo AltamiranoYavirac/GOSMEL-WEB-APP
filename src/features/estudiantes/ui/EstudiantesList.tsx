@@ -11,8 +11,7 @@ import type { IEstudianteRow } from "../model/estudiante.types";
 import AsignarCursoEstudianteDialog from "./AsignarCursoEstudianteDialog";
 import CrearEstudianteDialog from "./CrearEstudianteDialog";
 import EstudianteFichaCard from "./EstudianteFichaCard";
-
-type TEstadoFiltro = "activos" | "inactivos";
+import type { TEstadoFiltro } from "./EstudiantesList.types";
 
 export default function EstudiantesList() {
   const { data, isPending } = useEstudiantes();

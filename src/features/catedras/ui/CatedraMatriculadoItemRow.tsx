@@ -18,13 +18,7 @@ import {
 import { formatCurrency, formatDate } from "@/shared/lib/formatters";
 
 import { useEliminarInscripcionCatedra } from "../hooks/useEliminarInscripcionCatedra";
-import type { ICatedraEstudianteItem } from "../model/catedra-estudiantes.types";
-
-interface ICatedraMatriculadoItemRowProps {
-  catedraId: string;
-  catedraCodigo: string;
-  estudiante: ICatedraEstudianteItem;
-}
+import type { ICatedraMatriculadoItemRowProps } from "./CatedraMatriculadoItemRow.types";
 
 export default function CatedraMatriculadoItemRow({
   catedraId,

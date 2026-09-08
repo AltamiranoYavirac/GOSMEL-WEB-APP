@@ -7,13 +7,7 @@ import { toast } from "sonner";
 
 import { Button, Spinner } from "@/shared/ui";
 
-interface IImageUploadFieldProps {
-  value?: string | null;
-  onChange: (value: string) => void;
-  label?: string;
-  folder?: string;
-  helperText?: string;
-}
+import type { IImageUploadFieldProps } from "./ImageUploadField.types";
 
 export function ImageUploadField({
   value,

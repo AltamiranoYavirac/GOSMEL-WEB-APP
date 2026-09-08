@@ -2,11 +2,7 @@ import Link from "next/link";
 
 import { Button } from "@/shared/ui";
 
-interface ISocialLinkProps {
-  href: string;
-  "aria-label": string;
-  children: React.ReactNode;
-}
+import type { ISocialLinkProps } from "./SocialLink.types";
 
 export default function SocialLink({
   href,

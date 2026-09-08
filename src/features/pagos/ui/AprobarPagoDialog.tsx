@@ -18,11 +18,7 @@ import {
 import { formatCurrency } from "@/shared/lib/formatters";
 
 import { useAprobarPago } from "../hooks/useAprobarPago";
-import type { IPagoRow } from "../model/pago.types";
-
-interface IAprobarPagoDialogProps {
-  pago: IPagoRow;
-}
+import type { IAprobarPagoDialogProps } from "./AprobarPagoDialog.types";
 
 export default function AprobarPagoDialog({ pago }: IAprobarPagoDialogProps) {
   const [open, setOpen] = useState(false);

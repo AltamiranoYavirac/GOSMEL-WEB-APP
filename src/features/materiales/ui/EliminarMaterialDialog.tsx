@@ -17,11 +17,7 @@ import {
 } from "@/shared/ui";
 
 import { useEliminarMaterial } from "../hooks/useEliminarMaterial";
-import type { IMaterialRow } from "../model/material.types";
-
-interface IEliminarMaterialDialogProps {
-  material: IMaterialRow;
-}
+import type { IEliminarMaterialDialogProps } from "./EliminarMaterialDialog.types";
 
 export default function EliminarMaterialDialog({ material }: IEliminarMaterialDialogProps) {
   const [open, setOpen] = useState(false);
