@@ -112,6 +112,28 @@ export default function SolicitudCard({
             ) : null}
           </div>
 
+          {solicitud.mensaje ? (
+            <div className="mt-4">
+              <DataLabel>Mensaje</DataLabel>
+              <p className="mt-1.5 whitespace-pre-line text-[13px] text-foreground">
+                {solicitud.mensaje}
+              </p>
+            </div>
+          ) : null}
+          {solicitud.origenUrl ? (
+            <div className="mt-3">
+              <a
+                href={solicitud.origenUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[13px] font-medium text-primary transition-colors hover:underline"
+              >
+                Origen
+                <Icon icon="ph:arrow-square-out" width={12} height={12} aria-hidden="true" />
+              </a>
+            </div>
+          ) : null}
+
           <div className="mt-4 flex flex-wrap gap-2.5">
             {siguiente ? (
               <Button

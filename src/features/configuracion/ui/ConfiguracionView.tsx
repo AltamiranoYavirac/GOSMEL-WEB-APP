@@ -5,11 +5,12 @@ import { Icon } from "@iconify/react";
 import { AdminPageHeader, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/shared/ui";
 import { formatDateTime } from "@/shared/lib/formatters";
 
-import { useConfiguracion } from "../hooks/useConfiguracion";
+import { useSiteConfig } from "@/entities/site-config";
+
 import ConfiguracionField from "./ConfiguracionField";
 
 export default function ConfiguracionView() {
-  const { data, isPending } = useConfiguracion();
+  const { data, isPending } = useSiteConfig();
 
   if (isPending) {
     return (

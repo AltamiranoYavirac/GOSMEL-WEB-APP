@@ -12,6 +12,8 @@ export interface ISolicitudRow {
   telefono: string | null;
   tipo: TSolicitudTipo;
   estado: TSolicitudEstado;
+  mensaje: string | null;
+  origenUrl: string | null;
   interes: string | null;
   estudianteNombre: string | null;
   estudianteFechaNacimiento: string | null;

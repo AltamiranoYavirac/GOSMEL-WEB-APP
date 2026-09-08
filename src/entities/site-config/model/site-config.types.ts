@@ -1,6 +1,6 @@
 import type { Json } from "@/shared/api/supabase/database.types";
 
-export interface IConfiguracionSitio {
+export interface ISiteConfig {
   ciudad: string | null;
   direccion: string | null;
   telefono: string | null;
