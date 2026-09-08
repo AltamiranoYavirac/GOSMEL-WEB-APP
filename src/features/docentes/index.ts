@@ -7,5 +7,6 @@ export * from "./model/docente.types";
 export * from "./hooks/useDocentes";
 export * from "./hooks/useDocenteDetalle";
 export * from "./hooks/useCreateDocente";
+export * from "./hooks/usePerfilesDisponibles";
 export * from "./hooks/useUpdateDocente";
 export * from "./hooks/useEliminarDocente";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 import {
   AlertDialog,
@@ -23,20 +23,10 @@ import {
   Spinner,
   Textarea,
 } from "@/shared/ui";
-import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import { useInstrumentoOptions } from "@/entities/instrument";
 import { useCreateDocente } from "../hooks/useCreateDocente";
+import { usePerfilesDisponibles } from "../hooks/usePerfilesDisponibles";
 import type { ICrearDocenteDialogProps } from "./CrearDocenteDialog.types";
-
-interface IPerfilOption {
-  id: string;
-  nombre: string;
-  email: string | null;
-}
-
-interface IInstrumentoOption {
-  id: string;
-  nombre: string;
-}
 
 export default function CrearDocenteDialog({
   open: controlledOpen,
@@ -47,9 +37,9 @@ export default function CrearDocenteDialog({
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setOpen = setControlledOpen ?? setInternalOpen;
 
-  const [perfiles, setPerfiles] = useState<IPerfilOption[]>([]);
-  const [instrumentos, setInstrumentos] = useState<IInstrumentoOption[]>([]);
-  const [loadingOptions, setLoadingOptions] = useState(false);
+  const { data: perfiles = [], isLoading: loadingPerfiles } = usePerfilesDisponibles(open);
+  const { data: instrumentos = [], isLoading: loadingInstrumentos } = useInstrumentoOptions(open);
+  const loadingOptions = loadingPerfiles || loadingInstrumentos;
 
   const [perfilId, setPerfilId] = useState("");
   const [slug, setSlug] = useState("");
@@ -62,43 +52,6 @@ export default function CrearDocenteDialog({
   const [destacado, setDestacado] = useState(false);
 
   const createMutation = useCreateDocente();
-
-  useEffect(() => {
-    if (!open) return;
-    const fetchOptions = async () => {
-      setLoadingOptions(true);
-      const supabase = createSupabaseBrowserClient();
-
-      const [profsRes, docsRes, estsRes] = await Promise.all([
-        supabase.from("perfiles").select("id, nombres, apellidos, email").limit(200),
-        supabase.from("docentes").select("perfil_id"),
-        supabase.from("estudiantes").select("perfil_id"),
-      ]);
-
-      const docIds = new Set((docsRes.data ?? []).map((d) => d.perfil_id));
-      const estIds = new Set((estsRes.data ?? []).map((e) => e.perfil_id));
-
-      const disponibles = (profsRes.data ?? [])
-        .filter((p) => !docIds.has(p.id) && !estIds.has(p.id))
-        .map((p) => ({
-          id: p.id,
-          nombre: `${p.nombres} ${p.apellidos}`.trim(),
-          email: p.email,
-        }));
-      setPerfiles(disponibles);
-
-      const { data: insts } = await supabase
-        .from("instrumentos")
-        .select("id, nombre")
-        .eq("activo", true)
-        .order("nombre");
-      setInstrumentos(insts ?? []);
-
-      setLoadingOptions(false);
-    };
-
-    fetchOptions();
-  }, [open]);
 
   const handlePerfilChange = (id: string) => {
     setPerfilId(id);
