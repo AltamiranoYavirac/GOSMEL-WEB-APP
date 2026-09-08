@@ -18,13 +18,13 @@ import {
 } from "@/shared/ui";
 import { Form, NumberField, SelectField, TextField, useAppForm } from "@/shared/form";
 
-import { useAprobarMatricula } from "../hooks/useAprobarMatricula";
-import { useInscripcionesPendientes } from "../hooks/useInscripcionesPendientes";
 import {
   aprobarMatriculaFormSchema,
   getAprobarMatriculaFormDefaults,
+  useAprobarMatricula,
+  useInscripcionesPendientes,
   type IAprobarMatriculaFormValues,
-} from "../model/AprobarMatriculaForm.config";
+} from "@/entities/matricula";
 
 interface ICatedraMatriculasDialogProps {
   catedraId: string;
@@ -39,7 +39,7 @@ export default function CatedraMatriculasDialog({
 }: ICatedraMatriculasDialogProps) {
   const [open, setOpen] = useState(false);
   const pendientes = useInscripcionesPendientes(catedraId, open);
-  const mutation = useAprobarMatricula(catedraId);
+  const mutation = useAprobarMatricula();
   const form = useAppForm<IAprobarMatriculaFormValues>({
     schema: aprobarMatriculaFormSchema,
     defaultValues: getAprobarMatriculaFormDefaults(),

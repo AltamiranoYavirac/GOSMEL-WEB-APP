@@ -21,17 +21,14 @@ import {
 } from "@/shared/ui";
 import { formatCurrency, formatDate } from "@/shared/lib/formatters";
 
-import { useAprobarMatricula } from "../hooks/useAprobarMatricula";
-import { useRechazarSolicitudMatricula } from "../hooks/useRechazarSolicitudMatricula";
+import { useAprobarMatricula, useRechazarMatricula } from "@/entities/matricula";
 import type { ICatedraSolicitudItem } from "../model/catedra-estudiantes.types";
 
 interface ICatedraSolicitudItemCardProps {
-  catedraId: string;
   solicitud: ICatedraSolicitudItem;
 }
 
 export default function CatedraSolicitudItemCard({
-  catedraId,
   solicitud,
 }: ICatedraSolicitudItemCardProps) {
   const [monto, setMonto] = useState(
@@ -41,8 +38,8 @@ export default function CatedraSolicitudItemCard({
   const [motivo, setMotivo] = useState("");
   const [rejectOpen, setRejectOpen] = useState(false);
 
-  const aprobarMutation = useAprobarMatricula(catedraId);
-  const rechazarMutation = useRechazarSolicitudMatricula(catedraId);
+  const aprobarMutation = useAprobarMatricula();
+  const rechazarMutation = useRechazarMatricula();
 
   const handleAprobar = () => {
     aprobarMutation.mutate({
@@ -54,9 +51,10 @@ export default function CatedraSolicitudItemCard({
   };
 
   const handleRechazar = () => {
-    rechazarMutation.mutate(solicitud.inscripcionId, {
-      onSuccess: () => setRejectOpen(false),
-    });
+    rechazarMutation.mutate(
+      { inscripcionId: solicitud.inscripcionId, motivo: motivo.trim() || "Sin motivo especificado" },
+      { onSuccess: () => setRejectOpen(false) }
+    );
   };
 
   return (
@@ -172,7 +170,7 @@ export default function CatedraSolicitudItemCard({
             size="sm"
             onClick={handleAprobar}
             disabled={aprobarMutation.isPending || rechazarMutation.isPending}
-            className="gap-1.5 text-xs bg-success text-success-foreground hover:bg-success/90"
+            className="gap-1.5 text-xs bg-success text-warm-950 hover:bg-success/90"
           >
             <Icon icon="ph:check-circle" className="size-3.5" aria-hidden="true" />
             {aprobarMutation.isPending ? "Aprobando..." : "Aprobar matrícula"}

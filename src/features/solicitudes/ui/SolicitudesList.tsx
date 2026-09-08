@@ -1,150 +1,131 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 
-import { AdminDataTable, AdminPageHeader, Badge, Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, type IAdminColumn, type IAdminDataTableFilter } from "@/shared/ui";
-import { formatDateTime } from "@/shared/lib/formatters";
+import { AdminPageHeader, Input, Skeleton } from "@/shared/ui";
+import { cn } from "@/shared/lib/utils";
 
 import { useSolicitudes } from "../hooks/useSolicitudes";
 import { useUpdateSolicitudEstado } from "../hooks/useUpdateSolicitudEstado";
-import {
-  SOLICITUD_ESTADO_BADGE,
-  SOLICITUD_ESTADO_SIGUIENTE,
-  SOLICITUD_TIPO_BADGE,
-} from "../model/solicitudes.constants";
-import type { ISolicitudRow } from "../model/solicitud.types";
+import { SOLICITUD_ESTADO_SIGUIENTE } from "../model/solicitudes.constants";
+import type { ISolicitudRow, TSolicitudEstado } from "../model/solicitud.types";
 import CrearMatriculaDialog from "./CrearMatriculaDialog";
+import SolicitudCard from "./SolicitudCard";
+
+const FILTROS: Array<{ value: "todas" | TSolicitudEstado; label: string }> = [
+  { value: "todas", label: "Todas" },
+  { value: "nueva", label: "Nueva" },
+  { value: "contactada", label: "Contactada" },
+  { value: "convertida", label: "Convertida" },
+  { value: "descartada", label: "Descartada" },
+];
+
+function getWhatsAppUrl(row: ISolicitudRow): string | null {
+  if (!row.telefono) return null;
+  const clean = row.telefono.replace(/\D/g, "");
+  const num = clean.startsWith("0") ? `593${clean.slice(1)}` : clean;
+  const msg = `Hola ${row.nombre}, le saludamos de GOSMEL Music Academy respecto a su solicitud de información para ${row.interes ?? "nuestros cursos"}.`;
+  return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
+}
 
 export default function SolicitudesList() {
   const { data, isPending } = useSolicitudes();
   const mutation = useUpdateSolicitudEstado();
+  const rows = useMemo(() => data ?? [], [data]);
+
+  const [filtro, setFiltro] = useState<"todas" | TSolicitudEstado>("todas");
+  const [search, setSearch] = useState("");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [solicitudMatricula, setSolicitudMatricula] = useState<ISolicitudRow | null>(null);
-  const rows = data ?? [];
 
-  const getWhatsAppUrl = (row: ISolicitudRow) => {
-    if (!row.telefono) return null;
-    const clean = row.telefono.replace(/\D/g, "");
-    const num = clean.startsWith("0") ? `593${clean.slice(1)}` : clean;
-    const msg = `Hola ${row.nombre}, le saludamos de GOSMEL Music Academy respecto a su solicitud de información para ${row.interes ?? "nuestros cursos"}.`;
-    return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
-  };
+  const counts = useMemo(() => {
+    const base: Record<string, number> = { todas: rows.length };
+    for (const row of rows) base[row.estado] = (base[row.estado] ?? 0) + 1;
+    return base;
+  }, [rows]);
 
-  const columns: IAdminColumn<ISolicitudRow>[] = [
-    {
-      key: "fecha",
-      label: "Fecha",
-      render: (row) => <span className="text-muted-foreground">{formatDateTime(row.fecha)}</span>,
-    },
-    {
-      key: "nombre",
-      label: "Solicitante",
-      render: (row) => <span className="font-medium">{row.nombre}</span>,
-    },
-    {
-      key: "tipo",
-      label: "Tipo",
-      render: (row) => (
-        <Badge variant={SOLICITUD_TIPO_BADGE[row.tipo].variant}>{SOLICITUD_TIPO_BADGE[row.tipo].label}</Badge>
-      ),
-    },
-    {
-      key: "interes",
-      label: "Interés",
-      render: (row) => row.interes ?? <span className="text-muted-foreground">—</span>,
-    },
-    {
-      key: "contacto",
-      label: "Contacto",
-      render: (row) => (
-        <div className="flex flex-col">
-          <span>{row.email}</span>
-          {row.telefono ? <span className="text-xs text-muted-foreground">{row.telefono}</span> : null}
-        </div>
-      ),
-    },
-    {
-      key: "estado",
-      label: "Estado",
-      render: (row) => (
-        <Badge variant={SOLICITUD_ESTADO_BADGE[row.estado].variant}>{SOLICITUD_ESTADO_BADGE[row.estado].label}</Badge>
-      ),
-    },
-  ];
-
-  const filters: IAdminDataTableFilter<ISolicitudRow>[] = [
-    { value: "nueva", label: "Nuevas", match: (row) => row.estado === "nueva" },
-    { value: "contactada", label: "Contactadas", match: (row) => row.estado === "contactada" },
-    { value: "convertida", label: "Convertidas", match: (row) => row.estado === "convertida" },
-    { value: "descartada", label: "Descartadas", match: (row) => row.estado === "descartada" },
-  ];
+  const filtered = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return rows.filter((row) => {
+      if (filtro !== "todas" && row.estado !== filtro) return false;
+      if (!query) return true;
+      return [row.nombre, row.email, row.telefono ?? "", row.interes ?? ""].some((value) =>
+        value.toLowerCase().includes(query)
+      );
+    });
+  }, [rows, filtro, search]);
 
   return (
     <div className="space-y-6">
       <AdminPageHeader
-        eyebrow="General · GOSMEL"
-        title="Solicitudes"
-        description="Bandeja de solicitudes de admisión, clases de prueba, masterclasses y contacto general."
+        eyebrow="Admisiones · GOSMEL"
+        title="Bandeja de solicitudes"
+        description="Leads que llegan desde el sitio público, de nueva a convertida."
         icon="ph:tray"
       />
 
-      <AdminDataTable
-        data={rows}
-        columns={columns}
-        loading={isPending}
-        keyId={(row) => row.id}
-        searchKeys={[(row) => row.nombre, (row) => row.email, (row) => row.telefono ?? "", (row) => row.interes ?? ""]}
-        filters={filters}
-        emptyTitle="Sin solicitudes"
-        emptyDescription="Cuando lleguen solicitudes aparecerán aquí."
-        countLabel="solicitudes"
-        rowActions={(row) => {
-          const waUrl = getWhatsAppUrl(row);
-          const esDescartada = row.estado === "descartada";
-          const gestionable = row.estado === "nueva" || row.estado === "contactada";
-          const siguiente = SOLICITUD_ESTADO_SIGUIENTE[row.estado];
+      <div className="flex flex-wrap items-center gap-2">
+        {FILTROS.map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            onClick={() => setFiltro(item.value)}
+            aria-pressed={filtro === item.value}
+            className={cn(
+              "rounded-full px-4 py-2 text-xs font-bold transition-colors",
+              filtro === item.value
+                ? "bg-foreground/10 text-foreground"
+                : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
+            )}
+          >
+            {item.label} · {counts[item.value] ?? 0}
+          </button>
+        ))}
+        <Input
+          icon={<Icon icon="ph:magnifying-glass" aria-hidden="true" />}
+          iconPosition="start"
+          placeholder="Buscar solicitud…"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          className="w-full rounded-[9px] border-border bg-sidebar sm:ml-auto sm:w-64"
+        />
+      </div>
 
-          return (
-            <div className="flex items-center justify-end gap-1.5">
-              {waUrl && (
-                <Button asChild variant="ghost" size="sm" className="size-8 p-0 text-emerald-600 dark:text-emerald-400">
-                  <a href={waUrl} target="_blank" rel="noopener noreferrer" title="Contactar por WhatsApp">
-                    <Icon icon="ph:whatsapp-logo" width={16} height={16} aria-hidden="true" />
-                  </a>
-                </Button>
-              )}
-
-              {!esDescartada && (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon-sm" aria-label="Gestionar solicitud">
-                      <Icon icon="ph:dots-three-vertical" aria-hidden="true" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onSelect={() => setSolicitudMatricula(row)}>
-                      <Icon icon="ph:user-plus" aria-hidden="true" />
-                      Convertir a Matrícula
-                    </DropdownMenuItem>
-                    {siguiente ? (
-                      <DropdownMenuItem onSelect={() => mutation.mutate({ id: row.id, estado: siguiente })}>
-                        <Icon icon="ph:arrow-right" aria-hidden="true" />
-                        Marcar como {SOLICITUD_ESTADO_BADGE[siguiente].label}
-                      </DropdownMenuItem>
-                    ) : null}
-                    {gestionable ? (
-                      <DropdownMenuItem onSelect={() => mutation.mutate({ id: row.id, estado: "descartada" })}>
-                        <Icon icon="ph:x" aria-hidden="true" />
-                        Descartar
-                      </DropdownMenuItem>
-                    ) : null}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              )}
-            </div>
-          );
-        }}
-      />
+      {isPending ? (
+        <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} className="h-24 w-full rounded-2xl" />
+          ))}
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-border bg-card py-16 text-center">
+          <Icon icon="ph:tray" className="size-8 text-muted-foreground/60" aria-hidden="true" />
+          <p className="font-heading text-lg text-foreground">Sin solicitudes</p>
+          <p className="text-sm text-muted-foreground">Cuando lleguen solicitudes aparecerán aquí.</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {filtered.map((row) => {
+            const siguiente = SOLICITUD_ESTADO_SIGUIENTE[row.estado];
+            return (
+              <SolicitudCard
+                key={row.id}
+                solicitud={row}
+                expanded={expandedId === row.id}
+                onToggle={() => setExpandedId((prev) => (prev === row.id ? null : row.id))}
+                onMarkNext={() =>
+                  siguiente ? mutation.mutate({ id: row.id, estado: siguiente }) : undefined
+                }
+                onConvert={() => setSolicitudMatricula(row)}
+                onDiscard={() => mutation.mutate({ id: row.id, estado: "descartada" })}
+                waUrl={getWhatsAppUrl(row)}
+                busy={mutation.isPending}
+              />
+            );
+          })}
+        </div>
+      )}
 
       <CrearMatriculaDialog
         solicitud={solicitudMatricula}

@@ -78,7 +78,7 @@ export default function NotificationsMenu() {
                     icon="ph:user-plus"
                     label="Inscripciones por aprobar"
                     count={counts.inscripcionesPendientes}
-                    href="/dashboard/admin/catedras"
+                    href="/dashboard/admin/matriculas"
                     tone="primary"
                   />
                 ) : null}

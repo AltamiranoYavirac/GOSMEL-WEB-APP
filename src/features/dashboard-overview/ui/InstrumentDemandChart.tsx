@@ -6,9 +6,9 @@ import type { IInstrumentDemandChartProps } from "./InstrumentDemandChart.types"
 
 export default function InstrumentDemandChart({ data }: IInstrumentDemandChartProps) {
   return (
-    <div className="h-full rounded-3xl bg-background border border-white/60 dark:border-white/5 shadow-[-8px_-8px_20px_rgba(255,255,255,0.9),8px_8px_20px_rgba(169,146,125,0.22)] dark:shadow-[-8px_-8px_20px_rgba(255,255,255,0.04),8px_8px_22px_rgba(0,0,0,0.65)] p-6 sm:p-7 flex flex-col justify-between gap-4">
+    <div className="flex h-full flex-col justify-between gap-4 rounded-2xl border border-border bg-card p-5 sm:p-6">
       <div className="flex items-center justify-between">
-        <h3 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
+        <h3 className="font-heading text-[15.5px] font-bold tracking-tight text-foreground">
           Instrumentos más demandados
         </h3>
       </div>
@@ -49,8 +49,8 @@ export default function InstrumentDemandChart({ data }: IInstrumentDemandChartPr
                 {data.map((entry, index) => (
                   <Cell
                     key={entry.instrumento}
-                    fill={index === 0 ? "var(--color-primary-500)" : "var(--color-accent-soft)"}
-                    fillOpacity={index === 0 ? 1 : 1 - index * 0.12}
+                    fill="var(--color-foreground)"
+                    fillOpacity={1 - index * 0.14}
                   />
                 ))}
                 <LabelList

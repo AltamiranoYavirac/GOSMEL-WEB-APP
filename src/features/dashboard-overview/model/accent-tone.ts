@@ -1,41 +1,49 @@
 import type { TAccentTone } from "./dashboard-overview.types";
 
 export const ACCENT_TONE_TILE: Record<TAccentTone, string> = {
-  violet: "bg-violet-tint text-violet-700 dark:text-violet-300",
-  primary: "bg-primary-tint text-primary-700 dark:text-primary-300",
-  secondary: "bg-secondary-100 text-secondary-800 dark:bg-secondary-950 dark:text-secondary-300",
-  accent: "bg-accent-100 text-accent-700 dark:bg-accent-900 dark:text-accent-300",
-  destructive: "bg-destructive/10 text-destructive",
+  info: "bg-info-tint text-info-fg",
+  warning: "bg-warning-tint text-warning-fg",
+  success: "bg-success-tint text-success-fg",
+  danger: "bg-danger-tint text-danger-fg",
+  neutral: "bg-foreground/6 text-foreground",
 };
 
 export const ACCENT_TONE_SPARK: Record<TAccentTone, string> = {
-  violet: "text-violet-500 dark:text-violet-400",
-  primary: "text-primary-600 dark:text-primary-400",
-  secondary: "text-secondary-600 dark:text-secondary-400",
-  accent: "text-accent-600 dark:text-accent-400",
-  destructive: "text-destructive",
+  info: "text-info-fg",
+  warning: "text-warning-fg",
+  success: "text-success-fg",
+  danger: "text-danger-fg",
+  neutral: "text-muted-foreground",
 };
 
-export const ACCENT_TONE_GLOW: Record<TAccentTone, string> = {
-  violet: "bg-violet-500/15 dark:bg-violet-400/20",
-  primary: "bg-primary-500/15 dark:bg-primary-400/20",
-  secondary: "bg-secondary-500/20 dark:bg-secondary-400/15",
-  accent: "bg-accent-500/20 dark:bg-accent-400/15",
-  destructive: "bg-destructive/10",
+export const ACCENT_TONE_BORDER: Record<TAccentTone, string> = {
+  info: "border-info-border",
+  warning: "border-warning-border",
+  success: "border-success-border",
+  danger: "border-danger-border",
+  neutral: "border-border",
+};
+
+export const ACCENT_TONE_DOT: Record<TAccentTone, string> = {
+  info: "bg-info",
+  warning: "bg-warning",
+  success: "bg-success",
+  danger: "bg-danger",
+  neutral: "bg-muted-foreground",
 };
 
 export const ACCENT_TONE_AVATAR: Record<TAccentTone, string> = {
-  violet: "from-violet-500 to-violet-700",
-  primary: "from-primary-400 to-primary-600",
-  secondary: "from-secondary-400 to-secondary-600",
-  accent: "from-accent-400 to-accent-600",
-  destructive: "from-destructive to-destructive/80",
+  info: "bg-info-tint text-info-fg",
+  warning: "bg-warning-tint text-warning-fg",
+  success: "bg-success-tint text-success-fg",
+  danger: "bg-danger-tint text-danger-fg",
+  neutral: "bg-foreground/8 text-foreground",
 };
 
 export const ACCENT_TONE_BADGE: Record<TAccentTone, string> = {
-  violet: "bg-violet-tint text-violet-700 dark:text-violet-300",
-  primary: "bg-primary-tint text-primary-700 dark:text-primary-300",
-  secondary: "bg-secondary-100 text-secondary-800 dark:bg-secondary-950 dark:text-secondary-300",
-  accent: "bg-accent-100 text-accent-700 dark:bg-accent-900 dark:text-accent-300",
-  destructive: "bg-destructive/10 text-destructive",
+  info: "bg-info-tint text-info-fg",
+  warning: "bg-warning-tint text-warning-fg",
+  success: "bg-success-tint text-success-fg",
+  danger: "bg-danger-tint text-danger-fg",
+  neutral: "bg-foreground/8 text-foreground",
 };
