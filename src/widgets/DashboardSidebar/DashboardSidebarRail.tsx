@@ -23,7 +23,7 @@ export default function DashboardSidebarRail({ role, session, onExpand }: IDashb
     hrefs.some((href) => pathname === href || pathname.startsWith(`${href}/`));
 
   return (
-    <div className="flex h-full w-[72px] flex-col items-center bg-sidebar py-5 text-sidebar-foreground">
+    <div className="flex h-full w-18 flex-col items-center bg-sidebar py-5 text-sidebar-foreground">
       <button
         type="button"
         onClick={onExpand}

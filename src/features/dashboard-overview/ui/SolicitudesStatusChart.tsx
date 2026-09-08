@@ -50,7 +50,7 @@ export default function SolicitudesStatusChart({ data }: ISolicitudesStatusChart
               </ResponsiveContainer>
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
                 <p className="font-heading text-3xl font-bold text-foreground">{total}</p>
-                <p className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">Total</p>
+                <p className="text-[0.625rem] font-mono uppercase tracking-wider text-muted-foreground">Total</p>
               </div>
             </div>
 

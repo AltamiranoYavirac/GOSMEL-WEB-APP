@@ -12,7 +12,7 @@ export default function AdminPageHeader({
   return (
     <div className="flex flex-col gap-4 pb-2 md:flex-row md:items-start md:justify-between">
       <div className="max-w-2xl space-y-1.5">
-        <div className="flex items-center gap-2 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+        <div className="flex items-center gap-2 text-[0.656rem] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
           {icon ? <Icon icon={icon} className="size-3.5" aria-hidden="true" /> : null}
           <span>{eyebrow}</span>
         </div>
@@ -22,7 +22,7 @@ export default function AdminPageHeader({
         </h1>
 
         {description ? (
-          <p className="max-w-xl text-[13.5px] leading-relaxed text-muted-foreground">
+          <p className="max-w-xl text-[0.844rem] leading-relaxed text-muted-foreground">
             {description}
           </p>
         ) : null}

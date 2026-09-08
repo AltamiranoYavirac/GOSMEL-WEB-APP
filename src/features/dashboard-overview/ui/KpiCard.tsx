@@ -28,7 +28,7 @@ export default function KpiCard({ kpi }: IKpiCardProps) {
 
       <div className="relative z-10 text-sm font-semibold text-muted-foreground">{kpi.label}</div>
 
-      <div className="relative z-10 mt-3 font-heading text-[29px] font-extrabold tracking-[-0.03em] text-foreground">
+      <div className="relative z-10 mt-3 font-heading text-[1.8125rem] font-extrabold tracking-[-0.03em] text-foreground">
         {formatValue(kpi)}
       </div>
 
@@ -39,7 +39,7 @@ export default function KpiCard({ kpi }: IKpiCardProps) {
           <Link
             href={kpi.href}
             className={cn(
-              "inline-flex items-center gap-1 text-[12px] font-bold transition-transform hover:translate-x-0.5",
+              "inline-flex items-center gap-1 text-[0.75rem] font-bold transition-transform hover:translate-x-0.5",
               ACCENT_TONE_SPARK[tone]
             )}
           >

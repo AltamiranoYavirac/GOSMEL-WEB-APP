@@ -97,7 +97,7 @@ export default function EstudiantesList() {
       </div>
 
       {isPending ? (
-        <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {Array.from({ length: 6 }).map((_, index) => (
             <Skeleton key={index} className="h-52 w-full rounded-2xl" />
           ))}
@@ -109,7 +109,7 @@ export default function EstudiantesList() {
           <p className="text-sm text-muted-foreground">Cuando se registren estudiantes aparecerán aquí.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {filtered.map((row) => (
             <EstudianteFichaCard key={row.id} estudiante={row} />
           ))}
