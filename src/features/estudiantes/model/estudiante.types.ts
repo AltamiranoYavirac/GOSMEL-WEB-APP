@@ -2,6 +2,8 @@ import type { Database } from "@/shared/api/supabase/database.types";
 
 export type TNivelCurso = Database["public"]["Enums"]["nivel_curso"];
 
+export type TParentesco = "madre" | "padre" | "abuelo" | "tio" | "hermano" | "tutor_legal" | "otro";
+
 export interface IEstudianteCatedraInfo {
   id: string;
   catedraId: string;

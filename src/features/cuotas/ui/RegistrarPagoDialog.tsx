@@ -25,16 +25,7 @@ import {
   registrarPagoFormSchema,
   type IRegistrarPagoFormValues,
 } from "../model/RegistrarPagoForm.config";
-
-interface IRegistrarPagoDialogProps {
-  cuota: {
-    id: string;
-    estudiante: string;
-    saldo: number;
-    monto?: number;
-    periodo?: string;
-  };
-}
+import type { IRegistrarPagoDialogProps } from "./RegistrarPagoDialog.types";
 
 export default function RegistrarPagoDialog({ cuota }: IRegistrarPagoDialogProps) {
   const [open, setOpen] = useState(false);

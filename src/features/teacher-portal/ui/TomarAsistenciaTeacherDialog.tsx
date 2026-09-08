@@ -22,12 +22,10 @@ import { formatDate } from "@/shared/lib/formatters";
 import { useGuardarTeacherAsistencias } from "../hooks/useGuardarTeacherAsistencias";
 import { useTeacherSesionAsistencia } from "../hooks/useTeacherSesionAsistencia";
 import type { TEstadoAsistencia } from "../model/teacher-dashboard.types";
-import type { ITomarAsistenciaTeacherDialogProps } from "./TomarAsistenciaTeacherDialog.types";
-
-interface IAsistenciaOverride {
-  estado?: TEstadoAsistencia;
-  observacion?: string;
-}
+import type {
+  IAsistenciaOverride,
+  ITomarAsistenciaTeacherDialogProps,
+} from "./TomarAsistenciaTeacherDialog.types";
 
 const ESTADOS_ASISTENCIA: {
   value: TEstadoAsistencia;

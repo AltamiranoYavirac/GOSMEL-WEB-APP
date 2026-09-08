@@ -20,12 +20,10 @@ import {
 
 import { useTeacherCatalogos } from "../hooks/useTeacherCatalogos";
 import { useUpdateTeacherInstrumentos } from "../hooks/useUpdateTeacherInstrumentos";
-import type { IGestionarInstrumentosDialogProps } from "./GestionarInstrumentosDialog.types";
-
-interface IInstrumentoOverride {
-  selected?: boolean;
-  esPrincipal?: boolean;
-}
+import type {
+  IGestionarInstrumentosDialogProps,
+  IInstrumentoOverride,
+} from "./GestionarInstrumentosDialog.types";
 
 export default function GestionarInstrumentosDialog({
   open,

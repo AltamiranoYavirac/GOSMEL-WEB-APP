@@ -24,11 +24,7 @@ import {
   type IAsignarEstudianteFormValues,
   type TNivelCurso,
 } from "../model/AsignarEstudianteForm.config";
-
-interface IAsignarEstudianteDialogProps {
-  usuario: { id: string; nombre: string; cedula: string | null } | null;
-  onClose: () => void;
-}
+import type { IAsignarEstudianteDialogProps } from "./AsignarEstudianteDialog.types";
 
 export default function AsignarEstudianteDialog({ usuario, onClose }: IAsignarEstudianteDialogProps) {
   const open = !!usuario;

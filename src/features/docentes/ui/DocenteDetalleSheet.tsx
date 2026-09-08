@@ -22,11 +22,7 @@ import {
   MODALIDAD_BADGE,
   PORTAFOLIO_TIPO_LABEL,
 } from "../model/docente-detalle.types";
-
-interface IDocenteDetalleSheetProps {
-  docenteId: string;
-  docenteNombre: string;
-}
+import type { IDocenteDetalleSheetProps } from "./DocenteDetalleSheet.types";
 
 export default function DocenteDetalleSheet({ docenteId, docenteNombre }: IDocenteDetalleSheetProps) {
   const [open, setOpen] = useState(false);

@@ -24,17 +24,8 @@ import {
 } from "@/shared/ui";
 import { useRepresentantes } from "@/entities/representante";
 import { useCreateEstudiante } from "../hooks/useCreateEstudiante";
-import type { TNivelCurso } from "../model/estudiante.types";
+import type { TNivelCurso, TParentesco } from "../model/estudiante.types";
 import type { ICrearEstudianteDialogProps } from "./CrearEstudianteDialog.types";
-
-type TParentesco =
-  | "madre"
-  | "padre"
-  | "abuelo"
-  | "tio"
-  | "hermano"
-  | "tutor_legal"
-  | "otro";
 
 export default function CrearEstudianteDialog({
   open: controlledOpen,

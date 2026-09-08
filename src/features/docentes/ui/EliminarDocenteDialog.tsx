@@ -17,11 +17,7 @@ import {
 } from "@/shared/ui";
 
 import { useEliminarDocente } from "../hooks/useEliminarDocente";
-
-interface IEliminarDocenteDialogProps {
-  perfilId: string;
-  nombre: string;
-}
+import type { IEliminarDocenteDialogProps } from "./EliminarDocenteDialog.types";
 
 export default function EliminarDocenteDialog({ perfilId, nombre }: IEliminarDocenteDialogProps) {
   const [open, setOpen] = useState(false);

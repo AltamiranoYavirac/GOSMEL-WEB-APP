@@ -17,11 +17,7 @@ import {
 } from "@/shared/ui";
 
 import { useEliminarInstrumento } from "../hooks/useEliminarInstrumento";
-import type { IInstrumentoRow } from "../model/instrumento.types";
-
-interface IEliminarInstrumentoDialogProps {
-  instrumento: IInstrumentoRow;
-}
+import type { IEliminarInstrumentoDialogProps } from "./EliminarInstrumentoDialog.types";
 
 export default function EliminarInstrumentoDialog({ instrumento }: IEliminarInstrumentoDialogProps) {
   const [open, setOpen] = useState(false);

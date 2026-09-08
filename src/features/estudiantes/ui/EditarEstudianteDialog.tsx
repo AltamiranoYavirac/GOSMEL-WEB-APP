@@ -24,11 +24,7 @@ import {
   NIVEL_ESTUDIANTE_OPCIONES,
   type IEditarEstudianteFormValues,
 } from "../model/EditarEstudianteForm.config";
-import type { IEstudianteRow } from "../model/estudiante.types";
-
-interface IEditarEstudianteDialogProps {
-  estudiante: IEstudianteRow;
-}
+import type { IEditarEstudianteDialogProps } from "./EditarEstudianteDialog.types";
 
 export default function EditarEstudianteDialog({ estudiante }: IEditarEstudianteDialogProps) {
   const [open, setOpen] = useState(false);
