@@ -71,19 +71,19 @@ export default function SolicitudCard({
 
         <span className="min-w-0 flex-1">
           <span className="flex flex-wrap items-center gap-2">
-            <span className="text-[15px] font-bold text-foreground">{solicitud.nombre}</span>
+            <span className="text-[0.9375rem] font-bold text-foreground">{solicitud.nombre}</span>
             <Badge variant={estado.variant}>{estado.label}</Badge>
             <Badge variant="ghost">
               {tipo.label}
               {solicitud.interes ? ` · ${solicitud.interes}` : ""}
             </Badge>
-            <span className="ml-auto text-[11.5px] text-muted-foreground">
+            <span className="ml-auto text-[0.719rem] text-muted-foreground">
               {formatTimeAgo(solicitud.fecha)}
             </span>
           </span>
 
           {solicitud.mensaje ? (
-            <p className="mt-2 whitespace-pre-line text-[13px] text-foreground">
+            <p className="mt-2 whitespace-pre-line text-[0.8125rem] text-foreground">
               {solicitud.mensaje}
             </p>
           ) : null}
@@ -94,7 +94,7 @@ export default function SolicitudCard({
                 <Badge variant="warning">Solicitud para menor</Badge>
               ) : null}
               {origenPath ? (
-                <span className="text-[11.5px] text-muted-foreground">
+                <span className="text-[0.719rem] text-muted-foreground">
                   vía formulario / {origenPath}
                 </span>
               ) : null}
@@ -121,7 +121,7 @@ export default function SolicitudCard({
           >
             <div>
               <DataLabel>Contacto</DataLabel>
-              <div className="mt-1.5 flex flex-col gap-0.5 text-[13px] text-foreground">
+              <div className="mt-1.5 flex flex-col gap-0.5 text-[0.8125rem] text-foreground">
                 <span>{solicitud.email}</span>
                 {solicitud.telefono ? <span>{solicitud.telefono}</span> : null}
                 {waUrl ? (
@@ -129,7 +129,7 @@ export default function SolicitudCard({
                     href={waUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[13px] font-medium text-success-fg transition-colors hover:underline"
+                    className="inline-flex items-center gap-1 text-[0.8125rem] font-medium text-success-fg transition-colors hover:underline"
                     onClick={(event) => event.stopPropagation()}
                   >
                     <Icon icon="ph:whatsapp-logo" width={14} height={14} aria-hidden="true" />
@@ -142,17 +142,17 @@ export default function SolicitudCard({
             {solicitud.paraMenor ? (
               <div>
                 <DataLabel>Estudiante (menor)</DataLabel>
-                <div className="mt-1.5 text-[13px] text-foreground">
+                <div className="mt-1.5 text-[0.8125rem] text-foreground">
                   {solicitud.estudianteNombre ?? "—"}
                   {edad !== null ? ` · ${edad} años` : null}
                 </div>
                 {solicitud.parentesco ? (
-                  <div className="text-[13px] text-muted-foreground">
+                  <div className="text-[0.8125rem] text-muted-foreground">
                     Solicitante: {solicitud.parentesco}
                   </div>
                 ) : null}
                 {solicitud.estudianteFechaNacimiento ? (
-                  <div className="text-[12px] text-muted-foreground">
+                  <div className="text-[0.75rem] text-muted-foreground">
                     Nac. {formatDate(solicitud.estudianteFechaNacimiento)}
                   </div>
                 ) : null}
@@ -163,16 +163,16 @@ export default function SolicitudCard({
               <DataLabel>Consentimiento de datos</DataLabel>
               {solicitud.consentimientoDatos ? (
                 <div className="mt-1.5 space-y-0.5">
-                  <span className="flex items-center gap-1.5 text-[13px] text-success-fg">
+                  <span className="flex items-center gap-1.5 text-[0.8125rem] text-success-fg">
                     <Icon icon="ph:check" width={14} height={14} aria-hidden="true" />
                     Otorgado por {solicitud.consentimientoOtorgadoPor}
                   </span>
-                  <span className="block text-[12px] text-muted-foreground">
+                  <span className="block text-[0.75rem] text-muted-foreground">
                     {formatDateTimeShort(solicitud.consentimientoEn)}
                   </span>
                 </div>
               ) : (
-                <span className="mt-1.5 block text-[13px] text-muted-foreground">
+                <span className="mt-1.5 block text-[0.8125rem] text-muted-foreground">
                   No otorgado
                 </span>
               )}
@@ -180,8 +180,8 @@ export default function SolicitudCard({
           </div>
 
           <div className="mt-5 rounded-xl border border-border/40 bg-muted p-3">
-            <DataLabel className="text-[10px]">Notas internas</DataLabel>
-            <p className="mt-1.5 text-[13px] text-muted-foreground">
+            <DataLabel className="text-[0.625rem]">Notas internas</DataLabel>
+            <p className="mt-1.5 text-[0.8125rem] text-muted-foreground">
               {solicitud.notasInternas ?? "Sin notas aún — se le asignará seguimiento."}
             </p>
           </div>

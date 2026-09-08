@@ -15,7 +15,7 @@ export default function RevenueChart({ data }: IRevenueChartProps) {
           <h3 className="font-heading text-base font-bold tracking-tight text-foreground">Ingresos</h3>
           <p className="mt-0.5 text-xs text-muted-foreground">Últimos 6 meses</p>
         </div>
-        <span className="rounded-full bg-foreground/10 px-2.5 py-1 text-[11px] font-bold text-foreground">
+        <span className="rounded-full bg-foreground/10 px-2.5 py-1 text-[0.6875rem] font-bold text-foreground">
           6M
         </span>
       </div>

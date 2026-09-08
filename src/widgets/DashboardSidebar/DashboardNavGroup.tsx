@@ -22,7 +22,7 @@ export default function DashboardNavGroup({
         aria-expanded={isOpen}
         className={cn(
           "group flex w-full items-center gap-3 rounded-lg px-2.5 py-2.5 text-left transition-colors duration-150 select-none cursor-pointer",
-          "text-[13px] font-bold",
+          "text-[0.8125rem] font-bold",
           hasActiveChild ? "text-foreground" : "text-muted-foreground hover:text-foreground"
         )}
       >

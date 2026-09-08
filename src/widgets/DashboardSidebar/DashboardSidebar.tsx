@@ -35,7 +35,7 @@ export default function DashboardSidebar({ role, session, onNavigate }: IDashboa
             <span key={i} className={`w-[2.5px] rounded-[1px] bg-foreground ${h}`} />
           ))}
         </Link>
-        <span className="font-heading text-[15px] font-bold tracking-[0.2em] text-foreground">
+        <span className="font-heading text-[0.9375rem] font-bold tracking-[0.2em] text-foreground">
           GOSMEL
         </span>
       </div>
@@ -84,10 +84,10 @@ export default function DashboardSidebar({ role, session, onNavigate }: IDashboa
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <div className="truncate text-[13px] font-bold text-foreground">
+            <div className="truncate text-[0.8125rem] font-bold text-foreground">
               {label}
             </div>
-            <div className="text-[11px] font-medium text-muted-foreground">{ROLE_LABEL[role]}</div>
+            <div className="text-[0.6875rem] font-medium text-muted-foreground">{ROLE_LABEL[role]}</div>
           </div>
         </div>
       </div>
