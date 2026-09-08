@@ -19,4 +19,8 @@ export interface ISolicitudRow {
   estudianteFechaNacimiento: string | null;
   paraMenor: boolean;
   parentesco: TParentesco | null;
+  consentimientoDatos: boolean;
+  consentimientoEn: string;
+  consentimientoOtorgadoPor: string;
+  notasInternas: string | null;
 }

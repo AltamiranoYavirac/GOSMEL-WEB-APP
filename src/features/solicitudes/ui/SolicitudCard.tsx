@@ -4,7 +4,13 @@ import { Icon } from "@iconify/react";
 
 import { Badge, Button, DataLabel } from "@/shared/ui";
 import { cn } from "@/shared/lib/utils";
-import { formatDate, formatDateTime, initialsOf } from "@/shared/lib/formatters";
+import {
+  calculateAge,
+  formatDate,
+  formatDateTimeShort,
+  formatTimeAgo,
+  initialsOf,
+} from "@/shared/lib/formatters";
 
 import {
   SOLICITUD_ESTADO_BADGE,
@@ -13,12 +19,16 @@ import {
 } from "../model/solicitudes.constants";
 import type { ISolicitudCardProps } from "./SolicitudCard.types";
 
-const ESTADO_AVATAR: Record<string, string> = {
-  nueva: "bg-info-tint text-info-fg",
-  contactada: "bg-warning-tint text-warning-fg",
-  convertida: "bg-success-tint text-success-fg",
-  descartada: "bg-foreground/8 text-muted-foreground",
-};
+function getOrigenPath(url: string | null): string | null {
+  if (!url) return null;
+  try {
+    const { pathname } = new URL(url, "http://localhost");
+    const clean = pathname.replace(/^\/+/, "").replace(/\//g, " / ");
+    return clean || null;
+  } catch {
+    return url;
+  }
+}
 
 export default function SolicitudCard({
   solicitud,
@@ -34,11 +44,17 @@ export default function SolicitudCard({
   const tipo = SOLICITUD_TIPO_BADGE[solicitud.tipo];
   const siguiente = SOLICITUD_ESTADO_SIGUIENTE[solicitud.estado];
   const cerrada = solicitud.estado === "convertida" || solicitud.estado === "descartada";
+  const origenPath = getOrigenPath(solicitud.origenUrl);
+  const edad =
+    solicitud.paraMenor && solicitud.estudianteFechaNacimiento
+      ? calculateAge(solicitud.estudianteFechaNacimiento)
+      : null;
+  const puedeDescartar = solicitud.estado === "nueva" || solicitud.estado === "contactada";
 
   return (
     <div
       className={cn(
-        "rounded-2xl border bg-card transition-colors",
+        "rounded-2xl border bg-card text-card-foreground transition-colors",
         expanded ? "border-info-border" : "border-border",
         cerrada && "opacity-70"
       )}
@@ -49,12 +65,7 @@ export default function SolicitudCard({
         aria-expanded={expanded}
         className="flex w-full items-start gap-4 p-5 text-left"
       >
-        <span
-          className={cn(
-            "flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold",
-            ESTADO_AVATAR[solicitud.estado]
-          )}
-        >
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground/10 text-sm font-bold text-foreground">
           {initialsOf(solicitud.nombre)}
         </span>
 
@@ -67,12 +78,26 @@ export default function SolicitudCard({
               {solicitud.interes ? ` · ${solicitud.interes}` : ""}
             </Badge>
             <span className="ml-auto text-[11.5px] text-muted-foreground">
-              {formatDateTime(solicitud.fecha)}
+              {formatTimeAgo(solicitud.fecha)}
             </span>
           </span>
-          {solicitud.paraMenor ? (
-            <span className="mt-2 inline-flex">
-              <Badge variant="warning">Solicitud para menor</Badge>
+
+          {solicitud.mensaje ? (
+            <p className="mt-2 whitespace-pre-line text-[13px] text-foreground">
+              {solicitud.mensaje}
+            </p>
+          ) : null}
+
+          {solicitud.paraMenor || origenPath ? (
+            <span className="mt-2 flex flex-wrap items-center gap-2">
+              {solicitud.paraMenor ? (
+                <Badge variant="warning">Solicitud para menor</Badge>
+              ) : null}
+              {origenPath ? (
+                <span className="text-[11.5px] text-muted-foreground">
+                  vía formulario / {origenPath}
+                </span>
+              ) : null}
             </span>
           ) : null}
         </span>
@@ -87,60 +112,86 @@ export default function SolicitudCard({
       </button>
 
       {expanded ? (
-        <div className="border-t border-border bg-foreground/[0.015] px-5 py-4">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <div className="border-t border-border px-5 py-5">
+          <div
+            className={cn(
+              "grid gap-6",
+              solicitud.paraMenor ? "sm:grid-cols-3" : "sm:grid-cols-2"
+            )}
+          >
             <div>
               <DataLabel>Contacto</DataLabel>
-              <div className="mt-1.5 text-[13px] text-foreground">{solicitud.email}</div>
-              {solicitud.telefono ? (
-                <div className="text-[13px] text-foreground">{solicitud.telefono}</div>
-              ) : null}
+              <div className="mt-1.5 flex flex-col gap-0.5 text-[13px] text-foreground">
+                <span>{solicitud.email}</span>
+                {solicitud.telefono ? <span>{solicitud.telefono}</span> : null}
+                {waUrl ? (
+                  <a
+                    href={waUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[13px] font-medium text-success-fg transition-colors hover:underline"
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    <Icon icon="ph:whatsapp-logo" width={14} height={14} aria-hidden="true" />
+                    WhatsApp
+                  </a>
+                ) : null}
+              </div>
             </div>
+
             {solicitud.paraMenor ? (
               <div>
                 <DataLabel>Estudiante (menor)</DataLabel>
                 <div className="mt-1.5 text-[13px] text-foreground">
                   {solicitud.estudianteNombre ?? "—"}
+                  {edad !== null ? ` · ${edad} años` : null}
                 </div>
-                <div className="text-[13px] text-muted-foreground">
-                  {solicitud.estudianteFechaNacimiento
-                    ? `Nac. ${formatDate(solicitud.estudianteFechaNacimiento)}`
-                    : ""}
-                  {solicitud.parentesco ? ` · Solicitante: ${solicitud.parentesco}` : ""}
-                </div>
+                {solicitud.parentesco ? (
+                  <div className="text-[13px] text-muted-foreground">
+                    Solicitante: {solicitud.parentesco}
+                  </div>
+                ) : null}
+                {solicitud.estudianteFechaNacimiento ? (
+                  <div className="text-[12px] text-muted-foreground">
+                    Nac. {formatDate(solicitud.estudianteFechaNacimiento)}
+                  </div>
+                ) : null}
               </div>
             ) : null}
+
+            <div>
+              <DataLabel>Consentimiento de datos</DataLabel>
+              {solicitud.consentimientoDatos ? (
+                <div className="mt-1.5 space-y-0.5">
+                  <span className="flex items-center gap-1.5 text-[13px] text-success-fg">
+                    <Icon icon="ph:check" width={14} height={14} aria-hidden="true" />
+                    Otorgado por {solicitud.consentimientoOtorgadoPor}
+                  </span>
+                  <span className="block text-[12px] text-muted-foreground">
+                    {formatDateTimeShort(solicitud.consentimientoEn)}
+                  </span>
+                </div>
+              ) : (
+                <span className="mt-1.5 block text-[13px] text-muted-foreground">
+                  No otorgado
+                </span>
+              )}
+            </div>
           </div>
 
-          {solicitud.mensaje ? (
-            <div className="mt-4">
-              <DataLabel>Mensaje</DataLabel>
-              <p className="mt-1.5 whitespace-pre-line text-[13px] text-foreground">
-                {solicitud.mensaje}
-              </p>
-            </div>
-          ) : null}
-          {solicitud.origenUrl ? (
-            <div className="mt-3">
-              <a
-                href={solicitud.origenUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[13px] font-medium text-primary transition-colors hover:underline"
-              >
-                Origen
-                <Icon icon="ph:arrow-square-out" width={12} height={12} aria-hidden="true" />
-              </a>
-            </div>
-          ) : null}
+          <div className="mt-5 rounded-xl border border-border/40 bg-muted p-3">
+            <DataLabel className="text-[10px]">Notas internas</DataLabel>
+            <p className="mt-1.5 text-[13px] text-muted-foreground">
+              {solicitud.notasInternas ?? "Sin notas aún — se le asignará seguimiento."}
+            </p>
+          </div>
 
-          <div className="mt-4 flex flex-wrap gap-2.5">
+          <div className="mt-5 flex flex-wrap items-center gap-2.5">
             {siguiente ? (
               <Button
-                variant="outline"
+                variant="secondary"
                 size="sm"
                 disabled={busy}
-                className="border-info-border text-info-fg hover:bg-info-tint"
                 onClick={onMarkNext}
               >
                 Marcar {SOLICITUD_ESTADO_BADGE[siguiente].label}
@@ -149,22 +200,14 @@ export default function SolicitudCard({
             {!cerrada ? (
               <Button
                 size="sm"
-                className="bg-foreground text-background hover:bg-foreground/90"
+                className="bg-card-foreground text-card hover:bg-card-foreground/90"
                 onClick={onConvert}
               >
                 Convertir a matrícula
                 <Icon icon="ph:arrow-right" width={12} height={12} aria-hidden="true" />
               </Button>
             ) : null}
-            {waUrl ? (
-              <Button asChild variant="ghost" size="sm" className="text-success-fg">
-                <a href={waUrl} target="_blank" rel="noopener noreferrer">
-                  <Icon icon="ph:whatsapp-logo" width={16} height={16} aria-hidden="true" />
-                  WhatsApp
-                </a>
-              </Button>
-            ) : null}
-            {(solicitud.estado === "nueva" || solicitud.estado === "contactada") ? (
+            {puedeDescartar ? (
               <Button
                 variant="ghost"
                 size="sm"
