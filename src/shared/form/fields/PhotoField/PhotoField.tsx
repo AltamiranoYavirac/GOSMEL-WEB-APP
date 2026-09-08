@@ -4,7 +4,7 @@ import { useCallback, useState } from "react"
 import { Icon } from "@iconify/react"
 
 import { FileUpload } from "@/shared/ui"
-import { compressImageFile } from "@/shared/lib/utils/image-compression"
+import { compressImageFile } from "@/shared/lib/image-compression"
 import { useConnectedField } from "../useConnectedField"
 import type { IPhotoFieldProps } from "./PhotoField.types"
 

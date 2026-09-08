@@ -1,5 +1,5 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
-import { ensureDocenteRecord } from "@/shared/api/ensureDocenteRecord";
+import { ensureDocenteRecord } from "@/entities/docente";
 import type { TEstadoCatedra, TModalidadCurso } from "../model/catedra.types";
 
 export interface IUpdateCatedraInput {
