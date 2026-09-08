@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 
 import {
@@ -14,6 +14,7 @@ import {
   Button,
   Spinner,
 } from "@/shared/ui";
+import { cn } from "@/shared/lib/utils";
 import { DateField, Form, SelectField, SwitchField, TextField, useAppForm } from "@/shared/form";
 
 import { useCatedrasParaMatricula } from "../hooks/useCatedrasParaMatricula";
@@ -31,7 +32,9 @@ interface ICrearMatriculaDialogProps {
   onClose: () => void;
 }
 
-function buildDefaults(solicitud: ISolicitudRow): ICrearMatriculaFormValues {
+function buildValues(solicitud: ISolicitudRow | null): ICrearMatriculaFormValues {
+  if (!solicitud) return getCrearMatriculaFormDefaults();
+
   const nombreCompleto =
     solicitud.paraMenor && solicitud.estudianteNombre ? solicitud.estudianteNombre : solicitud.nombre;
   const parts = nombreCompleto.trim().split(/\s+/);
@@ -48,70 +51,118 @@ function buildDefaults(solicitud: ISolicitudRow): ICrearMatriculaFormValues {
   };
 }
 
+const STEPS = ["Elegir cátedra", "Confirmar datos"] as const;
+
 export default function CrearMatriculaDialog({ solicitud, onClose }: ICrearMatriculaDialogProps) {
-  const open = !!solicitud;
+  const open = solicitud !== null;
   const options = useCatedrasParaMatricula(open);
   const mutation = useCrearMatricula();
+  const [step, setStep] = useState<0 | 1>(0);
+
   const form = useAppForm<ICrearMatriculaFormValues>({
     schema: crearMatriculaFormSchema,
-    defaultValues: getCrearMatriculaFormDefaults(),
+    values: buildValues(solicitud),
+    resetOptions: { keepDirtyValues: false, keepErrors: false },
   });
   const paraMenor = form.watch("paraMenor");
 
-  useEffect(() => {
-    if (solicitud) {
-      form.reset(buildDefaults(solicitud));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [solicitud]);
+  const handleClose = () => {
+    setStep(0);
+    onClose();
+  };
+
+  const handleContinue = async () => {
+    const ok = await form.trigger("catedraId");
+    if (ok) setStep(1);
+  };
 
   const onSubmit = (values: ICrearMatriculaFormValues) => {
     if (!solicitud) return;
-    mutation.mutate(
-      { solicitudId: solicitud.id, values },
-      {
-        onSuccess: onClose,
-      }
-    );
+    mutation.mutate({ solicitudId: solicitud.id, values }, { onSuccess: handleClose });
   };
 
   return (
-    <AlertDialog open={open} onOpenChange={(next) => (next ? undefined : onClose())}>
-      <AlertDialogContent className="w-full max-w-2xl sm:max-w-3xl max-h-[90vh] overflow-y-auto p-6 sm:p-8">
+    <AlertDialog open={open} onOpenChange={(next) => (next ? null : handleClose())}>
+      <AlertDialogContent className="max-h-[90vh] w-full max-w-xl overflow-y-auto p-6 sm:p-7">
         <AlertDialogHeader>
-          <AlertDialogTitle>Crear matrícula</AlertDialogTitle>
+          <AlertDialogTitle>Convertir solicitud a matrícula</AlertDialogTitle>
           <AlertDialogDescription>
             {solicitud ? `${solicitud.nombre} · ${solicitud.interes ?? "—"}` : ""}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <Form form={form} onSubmit={onSubmit} id="crear-matricula" className="flex flex-col gap-4">
-          <SelectField
-            name="catedraId"
-            label="Cátedra"
-            placeholder="Seleccione una cátedra"
-            disabled={options.isPending}
-            options={(options.data ?? []).map((catedra) => ({ value: catedra.id, label: catedra.label }))}
-          />
+        <div className="flex items-center gap-2">
+          {STEPS.map((label, index) => (
+            <div key={label} className="flex flex-1 items-center gap-2">
+              <span
+                className={cn(
+                  "flex size-[22px] items-center justify-center rounded-full text-[11px] font-bold",
+                  index <= step ? "bg-foreground text-background" : "bg-foreground/10 text-muted-foreground"
+                )}
+              >
+                {index + 1}
+              </span>
+              <span
+                className={cn(
+                  "text-[12px] font-bold",
+                  index <= step ? "text-foreground" : "text-muted-foreground"
+                )}
+              >
+                {label}
+              </span>
+              {index === 0 ? <span className="h-px flex-1 bg-border" /> : null}
+            </div>
+          ))}
+        </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <TextField name="nombres" label="Nombres" />
-            <TextField name="apellidos" label="Apellidos" />
+        <Form form={form} onSubmit={onSubmit} id="crear-matricula" className="flex flex-col gap-4">
+          <div className={cn("flex flex-col gap-4", step === 0 ? "" : "hidden")}>
+            <SelectField
+              name="catedraId"
+              label="Cátedra"
+              placeholder="Seleccione una cátedra"
+              disabled={options.isPending}
+              options={(options.data ?? []).map((catedra) => ({ value: catedra.id, label: catedra.label }))}
+            />
           </div>
 
-          <DateField name="fechaNacimiento" label="Fecha de nacimiento" />
-
-          <SwitchField name="paraMenor" label="El estudiante es menor de edad" />
-
-          {paraMenor ? <SelectField name="parentesco" label="Parentesco" options={PARENTESCO_OPCIONES} /> : null}
+          <div className={cn("flex flex-col gap-4", step === 1 ? "" : "hidden")}>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <TextField name="nombres" label="Nombres" />
+              <TextField name="apellidos" label="Apellidos" />
+            </div>
+            <DateField name="fechaNacimiento" label="Fecha de nacimiento" />
+            <SwitchField name="paraMenor" label="El estudiante es menor de edad" />
+            {paraMenor ? (
+              <SelectField name="parentesco" label="Parentesco" options={PARENTESCO_OPCIONES} />
+            ) : null}
+            <p className="rounded-lg border border-info-border bg-info-tint px-3.5 py-2.5 text-[12px] leading-relaxed text-info-fg">
+              Al crear, la matrícula queda en estado <strong>pendiente</strong> y aparecerá en la cola de
+              aprobación. El monto mensual y el día de cobro se definen al aprobarla.
+            </p>
+          </div>
         </Form>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <Button form="crear-matricula" type="submit" disabled={mutation.isPending}>
-            {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:check" aria-hidden="true" />}
-            Crear matrícula
-          </Button>
+          {step === 0 ? (
+            <>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <Button type="button" onClick={handleContinue}>
+                Continuar
+                <Icon icon="ph:arrow-right" width={12} height={12} aria-hidden="true" />
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button type="button" variant="ghost" onClick={() => setStep(0)}>
+                Atrás
+              </Button>
+              <Button form="crear-matricula" type="submit" disabled={mutation.isPending}>
+                {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:check" aria-hidden="true" />}
+                Crear matrícula pendiente
+              </Button>
+            </>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

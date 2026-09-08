@@ -21,20 +21,19 @@ export default async function DashboardOverview() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <DashboardWelcome adminName={data.adminName} solicitudesPendientes={data.solicitudesPendientes} />
 
       <KpiCardGrid kpis={data.kpis} />
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <div className="xl:col-span-2">
+      <div className="grid grid-cols-1 gap-3.5 lg:grid-cols-3">
+        <div className="lg:col-span-2">
           <RevenueChart data={data.revenue} />
         </div>
         <SolicitudesStatusChart data={data.solicitudesPorEstado} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <InstrumentDemandChart data={data.instrumentosDemandados} />
+      <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
         <RecentActivityList
           title="Solicitudes recientes"
           emptyText="Aún no han llegado solicitudes."
@@ -48,6 +47,8 @@ export default async function DashboardOverview() {
           viewAllHref="/dashboard/admin/pagos"
         />
       </div>
+
+      <InstrumentDemandChart data={data.instrumentosDemandados} />
     </div>
   );
 }

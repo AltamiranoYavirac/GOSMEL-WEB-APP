@@ -8,6 +8,6 @@ export const activityBadgeVariants = tv({
     tone: ACCENT_TONE_BADGE,
   },
   defaultVariants: {
-    tone: "primary",
+    tone: "neutral",
   },
 });

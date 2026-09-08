@@ -3,24 +3,28 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { rechazarSolicitudMatricula } from "../api/rechazarSolicitudMatricula";
+import { rechazarMatricula } from "../api/rechazarMatricula";
+import { matriculasQueryKeys } from "../model/query-keys";
 
-export function useRechazarSolicitudMatricula(catedraId?: string) {
+export interface IRechazarMatriculaArgs {
+  inscripcionId: string;
+  motivo: string;
+}
+
+export function useRechazarMatricula() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (inscripcionId: string) => {
-      const { error } = await rechazarSolicitudMatricula(inscripcionId);
+    mutationFn: async ({ inscripcionId, motivo }: IRechazarMatriculaArgs) => {
+      const { error } = await rechazarMatricula(inscripcionId, motivo);
       if (error) throw new Error(error);
     },
     onSuccess: () => {
-      if (catedraId) {
-        queryClient.invalidateQueries({ queryKey: ["catedras", catedraId, "estudiantes"] });
-      }
+      queryClient.invalidateQueries({ queryKey: matriculasQueryKeys.all });
       queryClient.invalidateQueries({ queryKey: ["catedras"] });
       queryClient.invalidateQueries({ queryKey: ["estudiantes"] });
       queryClient.invalidateQueries({ queryKey: ["student-portal"] });
-      toast.success("Solicitud de matrícula descartada");
+      toast.success("Matrícula rechazada");
     },
     onError: (error) => toast.error(error.message),
   });

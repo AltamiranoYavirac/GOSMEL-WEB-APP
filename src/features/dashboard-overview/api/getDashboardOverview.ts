@@ -18,10 +18,10 @@ const SOLICITUD_ESTADO_LABEL: Record<ISolicitudEstadoCount["estado"], string> = 
 };
 
 const SOLICITUD_TIPO_BADGE: Record<string, { label: string; tone: TAccentTone }> = {
-  clase_prueba: { label: "Clase de prueba", tone: "violet" },
-  admision: { label: "Admisión", tone: "primary" },
-  masterclass: { label: "Masterclass", tone: "accent" },
-  contacto_general: { label: "Contacto general", tone: "secondary" },
+  clase_prueba: { label: "Clase de prueba", tone: "info" },
+  admision: { label: "Admisión", tone: "neutral" },
+  masterclass: { label: "Masterclass", tone: "warning" },
+  contacto_general: { label: "Contacto general", tone: "neutral" },
 };
 
 const MONTH_LABEL = new Intl.DateTimeFormat("es", { month: "short" });
@@ -224,7 +224,7 @@ export async function getDashboardOverview(): Promise<{
     const fecha = new Date(solicitud.created_at);
     const badge = SOLICITUD_TIPO_BADGE[solicitud.tipo] ?? {
       label: solicitud.tipo.replaceAll("_", " "),
-      tone: "secondary" as TAccentTone,
+      tone: "neutral" as TAccentTone,
     };
     return {
       id: solicitud.id,
@@ -247,7 +247,7 @@ export async function getDashboardOverview(): Promise<{
       meta: formatActivityMeta(new Date(pago.fecha_pago)),
       href: "/dashboard/admin/pagos",
       initials: initialsOf(nombre),
-      badge: { label: "Pago", tone: "primary" },
+      badge: { label: "Pago", tone: "success" },
     };
   });
 
@@ -264,7 +264,7 @@ export async function getDashboardOverview(): Promise<{
           format: "number",
           icon: "ph:students",
           href: "/dashboard/admin/estudiantes",
-          tone: "violet",
+          tone: "info",
           spark: estudiantesSpark,
         },
         {
@@ -273,7 +273,7 @@ export async function getDashboardOverview(): Promise<{
           format: "number",
           icon: "ph:chalkboard-teacher",
           href: "/dashboard/admin/docentes",
-          tone: "primary",
+          tone: "neutral",
         },
         {
           label: "Solicitudes pendientes",
@@ -281,7 +281,7 @@ export async function getDashboardOverview(): Promise<{
           format: "number",
           icon: "ph:tray",
           href: "/dashboard/admin/solicitudes",
-          tone: "secondary",
+          tone: "warning",
           trend: percentChange(solicitudesUltimos7.count ?? 0, solicitudesPrevios7.count ?? 0),
           trendLabel: "últimos 7 días",
         },
@@ -291,7 +291,7 @@ export async function getDashboardOverview(): Promise<{
           format: "currency",
           icon: "ph:currency-circle-dollar",
           href: "/dashboard/admin/pagos",
-          tone: "accent",
+          tone: "success",
           trend: percentChange(ingresosDelMes, ingresosMesAnterior),
           trendLabel: "vs mes anterior",
           spark: revenueSpark,
@@ -302,7 +302,7 @@ export async function getDashboardOverview(): Promise<{
           format: "number",
           icon: "ph:chalkboard",
           href: "/dashboard/admin/catedras",
-          tone: "primary",
+          tone: "neutral",
         },
         {
           label: "Cuotas vencidas",
@@ -310,7 +310,7 @@ export async function getDashboardOverview(): Promise<{
           format: "number",
           icon: "ph:warning-circle",
           href: "/dashboard/admin/cuotas",
-          tone: "destructive",
+          tone: "danger",
           pill: cuotasVencidas.count ? "Requieren atención" : undefined,
         },
         {
@@ -319,15 +319,15 @@ export async function getDashboardOverview(): Promise<{
           format: "number",
           icon: "ph:calendar-check",
           href: "/dashboard/admin/horarios",
-          tone: "violet",
+          tone: "info",
         },
         {
           label: "Inscripciones del mes",
           value: inscripcionesDelMes.count ?? 0,
           format: "number",
           icon: "ph:user-plus",
-          href: "/dashboard/admin/catedras",
-          tone: "secondary",
+          href: "/dashboard/admin/matriculas",
+          tone: "neutral",
           trend: percentChange(inscripcionesDelMes.count ?? 0, inscripcionesMesAnterior.count ?? 0),
           trendLabel: "vs mes anterior",
         },

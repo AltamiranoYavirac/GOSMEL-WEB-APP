@@ -7,5 +7,7 @@ export interface IDashboardNavItem {
 
 export interface IDashboardNavGroup {
   label: string
-  items: IDashboardNavItem[]
+  icon?: string
+  href?: string
+  items?: IDashboardNavItem[]
 }

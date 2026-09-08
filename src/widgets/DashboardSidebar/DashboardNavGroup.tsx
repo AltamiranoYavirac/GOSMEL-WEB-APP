@@ -12,40 +12,37 @@ export default function DashboardNavGroup({
   onToggle,
   onNavigate,
 }: IDashboardNavGroupProps) {
+  const items = group.items ?? [];
+
   return (
-    <div className="space-y-1">
+    <div>
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
         className={cn(
-          "group flex w-full items-center justify-between rounded-xl px-3 py-2 text-left transition-all duration-200 select-none cursor-pointer",
-          "hover:bg-background/60 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary/40",
-          hasActiveChild && !isOpen && "bg-background/40"
+          "group flex w-full items-center gap-3 rounded-lg px-2.5 py-2.5 text-left transition-colors duration-150 select-none cursor-pointer",
+          "text-[13px] font-bold",
+          hasActiveChild ? "text-foreground" : "text-muted-foreground hover:text-foreground"
         )}
       >
-        <div className="flex items-center gap-2">
-          {hasActiveChild && (
-            <span className="size-1.5 rounded-full bg-primary animate-pulse" />
-          )}
-          <span
-            className={cn(
-              "text-[10px] font-mono font-bold uppercase tracking-[0.25em] transition-colors",
-              hasActiveChild
-                ? "text-primary"
-                : "text-muted-foreground/70 group-hover:text-foreground"
-            )}
-          >
-            {group.label}
-          </span>
-        </div>
+        {group.icon ? (
+          <Icon
+            icon={group.icon}
+            width={16}
+            height={16}
+            aria-hidden="true"
+            className="shrink-0"
+          />
+        ) : null}
+        <span className="flex-1 truncate">{group.label}</span>
         <Icon
           icon="ph:caret-down"
-          width={14}
-          height={14}
+          width={12}
+          height={12}
           aria-hidden="true"
           className={cn(
-            "text-muted-foreground/60 transition-transform duration-200 group-hover:text-foreground",
+            "text-muted-foreground/60 transition-transform duration-200",
             isOpen ? "rotate-0" : "-rotate-90"
           )}
         />
@@ -59,14 +56,13 @@ export default function DashboardNavGroup({
             : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none"
         )}
       >
-        <div className="overflow-hidden space-y-1">
-          {group.items.map((item) => (
-            <DashboardNavLink
-              key={item.href}
-              item={item}
-              onNavigate={onNavigate}
-            />
-          ))}
+        <div className="overflow-hidden">
+          <div className="relative ml-5 space-y-0.5 pl-3">
+            <span className="absolute left-0 top-0 bottom-2 w-px bg-border" aria-hidden="true" />
+            {items.map((item) => (
+              <DashboardNavLink key={item.href} item={item} onNavigate={onNavigate} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
