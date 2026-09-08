@@ -94,7 +94,7 @@ export function ImageUploadField({
 
       {previewUrl ? (
         <div className="relative overflow-hidden rounded-xl border border-border bg-card p-2">
-          <div className="relative h-44 w-full overflow-hidden rounded-lg bg-black/5 dark:bg-white/5">
+          <div className="relative h-44 w-full overflow-hidden rounded-lg bg-accent-muted">
             <Image
               src={previewUrl}
               alt="Vista previa de portada"
@@ -103,7 +103,7 @@ export function ImageUploadField({
               className="object-cover"
             />
             {uploading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/60 backdrop-blur-xs text-white">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-scrim-strong backdrop-blur-xs text-surface-dark-foreground">
                 <Spinner className="size-6" />
                 <span className="text-xs font-medium">Subiendo foto a Cloudinary...</span>
               </div>

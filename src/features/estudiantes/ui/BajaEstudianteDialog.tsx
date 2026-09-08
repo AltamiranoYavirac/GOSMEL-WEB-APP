@@ -53,7 +53,7 @@ export default function BajaEstudianteDialog({
       <AlertDialogContent className="w-full max-w-xl sm:max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-8">
         <form onSubmit={handleSubmit} className="space-y-4">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-rose-600 dark:text-rose-400">
+            <AlertDialogTitle className="text-destructive">
               Tramitar Baja Administrativa
             </AlertDialogTitle>
             <AlertDialogDescription>

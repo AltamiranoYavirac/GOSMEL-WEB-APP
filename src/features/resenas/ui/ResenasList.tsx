@@ -38,7 +38,7 @@ export default function ResenasList() {
       label: "Puntuación",
       render: (row) => (
         <div className="flex items-center gap-1">
-          <Icon icon="ph:star-fill" className="size-4 text-amber-500" aria-hidden="true" />
+          <Icon icon="ph:star-fill" className="size-4 text-warning" aria-hidden="true" />
           <span className="font-semibold">{row.puntuacion}</span>
           <span className="text-xs text-muted-foreground">/ 5</span>
         </div>

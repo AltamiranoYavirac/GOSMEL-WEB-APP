@@ -18,10 +18,10 @@ export function activityIcon(tipo: string) {
   return "ph:bell-ringing";
 }
 
-export type TNotificationTone = "violet" | "destructive" | "primary" | "secondary";
+export type TNotificationTone = "info" | "destructive" | "primary" | "secondary";
 
 export const SECTION_TONE: Record<TNotificationTone, string> = {
-  violet: "text-violet-600 dark:text-violet-400",
+  info: "text-info-fg",
   destructive: "text-destructive",
   primary: "text-primary-700 dark:text-primary-300",
   secondary: "text-secondary-800 dark:text-secondary-300",

@@ -155,8 +155,8 @@ export function FileUpload({
                   unoptimized
                   className="object-cover"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-opacity group-hover:bg-black/40 group-hover:opacity-100">
-                  <span className="flex items-center gap-1.5 text-sm font-semibold text-white">
+                <div className="absolute inset-0 flex items-center justify-center bg-scrim-strong/0 opacity-0 transition-opacity group-hover:bg-scrim-strong group-hover:opacity-100">
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-surface-dark-foreground">
                     <Icon icon="ph:pencil-simple" className="size-3.5" aria-hidden="true" /> Cambiar
                   </span>
                 </div>

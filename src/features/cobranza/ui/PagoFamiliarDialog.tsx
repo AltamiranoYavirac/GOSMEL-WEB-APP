@@ -297,7 +297,7 @@ export default function PagoFamiliarDialog({
           </div>
         ) : (cuotas ?? []).length === 0 ? (
           <div className="p-8 rounded-2xl bg-background/50 border border-border/60 text-center space-y-2">
-            <Icon icon="ph:check-circle" width={32} height={32} className="mx-auto text-emerald-500" />
+            <Icon icon="ph:check-circle" width={32} height={32} className="mx-auto text-success-fg" />
             <p className="text-sm font-semibold text-foreground">Familia al día</p>
             <p className="text-xs text-muted-foreground">Esta familia no tiene cuotas pendientes ni saldos en mora registrados.</p>
           </div>
