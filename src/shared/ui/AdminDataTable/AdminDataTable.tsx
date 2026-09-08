@@ -12,10 +12,10 @@ const DEFAULT_PAGE_SIZE = 10;
 
 function chipClasses(active: boolean) {
   return cn(
-    "shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider transition-all",
+    "shrink-0 rounded-full px-4 py-2 text-xs font-bold transition-colors",
     active
-      ? "border border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
-      : "border border-white/60 dark:border-white/5 bg-background shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_2px_6px_rgba(169,146,125,0.18)] dark:shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),2px_2px_6px_rgba(0,0,0,0.5)] text-muted-foreground hover:text-foreground"
+      ? "bg-foreground/10 text-foreground"
+      : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
   );
 }
 
@@ -55,7 +55,7 @@ export default function AdminDataTable<T>({
   const pageRows = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
 
   return (
-    <div className="overflow-hidden rounded-3xl bg-background border border-white/60 dark:border-white/5 shadow-[-8px_-8px_20px_rgba(255,255,255,0.9),8px_8px_20px_rgba(169,146,125,0.22)] dark:shadow-[-8px_-8px_20px_rgba(255,255,255,0.04),8px_8px_22px_rgba(0,0,0,0.65)] flex flex-col">
+    <div className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card">
       <div className="flex flex-col gap-4 p-6">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           {filters ? (
@@ -89,7 +89,7 @@ export default function AdminDataTable<T>({
               placeholder={searchPlaceholder}
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              className="w-full lg:w-72 rounded-2xl border-border/80"
+              className="w-full rounded-[9px] border-border bg-sidebar lg:w-72"
             />
           ) : null}
         </div>
@@ -156,7 +156,7 @@ export default function AdminDataTable<T>({
       </div>
 
       {!loading && filtered.length > pageSize ? (
-        <div className="flex items-center justify-between border-t border-border/80 px-6 py-4">
+        <div className="flex items-center justify-between border-t border-border px-6 py-4">
           <p className="font-mono text-xs text-muted-foreground">
             {filtered.length} {countLabel}
           </p>
@@ -167,7 +167,7 @@ export default function AdminDataTable<T>({
               disabled={safePage === 1}
               onClick={() => setPage(safePage - 1)}
               aria-label="Página anterior"
-              className="rounded-xl border-white/60 dark:border-white/5 bg-background shadow-[-1px_-1px_3px_rgba(255,255,255,0.8),1px_1px_3px_rgba(169,146,125,0.15)] dark:shadow-[-1px_-1px_3px_rgba(255,255,255,0.02),1px_1px_3px_rgba(0,0,0,0.4)]"
+              className="rounded-lg border-border"
             >
               <Icon icon="ph:caret-left" aria-hidden="true" />
             </Button>
@@ -180,7 +180,7 @@ export default function AdminDataTable<T>({
               disabled={safePage === totalPages}
               onClick={() => setPage(safePage + 1)}
               aria-label="Página siguiente"
-              className="rounded-xl border-white/60 dark:border-white/5 bg-background shadow-[-1px_-1px_3px_rgba(255,255,255,0.8),1px_1px_3px_rgba(169,146,125,0.15)] dark:shadow-[-1px_-1px_3px_rgba(255,255,255,0.02),1px_1px_3px_rgba(0,0,0,0.4)]"
+              className="rounded-lg border-border"
             >
               <Icon icon="ph:caret-right" aria-hidden="true" />
             </Button>

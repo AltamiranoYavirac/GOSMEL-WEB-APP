@@ -1,4 +1,4 @@
-export type TAccentTone = "primary" | "secondary" | "accent" | "violet" | "destructive";
+export type TAccentTone = "info" | "warning" | "success" | "danger" | "neutral";
 
 export interface IDashboardKpi {
   label: string;

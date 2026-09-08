@@ -4,20 +4,18 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 import type { ISolicitudesStatusChartProps } from "./SolicitudesStatusChart.types";
 
-const COLORS = ["var(--color-primary-500)", "var(--color-secondary-500)", "var(--color-accent-500)", "var(--color-muted-foreground)"];
+const COLORS = ["var(--color-info)", "var(--color-warning)", "var(--color-success)", "var(--color-muted-foreground)"];
 
 export default function SolicitudesStatusChart({ data }: ISolicitudesStatusChartProps) {
   const total = data.reduce((sum, item) => sum + item.total, 0);
 
   return (
-    <div className="h-full rounded-3xl bg-background border border-white/60 dark:border-white/5 shadow-[-8px_-8px_20px_rgba(255,255,255,0.9),8px_8px_20px_rgba(169,146,125,0.22)] dark:shadow-[-8px_-8px_20px_rgba(255,255,255,0.04),8px_8px_22px_rgba(0,0,0,0.65)] p-6 sm:p-8 flex flex-col justify-between gap-6">
-      <div className="flex items-center justify-between">
-        <h3 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground">
+    <div className="flex h-full flex-col justify-between gap-6 rounded-2xl border border-border bg-card p-5 sm:p-6">
+      <div>
+        <h3 className="font-heading text-base font-bold tracking-tight text-foreground">
           Solicitudes por estado
         </h3>
-        <span className="font-mono text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
-          Resumen
-        </span>
+        <p className="mt-0.5 text-xs text-muted-foreground">Este mes</p>
       </div>
 
       <div>

@@ -4,10 +4,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { aprobarMatricula } from "../api/aprobarMatricula";
-import { catedrasQueryKeys } from "../model/query-keys";
+import { matriculasQueryKeys } from "../model/query-keys";
 import type { IAprobarMatriculaFormValues } from "../model/AprobarMatriculaForm.config";
 
-export function useAprobarMatricula(catedraId: string) {
+export function useAprobarMatricula() {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -22,9 +22,8 @@ export function useAprobarMatricula(catedraId: string) {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: catedrasQueryKeys.list() });
-      queryClient.invalidateQueries({ queryKey: catedrasQueryKeys.inscripcionesPendientes(catedraId) });
-      queryClient.invalidateQueries({ queryKey: ["catedras", catedraId, "estudiantes"] });
+      queryClient.invalidateQueries({ queryKey: matriculasQueryKeys.all });
+      queryClient.invalidateQueries({ queryKey: ["catedras"] });
       queryClient.invalidateQueries({ queryKey: ["estudiantes"] });
       queryClient.invalidateQueries({ queryKey: ["student-portal"] });
       queryClient.invalidateQueries({ queryKey: ["acuerdos"] });

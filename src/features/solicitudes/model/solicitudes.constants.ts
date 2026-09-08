@@ -13,10 +13,10 @@ export const SOLICITUD_ESTADO_BADGE: Record<
   TSolicitudEstado,
   { label: string; variant: TBadgeVariant }
 > = {
-  nueva: { label: "Nueva", variant: "warning" },
-  contactada: { label: "Contactada", variant: "outline" },
+  nueva: { label: "Nueva", variant: "info" },
+  contactada: { label: "Contactada", variant: "warning" },
   convertida: { label: "Convertida", variant: "success" },
-  descartada: { label: "Descartada", variant: "destructive" },
+  descartada: { label: "Descartada", variant: "ghost" },
 };
 
 export const SOLICITUD_ESTADO_SIGUIENTE: Partial<Record<TSolicitudEstado, TSolicitudEstado>> = {
