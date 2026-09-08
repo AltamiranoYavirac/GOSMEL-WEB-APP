@@ -1,20 +1,26 @@
 import { redirect } from "next/navigation"
 
-import { createSupabaseServerClient } from "@/shared/api/supabase/server"
-import { resolvePrimaryRole, type TRol } from "@/entities/user"
+import { getServerSession } from "@/features/session/server"
+import { resolvePrimaryRole } from "@/entities/user"
 
 import DashboardShell from "./_components/DashboardShell"
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createSupabaseServerClient()
-  const { data, error } = await supabase.auth.getClaims()
+  const sessionResult = await getServerSession()
 
-  if (error || !data) {
+  if (sessionResult.kind === "error") {
+    throw new Error(sessionResult.error)
+  }
+
+  if (sessionResult.kind === "anonymous") {
     redirect("/login")
   }
 
-  const roles = (data.claims.user_roles as TRol[] | undefined) ?? []
-  const role = resolvePrimaryRole(roles)
+  if (!sessionResult.data.isActive) {
+    redirect("/auth/signout?reason=inactive")
+  }
 
-  return <DashboardShell role={role}>{children}</DashboardShell>
+  const role = resolvePrimaryRole(sessionResult.data.roles)
+
+  return <DashboardShell role={role} session={sessionResult.data}>{children}</DashboardShell>
 }

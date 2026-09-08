@@ -20,7 +20,7 @@ import {
 
 import type { IDashboardTopbarProps } from "./DashboardTopbar.types";
 
-export default function DashboardTopbar({ role, onMenuClick, onToggleSidebar }: IDashboardTopbarProps) {
+export default function DashboardTopbar({ role, session, onMenuClick, onToggleSidebar }: IDashboardTopbarProps) {
   const pathname = usePathname();
   const groups = DASHBOARD_NAV[role];
   const sectionLabel = getDashboardSectionLabel(pathname, groups);
@@ -77,7 +77,7 @@ export default function DashboardTopbar({ role, onMenuClick, onToggleSidebar }: 
         {isAdmin ? <QuickActionsMenu /> : null}
         {isAdmin ? <NotificationsMenu /> : null}
         <ThemeToggle />
-        <SessionUserMenu />
+        <SessionUserMenu session={session} />
       </div>
     </header>
   );

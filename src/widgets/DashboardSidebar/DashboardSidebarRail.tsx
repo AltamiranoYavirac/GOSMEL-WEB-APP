@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { Icon } from "@iconify/react";
 
 import { DASHBOARD_NAV, DASHBOARD_NAV_FOOTER } from "@/entities/user";
-import { useSession } from "@/features/session";
 import { Avatar, AvatarFallback } from "@/shared/ui";
 import { cn } from "@/shared/lib/utils";
 
@@ -13,13 +12,12 @@ import type { IDashboardSidebarRailProps } from "./DashboardSidebarRail.types";
 
 const BAR_HEIGHTS = ["h-2", "h-3.5", "h-2.5", "h-4"];
 
-export default function DashboardSidebarRail({ role, onExpand }: IDashboardSidebarRailProps) {
+export default function DashboardSidebarRail({ role, session, onExpand }: IDashboardSidebarRailProps) {
   const pathname = usePathname();
   const groups = DASHBOARD_NAV[role];
   const footerLinks = DASHBOARD_NAV_FOOTER[role];
-  const session = useSession();
-
-  const initials = (session.data?.email ?? "").slice(0, 2).toUpperCase() || "?";
+  const label = session.displayName || session.email || "Usuario";
+  const initials = label.slice(0, 2).toUpperCase() || "?";
 
   const isGroupActive = (hrefs: string[]) =>
     hrefs.some((href) => pathname === href || pathname.startsWith(`${href}/`));
