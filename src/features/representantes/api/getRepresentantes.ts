@@ -1,1 +1,0 @@
-export { getRepresentantes } from "@/entities/representante";
