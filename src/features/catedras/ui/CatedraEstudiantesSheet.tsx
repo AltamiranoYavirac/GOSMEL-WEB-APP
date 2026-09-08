@@ -125,7 +125,6 @@ export default function CatedraEstudiantesSheet({
                       {data.pendientes.map((solicitud) => (
                         <CatedraSolicitudItemCard
                           key={solicitud.inscripcionId}
-                          catedraId={catedra.id}
                           solicitud={solicitud}
                         />
                       ))}

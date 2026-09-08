@@ -138,6 +138,23 @@
   --color-stage-accent:            var(--stage-accent);
   --color-success:                 var(--success);
   --color-violet-tint:             var(--violet-tint);
+
+  /* ─── estado — semánticos (no marca): info / warning / success / danger ─── */
+  --color-info:            var(--info);
+  --color-info-fg:         var(--info-fg);
+  --color-info-tint:       var(--info-tint);
+  --color-info-border:     var(--info-border);
+  --color-warning:         var(--warning);
+  --color-warning-fg:      var(--warning-fg);
+  --color-warning-tint:    var(--warning-tint);
+  --color-warning-border:  var(--warning-border);
+  --color-success-fg:      var(--success-fg);
+  --color-success-tint:    var(--success-tint);
+  --color-success-border:  var(--success-border);
+  --color-danger:          var(--danger);
+  --color-danger-fg:       var(--danger-fg);
+  --color-danger-tint:     var(--danger-tint);
+  --color-danger-border:   var(--danger-border);
 }
 
 :root {
@@ -187,15 +204,31 @@
   --primary-tint-strong:     #e8bd84;
   --stage-accent:            #e8bd84;
   --violet-tint:             oklch(0.945 0.03 300);
-  --success:                 oklch(0.55 0.13 155);
+
+  --info:            #3b82f6;
+  --info-fg:         #1d4ed8;
+  --info-tint:       rgb(59 130 246 / 0.12);
+  --info-border:     rgb(59 130 246 / 0.28);
+  --warning:         #f59e0b;
+  --warning-fg:      #b45309;
+  --warning-tint:    rgb(245 158 11 / 0.14);
+  --warning-border:  rgb(245 158 11 / 0.30);
+  --success:         #16a34a;
+  --success-fg:      #15803d;
+  --success-tint:    rgb(34 197 94 / 0.14);
+  --success-border:  rgb(34 197 94 / 0.30);
+  --danger:          #ef4444;
+  --danger-fg:       #b91c1c;
+  --danger-tint:     rgb(239 68 68 / 0.12);
+  --danger-border:   rgb(239 68 68 / 0.28);
 }
 
 .dark {
   --background:            #000000;
   --foreground:            #f2f0ec;
-  --card:                  #0d0d0f;
+  --card:                  #131416;
   --card-foreground:       #f2f0ec;
-  --popover:               #0d0d0f;
+  --popover:               #131416;
   --popover-foreground:    #f2f0ec;
   --primary:               #d9a15a;
   --primary-foreground:    #161206;
@@ -217,7 +250,7 @@
   --chart-6:               oklch(0.72 0.16 300);
   --chart-7:               oklch(0.62 0.16 300);
   --radius: 0.75rem;
-  --sidebar:               #0d0d0f;
+  --sidebar:               #0a0a0c;
   --sidebar-foreground:    #f2f0ec;
   --sidebar-primary:       #d9a15a;
   --sidebar-primary-foreground: #161206;
@@ -237,7 +270,23 @@
   --primary-tint-strong:     rgb(217 161 90 / 0.22);
   --stage-accent:            #d9a15a;
   --violet-tint:             oklch(0.30 0.06 300);
-  --success:                 oklch(0.75 0.13 155);
+
+  --info:            #3b82f6;
+  --info-fg:         #60a5fa;
+  --info-tint:       rgb(59 130 246 / 0.14);
+  --info-border:     rgb(59 130 246 / 0.25);
+  --warning:         #f59e0b;
+  --warning-fg:      #fbbf24;
+  --warning-tint:    rgb(245 158 11 / 0.14);
+  --warning-border:  rgb(245 158 11 / 0.25);
+  --success:         #22c55e;
+  --success-fg:      #4ade80;
+  --success-tint:    rgb(34 197 94 / 0.14);
+  --success-border:  rgb(34 197 94 / 0.25);
+  --danger:          #ef4444;
+  --danger-fg:       #f87171;
+  --danger-tint:     rgb(239 68 68 / 0.14);
+  --danger-border:   rgb(239 68 68 / 0.25);
 }
 
 @layer base {
@@ -321,6 +370,20 @@
 
 .dark .bg-auth-canvas {
   background: radial-gradient(circle at 50% 0%, color-mix(in oklch, var(--color-primary-tint) 45%, var(--color-background)) 0%, var(--color-background) 60%);
+}
+
+.bg-grid-faint {
+  background-image:
+    linear-gradient(color-mix(in oklch, var(--color-secondary-400) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklch, var(--color-secondary-400) 22%, transparent) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.dark .bg-grid-faint {
+  background-image:
+    linear-gradient(rgb(242 240 236 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(242 240 236 / 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
 .landing-scroll {

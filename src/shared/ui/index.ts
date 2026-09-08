@@ -79,6 +79,8 @@ export { AdminPageHeader } from "./AdminPageHeader";
 export type { IAdminPageHeaderProps } from "./AdminPageHeader";
 export { AdminDataTable } from "./AdminDataTable";
 export type { IAdminColumn, IAdminDataTableFilter, IAdminDataTableProps } from "./AdminDataTable";
+export { DataLabel } from "./DataLabel";
+export type { IDataLabelProps } from "./DataLabel";
 export { default as SocialAuthButtons } from "./SocialAuthButtons";
 export { default as IconTile } from "./IconTile";
 export { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination";

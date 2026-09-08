@@ -13,8 +13,13 @@ export * from "./hooks/useCrearCatedra";
 export * from "./hooks/useUpdateCatedra";
 export * from "./hooks/useGenerarSesionesCatedra";
 export * from "./hooks/useCatedraOptions";
-export * from "./hooks/useInscripcionesPendientes";
 export * from "./hooks/useCatedraEstudiantes";
 export * from "./hooks/useEliminarInscripcionCatedra";
-export * from "./hooks/useRechazarSolicitudMatricula";
-export * from "./hooks/useAprobarMatricula";
+export {
+  useInscripcionesPendientes,
+  useAprobarMatricula,
+  useRechazarMatricula,
+  aprobarMatriculaFormSchema,
+  getAprobarMatriculaFormDefaults,
+} from "@/entities/matricula";
+export type { IInscripcionPendiente, IAprobarMatriculaFormValues } from "@/entities/matricula";

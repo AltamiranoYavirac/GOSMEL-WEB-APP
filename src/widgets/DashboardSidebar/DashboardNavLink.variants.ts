@@ -1,11 +1,11 @@
 import { tv } from "tailwind-variants";
 
 export const dashboardNavLinkVariants = tv({
-  base: "relative flex items-center gap-3 rounded-2xl px-3.5 py-2.5 text-xs uppercase tracking-wider font-bold transition-all duration-200",
+  base: "relative flex items-center gap-3 rounded-lg px-2.5 py-2 text-[12.5px] font-semibold transition-colors duration-150",
   variants: {
     active: {
-      true: "bg-background text-primary border border-white/60 dark:border-white/5 shadow-[-2px_-2px_6px_rgba(255,255,255,0.8),2px_2px_6px_rgba(169,146,125,0.18)] dark:shadow-[-2px_-2px_6px_rgba(255,255,255,0.03),2px_2px_6px_rgba(0,0,0,0.5)]",
-      false: "text-muted-foreground hover:text-foreground hover:bg-background/50 hover:shadow-xs",
+      true: "bg-foreground/10 text-foreground font-bold",
+      false: "text-muted-foreground hover:bg-foreground/5 hover:text-foreground",
     },
   },
   defaultVariants: {
@@ -14,11 +14,11 @@ export const dashboardNavLinkVariants = tv({
 });
 
 export const dashboardNavIconVariants = tv({
-  base: "shrink-0 size-4.5 transition-transform duration-200 group-hover:scale-110",
+  base: "shrink-0 size-4 transition-colors duration-150",
   variants: {
     active: {
-      true: "text-primary",
-      false: "text-muted-foreground group-hover:text-primary",
+      true: "text-foreground",
+      false: "text-muted-foreground group-hover:text-foreground",
     },
   },
   defaultVariants: {
