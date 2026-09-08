@@ -60,11 +60,14 @@ porque solo lee; `courses-admin` usa browser client porque además crea/edita/bo
 api/
   getCursos.ts       # listar
   getCursoById.ts     # obtener uno
-  createCurso.ts       # crear
+  crearCurso.ts        # crear
   updateCurso.ts        # actualizar
-  deleteCurso.ts         # eliminar
-  index.ts                # barrel: re-exporta todas
+  eliminarCurso.ts       # eliminar
 ```
+
+**No hay `api/index.ts`.** Ningún slice del repo tiene barrel de segmento;
+los hooks importan la función directa (`import { getCursos } from "../api/getCursos"`).
+El único barrel público del slice es el `index.ts` de la raíz.
 
 Nombre en `camelCase`, verbo en español si el resto del dominio está en
 español (el repo mezcla inglés en nombres de archivo/función y español en
@@ -132,4 +135,4 @@ Para conteos sin traer filas (KPIs, dashboards):
 - [ ] Mapea `snake_case` → `camelCase` antes de retornar
 - [ ] Tipa la respuesta contra `Database` de `database.types.ts`
 - [ ] Un archivo por función, nombre en `camelCase` describiendo la acción
-- [ ] Agregada al `index.ts` (barrel) del segmento `api/`
+- [ ] Exportada en el `index.ts` de la raíz del slice si la consume otra capa
