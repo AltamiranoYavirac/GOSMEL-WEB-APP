@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { z } from "zod";
 
 import {
   AlertDialog,
@@ -20,33 +19,24 @@ import { DateField, Form, NumberField, useAppForm } from "@/shared/form";
 import { formatCurrency, formatMonthPeriod } from "@/shared/lib/formatters";
 
 import { useUpdateCuota } from "../hooks/useUpdateCuota";
-import type { ICuotaRow } from "../model/cuota.types";
-
-const editarCuotaSchema = z.object({
-  monto: z.coerce.number().positive("Ingresa un monto válido"),
-  fechaVencimiento: z.string().min(1, "Selecciona la fecha de vencimiento"),
-});
-
-type TEditarCuotaValues = z.infer<typeof editarCuotaSchema>;
-
-interface IEditarCuotaDialogProps {
-  cuota: ICuotaRow;
-}
+import {
+  editarCuotaFormSchema,
+  mapCuotaToFormValues,
+  type IEditarCuotaFormValues,
+} from "../model/EditarCuotaForm.config";
+import type { IEditarCuotaDialogProps } from "./EditarCuotaDialog.types";
 
 export default function EditarCuotaDialog({ cuota }: IEditarCuotaDialogProps) {
   const [open, setOpen] = useState(false);
   const mutation = useUpdateCuota();
 
-  const form = useAppForm<TEditarCuotaValues>({
-    schema: editarCuotaSchema,
-    values: {
-      monto: cuota.monto,
-      fechaVencimiento: cuota.fechaVencimiento ?? "",
-    },
+  const form = useAppForm<IEditarCuotaFormValues>({
+    schema: editarCuotaFormSchema,
+    values: mapCuotaToFormValues(cuota),
     resetOptions: { keepDirtyValues: false, keepErrors: false },
   });
 
-  const onSubmit = (values: TEditarCuotaValues) => {
+  const onSubmit = (values: IEditarCuotaFormValues) => {
     mutation.mutate(
       {
         cuotaId: cuota.id,

@@ -17,6 +17,24 @@ export interface ICursoRow {
   publicado: boolean;
 }
 
+export interface ICursoDetalle {
+  id: string;
+  nombre: string;
+  resumen: string;
+  descripcion: string;
+  nivel: TNivelCurso;
+  modalidad: TModalidadCurso;
+  duracionSemanas: string;
+  horasTotales: string;
+  precioReferencial: string;
+  etiquetaPrecio: string;
+  mostrarPrecio: boolean;
+  videoIntroUrl: string;
+  portadaPublicId: string;
+  publicado: boolean;
+  destacado: boolean;
+}
+
 export const NIVEL_BADGE: Record<TNivelCurso, { label: string; variant: TBadgeVariant }> = {
   iniciacion: { label: "Iniciación", variant: "secondary" },
   basico: { label: "Básico", variant: "outline" },

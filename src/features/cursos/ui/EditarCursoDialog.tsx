@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 import {
   AlertDialog,
@@ -23,8 +23,8 @@ import {
   Spinner,
   Textarea,
 } from "@/shared/ui";
-import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 import { useUpdateCurso } from "../hooks/useUpdateCurso";
+import { useCurso } from "../hooks/useCurso";
 import type { TNivelCurso, TModalidadCurso } from "../model/curso.types";
 import type { IEditarCursoDialogProps } from "./EditarCursoDialog.types";
 
@@ -34,7 +34,9 @@ export default function EditarCursoDialog({
   onOpenChange,
   onSuccess,
 }: IEditarCursoDialogProps) {
-  const [loading, setLoading] = useState(false);
+  const { data: detalle, isLoading: loading } = useCurso(open && curso ? curso.id : null);
+
+  const [loadedId, setLoadedId] = useState<string | null>(null);
   const [nombre, setNombre] = useState("");
   const [resumen, setResumen] = useState("");
   const [descripcion, setDescripcion] = useState("");
@@ -52,39 +54,23 @@ export default function EditarCursoDialog({
 
   const updateMutation = useUpdateCurso();
 
-  useEffect(() => {
-    if (!open || !curso) return;
-
-    const fetchCurso = async () => {
-      setLoading(true);
-      const supabase = createSupabaseBrowserClient();
-      const { data } = await supabase
-        .from("cursos")
-        .select("*")
-        .eq("id", curso.id)
-        .single();
-
-      if (data) {
-        setNombre(data.nombre ?? "");
-        setResumen(data.resumen ?? "");
-        setDescripcion(data.descripcion ?? "");
-        setNivel(data.nivel ?? "basico");
-        setModalidad(data.modalidad ?? "presencial");
-        setSemanas(data.duracion_semanas ? String(data.duracion_semanas) : "");
-        setHoras(data.horas_totales ? String(data.horas_totales) : "");
-        setPrecio(data.precio_referencial ? String(data.precio_referencial) : "");
-        setEtiquetaPrecio(data.etiqueta_precio ?? "");
-        setMostrarPrecio(data.mostrar_precio ?? false);
-        setVideoIntro(data.video_intro_url ?? "");
-        setPortadaPublicId(data.portada_public_id ?? "");
-        setPublicado(data.publicado ?? false);
-        setDestacado(data.destacado ?? false);
-      }
-      setLoading(false);
-    };
-
-    fetchCurso();
-  }, [open, curso]);
+  if (detalle && detalle.id !== loadedId) {
+    setLoadedId(detalle.id);
+    setNombre(detalle.nombre);
+    setResumen(detalle.resumen);
+    setDescripcion(detalle.descripcion);
+    setNivel(detalle.nivel);
+    setModalidad(detalle.modalidad);
+    setSemanas(detalle.duracionSemanas);
+    setHoras(detalle.horasTotales);
+    setPrecio(detalle.precioReferencial);
+    setEtiquetaPrecio(detalle.etiquetaPrecio);
+    setMostrarPrecio(detalle.mostrarPrecio);
+    setVideoIntro(detalle.videoIntroUrl);
+    setPortadaPublicId(detalle.portadaPublicId);
+    setPublicado(detalle.publicado);
+    setDestacado(detalle.destacado);
+  }
 
   if (!curso) return null;
 
