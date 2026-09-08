@@ -10,7 +10,7 @@ export async function getSolicitudes(): Promise<{
   const { data, error } = await supabase
     .from("solicitudes")
     .select(
-      "id, created_at, nombre_completo, email, telefono, tipo, estado, mensaje, origen_url, curso_id, cursos(nombre), instrumento_id, instrumentos(nombre), docente_id, docentes(perfiles!docentes_perfil_id_fkey(nombres, apellidos)), estudiante_nombre, estudiante_fecha_nacimiento, para_menor, parentesco"
+      "id, created_at, nombre_completo, email, telefono, tipo, estado, mensaje, origen_url, curso_id, cursos(nombre), instrumento_id, instrumentos(nombre), docente_id, docentes(perfiles!docentes_perfil_id_fkey(nombres, apellidos)), estudiante_nombre, estudiante_fecha_nacimiento, para_menor, parentesco, consentimiento_datos, consentimiento_en, consentimiento_otorgado_por, notas_internas"
     )
     .order("created_at", { ascending: false })
     .limit(300);
@@ -41,6 +41,10 @@ export async function getSolicitudes(): Promise<{
       estudianteFechaNacimiento: solicitud.estudiante_fecha_nacimiento,
       paraMenor: solicitud.para_menor,
       parentesco: solicitud.parentesco,
+      consentimientoDatos: solicitud.consentimiento_datos,
+      consentimientoEn: solicitud.consentimiento_en,
+      consentimientoOtorgadoPor: solicitud.consentimiento_otorgado_por,
+      notasInternas: solicitud.notas_internas,
     };
   });
 
