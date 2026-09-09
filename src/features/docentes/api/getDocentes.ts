@@ -1,12 +1,16 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IDocenteRow } from "../model/docente.types";
 
-export async function getDocentes(): Promise<{
+export async function getDocentes(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IDocenteRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
 
   const { data: rolesRol } = await supabase
     .from("perfil_rol")

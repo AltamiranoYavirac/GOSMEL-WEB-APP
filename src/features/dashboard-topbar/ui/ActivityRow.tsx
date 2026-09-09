@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { es } from "date-fns/locale/es";
 
 import { activityIcon } from "../model/topbar-constants";
 import type { IActivityRowProps } from "./ActivityRow.types";

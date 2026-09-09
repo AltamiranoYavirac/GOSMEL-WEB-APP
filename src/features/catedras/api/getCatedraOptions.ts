@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IDocenteOption, ICursoOption } from "../model/CrearCatedraForm.config";
 
-export async function getCatedraOptions(): Promise<{
+export async function getCatedraOptions(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: { cursos: ICursoOption[]; docentes: IDocenteOption[] } | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
 
   const { data: rolesDocente } = await supabase
     .from("perfil_rol")

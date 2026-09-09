@@ -1,8 +1,11 @@
 import { redirect } from "next/navigation"
 
+import { createSupabaseServerClient } from "@/shared/api/supabase/server"
+import { HydrateQuery } from "@/shared/api/prefetch"
 import { getServerSession } from "@/features/session/server"
 import { resolveHomeRoute } from "@/entities/user"
 import { StudentPortalLayout } from "@/features/student-portal"
+import { studentContextQuery } from "@/features/student-portal/server"
 
 export default async function StudentLayout({ children }: { children: React.ReactNode }) {
   const sessionResult = await getServerSession()
@@ -14,5 +17,11 @@ export default async function StudentLayout({ children }: { children: React.Reac
     redirect(resolveHomeRoute(sessionResult.data.roles))
   }
 
-  return <StudentPortalLayout>{children}</StudentPortalLayout>
+  const supabase = await createSupabaseServerClient()
+
+  return (
+    <HydrateQuery queries={[studentContextQuery(supabase)]}>
+      <StudentPortalLayout>{children}</StudentPortalLayout>
+    </HydrateQuery>
+  )
 }

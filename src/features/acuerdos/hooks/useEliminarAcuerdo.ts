@@ -18,7 +18,6 @@ export function useEliminarAcuerdo() {
       queryClient.invalidateQueries({ queryKey: acuerdosQueryKeys.list() });
       queryClient.invalidateQueries({ queryKey: ["cuotas"] });
       queryClient.invalidateQueries({ queryKey: ["cobranza"] });
-      queryClient.invalidateQueries({ queryKey: ["dashboard-overview"] });
       toast.success("Acuerdo de pago eliminado");
     },
     onError: (error) => toast.error(error.message),

@@ -13,7 +13,6 @@ export function useStudentAttendance(estudianteId: string | null) {
       if (error || !data) throw new Error(error ?? "No se pudo cargar la asistencia");
       return data;
     },
-    staleTime: 60_000,
     retry: false,
     enabled: Boolean(estudianteId),
   });

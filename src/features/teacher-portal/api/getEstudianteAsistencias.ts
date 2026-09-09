@@ -1,11 +1,13 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IEstudianteAsistenciaHistorialItem, TEstadoAsistencia } from "../model/teacher-dashboard.types";
 
 export async function getEstudianteAsistencias(
-  inscripcionId: string
+  inscripcionId: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
 ): Promise<{ data: IEstudianteAsistenciaHistorialItem[] | null; error: string | null }> {
-  const supabase = createSupabaseBrowserClient();
 
   const { data, error } = await supabase
     .from("asistencias")

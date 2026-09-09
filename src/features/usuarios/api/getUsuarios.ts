@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IUsuarioRow, TRolUsuario } from "../model/usuario.types";
 
-export async function getUsuarios(): Promise<{
+export async function getUsuarios(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IUsuarioRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("perfiles")
     .select("id, nombres, apellidos, email, cedula, celular, activo, perfil_rol!perfil_rol_perfil_id_fkey(rol)")

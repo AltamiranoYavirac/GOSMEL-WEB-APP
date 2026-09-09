@@ -13,7 +13,6 @@ export function useStudentMaterials(estudianteId: string | null) {
       if (error) throw new Error(error ?? "No se pudieron cargar los materiales");
       return data ?? [];
     },
-    staleTime: 60_000,
     retry: false,
     enabled: Boolean(estudianteId),
   });

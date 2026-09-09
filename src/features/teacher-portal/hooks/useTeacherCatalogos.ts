@@ -14,6 +14,5 @@ export function useTeacherCatalogos(enabled = true) {
       return data ?? { catedras: [], instrumentos: [] };
     },
     enabled,
-    staleTime: 60_000,
   });
 }

@@ -1,11 +1,13 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IEvaluacionDetalleCalificaciones, TTipoEvaluacion } from "../model/calificacion.types";
 
 export async function getCalificacionesEvaluacion(
-  evaluacionId: string
+  evaluacionId: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
 ): Promise<{ data: IEvaluacionDetalleCalificaciones | null; error: string | null }> {
-  const supabase = createSupabaseBrowserClient();
 
   const { data: evaluacion, error: evError } = await supabase
     .from("evaluaciones")

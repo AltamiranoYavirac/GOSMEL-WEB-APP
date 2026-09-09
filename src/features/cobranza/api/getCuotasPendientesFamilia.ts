@@ -1,4 +1,6 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 export interface ICuotaPendienteItem {
   cuotaId: string;
@@ -11,11 +13,13 @@ export interface ICuotaPendienteItem {
   fechaVencimiento: string | null;
 }
 
-export async function getCuotasPendientesFamilia(representanteId: string): Promise<{
+export async function getCuotasPendientesFamilia(
+  representanteId: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: ICuotaPendienteItem[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
 
   const { data: vinculos, error: vincError } = await supabase
     .from("estudiante_representante")

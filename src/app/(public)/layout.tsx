@@ -1,25 +1,16 @@
-import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
-import { getServerSession } from "@/features/session/server";
-import { Navbar } from "@/widgets/Navbar";
+import { Navbar, NavbarContainer } from "@/widgets/Navbar";
 import { Footer } from "@/widgets/Footer";
 
-export default async function PublicLayout({
+export default function PublicLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const sessionResult = await getServerSession();
-
-  if (sessionResult.kind === "error") {
-    throw new Error(sessionResult.error);
-  }
-
-  if (sessionResult.data?.isActive === false) {
-    redirect("/auth/signout?reason=inactive");
-  }
-
   return (
     <>
-      <Navbar session={sessionResult.data} />
+      <Suspense fallback={<Navbar session={null} />}>
+        <NavbarContainer />
+      </Suspense>
       <main className="flex-1 min-h-screen bg-background flex flex-col">
         {children}
       </main>
