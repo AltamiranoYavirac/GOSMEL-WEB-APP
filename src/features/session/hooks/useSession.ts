@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query"
 
 import { sessionQueryKeys } from "@/entities/user"
-import { getSession } from "../api"
+import { getSession } from "../api/getSession"
 
 export function useSession() {
   return useQuery({

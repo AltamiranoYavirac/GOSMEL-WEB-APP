@@ -35,7 +35,7 @@ export default function PagosList() {
         <div className="flex flex-col">
           <span className="font-medium">{row.estudiante}</span>
           {row.observacion ? (
-            <span className="text-xs text-muted-foreground italic truncate max-w-[200px]" title={row.observacion}>
+            <span className="text-xs text-muted-foreground italic truncate max-w-[12.5rem]" title={row.observacion}>
               {row.observacion}
             </span>
           ) : null}

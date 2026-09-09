@@ -6,7 +6,7 @@ import { toast } from "sonner"
 
 import { Button, SocialAuthButtons, Spinner } from "@/shared/ui"
 import { CheckboxField, Form, PasswordField, TextField, useAppForm } from "@/shared/form"
-import { useSocialLogin, type TAuthProvider } from "@/shared/auth"
+import { useSocialLogin, type TAuthProvider } from "@/entities/auth"
 import { useLogin } from "../hooks/useLogin"
 import { getLoginFormDefaults, loginFormSchema, type ILoginFormValues } from "../model/loginForm.config"
 import type { ILoginFormProps } from "./LoginForm.types"
@@ -17,14 +17,14 @@ const handleForgotPassword = () => {
   })
 }
 
-export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
+export default function LoginForm({ onSubmitSuccess, nextPath, notice }: ILoginFormProps) {
   const [serverError, setServerError] = useState<string>()
   const form = useAppForm<ILoginFormValues>({
     schema: loginFormSchema,
     defaultValues: getLoginFormDefaults(),
   })
-  const login = useLogin()
-  const socialLogin = useSocialLogin()
+  const login = useLogin(nextPath)
+  const socialLogin = useSocialLogin(nextPath)
 
   const onSubmit = async (values: ILoginFormValues) => {
     setServerError(undefined)
@@ -45,6 +45,12 @@ export default function LoginForm({ onSubmitSuccess }: ILoginFormProps) {
         <p className="mt-3 text-[15px] leading-[1.55] text-muted-foreground">
           Inicia sesión para continuar con tu formación musical.
         </p>
+
+        {notice ? (
+          <p className="mt-4 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+            {notice}
+          </p>
+        ) : null}
 
         <SocialAuthButtons
           dividerLabel="O con tu correo"

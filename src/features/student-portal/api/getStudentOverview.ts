@@ -1,4 +1,6 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 import { toLocalDateString } from "@/shared/lib/date";
 
 import type { IStudentOverview, IStudentProximaClase, TModalidadCurso } from "../model/student-dashboard.types";
@@ -11,11 +13,13 @@ function startOfWeek(): string {
   return toLocalDateString(lunes);
 }
 
-export async function getStudentOverview(estudianteId: string): Promise<{
+export async function getStudentOverview(
+  estudianteId: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IStudentOverview | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
 
   const { data: inscripciones, error: inscError } = await supabase
     .from("inscripciones")

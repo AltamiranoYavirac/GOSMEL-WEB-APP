@@ -13,7 +13,6 @@ export function useStudentAccountStatement(estudianteId: string | null) {
       if (error || !data) throw new Error(error ?? "No se pudo cargar el estado de cuenta");
       return data;
     },
-    staleTime: 60_000,
     retry: false,
     enabled: Boolean(estudianteId),
   });

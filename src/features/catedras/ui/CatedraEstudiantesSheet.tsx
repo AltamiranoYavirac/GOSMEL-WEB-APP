@@ -18,16 +18,9 @@ import {
 } from "@/shared/ui";
 
 import { useCatedraEstudiantes } from "../hooks/useCatedraEstudiantes";
-import type { ICatedraRow } from "../model/catedra.types";
 import CatedraMatriculadoItemRow from "./CatedraMatriculadoItemRow";
 import CatedraSolicitudItemCard from "./CatedraSolicitudItemCard";
-
-interface ICatedraEstudiantesSheetProps {
-  catedra: ICatedraRow | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  defaultTab?: "matriculados" | "pendientes";
-}
+import type { ICatedraEstudiantesSheetProps } from "./CatedraEstudiantesSheet.types";
 
 export default function CatedraEstudiantesSheet({
   catedra,

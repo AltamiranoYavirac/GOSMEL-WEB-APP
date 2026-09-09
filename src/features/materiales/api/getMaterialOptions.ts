@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { ICatedraMaterialOption, ICursoMaterialOption } from "../model/CrearMaterialForm.config";
 
-export async function getMaterialOptions(): Promise<{
+export async function getMaterialOptions(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: { cursos: ICursoMaterialOption[]; catedras: ICatedraMaterialOption[] } | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const [cursos, catedras] = await Promise.all([
     supabase.from("cursos").select("id, nombre").order("nombre", { ascending: true }).limit(300),
     supabase.from("catedras").select("id, codigo, cursos(nombre)").order("codigo", { ascending: true }).limit(300),

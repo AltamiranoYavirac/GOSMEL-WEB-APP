@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { ISesionRow, TEstadoSesion } from "../model/horario.types";
 
-export async function getSesiones(): Promise<{
+export async function getSesiones(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: ISesionRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("sesiones")
     .select("id, fecha, hora_inicio, hora_fin, tema, estado, catedra_id, catedras(codigo, cursos(nombre)), asistencias(estado)")

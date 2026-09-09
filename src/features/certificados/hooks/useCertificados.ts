@@ -30,7 +30,6 @@ export function useInscripcionesParaCertificados(enabled = true) {
       if (error) throw new Error(error);
       return data;
     },
-    staleTime: 60_000,
     enabled,
   });
 }

@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { ICobranzaRow } from "../model/cobranza.types";
 
-export async function getCobranza(): Promise<{
+export async function getCobranza(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: ICobranzaRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
 
   const [estudiantes, vinculos, representantes, acuerdos] = await Promise.all([
     supabase.from("estudiantes").select("id, perfil_id, nombres, apellidos").limit(2000),

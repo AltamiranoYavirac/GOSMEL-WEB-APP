@@ -13,7 +13,6 @@ export function useStudentSessions(estudianteId: string | null) {
       if (error || !data) throw new Error(error ?? "No se pudieron cargar las sesiones");
       return data;
     },
-    staleTime: 60_000,
     retry: false,
     enabled: Boolean(estudianteId),
   });

@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { ITeacherCatalogos } from "../model/teacher-dashboard.types";
 
-export async function getTeacherCatalogos(): Promise<{
+export async function getTeacherCatalogos(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: ITeacherCatalogos | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

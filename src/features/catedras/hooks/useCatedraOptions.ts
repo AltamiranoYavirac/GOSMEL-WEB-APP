@@ -13,7 +13,6 @@ export function useCatedraOptions(enabled = true) {
       if (error) throw new Error(error);
       return data ?? { cursos: [], docentes: [] };
     },
-    staleTime: 60_000,
     retry: false,
     enabled,
   });

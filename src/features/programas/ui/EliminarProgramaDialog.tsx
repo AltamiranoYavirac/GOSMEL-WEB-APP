@@ -17,11 +17,7 @@ import {
 } from "@/shared/ui";
 
 import { useEliminarPrograma } from "../hooks/useEliminarPrograma";
-import type { IProgramaRow } from "../model/programa.types";
-
-interface IEliminarProgramaDialogProps {
-  programa: IProgramaRow;
-}
+import type { IEliminarProgramaDialogProps } from "./EliminarProgramaDialog.types";
 
 export default function EliminarProgramaDialog({ programa }: IEliminarProgramaDialogProps) {
   const [open, setOpen] = useState(false);

@@ -17,11 +17,7 @@ import {
 } from "@/shared/ui";
 
 import { useEliminarCertificado } from "../hooks/useCertificados";
-import type { ICertificadoRow } from "../model/certificado.types";
-
-interface IEliminarCertificadoDialogProps {
-  certificado: ICertificadoRow;
-}
+import type { IEliminarCertificadoDialogProps } from "./EliminarCertificadoDialog.types";
 
 export default function EliminarCertificadoDialog({ certificado }: IEliminarCertificadoDialogProps) {
   const [open, setOpen] = useState(false);

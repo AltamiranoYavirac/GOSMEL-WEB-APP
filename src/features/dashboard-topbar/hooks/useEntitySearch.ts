@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { topbarQueryKeys } from "../model/topbar.query-keys";
+import { topbarQueryKeys } from "../model/query-keys";
 import { searchEntities } from "../api";
 
 export function useEntitySearch(query: string) {

@@ -36,7 +36,7 @@ export default function SolicitudesList() {
 
   const [filtro, setFiltro] = useState<"todas" | TSolicitudEstado>("todas");
   const [search, setSearch] = useState("");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | "none" | null>(null);
   const [solicitudMatricula, setSolicitudMatricula] = useState<ISolicitudRow | null>(null);
 
   const counts = useMemo(() => {
@@ -56,6 +56,12 @@ export default function SolicitudesList() {
     });
   }, [rows, filtro, search]);
 
+  const activeExpandedId = useMemo(() => {
+    if (expandedId === "none") return null;
+    if (expandedId && filtered.some((row) => row.id === expandedId)) return expandedId;
+    return filtered[0]?.id ?? null;
+  }, [expandedId, filtered]);
+
   return (
     <div className="space-y-6">
       <AdminPageHeader
@@ -70,7 +76,10 @@ export default function SolicitudesList() {
           <button
             key={item.value}
             type="button"
-            onClick={() => setFiltro(item.value)}
+            onClick={() => {
+              setFiltro(item.value);
+              setExpandedId(null);
+            }}
             aria-pressed={filtro === item.value}
             className={cn(
               "rounded-full px-4 py-2 text-xs font-bold transition-colors",
@@ -87,7 +96,10 @@ export default function SolicitudesList() {
           iconPosition="start"
           placeholder="Buscar solicitud…"
           value={search}
-          onChange={(event) => setSearch(event.target.value)}
+          onChange={(event) => {
+            setSearch(event.target.value);
+            setExpandedId(null);
+          }}
           className="w-full rounded-[9px] border-border bg-sidebar sm:ml-auto sm:w-64"
         />
       </div>
@@ -106,14 +118,20 @@ export default function SolicitudesList() {
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {filtered.map((row) => {
+          {filtered.map((row, index) => {
             const siguiente = SOLICITUD_ESTADO_SIGUIENTE[row.estado];
+            const isFirst = index === 0;
             return (
               <SolicitudCard
                 key={row.id}
                 solicitud={row}
-                expanded={expandedId === row.id}
-                onToggle={() => setExpandedId((prev) => (prev === row.id ? null : row.id))}
+                expanded={activeExpandedId === row.id}
+                onToggle={() =>
+                  setExpandedId((prev) => {
+                    const currentlyExpanded = prev === row.id || (prev === null && isFirst);
+                    return currentlyExpanded ? "none" : row.id;
+                  })
+                }
                 onMarkNext={() =>
                   siguiente ? mutation.mutate({ id: row.id, estado: siguiente }) : undefined
                 }

@@ -5,7 +5,7 @@ import { toast } from "sonner"
 
 import { Button, SocialAuthButtons, Spinner } from "@/shared/ui"
 import { CheckboxField, Form, PasswordField, TextField, useAppForm } from "@/shared/form"
-import { useSocialLogin, type TAuthProvider } from "@/shared/auth"
+import { useSocialLogin, type TAuthProvider } from "@/entities/auth"
 import { useRegister } from "../hooks/useRegister"
 import { getRegisterErrorMessage } from "../model/auth-errors"
 import {

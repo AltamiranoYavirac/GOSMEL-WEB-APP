@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { DASHBOARD_NAV, DASHBOARD_NAV_FOOTER, ROLE_LABEL } from "@/entities/user";
-import { useSession } from "@/features/session";
 import { Avatar, AvatarFallback, ScrollArea } from "@/shared/ui";
 
 import DashboardNavGroup from "./DashboardNavGroup";
@@ -14,11 +13,10 @@ import type { IDashboardSidebarProps } from "./DashboardSidebar.types";
 
 const BAR_HEIGHTS = ["h-2", "h-3.5", "h-2.5", "h-4"];
 
-export default function DashboardSidebar({ role, onNavigate }: IDashboardSidebarProps) {
+export default function DashboardSidebar({ role, session, onNavigate }: IDashboardSidebarProps) {
   const pathname = usePathname();
   const groups = DASHBOARD_NAV[role];
   const footerLinks = DASHBOARD_NAV_FOOTER[role];
-  const session = useSession();
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
@@ -26,8 +24,8 @@ export default function DashboardSidebar({ role, onNavigate }: IDashboardSidebar
     setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
   };
 
-  const email = session.data?.email ?? "";
-  const initials = email.slice(0, 2).toUpperCase() || "?";
+  const label = session.displayName || session.email || "Usuario";
+  const initials = label.slice(0, 2).toUpperCase() || "?";
 
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
@@ -37,7 +35,7 @@ export default function DashboardSidebar({ role, onNavigate }: IDashboardSidebar
             <span key={i} className={`w-[2.5px] rounded-[1px] bg-foreground ${h}`} />
           ))}
         </Link>
-        <span className="font-heading text-[15px] font-bold tracking-[0.2em] text-foreground">
+        <span className="font-heading text-[0.9375rem] font-bold tracking-[0.2em] text-foreground">
           GOSMEL
         </span>
       </div>
@@ -86,10 +84,10 @@ export default function DashboardSidebar({ role, onNavigate }: IDashboardSidebar
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <div className="truncate text-[13px] font-bold text-foreground">
-              {email || "Sesión activa"}
+            <div className="truncate text-[0.8125rem] font-bold text-foreground">
+              {label}
             </div>
-            <div className="text-[11px] font-medium text-muted-foreground">{ROLE_LABEL[role]}</div>
+            <div className="text-[0.6875rem] font-medium text-muted-foreground">{ROLE_LABEL[role]}</div>
           </div>
         </div>
       </div>

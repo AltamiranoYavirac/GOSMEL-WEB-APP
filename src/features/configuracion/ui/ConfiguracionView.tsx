@@ -5,22 +5,12 @@ import { Icon } from "@iconify/react";
 import { AdminPageHeader, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/shared/ui";
 import { formatDateTime } from "@/shared/lib/formatters";
 
-import { useConfiguracion } from "../hooks/useConfiguracion";
+import { useSiteConfig } from "@/entities/site-config";
 
-function Field({ label, icon, value }: { label: string; icon: string; value: React.ReactNode }) {
-  return (
-    <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-background p-3.5">
-      <Icon icon={icon} className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-      <div className="min-w-0">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">{label}</p>
-        <div className="mt-1 break-words text-sm text-foreground">{value}</div>
-      </div>
-    </div>
-  );
-}
+import ConfiguracionField from "./ConfiguracionField";
 
 export default function ConfiguracionView() {
-  const { data, isPending } = useConfiguracion();
+  const { data, isPending } = useSiteConfig();
 
   if (isPending) {
     return (
@@ -76,14 +66,14 @@ export default function ConfiguracionView() {
           <CardTitle>Contacto y redes</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Field label="Dirección" icon="ph:map-pin" value={data.direccion ?? "—"} />
-          <Field label="Ciudad" icon="ph:buildings" value={data.ciudad ?? "—"} />
-          <Field label="Teléfono" icon="ph:phone" value={data.telefono ?? "—"} />
-          <Field label="WhatsApp" icon="ph:whatsapp-logo" value={data.whatsapp ?? "—"} />
-          <Field label="Email general" icon="ph:envelope-simple" value={data.emailGeneral ?? "—"} />
-          <Field label="Email de admisiones" icon="ph:envelope" value={data.emailAdmisiones ?? "—"} />
-          <Field label="Horario de atención" icon="ph:clock" value={data.horarioAtencion ?? "—"} />
-          <Field
+          <ConfiguracionField label="Dirección" icon="ph:map-pin" value={data.direccion ?? "—"} />
+          <ConfiguracionField label="Ciudad" icon="ph:buildings" value={data.ciudad ?? "—"} />
+          <ConfiguracionField label="Teléfono" icon="ph:phone" value={data.telefono ?? "—"} />
+          <ConfiguracionField label="WhatsApp" icon="ph:whatsapp-logo" value={data.whatsapp ?? "—"} />
+          <ConfiguracionField label="Email general" icon="ph:envelope-simple" value={data.emailGeneral ?? "—"} />
+          <ConfiguracionField label="Email de admisiones" icon="ph:envelope" value={data.emailAdmisiones ?? "—"} />
+          <ConfiguracionField label="Horario de atención" icon="ph:clock" value={data.horarioAtencion ?? "—"} />
+          <ConfiguracionField
             label="Redes sociales"
             icon="ph:share-network"
             value={
@@ -107,7 +97,7 @@ export default function ConfiguracionView() {
               )
             }
           />
-          <Field
+          <ConfiguracionField
             label="Mapa embed"
             icon="ph:map-trifold"
             value={

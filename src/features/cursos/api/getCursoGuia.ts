@@ -1,4 +1,6 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type {
   ICursoGuia,
@@ -8,9 +10,9 @@ import type {
 } from "../model/curso-guia.types";
 
 export async function getCursoGuia(
-  cursoId: string
+  cursoId: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
 ): Promise<{ data: ICursoGuia | null; error: string | null }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("cursos")
     .select(

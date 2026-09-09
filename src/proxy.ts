@@ -1,22 +1,24 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-import { resolveHomeRoute, type TRol } from "@/entities/user"
 import { updateSession } from "@/shared/api/supabase/proxy"
 
 const PROTECTED_PREFIX = "/dashboard"
 const AUTH_ROUTES = ["/login", "/register"]
 
 export async function proxy(request: NextRequest) {
-  const { response, isAuthenticated, userRoles } = await updateSession(request)
+  const { response, isAuthenticated } = await updateSession(request)
   const { pathname } = request.nextUrl
+  const isDashboardRoute = pathname === PROTECTED_PREFIX || pathname.startsWith(`${PROTECTED_PREFIX}/`)
 
-  if (pathname.startsWith(PROTECTED_PREFIX) && !isAuthenticated) {
-    return NextResponse.redirect(new URL("/login", request.url))
+  if (isDashboardRoute && !isAuthenticated) {
+    const loginUrl = new URL("/login", request.url)
+    loginUrl.searchParams.set("next", `${pathname}${request.nextUrl.search}`)
+    return NextResponse.redirect(loginUrl)
   }
 
   if (AUTH_ROUTES.includes(pathname) && isAuthenticated) {
-    return NextResponse.redirect(new URL(resolveHomeRoute(userRoles as TRol[]), request.url))
+    return NextResponse.redirect(new URL(PROTECTED_PREFIX, request.url))
   }
 
   return response

@@ -3,12 +3,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 
-import { resolveHomeRoute, sessionQueryKeys } from "@/entities/user"
-import { signInWithPassword } from "../api"
+import { resolvePostLoginRoute, sessionQueryKeys } from "@/entities/user"
+import { signInWithPassword } from "../api/signInWithPassword"
 import { getAuthErrorMessage } from "../model/auth-errors"
 import type { IUseLoginParams } from "./useLogin.types"
 
-export function useLogin() {
+export function useLogin(nextPath?: string) {
   const queryClient = useQueryClient()
   const router = useRouter()
 
@@ -22,7 +22,7 @@ export function useLogin() {
     },
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: sessionQueryKeys.all })
-      router.replace(resolveHomeRoute(data.roles))
+      router.replace(resolvePostLoginRoute(nextPath, data.roles))
       router.refresh()
     },
   })

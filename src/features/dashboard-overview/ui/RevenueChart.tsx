@@ -3,19 +3,7 @@
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import type { IRevenueChartProps } from "./RevenueChart.types";
-
-function RevenueTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number }>; label?: string }) {
-  if (!active || !payload?.length) return null;
-
-  return (
-    <div className="rounded-xl border border-border bg-popover px-3.5 py-2 text-xs shadow-lg">
-      <p className="font-bold capitalize text-foreground">{label}</p>
-      <p className="mt-0.5 font-heading text-sm font-bold text-foreground">
-        ${payload[0].value.toLocaleString("es", { minimumFractionDigits: 2 })}
-      </p>
-    </div>
-  );
-}
+import RevenueTooltip from "./RevenueTooltip";
 
 export default function RevenueChart({ data }: IRevenueChartProps) {
   const hasRevenue = data.some((point) => point.total > 0);
@@ -27,7 +15,7 @@ export default function RevenueChart({ data }: IRevenueChartProps) {
           <h3 className="font-heading text-base font-bold tracking-tight text-foreground">Ingresos</h3>
           <p className="mt-0.5 text-xs text-muted-foreground">Últimos 6 meses</p>
         </div>
-        <span className="rounded-full bg-foreground/10 px-2.5 py-1 text-[11px] font-bold text-foreground">
+        <span className="rounded-full bg-foreground/10 px-2.5 py-1 text-[0.6875rem] font-bold text-foreground">
           6M
         </span>
       </div>

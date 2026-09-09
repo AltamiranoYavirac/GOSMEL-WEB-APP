@@ -120,7 +120,7 @@ export default function CobranzaList() {
           return (
             <div className="flex items-center justify-end gap-1.5">
               {waUrl && row.saldoTotal > 0 && (
-                <Button asChild variant="ghost" size="sm" className="size-8 p-0 text-emerald-600 dark:text-emerald-400">
+                <Button asChild variant="ghost" size="sm" className="size-8 p-0 text-success-fg">
                   <a href={waUrl} target="_blank" rel="noopener noreferrer" title="Enviar recordatorio por WhatsApp">
                     <Icon icon="ph:whatsapp-logo" width={16} height={16} aria-hidden="true" />
                   </a>

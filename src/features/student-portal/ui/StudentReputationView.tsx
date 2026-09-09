@@ -14,21 +14,7 @@ import { useToggleFavorite } from "../hooks/useToggleFavorite";
 import { NIVEL_CURSO_LABEL } from "../model/student-dashboard.types";
 import CrearResenaDialog from "./CrearResenaDialog";
 import StudentNoStudents from "./StudentNoStudents";
-
-function Stars({ value }: { value: number }) {
-  return (
-    <div className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <Icon
-          key={star}
-          icon={star <= value ? "ph:star-fill" : "ph:star"}
-          className={star <= value ? "size-4 text-primary" : "size-4 text-muted-foreground/50"}
-          aria-hidden="true"
-        />
-      ))}
-    </div>
-  );
-}
+import StudentRatingStars from "./StudentRatingStars";
 
 export default function StudentReputationView() {
   const { isLoading, estudianteActivo } = useStudentPortal();
@@ -77,7 +63,7 @@ export default function StudentReputationView() {
               <div key={resena.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-accent-muted/40 p-3">
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-foreground">{resena.curso}</p>
-                  <Stars value={resena.puntuacion} />
+                  <StudentRatingStars value={resena.puntuacion} />
                   {resena.comentario ? <p className="mt-1 text-xs text-muted-foreground">{resena.comentario}</p> : null}
                 </div>
                 <div className="flex flex-col items-end gap-1">
