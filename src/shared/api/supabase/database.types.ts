@@ -2379,6 +2379,7 @@ export type Database = {
           consentimiento_datos: boolean
           consentimiento_en: string
           consentimiento_otorgado_por: string
+          creada_por: string | null
           created_at: string
           curso_id: string | null
           docente_id: string | null
@@ -2402,6 +2403,7 @@ export type Database = {
           consentimiento_datos: boolean
           consentimiento_en?: string
           consentimiento_otorgado_por?: string
+          creada_por?: string | null
           created_at?: string
           curso_id?: string | null
           docente_id?: string | null
@@ -2425,6 +2427,7 @@ export type Database = {
           consentimiento_datos?: boolean
           consentimiento_en?: string
           consentimiento_otorgado_por?: string
+          creada_por?: string | null
           created_at?: string
           curso_id?: string | null
           docente_id?: string | null
@@ -2863,10 +2866,7 @@ export type Database = {
         }
         Returns: undefined
       }
-      convertir_solicitud_lead: {
-        Args: { p_catedra_id?: string; p_solicitud_id: string }
-        Returns: Json
-      }
+      cuenta_activa: { Args: never; Returns: boolean }
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
       dar_de_baja_estudiante: {
         Args: {

@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { formatDistanceToNow } from "date-fns";
-import { es } from "date-fns/locale";
+import { es } from "date-fns/locale/es";
 
 import { activityIcon } from "../model/topbar-constants";
 import type { IActivityRowProps } from "./ActivityRow.types";
@@ -25,7 +25,7 @@ export default function ActivityRow({ activity }: IActivityRowProps) {
           {activity.descripcion ? (
             <span className="block truncate text-xs text-muted-foreground">{activity.descripcion}</span>
           ) : null}
-          <span className="block text-[11px] text-muted-foreground/80">{relativeTime(activity.created_at)}</span>
+          <span className="block text-[0.6875rem] text-muted-foreground/80">{relativeTime(activity.created_at)}</span>
         </span>
       </div>
     </li>

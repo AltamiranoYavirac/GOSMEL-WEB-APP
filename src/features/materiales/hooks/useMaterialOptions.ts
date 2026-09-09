@@ -13,7 +13,6 @@ export function useMaterialOptions(enabled = true) {
       if (error) throw new Error(error);
       return data ?? { cursos: [], catedras: [] };
     },
-    staleTime: 60_000,
     retry: false,
     enabled,
   });

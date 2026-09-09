@@ -1,11 +1,13 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IInscripcionPendiente } from "../model/matricula.types";
 
 export async function getInscripcionesPendientes(
-  catedraId?: string
+  catedraId?: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
 ): Promise<{ data: IInscripcionPendiente[] | null; error: string | null }> {
-  const supabase = createSupabaseBrowserClient();
 
   let query = supabase
     .from("inscripciones")

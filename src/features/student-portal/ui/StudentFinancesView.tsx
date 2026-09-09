@@ -121,7 +121,7 @@ function pagoColumns(): IAdminColumn<IStudentPago>[] {
           <div className="flex flex-col gap-0.5 items-start">
             <Badge variant={badge.variant}>{badge.label}</Badge>
             {row.observacion && row.estado === "rechazado" ? (
-              <span className="text-[11px] text-destructive italic max-w-[160px] truncate" title={row.observacion}>
+              <span className="text-[0.6875rem] text-destructive italic max-w-[10rem] truncate" title={row.observacion}>
                 {row.observacion}
               </span>
             ) : null}

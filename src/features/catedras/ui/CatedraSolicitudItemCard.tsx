@@ -22,11 +22,7 @@ import {
 import { formatCurrency, formatDate } from "@/shared/lib/formatters";
 
 import { useAprobarMatricula, useRechazarMatricula } from "@/entities/matricula";
-import type { ICatedraSolicitudItem } from "../model/catedra-estudiantes.types";
-
-interface ICatedraSolicitudItemCardProps {
-  solicitud: ICatedraSolicitudItem;
-}
+import type { ICatedraSolicitudItemCardProps } from "./CatedraSolicitudItemCard.types";
 
 export default function CatedraSolicitudItemCard({
   solicitud,

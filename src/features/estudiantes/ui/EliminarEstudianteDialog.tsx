@@ -17,11 +17,7 @@ import {
 } from "@/shared/ui";
 
 import { useEliminarEstudiante } from "../hooks/useEliminarEstudiante";
-import type { IEstudianteRow } from "../model/estudiante.types";
-
-interface IEliminarEstudianteDialogProps {
-  estudiante: IEstudianteRow;
-}
+import type { IEliminarEstudianteDialogProps } from "./EliminarEstudianteDialog.types";
 
 export default function EliminarEstudianteDialog({ estudiante }: IEliminarEstudianteDialogProps) {
   const [open, setOpen] = useState(false);

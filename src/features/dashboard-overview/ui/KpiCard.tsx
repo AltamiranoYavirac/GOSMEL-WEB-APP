@@ -23,22 +23,23 @@ export default function KpiCard({ kpi }: IKpiCardProps) {
   return (
     <div className={base()}>
       <span className={tile()}>
-        <Icon icon={kpi.icon} className="size-[15px]" aria-hidden="true" />
+        <Icon icon={kpi.icon} className="size-16" aria-hidden="true" />
       </span>
 
-      <div className="mt-1 font-heading text-[27px] font-extrabold tracking-[-0.02em] text-foreground">
+      <div className="relative z-10 text-sm font-semibold text-muted-foreground">{kpi.label}</div>
+
+      <div className="relative z-10 mt-3 font-heading text-[1.8125rem] font-extrabold tracking-[-0.03em] text-foreground">
         {formatValue(kpi)}
       </div>
-      <div className="text-[12.5px] font-semibold text-muted-foreground">{kpi.label}</div>
 
-      <div className="mt-auto pt-2">
+      <div className="relative z-10 mt-auto pt-4">
         {kpi.trend !== undefined ? (
           <TrendChip trend={kpi.trend} label={kpi.trendLabel} />
         ) : (
           <Link
             href={kpi.href}
             className={cn(
-              "inline-flex items-center gap-1 text-[12px] font-bold transition-transform hover:translate-x-0.5",
+              "inline-flex items-center gap-1 text-[0.75rem] font-bold transition-transform hover:translate-x-0.5",
               ACCENT_TONE_SPARK[tone]
             )}
           >

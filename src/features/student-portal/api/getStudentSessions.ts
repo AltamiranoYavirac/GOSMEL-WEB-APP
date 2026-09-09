@@ -1,13 +1,17 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 import { toLocalDateString } from "@/shared/lib/date";
 
 import type { IStudentSessions, TEstadoSesion } from "../model/student-dashboard.types";
 
-export async function getStudentSessions(estudianteId: string): Promise<{
+export async function getStudentSessions(
+  estudianteId: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IStudentSessions | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
 
   const { data: inscripciones, error: inscError } = await supabase
     .from("inscripciones")

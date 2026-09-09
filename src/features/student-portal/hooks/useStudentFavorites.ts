@@ -13,7 +13,6 @@ export function useStudentFavorites() {
       if (error) throw new Error(error ?? "No se pudieron cargar los favoritos");
       return data ?? [];
     },
-    staleTime: 60_000,
     retry: false,
   });
 }

@@ -78,7 +78,7 @@ export default function GaleriaList() {
       </div>
 
       {isPending ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-6">
           {Array.from({ length: 8 }).map((_, index) => (
             <Skeleton key={index} className="h-64 rounded-xl" />
           ))}
@@ -90,10 +90,10 @@ export default function GaleriaList() {
           <p className="text-sm text-muted-foreground">Cuando se suban fotos o videos aparecerán aquí.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-6">
           {items.map((item) => (
             <Card key={item.id} className="gap-0 overflow-hidden">
-              <div className="relative aspect-[4/3] w-full bg-muted">
+              <div className="relative aspect-4/3 w-full bg-muted">
                 <Image
                   src={galeriaImageUrl(item.publicId, 600)}
                   alt={item.textoAlt}

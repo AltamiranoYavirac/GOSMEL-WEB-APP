@@ -1,4 +1,7 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 export interface ICursoHabilidad {
   id: string;
@@ -8,9 +11,9 @@ export interface ICursoHabilidad {
 }
 
 export async function getCursoHabilidades(
-  cursoId: string
+  cursoId: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
 ): Promise<{ data: ICursoHabilidad[] | null; error: string | null }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("curso_habilidades")
     .select("id, curso_id, habilidad, orden")

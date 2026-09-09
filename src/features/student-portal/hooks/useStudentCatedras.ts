@@ -13,7 +13,6 @@ export function useStudentCatedras(estudianteId: string | null) {
       if (error) throw new Error(error ?? "No se pudieron cargar las cátedras");
       return data ?? [];
     },
-    staleTime: 60_000,
     retry: false,
     enabled: Boolean(estudianteId),
   });

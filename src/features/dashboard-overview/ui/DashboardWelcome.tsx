@@ -10,7 +10,7 @@ export default function DashboardWelcome({ adminName }: IDashboardWelcomeProps) 
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-grid-faint" />
       <div className="relative flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h2 className="font-heading text-2xl font-bold tracking-[-0.02em] text-foreground sm:text-[25px]">
+          <h2 className="font-heading text-2xl font-bold tracking-[-0.02em] text-foreground sm:text-[1.5625rem]">
             Hola, {adminName}
           </h2>
           <p className="mt-1.5 text-sm font-medium text-muted-foreground">

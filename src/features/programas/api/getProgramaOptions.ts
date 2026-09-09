@@ -1,15 +1,18 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 export interface IOptionItem {
   id: string;
   nombre: string;
 }
 
-export async function getProgramaOptions(): Promise<{
+export async function getProgramaOptions(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: { instrumentos: IOptionItem[]; cursos: IOptionItem[] } | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const [instrumentos, cursos] = await Promise.all([
     supabase
       .from("instrumentos")

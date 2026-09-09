@@ -1,5 +1,8 @@
+"use client";
+
 import { Icon } from "@iconify/react";
 
+import { useSiteConfig } from "@/entities/site-config";
 import { Button } from "@/shared/ui";
 
 import {
@@ -9,33 +12,47 @@ import {
 } from "../model/contact.constants";
 import ContactMap from "./ContactMap";
 
-const ROWS = [
-  {
-    icon: "ph:map-pin",
-    label: "Dirección",
-    value: CONTACT_DETAILS.address,
-    detail: CONTACT_DETAILS.addressDetail,
-  },
-  {
-    icon: "ph:phone",
-    label: "Teléfono",
-    value: CONTACT_DETAILS.phone,
-    href: `tel:${CONTACT_DETAILS.phone.replace(/\s/g, "")}`,
-  },
-  {
-    icon: "ph:envelope-simple",
-    label: "Correo",
-    value: CONTACT_DETAILS.email,
-    href: `mailto:${CONTACT_DETAILS.email}`,
-  },
-] as const;
+const whatsappHref = (raw: string | null): string => {
+  if (!raw) return CONTACT_WHATSAPP_HREF;
+  const digits = raw.replace(/\D/g, "");
+  return digits ? `https://wa.me/${digits}` : CONTACT_WHATSAPP_HREF;
+};
 
 export default function ContactInfo() {
+  const { data: cfg } = useSiteConfig();
+
+  const address = cfg?.direccion ?? CONTACT_DETAILS.address;
+  const addressDetail = cfg?.ciudad ?? CONTACT_DETAILS.addressDetail;
+  const phone = cfg?.telefono ?? CONTACT_DETAILS.phone;
+  const email = cfg?.emailGeneral ?? CONTACT_DETAILS.email;
+  const waHref = whatsappHref(cfg?.whatsapp ?? null);
+
+  const rows = [
+    {
+      icon: "ph:map-pin",
+      label: "Dirección",
+      value: address,
+      detail: addressDetail,
+    },
+    {
+      icon: "ph:phone",
+      label: "Teléfono",
+      value: phone,
+      href: `tel:${phone.replace(/\s/g, "")}`,
+    },
+    {
+      icon: "ph:envelope-simple",
+      label: "Correo",
+      value: email,
+      href: `mailto:${email}`,
+    },
+  ] as const;
+
   return (
     <div className="flex flex-col gap-3.5">
       <div className="rounded-[18px] border border-border bg-card p-6 md:rounded-[20px] md:p-8">
         <div className="flex flex-col gap-5">
-          {ROWS.map((row) => (
+          {rows.map((row) => (
             <div key={row.label} className="flex items-start gap-4">
               <span className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full border border-border text-primary">
                 <Icon icon={row.icon} className="size-5" aria-hidden="true" />
@@ -62,12 +79,12 @@ export default function ContactInfo() {
           ))}
         </div>
 
-        {CONTACT_WHATSAPP_HREF ? (
+        {waHref ? (
           <Button
             asChild
             className="mt-6 h-[52px] w-full gap-2 rounded-full bg-success text-[15px] font-semibold text-surface-dark-foreground hover:bg-success/90"
           >
-            <a href={CONTACT_WHATSAPP_HREF} target="_blank" rel="noopener noreferrer">
+            <a href={waHref} target="_blank" rel="noopener noreferrer">
               <Icon icon="ph:whatsapp-logo" className="size-5" aria-hidden="true" />
               Escríbenos por WhatsApp
             </a>
@@ -90,11 +107,24 @@ export default function ContactInfo() {
         </div>
       </div>
 
-      <ContactMap
-        lat={CONTACT_DETAILS.lat}
-        lng={CONTACT_DETAILS.lng}
-        label={CONTACT_DETAILS.mapLabel}
-      />
+      {cfg?.mapaEmbed ? (
+        <div className="relative z-0 w-full overflow-hidden rounded-[18px] border border-border md:rounded-[20px]">
+          <iframe
+            src={cfg.mapaEmbed}
+            title="Ubicación de GOSMEL Academia Musical"
+            className="h-64 w-full border-0 md:h-72"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
+          />
+        </div>
+      ) : (
+        <ContactMap
+          lat={CONTACT_DETAILS.lat}
+          lng={CONTACT_DETAILS.lng}
+          label={CONTACT_DETAILS.mapLabel}
+        />
+      )}
     </div>
   );
 }

@@ -25,12 +25,7 @@ import {
   useInscripcionesPendientes,
   type IAprobarMatriculaFormValues,
 } from "@/entities/matricula";
-
-interface ICatedraMatriculasDialogProps {
-  catedraId: string;
-  codigo: string;
-  curso: string;
-}
+import type { ICatedraMatriculasDialogProps } from "./CatedraMatriculasDialog.types";
 
 export default function CatedraMatriculasDialog({
   catedraId,

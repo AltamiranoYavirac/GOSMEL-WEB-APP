@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { format, isValid, parse } from "date-fns"
-import { es } from "date-fns/locale"
+import { es } from "date-fns/locale/es"
 import { Icon } from "@iconify/react"
 
 import { cn } from "@/shared/lib/utils"

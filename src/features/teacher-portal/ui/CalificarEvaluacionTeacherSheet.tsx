@@ -21,12 +21,10 @@ import { formatDate } from "@/shared/lib/formatters";
 import { useGuardarTeacherCalificaciones } from "../hooks/useGuardarTeacherCalificaciones";
 import { useTeacherCalificaciones } from "../hooks/useTeacherCalificaciones";
 import { EVALUACION_TIPO_BADGE } from "../model/teacher-dashboard.types";
-import type { ICalificarEvaluacionTeacherSheetProps } from "./CalificarEvaluacionTeacherSheet.types";
-
-interface ICalificacionOverride {
-  nota?: string;
-  observacion?: string;
-}
+import type {
+  ICalificacionOverride,
+  ICalificarEvaluacionTeacherSheetProps,
+} from "./CalificarEvaluacionTeacherSheet.types";
 
 export default function CalificarEvaluacionTeacherSheet({
   evaluacionId,

@@ -1,13 +1,17 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { ITipoInstrumentoRow } from "../model/instrumento.types";
 import type { ITipoInstrumentoFormValues } from "../model/TipoInstrumentoForm.config";
 
-export async function getTiposInstrumento(): Promise<{
+export async function getTiposInstrumento(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: ITipoInstrumentoRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("tipos_instrumento")
     .select("id, nombre, orden, activo")

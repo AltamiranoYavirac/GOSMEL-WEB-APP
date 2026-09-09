@@ -22,7 +22,10 @@ solo archivo** — no separar en `schemas.ts` + `types.ts` + `defaults.ts`:
 
 1. Opciones de enum para selects (si aplica)
 2. `{entidad}FormSchema` — el schema Zod
-3. `I{Entidad}FormValues` — `z.infer<typeof schema>`
+3. `I{Entidad}FormValues` — `z.infer<typeof schema>`. **Excepción
+   registrada a la regla de `CLAUDE.md`:** aunque es un `type` (no una
+   `interface`), lleva prefijo `I`, no `T`. Los 40+ `*Form.config.ts` del
+   repo lo nombran así; mantener la consistencia.
 4. `get{Entidad}FormDefaults()` — valores iniciales para creación
 5. `map{Entidad}ToFormValues()` — solo si el form también edita: convierte
    la entidad de dominio en valores de formulario

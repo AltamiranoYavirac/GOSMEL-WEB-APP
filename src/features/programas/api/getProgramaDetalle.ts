@@ -1,11 +1,14 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IProgramaDetalle, TNivelCurso } from "../model/programa-detalle.types";
 
 export async function getProgramaDetalle(
-  programaId: string
+  programaId: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
 ): Promise<{ data: IProgramaDetalle | null; error: string | null }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("programas")
     .select(

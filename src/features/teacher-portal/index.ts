@@ -1,5 +1,4 @@
 export { default as TeacherResumenView } from "./ui/TeacherResumenView";
-export { default as TeacherDashboard } from "./ui/TeacherResumenView";
 export { default as TeacherCatedrasView } from "./ui/TeacherCatedrasView";
 export { default as TeacherEstudiantesView } from "./ui/TeacherEstudiantesView";
 export { default as TeacherSesionesView } from "./ui/TeacherSesionesView";

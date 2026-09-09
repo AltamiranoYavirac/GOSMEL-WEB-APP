@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IHorarioRecurrenteRow } from "../model/horario.types";
 
-export async function getHorariosRecurrentes(): Promise<{
+export async function getHorariosRecurrentes(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IHorarioRecurrenteRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("catedra_horarios")
     .select("id, dia_semana, hora_inicio, hora_fin, catedra_id, catedras(codigo, cursos(nombre))")

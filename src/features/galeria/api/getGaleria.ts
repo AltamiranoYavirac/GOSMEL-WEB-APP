@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IGaleriaMedioRow, TCategoriaMedio } from "../model/galeria.types";
 
-export async function getGaleria(): Promise<{
+export async function getGaleria(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IGaleriaMedioRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("galeria_medios")
     .select("id, titulo, texto_alt, categoria, public_id, publicado")

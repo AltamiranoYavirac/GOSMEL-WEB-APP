@@ -13,6 +13,5 @@ export function useTeacherCatedras() {
       if (error) throw new Error(error);
       return data ?? [];
     },
-    staleTime: 60_000,
   });
 }

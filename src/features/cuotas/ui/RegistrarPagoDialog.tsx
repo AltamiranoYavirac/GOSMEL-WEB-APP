@@ -25,16 +25,7 @@ import {
   registrarPagoFormSchema,
   type IRegistrarPagoFormValues,
 } from "../model/RegistrarPagoForm.config";
-
-interface IRegistrarPagoDialogProps {
-  cuota: {
-    id: string;
-    estudiante: string;
-    saldo: number;
-    monto?: number;
-    periodo?: string;
-  };
-}
+import type { IRegistrarPagoDialogProps } from "./RegistrarPagoDialog.types";
 
 export default function RegistrarPagoDialog({ cuota }: IRegistrarPagoDialogProps) {
   const [open, setOpen] = useState(false);
@@ -89,14 +80,14 @@ export default function RegistrarPagoDialog({ cuota }: IRegistrarPagoDialogProps
           </div>
 
           {esAbonoParcial && (
-            <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50 text-amber-600 dark:text-amber-400">
+            <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50 text-warning-fg">
               <span>Saldo que quedará pendiente (Abono):</span>
               <span className="font-bold">{formatCurrency(saldoRestante)}</span>
             </div>
           )}
 
           {montoIngresado >= cuota.saldo && (
-            <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50 text-emerald-600 dark:text-emerald-400">
+            <div className="flex items-center justify-between text-sm pt-2 border-t border-border/50 text-success-fg">
               <span>Estado resultante:</span>
               <span className="font-bold">Liquidación total (Pagada al 100%)</span>
             </div>

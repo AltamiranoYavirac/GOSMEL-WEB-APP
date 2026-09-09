@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { ITestimonioRow } from "../model/testimonio.types";
 
-export async function getTestimonios(): Promise<{
+export async function getTestimonios(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: ITestimonioRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("testimonios")
     .select("id, autor_nombre, autor_rol, cita, puntuacion, publicado")

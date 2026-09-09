@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { z } from "zod";
 
 import {
   AlertDialog,
@@ -17,67 +16,29 @@ import {
   Spinner,
 } from "@/shared/ui";
 import { DateField, Form, NumberField, SelectField, useAppForm } from "@/shared/form";
-import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import { useEstudianteOptions } from "@/entities/estudiante";
 
 import { useCrearCuota } from "../hooks/useCrearCuota";
 import { getMonthOptions } from "../model/GenerarCuotasForm.config";
-
-const crearCuotaSchema = z.object({
-  estudianteId: z.string().min(1, "Selecciona un estudiante"),
-  monto: z.coerce.number().positive("Ingresa un monto válido"),
-  periodo: z.string().min(1, "Selecciona el período"),
-  fechaVencimiento: z.string().min(1, "Selecciona la fecha de vencimiento"),
-});
-
-type TCrearCuotaValues = z.infer<typeof crearCuotaSchema>;
+import {
+  crearCuotaFormSchema,
+  getCrearCuotaFormDefaults,
+  type ICrearCuotaFormValues,
+} from "../model/CrearCuotaForm.config";
 
 export default function CrearCuotaDialog() {
   const [open, setOpen] = useState(false);
-  const [estudiantes, setEstudiantes] = useState<{ value: string; label: string }[]>([]);
-  const [loadingOptions, setLoadingOptions] = useState(false);
+  const { data: estudiantes = [], isLoading: loadingOptions } = useEstudianteOptions(open);
 
   const mutation = useCrearCuota();
 
-  const now = new Date();
-  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-  const defaultDueDate = new Date(now.getFullYear(), now.getMonth(), 5).toISOString().slice(0, 10);
-
-  const form = useAppForm<TCrearCuotaValues>({
-    schema: crearCuotaSchema,
-    values: {
-      estudianteId: "",
-      monto: 35,
-      periodo: currentMonth,
-      fechaVencimiento: defaultDueDate,
-    },
+  const form = useAppForm<ICrearCuotaFormValues>({
+    schema: crearCuotaFormSchema,
+    values: getCrearCuotaFormDefaults(),
     resetOptions: { keepDirtyValues: false, keepErrors: false },
   });
 
-  useEffect(() => {
-    if (!open) return;
-    const fetchEstudiantes = async () => {
-      setLoadingOptions(true);
-      const supabase = createSupabaseBrowserClient();
-      const { data } = await supabase
-        .from("estudiantes")
-        .select("id, nombres, apellidos")
-        .eq("activo", true)
-        .order("nombres", { ascending: true })
-        .limit(500);
-
-      setEstudiantes(
-        (data ?? []).map((e) => ({
-          value: e.id,
-          label: `${e.nombres} ${e.apellidos}`.trim(),
-        }))
-      );
-      setLoadingOptions(false);
-    };
-
-    fetchEstudiantes();
-  }, [open]);
-
-  const onSubmit = (values: TCrearCuotaValues) => {
+  const onSubmit = (values: ICrearCuotaFormValues) => {
     mutation.mutate(values, {
       onSuccess: () => setOpen(false),
     });
@@ -116,11 +77,7 @@ export default function CrearCuotaDialog() {
               integerOnly={false}
               startIcon={<Icon icon="ph:currency-dollar" className="size-4" aria-hidden="true" />}
             />
-            <SelectField
-              name="periodo"
-              label="Período"
-              options={getMonthOptions()}
-            />
+            <SelectField name="periodo" label="Período" options={getMonthOptions()} />
           </div>
 
           <DateField name="fechaVencimiento" label="Fecha de vencimiento" />

@@ -1,20 +1,25 @@
-import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
-
 export async function updateUsuarioActivo(
   id: string,
   activo: boolean
 ): Promise<{ data: { id: string } | null; error: string | null }> {
-  const supabase = createSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from("perfiles")
-    .update({ activo })
-    .eq("id", id)
-    .select("id")
-    .maybeSingle();
+  try {
+    const response = await fetch(`/api/admin/users/${id}/status`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ activo }),
+    });
 
-  if (error) {
-    return { data: null, error: error.message };
+    const result = (await response.json()) as {
+      data: { id: string } | null;
+      error: string | null;
+    };
+
+    if (!response.ok) {
+      return { data: null, error: result.error ?? "No se pudo actualizar el estado" };
+    }
+
+    return result;
+  } catch (error) {
+    return { data: null, error: error instanceof Error ? error.message : "No se pudo actualizar el estado" };
   }
-
-  return { data, error: null };
 }

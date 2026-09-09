@@ -5,3 +5,8 @@ export interface IGestionarInstrumentosDialogProps {
   onOpenChange: (open: boolean) => void;
   instrumentosActuales: ITeacherInstrumentoItem[];
 }
+
+export interface IInstrumentoOverride {
+  selected?: boolean;
+  esPrincipal?: boolean;
+}

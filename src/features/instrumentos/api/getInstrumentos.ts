@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IInstrumentoRow } from "../model/instrumento.types";
 
-export async function getInstrumentos(): Promise<{
+export async function getInstrumentos(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IInstrumentoRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("instrumentos")
     .select("id, nombre, slug, tipo_instrumento_id, icono, imagen_public_id, orden, activo, tipos_instrumento(nombre)")

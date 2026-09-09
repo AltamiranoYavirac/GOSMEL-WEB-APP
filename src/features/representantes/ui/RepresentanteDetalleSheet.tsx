@@ -115,7 +115,7 @@ export default function RepresentanteDetalleSheet({
 
               <div className="flex flex-wrap items-center gap-2">
                 {whatsappUrl && (
-                  <Button asChild variant="outline" size="sm" className="gap-2 text-emerald-600 dark:text-emerald-400">
+                  <Button asChild variant="outline" size="sm" className="gap-2 text-success-fg">
                     <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                       <Icon icon="ph:whatsapp-logo" width={16} height={16} aria-hidden="true" />
                       Contactar por WhatsApp
@@ -136,12 +136,12 @@ export default function RepresentanteDetalleSheet({
               </div>
 
               {rep.total_saldo_familiar > 0 && (
-                <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 flex items-center justify-between">
+                <div className="rounded-2xl border border-destructive/25 bg-destructive/10 p-4 flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 block">
+                    <span className="text-xs font-mono font-bold uppercase tracking-wider text-destructive block">
                       Saldo Total Vencido de la Familia
                     </span>
-                    <span className="text-lg font-bold text-rose-700 dark:text-rose-300">
+                    <span className="text-lg font-bold text-destructive">
                       {formatCurrency(rep.total_saldo_familiar)}
                     </span>
                   </div>

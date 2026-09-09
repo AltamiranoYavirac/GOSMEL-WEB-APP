@@ -1,5 +1,5 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
-import { ensureDocenteRecord } from "@/shared/api/ensureDocenteRecord";
+import { ensureDocenteRecord } from "@/entities/docente";
 import type { TablesInsert } from "@/shared/api/supabase/database.types";
 
 import type { ICrearCatedraFormValues } from "../model/CrearCatedraForm.config";
