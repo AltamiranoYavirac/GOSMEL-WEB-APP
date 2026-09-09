@@ -1,11 +1,13 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { ISesionAsistenciasData, TEstadoAsistencia } from "../model/asistencia.types";
 
 export async function getAsistenciasSesion(
-  sesionId: string
+  sesionId: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
 ): Promise<{ data: ISesionAsistenciasData | null; error: string | null }> {
-  const supabase = createSupabaseBrowserClient();
 
   const { data: sesion, error: sesionError } = await supabase
     .from("sesiones")

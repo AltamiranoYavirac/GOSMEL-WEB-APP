@@ -102,15 +102,15 @@ src/
 │   │   ├── model/                # Tipos, schemas Zod, lógica
 │   │   ├── api/                  # Llamadas a Supabase Auth
 │   │   └── index.ts              # Barrel export público
-│   ├── courses/
-│   ├── materials/
-│   ├── teachers/
+│   ├── cursos/                   # CRUD admin + catálogo público
+│   ├── docentes/  estudiantes/  catedras/  pagos/  ...
 │   └── contact/
 │
 ├── entities/                     # Modelos de dominio puros (sin side effects)
 │   ├── user/                     # User, Role, enums de permisos
-│   ├── course/                   # Course, Lesson, Material
-│   └── teacher/                  # Teacher, Schedule
+│   ├── estudiante/  instrument/  # catálogos de opciones para selects
+│   ├── catedra/  representante/  matricula/
+│   └── ...
 │
 ├── widgets/                      # Bloques UI compuestos (usan features + entities)
 │   ├── Navbar/
@@ -149,6 +149,10 @@ features/[nombre]/
 | Hooks personalizados | `camelCase` prefijo `use` + recurso en plural | `useCourses.ts`, `useMaterials.ts` |
 | Interfaces | `PascalCase` prefijo `I` | `ICourse`, `ITeacher` |
 | Types (type alias) | `PascalCase` prefijo `T` | `TCourseStatus`, `TRole` |
+
+> **Excepción:** el tipo de valores de un formulario en `{Entidad}Form.config.ts`
+> se llama `I{Entidad}FormValues` (prefijo `I`, aunque sea `z.infer`). Es el
+> patrón uniforme en los 40+ form configs del repo — ver skill `gosmel-fsd-form`.
 | Enums | `PascalCase` | `UserRole`, `MaterialType` |
 | Funciones y variables | `camelCase` | `formatDate`, `courseList` |
 | Archivos de utilidad | `kebab-case` | `format-date.ts`, `query-keys.ts` |
@@ -170,6 +174,12 @@ features/courses/model/
 ```
 
 Esto aplica también en `entities/`, `widgets/` y `shared/`.
+
+> **No cuenta como "interface inline":** las definiciones de `columns` y
+> `filters` de `AdminDataTable` (`@/shared/ui`) se declaran dentro del cuerpo
+> del componente `{Entidades}List` — llevan `render: (row) => <JSX/>` y
+> closures sobre handlers/estado, no son constantes de datos. Igual, los
+> tipos de props (`I*Props`) sí van siempre a su `.types.ts`.
 
 ### Componentes
 - Preferir Server Components por defecto en App Router.

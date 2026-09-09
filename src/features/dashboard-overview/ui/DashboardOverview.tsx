@@ -26,8 +26,8 @@ export default async function DashboardOverview() {
 
       <KpiCardGrid kpis={data.kpis} />
 
-      <div className="grid grid-cols-1 gap-3.5 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 gap-3.5 lg:grid-cols-3 3xl:grid-cols-4">
+        <div className="lg:col-span-2 3xl:col-span-3">
           <RevenueChart data={data.revenue} />
         </div>
         <SolicitudesStatusChart data={data.solicitudesPorEstado} />

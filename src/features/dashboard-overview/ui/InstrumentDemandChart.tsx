@@ -8,7 +8,7 @@ export default function InstrumentDemandChart({ data }: IInstrumentDemandChartPr
   return (
     <div className="flex h-full flex-col justify-between gap-4 rounded-2xl border border-border bg-card p-5 sm:p-6">
       <div className="flex items-center justify-between">
-        <h3 className="font-heading text-[15.5px] font-bold tracking-tight text-foreground">
+        <h3 className="font-heading text-[0.969rem] font-bold tracking-tight text-foreground">
           Instrumentos más demandados
         </h3>
       </div>

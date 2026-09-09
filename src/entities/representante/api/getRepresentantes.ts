@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IRepresentanteRow } from "../model/representante.types";
 
-export async function getRepresentantes(): Promise<{
+export async function getRepresentantes(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IRepresentanteRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("representantes")
     .select("id, nombres, apellidos, cedula, celular, email, direccion, ocupacion, perfil_id, estudiante_representante(estudiante_id)")

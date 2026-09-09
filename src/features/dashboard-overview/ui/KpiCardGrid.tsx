@@ -3,7 +3,7 @@ import type { IKpiCardGridProps } from "./KpiCardGrid.types";
 
 export default function KpiCardGrid({ kpis }: IKpiCardGridProps) {
   return (
-    <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-3">
+    <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-3 3xl:grid-cols-5">
       {kpis.map((kpi) => (
         <KpiCard key={kpi.label} kpi={kpi} />
       ))}

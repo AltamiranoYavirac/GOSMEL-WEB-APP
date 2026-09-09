@@ -1,20 +1,16 @@
 import { redirect } from "next/navigation"
 
-import { createSupabaseServerClient } from "@/shared/api/supabase/server"
-import { resolveHomeRoute, type TRol } from "@/entities/user"
+import { getServerSession } from "@/features/session/server"
+import { resolveHomeRoute } from "@/entities/user"
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createSupabaseServerClient()
-  const { data, error } = await supabase.auth.getClaims()
+  const sessionResult = await getServerSession()
 
-  if (error || !data) {
-    redirect("/login")
-  }
-
-  const roles = (data.claims.user_roles as TRol[] | undefined) ?? []
-
-  if (!roles.includes("admin")) {
-    redirect(resolveHomeRoute(roles))
+  if (sessionResult.kind === "error") throw new Error(sessionResult.error)
+  if (sessionResult.kind === "anonymous") redirect("/login")
+  if (!sessionResult.data.isActive) redirect("/auth/signout?reason=inactive")
+  if (!sessionResult.data.roles.includes("admin")) {
+    redirect(resolveHomeRoute(sessionResult.data.roles))
   }
 
   return children

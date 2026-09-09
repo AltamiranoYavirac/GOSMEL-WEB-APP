@@ -22,12 +22,10 @@ import { formatDate } from "@/shared/lib/formatters";
 import { useGuardarTeacherAsistencias } from "../hooks/useGuardarTeacherAsistencias";
 import { useTeacherSesionAsistencia } from "../hooks/useTeacherSesionAsistencia";
 import type { TEstadoAsistencia } from "../model/teacher-dashboard.types";
-import type { ITomarAsistenciaTeacherDialogProps } from "./TomarAsistenciaTeacherDialog.types";
-
-interface IAsistenciaOverride {
-  estado?: TEstadoAsistencia;
-  observacion?: string;
-}
+import type {
+  IAsistenciaOverride,
+  ITomarAsistenciaTeacherDialogProps,
+} from "./TomarAsistenciaTeacherDialog.types";
 
 const ESTADOS_ASISTENCIA: {
   value: TEstadoAsistencia;
@@ -39,25 +37,25 @@ const ESTADOS_ASISTENCIA: {
     value: "presente",
     label: "Presente",
     icon: "ph:check-circle-bold",
-    activeClass: "bg-emerald-600 text-white shadow-xs",
+    activeClass: "bg-success text-surface-dark-foreground shadow-xs",
   },
   {
     value: "atraso",
     label: "Atraso",
     icon: "ph:clock-countdown-bold",
-    activeClass: "bg-amber-600 text-white shadow-xs",
+    activeClass: "bg-warning text-surface-dark-foreground shadow-xs",
   },
   {
     value: "justificado",
     label: "Justificado",
     icon: "ph:file-text-bold",
-    activeClass: "bg-sky-600 text-white shadow-xs",
+    activeClass: "bg-info text-surface-dark-foreground shadow-xs",
   },
   {
     value: "ausente",
     label: "Ausente",
     icon: "ph:x-circle-bold",
-    activeClass: "bg-rose-600 text-white shadow-xs",
+    activeClass: "bg-destructive text-destructive-foreground shadow-xs",
   },
 ];
 
@@ -182,23 +180,23 @@ export default function TomarAsistenciaTeacherDialog({
               <div className="flex flex-wrap items-center gap-2 text-xs">
                 <span className="font-medium text-foreground">Estudiantes: <strong>{rows.length}</strong></span>
                 <span className="text-muted-foreground">·</span>
-                <span className="text-emerald-500 font-semibold">{presentesCount} presentes</span>
+                <span className="text-success-fg font-semibold">{presentesCount} presentes</span>
                 {ausentesCount > 0 && (
                   <>
                     <span className="text-muted-foreground">·</span>
-                    <span className="text-rose-500 font-semibold">{ausentesCount} ausentes</span>
+                    <span className="text-destructive font-semibold">{ausentesCount} ausentes</span>
                   </>
                 )}
                 {atrasosCount > 0 && (
                   <>
                     <span className="text-muted-foreground">·</span>
-                    <span className="text-amber-500 font-semibold">{atrasosCount} atrasos</span>
+                    <span className="text-warning-fg font-semibold">{atrasosCount} atrasos</span>
                   </>
                 )}
                 {justificadosCount > 0 && (
                   <>
                     <span className="text-muted-foreground">·</span>
-                    <span className="text-sky-500 font-semibold">{justificadosCount} justificados</span>
+                    <span className="text-info-fg font-semibold">{justificadosCount} justificados</span>
                   </>
                 )}
               </div>
@@ -210,7 +208,7 @@ export default function TomarAsistenciaTeacherDialog({
                   onClick={() => handleMarcarTodos("presente")}
                   className="h-8 text-xs gap-1.5"
                 >
-                  <Icon icon="ph:checks-bold" className="size-3.5 text-emerald-500" />
+                  <Icon icon="ph:checks-bold" className="size-3.5 text-success-fg" />
                   Todos presentes
                 </Button>
                 <Button
@@ -220,7 +218,7 @@ export default function TomarAsistenciaTeacherDialog({
                   onClick={() => handleMarcarTodos("ausente")}
                   className="h-8 text-xs gap-1.5"
                 >
-                  <Icon icon="ph:x-bold" className="size-3.5 text-rose-500" />
+                  <Icon icon="ph:x-bold" className="size-3.5 text-destructive" />
                   Todos ausentes
                 </Button>
               </div>

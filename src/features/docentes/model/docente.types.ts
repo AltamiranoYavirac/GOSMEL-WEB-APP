@@ -11,6 +11,12 @@ export interface IDocenteRow {
   publicado: boolean;
 }
 
+export interface IPerfilDisponible {
+  id: string;
+  nombre: string;
+  email: string | null;
+}
+
 export const DOCENTE_DESTACADO_BADGE: Record<"true" | "false", { label: string; variant: TBadgeVariant }> = {
   true: { label: "Destacado", variant: "default" },
   false: { label: "Regular", variant: "ghost" },

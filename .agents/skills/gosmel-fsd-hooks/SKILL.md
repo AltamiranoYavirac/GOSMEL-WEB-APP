@@ -23,16 +23,17 @@ Server Components no usan esto: llaman a `api/` directo con `await`
 Un archivo `model/query-keys.ts` por slice, siempre con esta forma:
 
 ```typescript
-export const coursesAdminQueryKeys = {
-  all: ["courses-admin"] as const,
-  lists: () => [...coursesAdminQueryKeys.all, "list"] as const,
-  detail: (id: string) => [...coursesAdminQueryKeys.all, "detail", id] as const,
+export const cursosQueryKeys = {
+  all: ["cursos"] as const,
+  list: () => [...cursosQueryKeys.all, "list"] as const,
+  detail: (id: string) => [...cursosQueryKeys.all, "detail", id] as const,
 }
 ```
 
 `all` sirve para invalidar todo el slice de una vez;
-`lists()`/`detail(id)` para invalidaciones quirúrgicas. No usar arrays de
+`list()`/`detail(id)` para invalidaciones quirúrgicas. No usar arrays de
 strings sueltos inline en cada hook — siempre a través de este objeto.
+El objeto se llama `{slice}QueryKeys` y su `all` es `["{slice}"]`.
 
 ## Hook de listado (query)
 
@@ -40,12 +41,12 @@ strings sueltos inline en cada hook — siempre a través de este objeto.
 "use client"
 
 import { useQuery } from "@tanstack/react-query"
-import { getCursos } from "../api"
-import { coursesAdminQueryKeys } from "../model/query-keys"
+import { getCursos } from "../api/getCursos"
+import { cursosQueryKeys } from "../model/query-keys"
 
 export function useCourses() {
   return useQuery({
-    queryKey: coursesAdminQueryKeys.lists(),
+    queryKey: cursosQueryKeys.list(),
     queryFn: async () => {
       const { data, error } = await getCursos()
       if (error || !data) {
@@ -68,7 +69,7 @@ Cuando el id puede no existir todavía (ej. sheet de edición cerrado), usar
 ```typescript
 export function useCourse(id: string | null) {
   return useQuery({
-    queryKey: coursesAdminQueryKeys.detail(id ?? ""),
+    queryKey: cursosQueryKeys.detail(id ?? ""),
     queryFn: async () => {
       const { data, error } = await getCursoById(id as string)
       if (error || !data) throw new Error(error ?? "No se pudo cargar el curso.")
@@ -95,7 +96,7 @@ export function useCreateCourse() {
       return data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: coursesAdminQueryKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: cursosQueryKeys.list() })
     },
   })
 }
@@ -105,8 +106,8 @@ Para `update`, invalidar tanto la lista como el detalle del id afectado:
 
 ```typescript
 onSuccess: (_data, variables) => {
-  queryClient.invalidateQueries({ queryKey: coursesAdminQueryKeys.lists() })
-  queryClient.invalidateQueries({ queryKey: coursesAdminQueryKeys.detail(variables.id) })
+  queryClient.invalidateQueries({ queryKey: cursosQueryKeys.list() })
+  queryClient.invalidateQueries({ queryKey: cursosQueryKeys.detail(variables.id) })
 },
 ```
 
@@ -128,7 +129,7 @@ try {
 
 ## Checklist para hooks nuevos
 
-- [ ] `model/query-keys.ts` existe con `all`/`lists()`/`detail(id)`
+- [ ] `model/query-keys.ts` existe con `all`/`list()`/`detail(id)`
 - [ ] Un hook por archivo, `"use client"` al inicio
 - [ ] `queryFn`/`mutationFn` hacen el `throw new Error(...)` cuando
       `api/` retorna `error`

@@ -29,7 +29,7 @@ export default function NotificationsMenu() {
             {counts && counts.totalPendientes > 0 ? (
               <span
                 aria-hidden="true"
-                className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-violet-500 px-1 text-[9px] font-bold leading-none text-primary-foreground ring-2 ring-background"
+                className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[9px] font-bold leading-none text-destructive-foreground ring-2 ring-background"
               >
                 {counts.totalPendientes > 99 ? "99+" : counts.totalPendientes}
               </span>
@@ -61,7 +61,7 @@ export default function NotificationsMenu() {
                     label="Solicitudes nuevas"
                     count={counts.solicitudesPendientes}
                     href="/dashboard/admin/solicitudes"
-                    tone="violet"
+                    tone="info"
                   />
                 ) : null}
                 {counts.cuotasVencidas > 0 ? (

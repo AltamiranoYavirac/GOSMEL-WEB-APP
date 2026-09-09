@@ -1,12 +1,16 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IStudentCalificacion, TTipoEvaluacion } from "../model/student-dashboard.types";
 
-export async function getStudentGrades(estudianteId: string): Promise<{
+export async function getStudentGrades(
+  estudianteId: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IStudentCalificacion[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
 
   const { data: inscripciones, error: inscError } = await supabase
     .from("inscripciones")

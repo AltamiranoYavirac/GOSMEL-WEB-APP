@@ -21,8 +21,7 @@ export const ROL_BADGE: Record<
   docente: {
     label: "Docente",
     variant: "outline",
-    className:
-      "border-violet-500/30 bg-violet-500/10 text-violet-700 dark:border-violet-400/40 dark:bg-violet-500/15 dark:text-violet-300",
+    className: "border-info-border bg-info-tint text-info-fg",
   },
   estudiante: { label: "Estudiante", variant: "outline" },
   representante: { label: "Representante", variant: "ghost" },

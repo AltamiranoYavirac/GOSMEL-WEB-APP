@@ -18,11 +18,7 @@ import {
 import { formatCurrency } from "@/shared/lib/formatters";
 
 import { useAnularPago } from "../hooks/useAnularPago";
-import type { IPagoRow } from "../model/pago.types";
-
-interface IAnularPagoDialogProps {
-  pago: IPagoRow;
-}
+import type { IAnularPagoDialogProps } from "./AnularPagoDialog.types";
 
 export default function AnularPagoDialog({ pago }: IAnularPagoDialogProps) {
   const [open, setOpen] = useState(false);

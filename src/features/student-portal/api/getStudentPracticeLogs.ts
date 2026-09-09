@@ -1,4 +1,6 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 import { toLocalDateString } from "@/shared/lib/date";
 
 import type { IStudentPractice, IStudentPracticeLog } from "../model/student-dashboard.types";
@@ -7,11 +9,13 @@ function fechaKey(date: Date): string {
   return toLocalDateString(date);
 }
 
-export async function getStudentPracticeLogs(estudianteId: string): Promise<{
+export async function getStudentPracticeLogs(
+  estudianteId: string,
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IStudentPractice | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("registros_practica")
     .select("id, fecha, minutos, nota, inscripcion_id, inscripciones!registros_practica_inscripcion_id_fkey(catedras!inscripciones_catedra_id_fkey(codigo))")

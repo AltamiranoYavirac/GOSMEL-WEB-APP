@@ -2,11 +2,39 @@ import type { TBadgeVariant } from "@/shared/ui";
 
 import type { TSolicitudEstado, TSolicitudTipo } from "./solicitud.types";
 
-export const SOLICITUD_TIPO_BADGE: Record<TSolicitudTipo, { label: string; variant: TBadgeVariant }> = {
-  clase_prueba: { label: "Clase de prueba", variant: "outline" },
-  admision: { label: "Admisión", variant: "default" },
-  masterclass: { label: "Masterclass", variant: "secondary" },
-  contacto_general: { label: "Contacto general", variant: "ghost" },
+export const SOLICITUD_TIPO_BADGE: Record<
+  TSolicitudTipo,
+  {
+    label: string;
+    variant: TBadgeVariant;
+    icon: string;
+    tone: "info" | "success" | "warning" | "neutral";
+  }
+> = {
+  clase_prueba: {
+    label: "Clase de prueba",
+    variant: "info",
+    icon: "ph:chalkboard-teacher",
+    tone: "info",
+  },
+  admision: {
+    label: "Admisión",
+    variant: "success",
+    icon: "ph:student",
+    tone: "success",
+  },
+  masterclass: {
+    label: "Masterclass",
+    variant: "warning",
+    icon: "ph:presentation-chart",
+    tone: "warning",
+  },
+  contacto_general: {
+    label: "Contacto general",
+    variant: "ghost",
+    icon: "ph:chat-circle-dots",
+    tone: "neutral",
+  },
 };
 
 export const SOLICITUD_ESTADO_BADGE: Record<

@@ -1,12 +1,16 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
+import { getInstrumentoOptions } from "@/entities/instrument";
 
 import type { IDocenteOption, IInstrumentoOption } from "../model/CrearCursoForm.config";
 
-export async function getCursoOptions(): Promise<{
+export async function getCursoOptions(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: { instrumentos: IInstrumentoOption[]; docentes: IDocenteOption[] } | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
 
   const { data: rolesDocente } = await supabase
     .from("perfil_rol")
@@ -15,13 +19,8 @@ export async function getCursoOptions(): Promise<{
 
   const docentePerfilIds = Array.from(new Set((rolesDocente ?? []).map((r) => r.perfil_id)));
 
-  const [instrumentos, perfilesDocentes] = await Promise.all([
-    supabase
-      .from("instrumentos")
-      .select("id, nombre")
-      .eq("activo", true)
-      .order("nombre", { ascending: true })
-      .limit(300),
+  const [instrumentosResult, perfilesDocentes] = await Promise.all([
+    getInstrumentoOptions(),
     supabase
       .from("perfiles")
       .select("id, nombres, apellidos")
@@ -30,9 +29,9 @@ export async function getCursoOptions(): Promise<{
       .limit(300),
   ]);
 
-  const firstError = [instrumentos, perfilesDocentes].map((result) => result.error).find(Boolean);
+  const firstError = instrumentosResult.error ?? perfilesDocentes.error?.message ?? null;
   if (firstError) {
-    return { data: null, error: firstError.message };
+    return { data: null, error: firstError };
   }
 
   const roleMap = new Map<string, Set<string>>();
@@ -43,10 +42,7 @@ export async function getCursoOptions(): Promise<{
 
   return {
     data: {
-      instrumentos: (instrumentos.data ?? []).map((instrumento) => ({
-        id: instrumento.id,
-        nombre: instrumento.nombre,
-      })),
+      instrumentos: instrumentosResult.data ?? [],
       docentes: (perfilesDocentes.data ?? []).map((perfil) => {
         const roles = roleMap.get(perfil.id);
         const esAdmin = roles?.has("admin") && !roles?.has("docente");

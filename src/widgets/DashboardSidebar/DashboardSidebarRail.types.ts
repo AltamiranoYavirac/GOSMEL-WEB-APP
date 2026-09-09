@@ -1,6 +1,7 @@
-import type { TRol } from "@/entities/user";
+import type { ISessionUser, TRol } from "@/entities/user";
 
 export interface IDashboardSidebarRailProps {
   role: TRol;
+  session: ISessionUser;
   onExpand: () => void;
 }

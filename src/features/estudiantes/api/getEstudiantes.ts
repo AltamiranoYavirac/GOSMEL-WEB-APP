@@ -1,4 +1,6 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IEstudianteCatedraInfo, IEstudianteRow, TNivelCurso } from "../model/estudiante.types";
 
@@ -13,11 +15,12 @@ function calcularEdad(fechaNacimiento: string): number | null {
   return edad;
 }
 
-export async function getEstudiantes(): Promise<{
+export async function getEstudiantes(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IEstudianteRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
 
   const { data: rolesRol } = await supabase
     .from("perfil_rol")

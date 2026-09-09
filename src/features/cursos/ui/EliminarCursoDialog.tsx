@@ -17,11 +17,7 @@ import {
 } from "@/shared/ui";
 
 import { useEliminarCurso } from "../hooks/useEliminarCurso";
-import type { ICursoRow } from "../model/curso.types";
-
-interface IEliminarCursoDialogProps {
-  curso: ICursoRow;
-}
+import type { IEliminarCursoDialogProps } from "./EliminarCursoDialog.types";
 
 export default function EliminarCursoDialog({ curso }: IEliminarCursoDialogProps) {
   const [open, setOpen] = useState(false);

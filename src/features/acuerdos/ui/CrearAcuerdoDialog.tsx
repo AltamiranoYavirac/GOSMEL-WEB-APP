@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { z } from "zod";
 
 import {
   AlertDialog,
@@ -17,70 +16,28 @@ import {
   Spinner,
 } from "@/shared/ui";
 import { DateField, Form, NumberField, SelectField, TextareaField, TextField, useAppForm } from "@/shared/form";
-import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import { useEstudianteOptions } from "@/entities/estudiante";
 
 import { useCrearAcuerdo } from "../hooks/useCrearAcuerdo";
-
-const crearAcuerdoSchema = z.object({
-  estudianteId: z.string().min(1, "Selecciona un estudiante"),
-  montoMensual: z.coerce.number().positive("Ingresa una mensualidad válida"),
-  diaCobro: z.coerce.number().min(1).max(28, "Día entre 1 y 28"),
-  fechaInicio: z.string().min(1, "Selecciona la fecha de inicio"),
-  fechaFin: z.string().optional(),
-  motivoAjuste: z.string().optional(),
-  observaciones: z.string().optional(),
-});
-
-type TCrearAcuerdoValues = z.infer<typeof crearAcuerdoSchema>;
+import {
+  crearAcuerdoFormSchema,
+  getCrearAcuerdoFormDefaults,
+  type ICrearAcuerdoFormValues,
+} from "../model/CrearAcuerdoForm.config";
 
 export default function CrearAcuerdoDialog() {
   const [open, setOpen] = useState(false);
-  const [estudiantes, setEstudiantes] = useState<{ value: string; label: string }[]>([]);
-  const [loadingOptions, setLoadingOptions] = useState(false);
+  const { data: estudiantes = [], isLoading: loadingOptions } = useEstudianteOptions(open);
 
   const mutation = useCrearAcuerdo();
 
-  const today = new Date().toISOString().slice(0, 10);
-
-  const form = useAppForm<TCrearAcuerdoValues>({
-    schema: crearAcuerdoSchema,
-    values: {
-      estudianteId: "",
-      montoMensual: 35,
-      diaCobro: 5,
-      fechaInicio: today,
-      fechaFin: "",
-      motivoAjuste: "",
-      observaciones: "",
-    },
+  const form = useAppForm<ICrearAcuerdoFormValues>({
+    schema: crearAcuerdoFormSchema,
+    values: getCrearAcuerdoFormDefaults(),
     resetOptions: { keepDirtyValues: false, keepErrors: false },
   });
 
-  useEffect(() => {
-    if (!open) return;
-    const fetchEstudiantes = async () => {
-      setLoadingOptions(true);
-      const supabase = createSupabaseBrowserClient();
-      const { data } = await supabase
-        .from("estudiantes")
-        .select("id, nombres, apellidos")
-        .eq("activo", true)
-        .order("nombres", { ascending: true })
-        .limit(500);
-
-      setEstudiantes(
-        (data ?? []).map((e) => ({
-          value: e.id,
-          label: `${e.nombres} ${e.apellidos}`.trim(),
-        }))
-      );
-      setLoadingOptions(false);
-    };
-
-    fetchEstudiantes();
-  }, [open]);
-
-  const onSubmit = (values: TCrearAcuerdoValues) => {
+  const onSubmit = (values: ICrearAcuerdoFormValues) => {
     mutation.mutate(values, {
       onSuccess: () => setOpen(false),
     });

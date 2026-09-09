@@ -1,15 +1,18 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 export interface ICatedraSelectOption {
   id: string;
   label: string;
 }
 
-export async function getCatedrasParaHorarios(): Promise<{
+export async function getCatedrasParaHorarios(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: ICatedraSelectOption[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("catedras")
     .select("id, codigo, cursos(nombre)")

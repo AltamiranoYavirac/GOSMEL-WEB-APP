@@ -1,13 +1,16 @@
 "use client";
 
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 
 import { Button } from "@/shared/ui";
 
-import animationData from "./construccion.json";
 import type { IComingSoonProps } from "./ComingSoon.types";
+
+const ComingSoonAnimation = dynamic(() => import("./ComingSoonAnimation"), {
+  ssr: false,
+});
 
 export default function ComingSoon({
   title = "Próximamente",
@@ -18,11 +21,7 @@ export default function ComingSoon({
   return (
     <div className="flex-1 min-h-[60vh] flex flex-col items-center justify-center px-4 text-center">
       <div className="w-full max-w-lg">
-        <Lottie
-          animationData={animationData}
-          loop
-          className="w-full h-auto"
-        />
+        <ComingSoonAnimation />
       </div>
 
       <div className="mt-4 space-y-4 max-w-md">
