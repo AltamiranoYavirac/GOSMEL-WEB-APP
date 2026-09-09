@@ -13,7 +13,6 @@ export function useStudentGrades(estudianteId: string | null) {
       if (error) throw new Error(error ?? "No se pudieron cargar las notas");
       return data ?? [];
     },
-    staleTime: 60_000,
     retry: false,
     enabled: Boolean(estudianteId),
   });

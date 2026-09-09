@@ -15,6 +15,5 @@ export function useCursoTemario(cursoId: string | null, enabled = true) {
       return data;
     },
     enabled: Boolean(cursoId) && enabled,
-    staleTime: 60_000,
   });
 }

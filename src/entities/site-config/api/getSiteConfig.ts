@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { ISiteConfig } from "../model/site-config.types";
 
-export async function getSiteConfig(): Promise<{
+export async function getSiteConfig(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: ISiteConfig | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("configuracion_sitio")
     .select(

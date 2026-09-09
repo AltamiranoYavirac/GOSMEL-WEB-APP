@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { ITeacherSesion, TEstadoSesion } from "../model/teacher-dashboard.types";
 
-export async function getTeacherSesiones(): Promise<{
+export async function getTeacherSesiones(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: ITeacherSesion[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

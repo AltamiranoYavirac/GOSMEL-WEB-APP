@@ -13,7 +13,6 @@ export function useCursoOptions(enabled = true) {
       if (error) throw new Error(error);
       return data ?? { instrumentos: [], docentes: [] };
     },
-    staleTime: 60_000,
     retry: false,
     enabled,
   });

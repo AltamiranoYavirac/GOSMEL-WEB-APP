@@ -1,4 +1,6 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { ITopbarSummary } from "../model/topbar.types";
 
@@ -7,8 +9,9 @@ interface IGetTopbarSummaryResult {
   error: string | null;
 }
 
-export async function getTopbarSummary(): Promise<IGetTopbarSummaryResult> {
-  const supabase = createSupabaseBrowserClient();
+export async function getTopbarSummary(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<IGetTopbarSummaryResult> {
   const today = new Date().toISOString().slice(0, 10);
 
   const [solicitudes, cuotas, sesiones, inscripciones, actividades] = await Promise.all([

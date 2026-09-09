@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IPerfilDisponible } from "../model/docente.types";
 
-export async function getPerfilesDisponibles(): Promise<{
+export async function getPerfilesDisponibles(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IPerfilDisponible[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
 
   const [profsRes, docsRes, estsRes] = await Promise.all([
     supabase.from("perfiles").select("id, nombres, apellidos, email").limit(200),

@@ -1,12 +1,15 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/shared/api/supabase/database.types";
 
 import type { IMaterialRow, TTipoMaterial, TVisibilidadMaterial } from "../model/material.types";
 
-export async function getMateriales(): Promise<{
+export async function getMateriales(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
+): Promise<{
   data: IMaterialRow[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("materiales")
     .select(
