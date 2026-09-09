@@ -10,7 +10,7 @@ export async function getSolicitudes(): Promise<{
   const { data, error } = await supabase
     .from("solicitudes")
     .select(
-      "id, created_at, nombre_completo, email, telefono, tipo, estado, mensaje, origen_url, curso_id, cursos(nombre), instrumento_id, instrumentos(nombre), docente_id, docentes(perfiles!docentes_perfil_id_fkey(nombres, apellidos)), estudiante_nombre, estudiante_fecha_nacimiento, para_menor, parentesco, consentimiento_datos, consentimiento_en, consentimiento_otorgado_por, notas_internas"
+      "id, created_at, nombre_completo, email, telefono, tipo, estado, mensaje, origen_url, curso_id, cursos(nombre), instrumento_id, instrumentos(nombre), docente_id, docentes(perfiles!docentes_perfil_id_fkey(nombres, apellidos)), estudiante_nombre, estudiante_fecha_nacimiento, para_menor, parentesco, consentimiento_datos, consentimiento_en, consentimiento_otorgado_por, notas_internas, responsable:perfiles!solicitudes_atendida_por_fkey(nombres, apellidos, avatar_public_id)"
     )
     .order("created_at", { ascending: false })
     .limit(300);
@@ -21,6 +21,7 @@ export async function getSolicitudes(): Promise<{
 
   const rows: ISolicitudRow[] = (data ?? []).map((solicitud) => {
     const docente = solicitud.docentes?.perfiles;
+    const responsable = solicitud.responsable;
     const interes =
       solicitud.cursos?.nombre ??
       solicitud.instrumentos?.nombre ??
@@ -45,6 +46,10 @@ export async function getSolicitudes(): Promise<{
       consentimientoEn: solicitud.consentimiento_en,
       consentimientoOtorgadoPor: solicitud.consentimiento_otorgado_por,
       notasInternas: solicitud.notas_internas,
+      responsableNombre: responsable
+        ? `${responsable.nombres} ${responsable.apellidos}`.trim()
+        : null,
+      responsableAvatarPublicId: responsable?.avatar_public_id ?? null,
     };
   });
 
