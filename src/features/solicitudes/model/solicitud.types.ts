@@ -23,4 +23,6 @@ export interface ISolicitudRow {
   consentimientoEn: string;
   consentimientoOtorgadoPor: string;
   notasInternas: string | null;
+  responsableNombre: string | null;
+  responsableAvatarPublicId: string | null;
 }
