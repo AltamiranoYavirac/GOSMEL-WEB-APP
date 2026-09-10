@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { cloudinary } from "@/shared/api/cloudinary";
+import { requireApiSession } from "@/features/session/server";
 
 export async function POST(req: NextRequest) {
   try {
+    const auth = await requireApiSession(["admin", "docente", "estudiante", "representante"]);
+    if (!auth.ok) return auth.response;
+
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
 

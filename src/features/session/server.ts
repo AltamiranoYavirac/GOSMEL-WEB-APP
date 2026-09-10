@@ -1,4 +1,7 @@
 export { getServerSession } from "./api/getServerSession"
 export type { IServerSessionResult } from "./api/getServerSession"
+export { requireApiSession } from "./api/requireApiSession"
+export type { TApiSessionResult } from "./api/requireApiSession.types"
+export { requireSession } from "./api/requireSession"
 export { exchangeOAuthCode } from "./api/exchangeOAuthCode"
 export { signOutServer } from "./api/signOutServer"
