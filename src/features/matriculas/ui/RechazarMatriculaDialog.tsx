@@ -16,10 +16,13 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogMedia,
   AlertDialogTitle,
   Button,
+  DataLabel,
   Spinner,
 } from "@/shared/ui";
+import { formatDate, initialsOf } from "@/shared/lib/formatters";
 
 import type { IRechazarMatriculaDialogProps } from "./RechazarMatriculaDialog.types";
 
@@ -40,25 +43,46 @@ export default function RechazarMatriculaDialog({ inscripcion, onClose }: IRecha
 
   return (
     <AlertDialog open={open} onOpenChange={(next) => (next ? null : onClose())}>
-      <AlertDialogContent className="w-full max-w-md p-6">
+      <AlertDialogContent size="xl" className="w-full p-6 sm:p-7">
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2">
-            <span className="flex size-8 items-center justify-center rounded-full bg-danger-tint text-danger-fg">
-              <Icon icon="ph:x" aria-hidden="true" />
-            </span>
-            Rechazar matrícula
-          </AlertDialogTitle>
+          <AlertDialogMedia className="rounded-xl bg-danger-tint text-danger-fg">
+            <Icon icon="ph:prohibit" aria-hidden="true" />
+          </AlertDialogMedia>
+          <AlertDialogTitle>Rechazar matrícula</AlertDialogTitle>
           <AlertDialogDescription>
-            {inscripcion?.estudiante} · {inscripcion?.cursoNombre ?? inscripcion?.catedraCodigo ?? "Cátedra"}
+            La inscripción se descartará y se notificará el motivo.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
+        {inscripcion ? (
+          <div className="flex items-center gap-3 rounded-xl border border-border/70 bg-card p-3.5 sm:p-4">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-warning-tint text-xs font-extrabold text-warning-fg">
+              {initialsOf(inscripcion.estudiante)}
+            </span>
+            <div className="min-w-0">
+              <DataLabel>Inscripción seleccionada</DataLabel>
+              <p className="mt-0.5 truncate text-sm font-bold text-foreground">
+                {inscripcion.estudiante}
+              </p>
+              <p className="truncate text-xs text-muted-foreground">
+                {inscripcion.cursoNombre ?? "Cátedra"}
+                {inscripcion.catedraCodigo ? ` · ${inscripcion.catedraCodigo}` : ""}
+                {` · inicia ${formatDate(inscripcion.fechaInicio)}`}
+              </p>
+            </div>
+          </div>
+        ) : null}
+
         <Form form={form} onSubmit={onSubmit} id="rechazar-matricula" className="flex flex-col gap-4">
           <p className="rounded-lg border border-danger-border bg-danger-tint px-3.5 py-2.5 text-[12px] leading-relaxed text-danger-fg">
-            Esta acción es definitiva. El estudiante y quien solicitó la matrícula serán notificados con el
-            motivo.
+            Esta acción es definitiva. El estudiante y quien solicitó la matrícula serán notificados
+            con el motivo.
           </p>
-          <TextareaField name="motivo" label="Motivo del rechazo" placeholder="Ej: No hay cupo disponible en el horario solicitado…" />
+          <TextareaField
+            name="motivo"
+            label="Motivo del rechazo"
+            placeholder="Ej: No hay cupo disponible en el horario solicitado…"
+          />
         </Form>
 
         <AlertDialogFooter>
