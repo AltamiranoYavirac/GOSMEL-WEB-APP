@@ -54,12 +54,23 @@ const eslintConfig = defineConfig([
     },
   },
 
+  // Tests: la regla FSD no aplica a tests co-locados ni a utilidades de src/test
+  {
+    files: ["src/**/*.{test,spec}.{ts,tsx}", "src/test/**/*.{ts,tsx}"],
+    rules: {
+      "boundaries/dependencies": "off",
+    },
+  },
+
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
     "build/**",
+    "coverage/**",
+    ".claude/**",
+    ".agents/**",
     "next-env.d.ts",
     "Academia de música rediseño/**",
     "Academia de música rediseño v2/**",

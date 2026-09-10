@@ -85,7 +85,7 @@ src/
 │   │   ├── instruments/
 │   │   ├── masterclasses/
 │   │   └── contact/
-│   ├── (private)/                # Rutas protegidas por middleware
+│   ├── (private)/                # Rutas protegidas por requireSession() en cada layout
 │   │   └── dashboard/
 │   │       ├── student/
 │   │       ├── teacher/
@@ -94,7 +94,11 @@ src/
 │   ├── layout.tsx
 │   └── page.tsx                  # Landing principal
 │
-├── middleware.ts                 # RBAC — verificación de roles (raíz de src/, stub hoy)
+├── proxy.ts                      # Next 16 renombró Middleware a Proxy. Redirect optimista
+│                                 # de UX (anónimo → /login, autenticado → /dashboard) vía
+│                                 # updateSession (lee claims, refresca cookies). Sin consultas
+│                                 # a DB. NO es capa de auth: la autorización real vive en
+│                                 # requireSession() de cada layout.
 │
 ├── features/                     # Lógica de negocio por dominio
 │   ├── auth/
@@ -124,6 +128,29 @@ src/
     ├── lib/                       # utils, formatters, cn(), image-compression
     └── types/                     # Tipos globales compartidos
 ```
+
+### Autorización — requireSession (Data Access Layer)
+
+Next.js 16 renombró Middleware a Proxy y las docs desaconsejan usarlo como
+única capa de auth o para consultas a DB. La autorización real vive en cada
+`layout.tsx` de rol, en un único punto testeable:
+
+- `getServerSession()` (`@/features/session/server`) → lee claims de Supabase
+  Auth + perfil + roles. Envuelto en `cache()` de React: llamarlo desde el
+  layout padre y el hijo no duplica queries en el mismo render.
+- `requireSession(allowed?)` (`@/features/session/server`) → en `layout.tsx`:
+  - anónimo → `redirect("/login")`
+  - cuenta inactiva → `redirect("/auth/signout?reason=inactive")`
+  - rol no permitido → `redirect(resolveHomeRoute(roles))`
+  - error de DB → `throw`
+- `requireApiSession(allowed?)` (`@/features/session/server`) → en route
+  handlers: responde 401 / 403 / 500 sin ejecutar la lógica del handler.
+- RLS de Supabase = segunda línea de defensa.
+- `src/proxy.ts` (implementado) → solo redirect optimista de UX vía
+  `updateSession` (`@/shared/api/supabase/proxy`): sin sesión y ruta
+  `/dashboard/*` → `redirect("/login?next=…")`; con sesión y `/login` o
+  `/register` → `redirect("/dashboard")`. Refresca las cookies de Supabase en
+  cada request. Sin consultas a DB ni checks de rol.
 
 ### Estructura interna de cada feature
 
@@ -303,7 +330,7 @@ yarn lint         # ESLint
 
 - Usar el cliente singleton de `shared/api/supabase.ts`.
 - **Row Level Security (RLS) activo** en todas las tablas. No desactivar.
-- Las políticas RLS son la segunda línea de defensa (el middleware es la primera).
+- Las políticas RLS son la segunda línea de defensa (la autorización de layouts/route handlers con `requireSession` / `requireApiSession` es la primera).
 - El Storage de Supabase se usa para archivos internos de bajo volumen.
 - Cloudinary se usa para partituras, PDFs e imágenes que se sirven públicamente.
 
