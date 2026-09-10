@@ -15,7 +15,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
   Button,
-  ThemeToggle,
 } from "@/shared/ui";
 
 import type { IDashboardTopbarProps } from "./DashboardTopbar.types";
@@ -76,7 +75,6 @@ export default function DashboardTopbar({ role, session, onMenuClick, onToggleSi
         {isAdmin ? <GlobalSearchDialog /> : null}
         {isAdmin ? <QuickActionsMenu /> : null}
         {isAdmin ? <NotificationsMenu /> : null}
-        <ThemeToggle />
         <SessionUserMenu session={session} />
       </div>
     </header>

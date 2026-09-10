@@ -29,14 +29,14 @@ export default function FinalCtaSection() {
         >
           <Button
             asChild
-            className="h-[52px] w-full rounded-full bg-surface-dark-foreground px-8 text-base font-semibold text-surface-dark hover:bg-surface-dark-foreground/85 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/85 md:h-[52px] md:w-auto md:text-[15px]"
+            className="h-[52px] w-full rounded-full bg-surface-dark-foreground px-8 text-base font-semibold text-surface-dark hover:bg-surface-dark-foreground/85 md:h-[52px] md:w-auto md:text-[15px]"
           >
             <Link href="/courses">Ver cursos</Link>
           </Button>
           <Button
             asChild
             variant="outline"
-            className="h-[52px] w-full rounded-full border-surface-dark-foreground/30 bg-transparent text-base font-semibold text-surface-dark-foreground hover:bg-surface-dark-foreground/10 hover:text-surface-dark-foreground md:h-auto md:w-auto md:border-0 md:p-0 md:text-[15px] md:font-medium md:text-stage-accent md:hover:bg-transparent md:hover:text-stage-accent/80 md:dark:text-surface-dark-foreground md:dark:hover:text-surface-dark-foreground/80"
+            className="h-[52px] w-full rounded-full border-surface-dark-foreground/30 bg-transparent text-base font-semibold text-surface-dark-foreground hover:bg-surface-dark-foreground/10 hover:text-surface-dark-foreground md:h-auto md:w-auto md:border-0 md:p-0 md:text-[15px] md:font-medium md:text-stage-accent md:hover:bg-transparent md:hover:text-stage-accent/80"
           >
             <Link href="/register">Inscríbete ahora<span className="hidden md:inline"> ›</span></Link>
           </Button>

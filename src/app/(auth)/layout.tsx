@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { Icon } from "@iconify/react";
 
 import { getServerSession } from "@/features/session/server";
-import { Button, ThemeToggle } from "@/shared/ui";
+import { Button } from "@/shared/ui";
 
 export default async function AuthLayout({
   children,
@@ -24,7 +24,7 @@ export default async function AuthLayout({
 
   return (
     <main className="flex-1 min-h-screen bg-background flex flex-col overflow-x-hidden">
-      <div className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4 sm:p-6">
+      <div className="absolute inset-x-0 top-0 z-20 flex items-center p-4 sm:p-6">
         <Button
           asChild
           variant="ghost"
@@ -35,7 +35,6 @@ export default async function AuthLayout({
             Inicio
           </Link>
         </Button>
-        <ThemeToggle className="border border-border bg-background/70 backdrop-blur-md" />
       </div>
       {children}
     </main>

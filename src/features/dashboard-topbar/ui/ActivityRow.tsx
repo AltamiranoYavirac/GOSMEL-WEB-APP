@@ -17,7 +17,7 @@ export default function ActivityRow({ activity }: IActivityRowProps) {
   return (
     <li>
       <div className="flex items-start gap-3 px-2 py-2">
-        <span aria-hidden="true" className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-primary-tint text-primary-700 dark:text-primary-300">
+        <span aria-hidden="true" className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-primary-tint text-primary-700">
           <Icon icon={activityIcon(activity.tipo)} width={14} height={14} />
         </span>
         <span className="min-w-0 flex-1">

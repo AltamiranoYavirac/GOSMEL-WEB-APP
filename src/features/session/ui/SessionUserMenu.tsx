@@ -3,15 +3,17 @@
 import Link from "next/link"
 import { Icon } from "@iconify/react"
 
-import { ROLE_LABEL, resolvePrimaryRole } from "@/entities/user"
+import { ROLE_LABEL, resolvePrimaryRole, resolveProfileRoute } from "@/entities/user"
 import { initialsOf } from "@/shared/lib/formatters"
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  Badge,
   Button,
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -31,45 +33,121 @@ export default function SessionUserMenu({ session, mode = "dashboard" }: ISessio
   const logout = useLogout(mode === "public" ? "/" : "/login")
   const role = session.roles.length > 0 ? resolvePrimaryRole(session.roles) : null
   const label = session.displayName || session.email || "Sesión activa"
+  const firstName = label.split(" ")[0]
   const avatarUrl = cloudinaryUrl(session.avatarPublicId)
+  const profileRoute = resolveProfileRoute(session.roles)
+  const panelHref = mode === "public" ? session.homeRoute : "/"
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full" aria-label="Abrir menú de usuario">
-          <Avatar>
+        <Button
+          variant="ghost"
+          className="h-10 gap-2 rounded-full px-1 sm:pr-3"
+          aria-label="Abrir menú de usuario"
+        >
+          <Avatar className="ring-2 ring-primary/15">
             {avatarUrl ? <AvatarImage src={avatarUrl} alt={label} /> : null}
-            <AvatarFallback className="bg-primary/15 text-primary font-semibold">
+            <AvatarFallback className="bg-primary/15 font-semibold text-primary-700">
               {initialsOf(label)}
             </AvatarFallback>
           </Avatar>
+          <span className="hidden max-w-[128px] truncate text-sm font-medium sm:block">
+            {firstName}
+          </span>
+          <Icon
+            icon="ph:caret-down"
+            width={14}
+            height={14}
+            aria-hidden="true"
+            className="hidden shrink-0 text-muted-foreground transition-transform group-aria-expanded/button:rotate-180 sm:block"
+          />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-64">
-        <DropdownMenuLabel className="flex flex-col gap-0.5">
-          <span className="truncate text-sm font-semibold text-foreground">{label}</span>
-          {session.email && session.email !== label ? (
-            <span className="truncate text-xs font-normal text-muted-foreground">{session.email}</span>
+
+      <DropdownMenuContent align="end" className="w-[300px] overflow-hidden p-0">
+        <div className="flex items-center gap-3 bg-gradient-to-br from-primary/12 via-accent-500/8 to-transparent px-4 pt-4 pb-3">
+          <Avatar size="lg" className="shadow-sm ring-2 ring-background">
+            {avatarUrl ? <AvatarImage src={avatarUrl} alt={label} /> : null}
+            <AvatarFallback className="bg-primary/15 font-semibold text-primary-700">
+              {initialsOf(label)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-foreground">{label}</p>
+            {session.email && session.email !== label ? (
+              <p className="truncate text-xs text-muted-foreground">{session.email}</p>
+            ) : null}
+          </div>
+        </div>
+
+        {role ? (
+          <div className="px-4 pb-3">
+            <Badge variant="secondary" className="gap-1">
+              <Icon icon="ph:identification-badge" width={12} height={12} aria-hidden="true" />
+              {ROLE_LABEL[role]}
+            </Badge>
+          </div>
+        ) : null}
+
+        <DropdownMenuSeparator className="my-0" />
+
+        <DropdownMenuGroup className="p-1.5">
+          <DropdownMenuLabel className="px-2 text-[10px] uppercase tracking-wider">
+            Cuenta
+          </DropdownMenuLabel>
+          {profileRoute ? (
+            <DropdownMenuItem asChild className="gap-3 px-2 py-2">
+              <Link href={profileRoute}>
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary-700">
+                  <Icon icon="ph:user-circle" width={17} height={17} aria-hidden="true" />
+                </span>
+                <span className="flex flex-col">
+                  <span className="text-sm font-medium">Perfil</span>
+                  <span className="text-xs text-muted-foreground">Tus datos y preferencias</span>
+                </span>
+              </Link>
+            </DropdownMenuItem>
           ) : null}
-          {role ? (
-            <span className="text-xs font-normal text-muted-foreground">{ROLE_LABEL[role]}</span>
-          ) : null}
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href={mode === "public" ? session.homeRoute : "/"}>
-            <Icon icon="ph:globe" width={16} height={16} aria-hidden="true" />
-            {mode === "public" ? "Ir a mi panel" : "Ver sitio"}
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          variant="destructive"
-          disabled={logout.isPending}
-          onClick={() => logout.mutate()}
-        >
-          <Icon icon="ph:sign-out" width={16} height={16} aria-hidden="true" />
-          {logout.isPending ? "Cerrando sesión…" : "Cerrar sesión"}
-        </DropdownMenuItem>
+          <DropdownMenuItem asChild className="gap-3 px-2 py-2">
+            <Link href={panelHref}>
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary-700">
+                <Icon
+                  icon={mode === "public" ? "ph:squares-four" : "ph:globe"}
+                  width={17}
+                  height={17}
+                  aria-hidden="true"
+                />
+              </span>
+              <span className="flex flex-col">
+                <span className="text-sm font-medium">
+                  {mode === "public" ? "Ir a mi panel" : "Ver sitio"}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {mode === "public" ? "Tu espacio de trabajo" : "Volver al sitio público"}
+                </span>
+              </span>
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator className="my-0" />
+
+        <div className="p-1.5">
+          <DropdownMenuItem
+            variant="destructive"
+            className="gap-3 px-2 py-2"
+            disabled={logout.isPending}
+            onClick={() => logout.mutate()}
+          >
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-destructive/10">
+              <Icon icon="ph:sign-out" width={17} height={17} aria-hidden="true" />
+            </span>
+            <span className="text-sm font-medium">
+              {logout.isPending ? "Cerrando sesión…" : "Cerrar sesión"}
+            </span>
+          </DropdownMenuItem>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   )

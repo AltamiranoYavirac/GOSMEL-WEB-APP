@@ -5,8 +5,8 @@ import type { IPasswordStrengthMeterProps } from "./PasswordStrengthMeter.types"
 const SEGMENT_COLORS = [
   "bg-destructive",
   "bg-destructive",
-  "bg-secondary-500",
-  "bg-primary-500",
+  "bg-warning",
+  "bg-success",
 ] as const
 
 export default function PasswordStrengthMeter({ value }: IPasswordStrengthMeterProps) {

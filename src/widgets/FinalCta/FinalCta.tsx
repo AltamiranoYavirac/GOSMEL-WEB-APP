@@ -47,7 +47,7 @@ export default function FinalCta({
         >
           <Button
             asChild
-            className="h-[52px] w-full rounded-full bg-surface-dark-foreground px-[30px] text-[15px] font-semibold text-surface-dark hover:bg-surface-dark-foreground/85 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/85 sm:w-auto"
+            className="h-[52px] w-full rounded-full bg-surface-dark-foreground px-[30px] text-[15px] font-semibold text-surface-dark hover:bg-surface-dark-foreground/85 sm:w-auto"
           >
             <Link href={primary.href}>{primary.label}</Link>
           </Button>

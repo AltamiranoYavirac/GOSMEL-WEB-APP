@@ -5,7 +5,7 @@ import { LANDING_STEPS } from "./LandingPage.constants";
 
 export default function HowItWorksSection() {
   return (
-    <section className="bg-card dark:bg-background">
+    <section className="bg-card">
       <div className="mx-auto grid w-full max-w-[1600px] lg:grid-cols-[1.02fr_1fr]">
         <div className="relative aspect-[4/3] overflow-hidden lg:aspect-[9/10]">
           <RevealImage

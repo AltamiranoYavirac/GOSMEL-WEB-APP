@@ -8,7 +8,7 @@ import type { ICourseCardProps } from "./CourseCard.types";
 
 export default function CourseCard({ course, teachers, number }: ICourseCardProps) {
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-[22px] border border-surface-dark-border/30 bg-surface-dark transition-colors duration-500 hover:border-primary/40 sm:flex-row">
+    <article className="group relative flex flex-col overflow-hidden rounded-[22px] border border-border bg-card shadow-sm transition-all duration-500 hover:border-primary/40 hover:shadow-md sm:flex-row">
       <div className="relative h-[220px] w-full sm:h-auto sm:min-h-[300px] sm:w-[42%]">
         <Image
           src={course.image}
@@ -30,20 +30,20 @@ export default function CourseCard({ course, teachers, number }: ICourseCardProp
 
       <div className="flex flex-1 flex-col justify-between p-6 sm:p-7">
         <div>
-          <p className="line-clamp-2 text-[13px] leading-[1.6] text-surface-dark-muted md:line-clamp-3 md:text-[14px]">
+          <p className="line-clamp-2 text-[13px] leading-[1.6] text-muted-foreground md:line-clamp-3 md:text-[14px]">
             {course.description}
           </p>
 
-          <p className="mb-3 mt-5 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-primary md:text-[11px]">
+          <p className="mb-3 mt-5 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-primary-700 md:text-[11px]">
             Lo que aprenderás
           </p>
           <ul className="flex flex-col gap-2.5">
             {course.learns.map((item) => (
               <li key={item} className="flex items-start gap-2.5">
-                <span className="flex size-[22px] shrink-0 items-center justify-center rounded-full bg-primary-tint text-primary">
+                <span className="flex size-[22px] shrink-0 items-center justify-center rounded-full bg-primary-tint text-primary-700">
                   <Icon icon="ph:check-bold" className="size-3.5" aria-hidden="true" />
                 </span>
-                <span className="text-[13px] leading-[1.5] text-surface-dark-foreground md:text-[14px]">
+                <span className="text-[13px] leading-[1.5] text-foreground md:text-[14px]">
                   {item}
                 </span>
               </li>
@@ -61,7 +61,7 @@ export default function CourseCard({ course, teachers, number }: ICourseCardProp
                     {teacher.name.split(" ").map((n) => n[0]).join("")}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-[13px] font-medium text-surface-dark-foreground">
+                <span className="text-[13px] font-medium text-foreground">
                   {teacher.name}
                 </span>
               </div>
@@ -70,7 +70,7 @@ export default function CourseCard({ course, teachers, number }: ICourseCardProp
 
           <Link
             href={`/courses/${course.slug}`}
-            className="group/link flex shrink-0 items-center gap-1 text-[13px] font-semibold text-primary transition-colors hover:text-primary/80"
+            className="group/link flex shrink-0 items-center gap-1 text-[13px] font-semibold text-primary-700 transition-colors hover:text-primary"
           >
             Ver curso
             <Icon icon="ph:arrow-right" className="size-4 transition-transform group-hover/link:translate-x-1" aria-hidden="true" />

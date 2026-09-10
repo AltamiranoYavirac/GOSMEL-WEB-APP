@@ -19,11 +19,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="es"
-      suppressHydrationWarning
-      className={`${nunitoSans.variable}`}
-    >
+    <html lang="es" className={`${nunitoSans.variable}`}>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-ginger selection:text-cream antialiased">
         <Providers>{children}</Providers>
         <Toaster />

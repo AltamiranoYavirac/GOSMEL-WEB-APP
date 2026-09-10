@@ -1,7 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@config "../../tailwind.config.ts";
 
+/* App is light-only. `.dark` is never applied — neutralizes any stray dark: utility
+   so it cannot fall back to the prefers-color-scheme media query. */
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -24,8 +27,6 @@
   --color-sidebar-primary:       var(--sidebar-primary);
   --color-sidebar-foreground:    var(--sidebar-foreground);
   --color-sidebar:               var(--sidebar);
-  --color-chart-7:               var(--chart-7);
-  --color-chart-6:               var(--chart-6);
   --color-chart-5:               var(--chart-5);
   --color-chart-4:               var(--chart-4);
   --color-chart-3:               var(--chart-3);
@@ -35,6 +36,7 @@
   --color-input:                 var(--input);
   --color-border:                var(--border);
   --color-destructive:           var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-accent-foreground:     var(--accent-foreground);
   --color-accent:                var(--accent);
   --color-muted-foreground:      var(--muted-foreground);
@@ -56,78 +58,74 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* ─── primary — Ámbar de escenario (#D9A15A @ 500) ─────────────── */
-  --color-primary-50:  #fcf8f2;
-  --color-primary-100: #f8ecd9;
-  --color-primary-200: #f1d8b3;
-  --color-primary-300: #e8bd84;
-  --color-primary-400: #dfae6d;
-  --color-primary-500: #d9a15a;
-  --color-primary-600: #b7792f;
-  --color-primary-700: #8f5c17;
-  --color-primary-800: #6b4310;
-  --color-primary-900: #482d0c;
-  --color-primary-950: #291807;
+  /* ─── sombras cálidas — tinte naranja oscuro, no gris puro ──────── */
+  --shadow-2xs: 0 1px 2px 0 rgb(198 108 3 / 0.06);
+  --shadow-xs:  0 1px 3px 0 rgb(198 108 3 / 0.08);
+  --shadow-sm:  0 1px 3px 0 rgb(198 108 3 / 0.10), 0 1px 2px -1px rgb(198 108 3 / 0.10);
+  --shadow:     0 1px 3px 0 rgb(198 108 3 / 0.10), 0 1px 2px -1px rgb(198 108 3 / 0.10);
+  --shadow-md:  0 4px 6px -1px rgb(198 108 3 / 0.12), 0 2px 4px -2px rgb(198 108 3 / 0.10);
+  --shadow-lg:  0 10px 15px -3px rgb(198 108 3 / 0.13), 0 4px 6px -4px rgb(198 108 3 / 0.10);
+  --shadow-xl:  0 20px 25px -5px rgb(198 108 3 / 0.15), 0 8px 10px -6px rgb(198 108 3 / 0.12);
+  --shadow-2xl: 0 25px 50px -12px rgb(198 108 3 / 0.22);
+
+  /* ─── primary — Naranja Jengibre (#F68704 @ 500) ───────────────── */
+  --color-primary-50:  #fff4e8;
+  --color-primary-100: #ffe4c6;
+  --color-primary-200: #fecf9c;
+  --color-primary-300: #fbb066;
+  --color-primary-400: #f99a3a;
+  --color-primary-500: #f68704;
+  --color-primary-600: #d97404;
+  --color-primary-700: #b45c05;
+  --color-primary-800: #8f4a0c;
+  --color-primary-900: #743d10;
+  --color-primary-950: #421f04;
   --color-primary-foreground: var(--primary-foreground);
 
-  /* ─── secondary — Hueso y piedra cálida ─────────────────────────── */
-  --color-secondary-50:  #fbfaf8;
-  --color-secondary-100: #f7f5f1;
-  --color-secondary-200: #efece6;
-  --color-secondary-300: #d8d5ce;
-  --color-secondary-400: #c6c3bc;
-  --color-secondary-500: #a5a29a;
-  --color-secondary-600: #8b8880;
-  --color-secondary-700: #6b6862;
-  --color-secondary-800: #5c5952;
-  --color-secondary-900: #3a3833;
-  --color-secondary-950: #24221f;
+  /* ─── secondary — Rojo de marca (#E22603 @ 500) ────────────────── */
+  --color-secondary-50:  #fdece7;
+  --color-secondary-100: #fbd7cc;
+  --color-secondary-200: #f7b3a0;
+  --color-secondary-300: #f28469;
+  --color-secondary-400: #ec5232;
+  --color-secondary-500: #e22603;
+  --color-secondary-600: #c11f03;
+  --color-secondary-700: #9c1a06;
+  --color-secondary-800: #7c1809;
+  --color-secondary-900: #63170c;
+  --color-secondary-950: #370a03;
   --color-secondary-foreground: var(--secondary-foreground);
 
-  /* ─── accent — Bronce cálido ─────────────────────────────────────── */
-  --color-accent-50:  #fbf6ef;
-  --color-accent-100: #f5e8d5;
-  --color-accent-200: #eed5b4;
-  --color-accent-300: #e8bd84;
-  --color-accent-400: #dda75f;
-  --color-accent-500: #c98b3f;
-  --color-accent-600: #ad6f27;
-  --color-accent-700: #8f5c17;
-  --color-accent-800: #6b4310;
-  --color-accent-900: #492d0a;
-  --color-accent-950: #281804;
+  /* ─── accent — Amarillo de marca (#FEDA08 @ 500) ───────────────── */
+  --color-accent-50:  #fffce6;
+  --color-accent-100: #fff7c0;
+  --color-accent-200: #ffee85;
+  --color-accent-300: #ffe340;
+  --color-accent-400: #fedc1a;
+  --color-accent-500: #feda08;
+  --color-accent-600: #dbb500;
+  --color-accent-700: #b08d02;
+  --color-accent-800: #8a6d08;
+  --color-accent-900: #75590d;
+  --color-accent-950: #443000;
   --color-accent-foreground: var(--accent-foreground);
 
-  /* ─── warm — hueso → negro escenario ────────────────────────────── */
-  --color-warm-50:  #f7f5f1;
-  --color-warm-100: #efece6;
-  --color-warm-200: #d8d5ce;
-  --color-warm-300: #c6c3bc;
-  --color-warm-400: #a5a29a;
-  --color-warm-500: #8b8880;
-  --color-warm-600: #6b6862;
-  --color-warm-700: #5c5952;
-  --color-warm-800: #3a3833;
-  --color-warm-900: #121110;
-  --color-warm-950: #000000;
-
-  /* ─── violet — Amatista (#8B5CF6-ish @ 500) ─────────────────────── */
-  --color-violet-50:  oklch(0.975 0.014 300);
-  --color-violet-100: oklch(0.955 0.032 300);
-  --color-violet-200: oklch(0.920 0.062 300);
-  --color-violet-300: oklch(0.870 0.095 300);
-  --color-violet-400: oklch(0.800 0.130 300);
-  --color-violet-500: oklch(0.660 0.175 300);
-  --color-violet-600: oklch(0.555 0.170 300);
-  --color-violet-700: oklch(0.465 0.145 300);
-  --color-violet-800: oklch(0.365 0.110 300);
-  --color-violet-900: oklch(0.270 0.080 300);
-  --color-violet-950: oklch(0.198 0.055 300);
+  /* ─── warm — neutro cálido (hueso → negro suavizado) ───────────── */
+  --color-warm-50:  #fafafa;
+  --color-warm-100: #f4f4f3;
+  --color-warm-200: #e5e5e5;
+  --color-warm-300: #d4d4d3;
+  --color-warm-400: #a3a3a1;
+  --color-warm-500: #6b6b6b;
+  --color-warm-600: #565655;
+  --color-warm-700: #404040;
+  --color-warm-800: #262626;
+  --color-warm-900: #171717;
+  --color-warm-950: #0d0d0d;
 
   /* ─── brand aliases kept for specific use ───────────────────────── */
   --color-cream:  var(--color-warm-50);
   --color-ginger: var(--color-primary-500);
-  --color-viola:  var(--color-violet-500);
 
   /* ─── new semantic surface tokens ───────────────────────────────── */
   --color-surface-dark:            var(--surface-dark);
@@ -141,7 +139,6 @@
   --color-primary-tint-strong:     var(--primary-tint-strong);
   --color-stage-accent:            var(--stage-accent);
   --color-success:                 var(--success);
-  --color-violet-tint:             var(--violet-tint);
 
   /* ─── estado — semánticos (no marca): info / warning / success / danger ─── */
   --color-info:            var(--info);
@@ -162,135 +159,69 @@
 }
 
 :root {
-  --background:            #f7f5f1;
-  --foreground:            #121110;
-  --card:                  #efece6;
-  --card-foreground:       #121110;
-  --popover:               #f7f5f1;
-  --popover-foreground:    #121110;
-  --primary:               #8f5c17;
-  --primary-foreground:    #f7f5f1;
-  --secondary:             #efece6;
-  --secondary-foreground:  #121110;
-  --muted:                 #efece6;
-  --muted-foreground:      #6b6862;
-  --accent:                #e8bd84;
-  --accent-foreground:     #161206;
-  --destructive:           oklch(0.577 0.245 27.325);
-  --border:                rgb(18 17 16 / 0.14);
-  --input:                 rgb(18 17 16 / 0.18);
-  --ring:                  #8f5c17;
+  --background:            #ffffff;
+  --foreground:            #0d0d0d;
+  --card:                  #ffffff;
+  --card-foreground:       #0d0d0d;
+  --popover:               #ffffff;
+  --popover-foreground:    #0d0d0d;
+  --primary:               #f68704;
+  --primary-foreground:    #0d0d0d;
+  --secondary:             #e22603;
+  --secondary-foreground:  #ffffff;
+  --muted:                 #f4f4f3;
+  --muted-foreground:      #6b6b6b;
+  /* shadcn `accent` is an interaction-highlight surface (menu/select hover), not a
+     brand color. Brand yellow lives in the `accent-*` numbered scale instead. */
+  --accent:                #f1efec;
+  --accent-foreground:     #0d0d0d;
+  --destructive:           #c81e4b;
+  --destructive-foreground: #ffffff;
+  --border:                #e5e5e5;
+  --input:                 #d4d4d3;
+  --ring:                  #e22603;
   --chart-1:               var(--color-primary-500);
   --chart-2:               var(--color-secondary-500);
-  --chart-3:               var(--color-accent-300);
-  --chart-4:               var(--color-primary-600);
+  --chart-3:               var(--color-accent-500);
+  --chart-4:               var(--color-success);
   --chart-5:               var(--color-warm-500);
-  --chart-6:               var(--color-violet-500);
-  --chart-7:               var(--color-violet-300);
   --radius: 0.75rem;
-  --sidebar:               #f7f5f1;
-  --sidebar-foreground:    #121110;
-  --sidebar-primary:       #8f5c17;
-  --sidebar-primary-foreground: #f7f5f1;
-  --sidebar-accent:        #efece6;
-  --sidebar-accent-foreground: #121110;
-  --sidebar-border:        rgb(18 17 16 / 0.14);
-  --sidebar-ring:          #8f5c17;
+  --sidebar:               #ffffff;
+  --sidebar-foreground:    #0d0d0d;
+  --sidebar-primary:       #f68704;
+  --sidebar-primary-foreground: #0d0d0d;
+  --sidebar-accent:        #f4f4f3;
+  --sidebar-accent-foreground: #0d0d0d;
+  --sidebar-border:        #e5e5e5;
+  --sidebar-ring:          #e22603;
 
-  --surface-dark:            #000000;
-  --surface-dark-foreground: #f2f0ec;
-  --surface-dark-muted:      #c6c3bc;
-  --surface-dark-border:     rgb(242 240 236 / 0.13);
-  --scrim:                   rgb(18 17 16 / 0.10);
-  --scrim-strong:            rgb(0 0 0 / 0.80);
-  --accent-muted:            #efece6;
-  --primary-tint:            #f1d8b3;
-  --primary-tint-strong:     #e8bd84;
-  --stage-accent:            #e8bd84;
-  --violet-tint:             oklch(0.945 0.03 300);
+  --surface-dark:            #0d0d0d;
+  --surface-dark-foreground: #fafafa;
+  --surface-dark-muted:      #a3a3a1;
+  --surface-dark-border:     rgb(250 250 250 / 0.14);
+  --scrim:                   rgb(13 13 13 / 0.10);
+  --scrim-strong:            rgb(13 13 13 / 0.60);
+  --accent-muted:            #f4f4f3;
+  --primary-tint:            #ffe4c6;
+  --primary-tint-strong:     #fecf9c;
+  --stage-accent:            #f68704;
 
-  --info:            #3b82f6;
-  --info-fg:         #1d4ed8;
-  --info-tint:       rgb(59 130 246 / 0.12);
-  --info-border:     rgb(59 130 246 / 0.28);
-  --warning:         #f59e0b;
-  --warning-fg:      #b45309;
-  --warning-tint:    rgb(245 158 11 / 0.14);
-  --warning-border:  rgb(245 158 11 / 0.30);
-  --success:         #16a34a;
-  --success-fg:      #15803d;
-  --success-tint:    rgb(34 197 94 / 0.14);
-  --success-border:  rgb(34 197 94 / 0.30);
-  --danger:          #ef4444;
-  --danger-fg:       #b91c1c;
-  --danger-tint:     rgb(239 68 68 / 0.12);
-  --danger-border:   rgb(239 68 68 / 0.28);
-}
-
-.dark {
-  --background:            #000000;
-  --foreground:            #f2f0ec;
-  --card:                  #131416;
-  --card-foreground:       #f2f0ec;
-  --popover:               #131416;
-  --popover-foreground:    #f2f0ec;
-  --primary:               #d9a15a;
-  --primary-foreground:    #161206;
-  --secondary:             #24221f;
-  --secondary-foreground:  #f2f0ec;
-  --muted:                 #0d0d0f;
-  --muted-foreground:      #a5a29a;
-  --accent:                #d9a15a;
-  --accent-foreground:     #161206;
-  --destructive:           oklch(0.704 0.191 22.216);
-  --border:                rgb(242 240 236 / 0.13);
-  --input:                 rgb(242 240 236 / 0.16);
-  --ring:                  #d9a15a;
-  --chart-1:               var(--color-primary-500);
-  --chart-2:               var(--color-secondary-500);
-  --chart-3:               var(--color-accent-300);
-  --chart-4:               var(--color-primary-600);
-  --chart-5:               var(--color-accent-400);
-  --chart-6:               oklch(0.72 0.16 300);
-  --chart-7:               oklch(0.62 0.16 300);
-  --radius: 0.75rem;
-  --sidebar:               #0a0a0c;
-  --sidebar-foreground:    #f2f0ec;
-  --sidebar-primary:       #d9a15a;
-  --sidebar-primary-foreground: #161206;
-  --sidebar-accent:        #24221f;
-  --sidebar-accent-foreground: #f2f0ec;
-  --sidebar-border:        rgb(242 240 236 / 0.13);
-  --sidebar-ring:          #d9a15a;
-
-  --surface-dark:            #000000;
-  --surface-dark-foreground: #f2f0ec;
-  --surface-dark-muted:      #c6c3bc;
-  --surface-dark-border:     rgb(242 240 236 / 0.13);
-  --scrim:                   rgb(0 0 0 / 0.30);
-  --scrim-strong:            rgb(0 0 0 / 0.80);
-  --accent-muted:            #0d0d0f;
-  --primary-tint:            rgb(217 161 90 / 0.14);
-  --primary-tint-strong:     rgb(217 161 90 / 0.22);
-  --stage-accent:            #d9a15a;
-  --violet-tint:             oklch(0.30 0.06 300);
-
-  --info:            #3b82f6;
-  --info-fg:         #60a5fa;
-  --info-tint:       rgb(59 130 246 / 0.14);
-  --info-border:     rgb(59 130 246 / 0.25);
-  --warning:         #f59e0b;
-  --warning-fg:      #fbbf24;
-  --warning-tint:    rgb(245 158 11 / 0.14);
-  --warning-border:  rgb(245 158 11 / 0.25);
-  --success:         #22c55e;
-  --success-fg:      #4ade80;
-  --success-tint:    rgb(34 197 94 / 0.14);
-  --success-border:  rgb(34 197 94 / 0.25);
-  --danger:          #ef4444;
-  --danger-fg:       #f87171;
-  --danger-tint:     rgb(239 68 68 / 0.14);
-  --danger-border:   rgb(239 68 68 / 0.25);
+  --info:            #b45c05;
+  --info-fg:         #8f4a0c;
+  --info-tint:       rgb(246 135 4 / 0.12);
+  --info-border:     rgb(246 135 4 / 0.28);
+  --warning:         #feda08;
+  --warning-fg:      #0d0d0d;
+  --warning-tint:    rgb(254 218 8 / 0.16);
+  --warning-border:  rgb(254 218 8 / 0.40);
+  --success:         #2e8b57;
+  --success-fg:      #1f6b41;
+  --success-tint:    rgb(46 139 87 / 0.14);
+  --success-border:  rgb(46 139 87 / 0.32);
+  --danger:          #c81e4b;
+  --danger-fg:       #a01739;
+  --danger-tint:     rgb(200 30 75 / 0.12);
+  --danger-border:   rgb(200 30 75 / 0.30);
 }
 
 @layer base {
@@ -337,7 +268,7 @@
 }
 
 .text-brand-gradient {
-  background: linear-gradient(to right, var(--color-primary-500), var(--color-secondary-500), var(--color-primary-500));
+  background: linear-gradient(to right, var(--color-accent-500), var(--color-primary-500), var(--color-secondary-500));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% auto;
@@ -354,51 +285,28 @@
   background: linear-gradient(135deg, color-mix(in oklch, var(--color-warm-100) 60%, transparent) 0%, var(--color-warm-50) 100%);
 }
 
-.dark .bg-card-gradient {
-  background: linear-gradient(135deg, color-mix(in oklch, var(--secondary) 55%, transparent) 0%, var(--card) 100%);
-}
-
 .bg-surface-gradient {
   background-image: linear-gradient(135deg, color-mix(in oklch, var(--color-warm-100) 60%, transparent) 0%, var(--color-warm-50) 100%);
-}
-
-.dark .bg-surface-gradient {
-  background-image: linear-gradient(135deg, color-mix(in oklch, var(--secondary) 45%, transparent) 0%, var(--card) 100%);
 }
 
 .bg-staff-lines {
   background-image: repeating-linear-gradient(
     to bottom,
-    color-mix(in oklch, var(--color-secondary-300) 22%, transparent) 0,
-    color-mix(in oklch, var(--color-secondary-300) 22%, transparent) 1px,
+    color-mix(in oklch, var(--color-warm-300) 40%, transparent) 0,
+    color-mix(in oklch, var(--color-warm-300) 40%, transparent) 1px,
     transparent 1px,
     transparent 14px
   );
-}
-
-.dark .bg-staff-lines {
-  background-image: none;
 }
 
 .bg-auth-canvas {
   background: radial-gradient(circle at 50% 0%, var(--color-primary-tint) 0%, var(--color-background) 60%);
 }
 
-.dark .bg-auth-canvas {
-  background: radial-gradient(circle at 50% 0%, color-mix(in oklch, var(--color-primary-tint) 45%, var(--color-background)) 0%, var(--color-background) 60%);
-}
-
 .bg-grid-faint {
   background-image:
-    linear-gradient(color-mix(in oklch, var(--color-secondary-400) 22%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in oklch, var(--color-secondary-400) 22%, transparent) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-.dark .bg-grid-faint {
-  background-image:
-    linear-gradient(rgb(242 240 236 / 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(242 240 236 / 0.035) 1px, transparent 1px);
+    linear-gradient(color-mix(in oklch, var(--color-warm-400) 30%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklch, var(--color-warm-400) 30%, transparent) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
