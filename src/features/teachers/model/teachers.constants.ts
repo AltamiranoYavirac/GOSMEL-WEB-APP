@@ -4,46 +4,6 @@ import type { ITeacher } from "./teachers.types";
 
 export const TEACHERS: ITeacher[] = [
   {
-    slug: "andrea-salazar",
-    name: "Andrea Salazar",
-    instrument: "Piano",
-    courseSlug: "piano",
-    photo: AppImages.LANDING_PROGRAM_PIANO,
-    photoAlt: "Andrea Salazar, profesora de piano de GOSMEL",
-    photoIsReference: true,
-    headline: "Profesora de Piano",
-    bio: "Pianista y docente formada en el Conservatorio Superior Nacional. Andrea trabaja la técnica sin perder de vista la musicalidad: cada ejercicio tiene un para qué y un repertorio detrás.",
-    tags: ["12 años de experiencia", "Repertorio clásico y popular"],
-    education: [
-      {
-        title: "Conservatorio Superior Nacional de Música",
-        detail: "Licenciatura en Interpretación de Piano",
-      },
-      {
-        title: "Pedagogía del piano",
-        detail: "Formación complementaria en enseñanza inicial",
-      },
-    ],
-    teachesNote:
-      "Clases individuales para todas las edades, desde el primer contacto con el teclado hasta repertorio avanzado.",
-    philosophy:
-      "El piano se aprende con las manos y con la cabeza. Mi trabajo es que cada estudiante entienda lo que toca, no solo que lo repita.",
-    studentTestimonials: [
-      {
-        quote:
-          "Andrea nunca te apura. Cuando algo no sale, cambia el enfoque hasta que lo entiendo.",
-        author: "Renata Ibarra",
-        role: "Alumna",
-      },
-      {
-        quote:
-          "Llevo dos años y cada mes tengo una pieza nueva que me reta. Sus clases están muy bien pensadas.",
-        author: "Sebastián Mora",
-        role: "Alumno",
-      },
-    ],
-  },
-  {
     slug: "camila-vega",
     name: "Camila Vega",
     instrument: "Violín",
@@ -52,6 +12,9 @@ export const TEACHERS: ITeacher[] = [
     photoAlt: "Camila Vega, profesora de violín de GOSMEL",
     photoIsReference: false,
     headline: "Profesora de Violín",
+    tituloProfesional: "Conservatorio Superior Nacional - Música de cámara",
+    fraseDestacada: "El violín premia la paciencia antes que el talento.",
+    aniosExperiencia: 10,
     bio: "Formada en el Conservatorio Superior Nacional, Camila acompaña a estudiantes de todas las edades a construir una relación honesta con el instrumento: primero el oído, luego la técnica, después la música.",
     tags: ["10 años de experiencia", "Música de cámara"],
     education: [
@@ -84,6 +47,49 @@ export const TEACHERS: ITeacher[] = [
     ],
   },
   {
+    slug: "andrea-salazar",
+    name: "Andrea Salazar",
+    instrument: "Piano",
+    courseSlug: "piano",
+    photo: AppImages.LANDING_PROGRAM_PIANO,
+    photoAlt: "Andrea Salazar, profesora de piano de GOSMEL",
+    photoIsReference: true,
+    headline: "Profesora de Piano",
+    tituloProfesional: "Conservatorio Superior Nacional - Repertorio clásico",
+    fraseDestacada: "Cada tecla tiene una historia que contar, si sabes escucharla.",
+    aniosExperiencia: 8,
+    bio: "Pianista y docente formada en el Conservatorio Superior Nacional. Andrea trabaja la técnica sin perder de vista la musicalidad: cada ejercicio tiene un para qué y un repertorio detrás.",
+    tags: ["8 años de experiencia", "Repertorio clásico y popular"],
+    education: [
+      {
+        title: "Conservatorio Superior Nacional de Música",
+        detail: "Licenciatura en Interpretación de Piano",
+      },
+      {
+        title: "Pedagogía del piano",
+        detail: "Formación complementaria en enseñanza inicial",
+      },
+    ],
+    teachesNote:
+      "Clases individuales para todas las edades, desde el primer contacto con el teclado hasta repertorio avanzado.",
+    philosophy:
+      "El piano se aprende con las manos y con la cabeza. Mi trabajo es que cada estudiante entienda lo que toca, no solo que lo repita.",
+    studentTestimonials: [
+      {
+        quote:
+          "Andrea nunca te apura. Cuando algo no sale, cambia el enfoque hasta que lo entiendo.",
+        author: "Renata Ibarra",
+        role: "Alumna",
+      },
+      {
+        quote:
+          "Llevo dos años y cada mes tengo una pieza nueva que me reta. Sus clases están muy bien pensadas.",
+        author: "Sebastián Mora",
+        role: "Alumno",
+      },
+    ],
+  },
+  {
     slug: "diego-fuentes",
     name: "Diego Fuentes",
     instrument: "Guitarra",
@@ -92,8 +98,11 @@ export const TEACHERS: ITeacher[] = [
     photoAlt: "Diego Fuentes, profesor de guitarra de GOSMEL",
     photoIsReference: true,
     headline: "Profesor de Guitarra",
+    tituloProfesional: "Conservatorio Superior Nacional - Guitarra popular",
+    fraseDestacada: "Un buen acorde vale más que mil escalas memorizadas.",
+    aniosExperiencia: 7,
     bio: "Guitarrista con recorrido en música popular y de concierto. Diego parte siempre de las canciones que el estudiante quiere tocar y construye la técnica desde ahí.",
-    tags: ["9 años de experiencia", "Guitarra acústica y clásica"],
+    tags: ["7 años de experiencia", "Guitarra acústica y clásica"],
     education: [
       {
         title: "Escuela de Música Contemporánea",
@@ -132,8 +141,11 @@ export const TEACHERS: ITeacher[] = [
     photoAlt: "Mateo Rueda, profesor de guitarra eléctrica de GOSMEL",
     photoIsReference: true,
     headline: "Profesor de Guitarra eléctrica",
+    tituloProfesional: "Instituto de Música Contemporánea - Rock y blues",
+    fraseDestacada: "El sonido que buscas ya está en tus manos, hay que encontrarlo.",
+    aniosExperiencia: 6,
     bio: "Guitarrista de banda y productor. Mateo combina técnica con púa, teoría aplicada y trabajo de sonido para que cada estudiante encuentre su voz eléctrica.",
-    tags: ["8 años de experiencia", "Rock, blues y funk"],
+    tags: ["6 años de experiencia", "Rock, blues y funk"],
     education: [
       {
         title: "Escuela de Música Contemporánea",
@@ -172,8 +184,11 @@ export const TEACHERS: ITeacher[] = [
     photoAlt: "Valentina Ríos, profesora de solfeo de GOSMEL",
     photoIsReference: true,
     headline: "Profesora de Solfeo y Lenguaje Musical",
+    tituloProfesional: "Conservatorio Superior Nacional - Lenguaje musical",
+    fraseDestacada: "Leer música bien te libera para tocarla sin miedo.",
+    aniosExperiencia: 9,
     bio: "Directora coral y docente de lenguaje musical. Valentina hace que la teoría deje de ser abstracta: todo se canta, se palmea y se conecta con lo que el estudiante ya escucha.",
-    tags: ["11 años de experiencia", "Dirección coral"],
+    tags: ["9 años de experiencia", "Dirección coral"],
     education: [
       {
         title: "Conservatorio Superior Nacional de Música",
@@ -212,8 +227,11 @@ export const TEACHERS: ITeacher[] = [
     photoAlt: "Pablo Quishpe, profesor de charango de GOSMEL",
     photoIsReference: true,
     headline: "Profesor de Charango",
+    tituloProfesional: "Escuela de Música Andina - Música tradicional",
+    fraseDestacada: "El charango guarda la memoria de los Andes en cada cuerda.",
+    aniosExperiencia: 12,
     bio: "Charanguista con años de trabajo en música andina de raíz y de proyección. Pablo enseña técnica tradicional y repertorio propio de la región.",
-    tags: ["14 años de experiencia", "Música andina de raíz"],
+    tags: ["12 años de experiencia", "Música andina de raíz"],
     education: [
       {
         title: "Formación tradicional",
@@ -252,8 +270,11 @@ export const TEACHERS: ITeacher[] = [
     photoAlt: "Sofía Cachimuel, profesora de quena de GOSMEL",
     photoIsReference: true,
     headline: "Profesora de Quena",
+    tituloProfesional: "Escuela de Música Andina - Instrumentos de viento",
+    fraseDestacada: "Cada nota de quena lleva el aire de la montaña.",
+    aniosExperiencia: 5,
     bio: "Intérprete de instrumentos de viento andinos. Sofía trabaja la respiración y la emisión con mucha calma, porque son la base de todo lo demás.",
-    tags: ["9 años de experiencia", "Vientos andinos"],
+    tags: ["5 años de experiencia", "Vientos andinos"],
     education: [
       {
         title: "Formación tradicional",
@@ -284,6 +305,7 @@ export const TEACHERS: ITeacher[] = [
     ],
   },
 ];
+
 
 export function getTeacherBySlug(slug: string): ITeacher | undefined {
   return TEACHERS.find((teacher) => teacher.slug === slug);

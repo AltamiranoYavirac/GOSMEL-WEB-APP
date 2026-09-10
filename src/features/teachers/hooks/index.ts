@@ -1,0 +1,1 @@
+export { usePublicDocentes } from "./usePublicDocentes";

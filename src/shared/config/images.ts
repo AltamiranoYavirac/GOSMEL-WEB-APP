@@ -15,6 +15,7 @@ export const AppImages = {
   LANDING_PROGRAM_VIOLIN: `${CLOUDINARY_BASE}/ar_2:3,c_fill,g_auto,w_720,q_auto,f_auto/v1781128616/WhatsApp_Image_2026-06-10_at_01.11.01_z4qsil.jpg`,
   LANDING_PROGRAM_GUITAR: `${CLOUDINARY_BASE}/ar_2:3,c_fill,g_auto,w_720,q_auto,f_auto/v1781128622/WhatsApp_Image_2026-06-10_at_01.23.13_ujavfi.jpg`,
   LANDING_PROGRAM_SOLFEO: `${CLOUDINARY_BASE}/ar_2:3,c_fill,g_auto,w_720,q_auto,f_auto/v1785808073/Gosmel3_o0fase.png`,
+  LANDING_PROGRAM_ELECTRIC_GUITAR: `${CLOUDINARY_BASE}/ar_2:3,c_fill,g_auto,w_720,q_auto,f_auto/v1788920963/GuitarraElectricaLanding_bo9kne.jpg`,
   LANDING_PROCESS: `${CLOUDINARY_BASE}/ar_9:10,c_fill,g_auto,w_1400,q_auto,f_auto/v1786821231/Violin_Guitarra_2_qfp5j8.png`,
   LANDING_CTA: `${CLOUDINARY_BASE}/ar_16:9,c_fill,g_south,w_1920,q_auto,f_auto/v1788565457/music-8559592_640_y9l2r8.jpg`,
 
