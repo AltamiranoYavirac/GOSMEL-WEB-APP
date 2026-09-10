@@ -41,7 +41,7 @@ export const LANDING_PROGRAM_IMAGES = {
   Violín: AppImages.LANDING_PROGRAM_VIOLIN,
   Guitarra: AppImages.LANDING_PROGRAM_GUITAR,
   Solfeo: AppImages.LANDING_PROGRAM_SOLFEO,
-  "Guitarra eléctrica": null,
+  "Guitarra eléctrica": AppImages.LANDING_PROGRAM_ELECTRIC_GUITAR,
   Charango: null,
   Quena: null,
 } as const;
