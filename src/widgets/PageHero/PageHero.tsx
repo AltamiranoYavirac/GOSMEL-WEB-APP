@@ -20,7 +20,7 @@ export default function PageHero({
         src={image}
         alt={imageAlt}
         fetchPriority="high"
-        priority
+        preload
         sizes="100vw"
         className="object-cover object-center"
       />

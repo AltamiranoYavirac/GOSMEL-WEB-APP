@@ -7,7 +7,7 @@ export default function FinalCtaSection() {
   return (
     <section
       aria-labelledby="landing-cta-title"
-      className="relative h-[480px] overflow-hidden md:mt-[110px] md:aspect-[16/9] md:h-auto"
+      className="relative h-[420px] overflow-hidden md:mt-[100px] md:h-[520px] lg:h-[560px]"
     >
       <RevealImage
         src={AppImages.LANDING_CTA}

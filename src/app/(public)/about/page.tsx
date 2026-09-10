@@ -24,7 +24,6 @@ export default function AboutPage() {
         eyebrow="Sobre nosotros"
         title="Una academia donde la música se vive."
         description="Más que aprender notas, construyes herramientas para expresarte con confianza y disfrutar cada etapa del proceso."
-        chips={["Comunidad unida", "Excelencia musical"]}
       />
       <AboutConcerts
         videoUrl={AppImages.ABOUT_VIDEO}

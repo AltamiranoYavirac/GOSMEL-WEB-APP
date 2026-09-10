@@ -4,5 +4,4 @@ export interface IAboutHeroProps {
   eyebrow: string;
   title: string;
   description: string;
-  chips: string[];
 }

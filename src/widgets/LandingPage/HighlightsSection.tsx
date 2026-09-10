@@ -1,41 +1,30 @@
-import Image from "next/image";
-
 import { Reveal } from "@/shared/ui";
 
 import { LANDING_HIGHLIGHTS } from "./LandingPage.constants";
 
 export default function HighlightsSection() {
   return (
-    <section aria-label="La experiencia GOSMEL" className="grid gap-0.5 bg-background md:grid-cols-2">
-      {LANDING_HIGHLIGHTS.map(({ image, imageAlt, imagePosition, title, description }, index) => (
-        <Reveal
-          key={title}
-          as="article"
-          variant={index % 2 === 0 ? "left" : "right"}
-          className="relative aspect-[3/2] overflow-hidden"
-        >
-          <Image
-            src={image}
-            alt={imageAlt}
-            fill
-            sizes="(max-width: 767px) 100vw, 50vw"
-            className="object-cover"
-            style={{ objectPosition: imagePosition }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/90 via-surface-dark/20 to-transparent" />
+    <section
+      aria-label="La experiencia GOSMEL"
+      className="border-y border-warm-200 bg-warm-50"
+    >
+      <div className="mx-auto grid w-full max-w-[1600px] md:grid-cols-2">
+        {LANDING_HIGHLIGHTS.map(({ title, description }, index) => (
           <Reveal
-            delay={0.15}
-            className="absolute inset-x-0 bottom-0 px-[22px] pb-[26px] text-surface-dark-foreground md:px-9 md:pb-9"
+            key={title}
+            as="article"
+            delay={index * 0.08}
+            className="border-warm-200 px-[22px] py-7 first:border-b md:px-14 md:py-9 md:first:border-r md:first:border-b-0 lg:px-12 xl:px-16 2xl:px-20"
           >
-            <h2 className="text-[27px] font-semibold leading-[1.1] tracking-[-0.03em] md:text-[34px]">
+            <h2 className="text-xl font-semibold leading-tight tracking-[-0.02em] text-foreground md:text-2xl">
               {title}
             </h2>
-            <p className="mt-2 max-w-[420px] text-sm leading-[1.6] text-surface-dark-muted md:mt-2.5 md:text-[15px]">
+            <p className="mt-2 max-w-[560px] text-[15px] leading-relaxed text-warm-700 md:text-base">
               {description}
             </p>
           </Reveal>
-        </Reveal>
-      ))}
+        ))}
+      </div>
     </section>
   );
 }

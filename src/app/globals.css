@@ -318,3 +318,10 @@
 .landing-scroll::-webkit-scrollbar {
   display: none;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

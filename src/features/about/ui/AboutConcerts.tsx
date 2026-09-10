@@ -10,22 +10,31 @@ export default function AboutConcerts({
   description,
 }: IAboutConcertsProps) {
   return (
-    <section className="bg-background pt-[70px] md:pt-[110px]">
-      <div className="mx-auto grid w-full max-w-[1600px] items-center gap-10 px-[22px] md:px-14 lg:grid-cols-[1fr_1.3fr] lg:gap-14">
+    <section aria-labelledby="about-concerts-title" className="bg-surface-dark py-16 md:py-24 lg:py-28">
+      <div className="mx-auto grid w-full max-w-[1600px] items-center gap-10 px-[22px] text-surface-dark-foreground md:px-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20 xl:px-20">
         <Reveal>
-          <p className="mb-5 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-primary md:text-[11px] md:tracking-[0.24em]">
+          <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-stage-accent">
             Conciertos
           </p>
-          <h2 className="text-[30px] font-semibold leading-[1.1] tracking-[-0.03em] md:text-[40px]">
+          <h2
+            id="about-concerts-title"
+            className="mt-6 max-w-[520px] text-[clamp(2.1rem,4vw,4rem)] font-semibold leading-[1.02] tracking-[-0.045em]"
+          >
             {videoTitle}
           </h2>
-          <p className="mt-5 max-w-[480px] text-[15px] leading-[1.65] text-muted-foreground md:text-base">
+          <p className="mt-6 max-w-[480px] text-base leading-7 text-surface-dark-muted md:text-lg md:leading-8">
             {description}
           </p>
         </Reveal>
 
-        <Reveal delay={0.12}>
-          <AboutMedia src={videoUrl} poster={posterUrl} title={videoTitle} aspect="video" />
+        <Reveal delay={0.1}>
+          <AboutMedia
+            src={videoUrl}
+            poster={posterUrl}
+            title={videoTitle}
+            aspect="video"
+            sizes="(max-width: 1023px) calc(100vw - 44px), (max-width: 1599px) 55vw, 860px"
+          />
         </Reveal>
       </div>
     </section>

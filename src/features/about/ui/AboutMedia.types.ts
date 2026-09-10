@@ -3,5 +3,7 @@ export interface IAboutMediaProps {
   poster: string;
   title: string;
   aspect: "video" | "portrait";
+  sizes: string;
+  captionsSrc?: string;
   className?: string;
 }

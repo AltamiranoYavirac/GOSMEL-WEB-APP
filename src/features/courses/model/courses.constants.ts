@@ -8,6 +8,8 @@ export const COURSES = [
     category: "Instrumento",
     image: AppImages.COURSE_PIANO,
     imageAlt: "Estudiante practicando piano en GOSMEL",
+    catalogImage: AppImages.LANDING_PROGRAM_PIANO,
+    catalogImageAlt: "Estudiante de GOSMEL practicando piano",
     description:
       "Domina las teclas con técnica y expresión, desde tus primeras melodías hasta un repertorio más personal.",
     learns: ["Lectura musical", "Técnica y coordinación", "Repertorio y expresión"],
@@ -19,6 +21,8 @@ export const COURSES = [
     category: "Instrumento",
     image: AppImages.COURSE_VIOLIN,
     imageAlt: "Violín y guitarra durante una práctica musical",
+    catalogImage: AppImages.LANDING_PROGRAM_VIOLIN,
+    catalogImageAlt: "Estudiante de GOSMEL interpretando el violín",
     description:
       "Desarrolla oído, precisión y sensibilidad con uno de los instrumentos más expresivos de la música.",
     learns: ["Postura y arco", "Afinación y oído", "Interpretación musical"],
@@ -30,6 +34,8 @@ export const COURSES = [
     category: "Instrumento",
     image: AppImages.COURSE_GUITAR,
     imageAlt: "Guitarras acústicas en el aula de música",
+    catalogImage: AppImages.LANDING_PROGRAM_GUITAR,
+    catalogImageAlt: "Estudiante durante una clase de guitarra en GOSMEL",
     description:
       "Aprende acordes, punteos y teoría musical aplicada para tocar canciones y construir tu propio estilo.",
     learns: ["Acordes y ritmo", "Punteos y acompañamiento", "Repertorio popular"],
@@ -41,6 +47,8 @@ export const COURSES = [
     category: "Instrumento",
     image: AppImages.COURSE_ELECTRIC_GUITAR,
     imageAlt: "Guitarra eléctrica en una sesión de práctica",
+    catalogImage: AppImages.LANDING_PROGRAM_ELECTRIC_GUITAR,
+    catalogImageAlt: "Estudiante practicando guitarra eléctrica en GOSMEL",
     description:
       "Explora riffs, efectos y técnica para encontrar tu sonido y tocar con mayor seguridad.",
     learns: ["Riffs y escalas", "Técnica con púa", "Sonido y efectos"],
@@ -52,6 +60,8 @@ export const COURSES = [
     category: "Lenguaje musical",
     image: AppImages.COURSE_SOLFEO,
     imageAlt: "Material de estudio para solfeo y lenguaje musical",
+    catalogImage: AppImages.LANDING_PROGRAM_SOLFEO,
+    catalogImageAlt: "Clase de solfeo y lenguaje musical en GOSMEL",
     description:
       "Construye una base sólida para leer, comprender y expresar la música con mayor libertad.",
     learns: ["Lectura de partituras", "Ritmo y métrica", "Entrenamiento auditivo"],
@@ -63,6 +73,8 @@ export const COURSES = [
     category: "Instrumento",
     image: AppImages.COURSE_CHARANGO,
     imageAlt: "Instrumentos de cuerda durante una práctica musical",
+    catalogImage: AppImages.LANDING_PROGRAM_CHARANGO,
+    catalogImageAlt: "Estudiante practicando un instrumento andino de cuerda",
     description:
       "Conoce la sonoridad y la tradición de este instrumento andino mientras desarrollas técnica y musicalidad.",
     learns: ["Rasgueos tradicionales", "Acordes y afinación", "Repertorio andino"],
@@ -74,6 +86,8 @@ export const COURSES = [
     category: "Instrumento",
     image: AppImages.COURSE_QUENA,
     imageAlt: "Estudiantes compartiendo una experiencia musical",
+    catalogImage: AppImages.LANDING_PROGRAM_QUENA,
+    catalogImageAlt: "Estudiante interpretando un instrumento andino de viento",
     description:
       "Descubre la interpretación de uno de los instrumentos ancestrales de los Andes y su particular color sonoro.",
     learns: ["Respiración y emisión", "Digitación y afinación", "Melodías andinas"],

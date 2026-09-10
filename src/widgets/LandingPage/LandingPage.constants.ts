@@ -2,17 +2,11 @@ import { AppImages } from "@/shared/config";
 
 export const LANDING_HIGHLIGHTS = [
   {
-    image: AppImages.LANDING_STAGE,
-    imageAlt: "Estudiante de guitarra tocando en el recital de la academia",
-    imagePosition: "center 28%",
     title: "Cada etapa cierra en escena",
     description:
       "La oportunidad de consolidar lo aprendido, ganar confianza y celebrar tu evolución musical.",
   },
   {
-    image: AppImages.LANDING_TEACHERS,
-    imageAlt: "Estudiante de canto interpretando con micrófono en el auditorio",
-    imagePosition: "58% center",
     title: "Maestros de conservatorio",
     description:
       "Instructores graduados de conservatorios de prestigio con años de experiencia pedagógica y artística.",
@@ -42,8 +36,8 @@ export const LANDING_PROGRAM_IMAGES = {
   Guitarra: AppImages.LANDING_PROGRAM_GUITAR,
   Solfeo: AppImages.LANDING_PROGRAM_SOLFEO,
   "Guitarra eléctrica": AppImages.LANDING_PROGRAM_ELECTRIC_GUITAR,
-  Charango: null,
-  Quena: null,
+  Charango: AppImages.LANDING_PROGRAM_CHARANGO,
+  Quena: AppImages.LANDING_PROGRAM_QUENA,
 } as const;
 
 export const LANDING_PROGRAM_IMAGE_ALTS = {
