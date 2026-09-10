@@ -15,7 +15,7 @@ export default function MatriculasList() {
   const rows = useMemo(() => data ?? [], [data]);
 
   const [search, setSearch] = useState("");
-  const [expandedId, setExpandedId] = useState<string | "none" | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [aprobar, setAprobar] = useState<IInscripcionPendiente | null>(null);
   const [rechazar, setRechazar] = useState<IInscripcionPendiente | null>(null);
 
@@ -29,11 +29,10 @@ export default function MatriculasList() {
     );
   }, [rows, search]);
 
-  const activeExpandedId = useMemo(() => {
-    if (expandedId === "none") return null;
-    if (expandedId && filtered.some((row) => row.id === expandedId)) return expandedId;
-    return filtered[0]?.id ?? null;
-  }, [expandedId, filtered]);
+  const activeExpandedId = useMemo(
+    () => (expandedId && filtered.some((row) => row.id === expandedId) ? expandedId : null),
+    [expandedId, filtered]
+  );
 
   const searching = search.trim().length > 0;
 
@@ -88,18 +87,14 @@ export default function MatriculasList() {
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {filtered.map((row, index) => {
-            const isFirst = index === 0;
+          {filtered.map((row) => {
             return (
               <MatriculaCard
                 key={row.id}
                 inscripcion={row}
                 expanded={activeExpandedId === row.id}
                 onToggle={() =>
-                  setExpandedId((prev) => {
-                    const currentlyExpanded = prev === row.id || (prev === null && isFirst);
-                    return currentlyExpanded ? "none" : row.id;
-                  })
+                  setExpandedId((prev) => (prev === row.id ? null : row.id))
                 }
                 onAprobar={() => setAprobar(row)}
                 onRechazar={() => setRechazar(row)}
