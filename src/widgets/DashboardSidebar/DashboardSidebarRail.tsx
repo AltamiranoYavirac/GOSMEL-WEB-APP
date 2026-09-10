@@ -44,7 +44,7 @@ export default function DashboardSidebarRail({ role, session, onExpand }: IDashb
           const className = cn(
             "flex size-10 items-center justify-center rounded-[10px] transition-colors",
             active
-              ? "bg-foreground/10 text-foreground"
+              ? "bg-primary/15 text-primary"
               : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
           );
 
@@ -78,7 +78,7 @@ export default function DashboardSidebarRail({ role, session, onExpand }: IDashb
             className={cn(
               "mb-2 flex size-10 items-center justify-center rounded-[10px] transition-colors",
               active
-                ? "bg-foreground/10 text-foreground"
+                ? "bg-primary/15 text-primary"
                 : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
             )}
           >

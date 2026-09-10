@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { requireApiSession } from "@/features/session/server";
+
 export async function GET(req: NextRequest) {
+  const auth = await requireApiSession();
+  if (!auth.ok) return auth.response;
+
   const searchParams = req.nextUrl.searchParams;
   const path = searchParams.get("path");
 
