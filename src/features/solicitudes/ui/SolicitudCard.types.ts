@@ -5,7 +5,6 @@ export interface ISolicitudCardProps {
   expanded: boolean;
   onToggle: () => void;
   onMarkNext: () => void;
-  onConvert: () => void;
   onDiscard: () => void;
   waUrl: string | null;
   busy: boolean;
