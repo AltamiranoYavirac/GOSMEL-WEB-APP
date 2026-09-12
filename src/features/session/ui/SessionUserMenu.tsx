@@ -57,6 +57,12 @@ export default function SessionUserMenu({ session, mode = "dashboard" }: ISessio
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
+          <Link href="/dashboard/perfil">
+            <Icon icon="ph:user-circle" width={16} height={16} aria-hidden="true" />
+            Mi cuenta
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
           <Link href={mode === "public" ? session.homeRoute : "/"}>
             <Icon icon="ph:globe" width={16} height={16} aria-hidden="true" />
             {mode === "public" ? "Ir a mi panel" : "Ver sitio"}

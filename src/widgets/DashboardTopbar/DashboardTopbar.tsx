@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 
-import { DASHBOARD_NAV, getDashboardSectionGroup, getDashboardSectionLabel } from "@/entities/user";
+import { DASHBOARD_NAV, DASHBOARD_NAV_FOOTER, getDashboardSectionGroup, getDashboardSectionLabel } from "@/entities/user";
 import { GlobalSearchDialog, NotificationsMenu, QuickActionsMenu, TodayChip } from "@/features/dashboard-topbar";
 import { SessionUserMenu } from "@/features/session";
 import {
@@ -23,7 +23,7 @@ import type { IDashboardTopbarProps } from "./DashboardTopbar.types";
 export default function DashboardTopbar({ role, session, onMenuClick, onToggleSidebar }: IDashboardTopbarProps) {
   const pathname = usePathname();
   const groups = DASHBOARD_NAV[role];
-  const sectionLabel = getDashboardSectionLabel(pathname, groups);
+  const sectionLabel = getDashboardSectionLabel(pathname, groups, DASHBOARD_NAV_FOOTER[role]);
   const groupLabel = getDashboardSectionGroup(pathname, groups);
   const isAdmin = role === "admin";
 
