@@ -4,4 +4,6 @@ export interface IImageUploadFieldProps {
   label?: string;
   folder?: string;
   helperText?: string;
+  endpoint?: string;
+  compress?: boolean;
 }

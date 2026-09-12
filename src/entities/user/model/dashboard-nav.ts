@@ -62,7 +62,14 @@ const ADMIN_NAV: IDashboardNavGroup[] = [
   },
 ]
 
+const CUENTA_NAV_ITEM: IDashboardNavItem = {
+  label: "Mi cuenta",
+  href: "/dashboard/perfil",
+  icon: "ph:user-circle",
+}
+
 const ADMIN_NAV_FOOTER: IDashboardNavItem[] = [
+  CUENTA_NAV_ITEM,
   { label: "Configuración", href: "/dashboard/admin/configuracion", icon: "ph:gear-six" },
 ]
 
@@ -118,9 +125,9 @@ export const DASHBOARD_NAV: Record<TRol, IDashboardNavGroup[]> = {
 
 export const DASHBOARD_NAV_FOOTER: Record<TRol, IDashboardNavItem[]> = {
   admin: ADMIN_NAV_FOOTER,
-  docente: [],
-  estudiante: [],
-  representante: [],
+  docente: [CUENTA_NAV_ITEM],
+  estudiante: [CUENTA_NAV_ITEM],
+  representante: [CUENTA_NAV_ITEM],
 }
 
 function iterateItems(groups: IDashboardNavGroup[]): IDashboardNavItem[] {
@@ -133,11 +140,15 @@ function iterateItems(groups: IDashboardNavGroup[]): IDashboardNavItem[] {
   })
 }
 
-export function getDashboardSectionLabel(pathname: string, groups: IDashboardNavGroup[]): string {
+export function getDashboardSectionLabel(
+  pathname: string,
+  groups: IDashboardNavGroup[],
+  footerItems: IDashboardNavItem[] = [],
+): string {
   let bestLabel = ""
   let bestLength = -1
 
-  for (const item of iterateItems(groups)) {
+  for (const item of [...iterateItems(groups), ...footerItems]) {
     const matches = item.href === pathname || pathname.startsWith(`${item.href}/`)
     if (matches && item.href.length > bestLength) {
       bestLabel = item.label
