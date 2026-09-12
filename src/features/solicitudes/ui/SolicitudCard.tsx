@@ -36,7 +36,6 @@ export default function SolicitudCard({
   expanded,
   onToggle,
   onMarkNext,
-  onConvert,
   onDiscard,
   waUrl,
   busy,
@@ -263,7 +262,6 @@ export default function SolicitudCard({
             <div className="flex flex-col gap-2.5 sm:ml-auto sm:flex-row">
               {siguiente ? (
                 <Button
-                  variant="secondary"
                   size="lg"
                   disabled={busy}
                   className="w-full px-4 sm:w-auto"
@@ -271,12 +269,6 @@ export default function SolicitudCard({
                 >
                   <Icon icon="ph:check-circle" className="size-4" aria-hidden="true" />
                   Marcar {SOLICITUD_ESTADO_BADGE[siguiente].label}
-                </Button>
-              ) : null}
-              {!cerrada ? (
-                <Button size="lg" disabled={busy} className="w-full px-4 sm:w-auto" onClick={onConvert}>
-                  Convertir a matrícula
-                  <Icon icon="ph:arrow-right" className="size-4" aria-hidden="true" />
                 </Button>
               ) : null}
             </div>
