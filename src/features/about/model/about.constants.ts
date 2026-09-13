@@ -7,21 +7,21 @@ export const ABOUT_VALUES: IAboutValue[] = [
     title: "Pasión",
     description:
       "El motor de nuestra creatividad y la chispa de vida a cada nota que interpretamos.",
-    imageUrl: AppImages.ABOUT_PASSION,
+    imageUrl: AppImages.ABOUT_VALUE_PASSION,
     imageAlt: "Estudiante de canto interpretando con pasión",
   },
   {
     title: "Disciplina",
     description:
       "El camino riguroso hacia la maestría. Sin constancia, no existe el verdadero arte.",
-    imageUrl: AppImages.ABOUT_DISCIPLINE,
+    imageUrl: AppImages.ABOUT_VALUE_DISCIPLINE,
     imageAlt: "Estudiante practicando piano con disciplina",
   },
   {
     title: "Innovación",
     description:
       "Evolucionando el sonido del mañana mediante la exploración de nuevas fronteras sonoras.",
-    imageUrl: AppImages.ABOUT_INNOVATION,
+    imageUrl: AppImages.ABOUT_VALUE_INNOVATION,
     imageAlt: "Profesora acompañando en guitarra a un estudiante de violín",
   },
 ];

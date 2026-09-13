@@ -23,8 +23,8 @@ export type TNotificationTone = "info" | "destructive" | "primary" | "secondary"
 export const SECTION_TONE: Record<TNotificationTone, string> = {
   info: "text-info-fg",
   destructive: "text-destructive",
-  primary: "text-primary-700 dark:text-primary-300",
-  secondary: "text-secondary-800 dark:text-secondary-300",
+  primary: "text-primary-700",
+  secondary: "text-secondary-700",
 };
 
 export const QUICK_ACTIONS = [

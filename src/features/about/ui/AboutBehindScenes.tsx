@@ -10,28 +10,34 @@ export default function AboutBehindScenes({
   description,
 }: IAboutBehindScenesProps) {
   return (
-    <section className="bg-background pt-[70px] md:pt-[110px]">
-      <div className="mx-auto grid w-full max-w-[1600px] items-center gap-10 px-[22px] md:px-14 lg:grid-cols-[0.85fr_1fr] lg:gap-14">
-        <Reveal delay={0.12} className="order-2 flex justify-center lg:order-1">
+    <section aria-labelledby="about-process-title" className="border-b border-border bg-warm-50 py-16 md:py-24 lg:py-28">
+      <div className="mx-auto grid w-full max-w-[1280px] items-center gap-12 px-[22px] md:px-14 lg:grid-cols-[0.7fr_1fr] lg:gap-24">
+        <Reveal delay={0.08} className="order-2 mx-auto w-full max-w-[330px] lg:order-1 lg:max-w-[360px]">
           <AboutMedia
             src={videoUrl}
             poster={posterUrl}
             title={videoTitle}
             aspect="portrait"
-            className="w-[280px] shadow-[0_30px_70px_-30px_rgba(0,0,0,0.55)] md:rounded-[28px]"
+            sizes="(max-width: 767px) min(100vw - 44px, 330px), 360px"
           />
         </Reveal>
 
         <Reveal className="order-1 lg:order-2">
-          <p className="mb-5 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-primary md:text-[11px] md:tracking-[0.24em]">
+          <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-primary-700">
             Detrás de escena
           </p>
-          <h2 className="text-[28px] font-semibold leading-[1.12] tracking-[-0.03em] md:text-[36px]">
+          <h2
+            id="about-process-title"
+            className="mt-6 max-w-[520px] text-[clamp(2.1rem,4vw,4rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-foreground"
+          >
             {videoTitle}
           </h2>
-          <p className="mt-5 max-w-[460px] text-[15px] leading-[1.65] text-muted-foreground md:text-base">
+          <p className="mt-6 max-w-[490px] text-base leading-7 text-muted-foreground md:text-lg md:leading-8">
             {description}
           </p>
+          <div className="mt-10 max-w-[490px] border-t border-border pt-5 text-sm leading-6 text-foreground">
+            La confianza se construye en cada ensayo, antes de que llegue el momento de tocar frente al público.
+          </div>
         </Reveal>
       </div>
     </section>

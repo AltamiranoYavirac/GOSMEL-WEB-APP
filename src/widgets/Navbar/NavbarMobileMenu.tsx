@@ -15,7 +15,6 @@ import {
   SheetContent,
   SheetTitle,
   SheetTrigger,
-  ThemeToggle,
 } from "@/shared/ui";
 
 import { NAV_ITEMS } from "./Navbar.constants";
@@ -47,7 +46,7 @@ export default function NavbarMobileMenu({ session }: INavbarMobileMenuProps) {
           variant="ghost"
           size="icon-lg"
           aria-label="Abrir menú"
-          className="size-11 rounded-none hover:bg-transparent dark:hover:bg-transparent md:hidden"
+          className="size-11 rounded-none hover:bg-transparent md:hidden"
         >
           <span className="flex flex-col items-end gap-[5px]" aria-hidden="true">
             <span className="h-px w-5 bg-current" />
@@ -74,10 +73,6 @@ export default function NavbarMobileMenu({ session }: INavbarMobileMenuProps) {
             ))}
           </nav>
           <div className="mt-auto space-y-3 pt-8">
-            <div className="flex items-center justify-between border-y border-border py-3 text-sm text-muted-foreground">
-              <span>Tema</span>
-              <ThemeToggle className="rounded-full" />
-            </div>
             {session ? (
               <div className="space-y-3 rounded-xl border border-border p-3">
                 <div className="flex min-w-0 items-center gap-3">
@@ -122,13 +117,6 @@ export default function NavbarMobileMenu({ session }: INavbarMobileMenuProps) {
                 </Link>
               </>
             )}
-            <Button
-              asChild
-              className="h-12 w-full rounded-full bg-foreground text-background hover:bg-foreground/80 dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/80"
-              onClick={close}
-            >
-              <Link href="/courses">Ver cursos</Link>
-            </Button>
           </div>
         </div>
       </SheetContent>
