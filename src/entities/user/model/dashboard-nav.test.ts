@@ -33,6 +33,14 @@ describe("getDashboardSectionLabel", () => {
     expect(getDashboardSectionLabel("/dashboard/perfil", STUDENT, DASHBOARD_NAV_FOOTER.estudiante)).toBe("Mi cuenta")
     expect(getDashboardSectionLabel("/dashboard/perfil", STUDENT)).toBe("")
   })
+
+  it("docente no tiene pestaña separada de perfil profesional y mantiene Mi cuenta en el footer", () => {
+    const docenteHrefs = DASHBOARD_NAV.docente.flatMap((group) =>
+      [group.href, ...(group.items ?? []).map((item) => item.href)].filter(Boolean),
+    )
+    expect(docenteHrefs).not.toContain("/dashboard/teacher/perfil")
+    expect(DASHBOARD_NAV_FOOTER.docente.map((item) => item.href)).toContain("/dashboard/perfil")
+  })
 })
 
 describe("getDashboardSectionGroup", () => {

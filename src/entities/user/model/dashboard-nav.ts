@@ -90,13 +90,6 @@ const TEACHER_NAV: IDashboardNavGroup[] = [
       { label: "Materiales", href: "/dashboard/teacher/materiales", icon: "ph:file-audio" },
     ],
   },
-  {
-    label: "Mi perfil",
-    icon: "ph:user-circle",
-    items: [
-      { label: "Perfil profesional", href: "/dashboard/teacher/perfil", icon: "ph:user-circle" },
-    ],
-  },
 ]
 
 const STUDENT_NAV: IDashboardNavGroup[] = [
