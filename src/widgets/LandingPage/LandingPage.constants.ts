@@ -22,12 +22,8 @@ export const LANDING_STATS = [
 
 export const LANDING_PROGRAM_ORDER = [
   "Piano",
-  "Violín",
   "Guitarra",
   "Solfeo",
-  "Guitarra eléctrica",
-  "Charango",
-  "Quena",
 ] as const;
 
 export const LANDING_PROGRAM_IMAGES = {

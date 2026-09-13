@@ -1,12 +1,14 @@
 import { render, screen } from "@testing-library/react";
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 
 import { ABOUT_VALUES } from "../model/about.constants";
 import AboutValues from "./AboutValues";
 
 vi.mock("@/shared/ui", () => ({
-  Reveal: ({ children }: { children: ReactNode }) => <>{children}</>,
+  Reveal: ({ as: Tag = "div", children }: { as?: ElementType; children: ReactNode }) => (
+    <Tag>{children}</Tag>
+  ),
 }));
 
 vi.mock("next/image", () => ({

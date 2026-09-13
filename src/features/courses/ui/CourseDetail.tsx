@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 
-import { Button, Reveal } from "@/shared/ui";
+import { Reveal } from "@/shared/ui";
 
 import type { ICourseDetailProps } from "./CourseDetail.types";
 
@@ -36,9 +36,6 @@ export default function CourseDetail({ course, detail, teacher }: ICourseDetailP
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/70 to-transparent" />
-          <span className="absolute left-[22px] top-[22px] rounded-full bg-surface-dark/55 px-[15px] py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-stage-accent backdrop-blur-sm">
-            {course.category}
-          </span>
         </div>
 
         <div>
@@ -55,12 +52,6 @@ export default function CourseDetail({ course, detail, teacher }: ICourseDetailP
               </span>
             ))}
           </Reveal>
-          <Reveal delay={0.2}>
-            <Button asChild className="mt-7 h-[52px] w-fit rounded-full px-[28px] text-[14px] font-semibold">
-              <Link href="/contact">Reservar clase de prueba</Link>
-            </Button>
-          </Reveal>
-
           <div className="my-12 h-px bg-border" />
 
           <p className="mb-5 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-primary md:text-[11px]">
