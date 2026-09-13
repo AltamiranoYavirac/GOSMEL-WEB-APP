@@ -11,4 +11,6 @@ export interface ICourseCardProps {
   course: (typeof COURSES)[number];
   teachers: ICourseCardTeacher[];
   number: string;
+  isFirst: boolean;
+  isLast: boolean;
 }

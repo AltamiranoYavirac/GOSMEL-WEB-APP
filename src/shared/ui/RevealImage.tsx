@@ -12,7 +12,7 @@ export default function RevealImage({
   sizes,
   className,
   style,
-  priority,
+  preload,
   fetchPriority,
 }: IRevealImageProps) {
   const reduced = useReducedMotion();
@@ -30,7 +30,7 @@ export default function RevealImage({
         alt={alt}
         fill
         sizes={sizes}
-        priority={priority}
+        preload={preload}
         fetchPriority={fetchPriority}
         className={className}
         style={style}

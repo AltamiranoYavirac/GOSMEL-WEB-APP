@@ -1,4 +1,5 @@
 import FaqSection from "./FaqSection";
+import ExperienceGallerySection from "./ExperienceGallerySection";
 import FinalCtaSection from "./FinalCtaSection";
 import HeroSection from "./HeroSection";
 import HighlightsSection from "./HighlightsSection";
@@ -13,6 +14,7 @@ export default function LandingPage() {
       <HeroSection />
       <HighlightsSection />
       <PhilosophySection />
+      <ExperienceGallerySection />
       <ProgramsSection />
       <HowItWorksSection />
       <TestimonialsSection />
