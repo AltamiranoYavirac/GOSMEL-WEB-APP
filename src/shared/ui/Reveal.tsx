@@ -20,11 +20,16 @@ export default function Reveal({
   const Component = motion[as];
 
   if (reduced) {
-    return <Component className={className}>{children}</Component>;
+    return (
+      <Component data-reveal className={className}>
+        {children}
+      </Component>
+    );
   }
 
   return (
     <Component
+      data-reveal
       className={className}
       variants={REVEAL_VARIANTS[variant]}
       initial="hidden"

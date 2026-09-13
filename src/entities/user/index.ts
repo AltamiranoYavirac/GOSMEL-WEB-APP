@@ -1,5 +1,5 @@
 export type { TRol, ISessionUser } from "./model/user.types"
-export { ROLE_HOME_ROUTE, ROLE_LABEL, resolveHomeRoute, resolvePrimaryRole } from "./model/roles"
+export { ROLE_HOME_ROUTE, ROLE_LABEL, ROLE_PROFILE_ROUTE, resolveHomeRoute, resolvePrimaryRole, resolveProfileRoute } from "./model/roles"
 export { isDashboardRouteAllowed, resolvePostLoginRoute } from "./model/routes"
 export { sessionQueryKeys } from "./model/query-keys"
 export { DASHBOARD_NAV, DASHBOARD_NAV_FOOTER, getDashboardSectionLabel, getDashboardSectionGroup } from "./model/dashboard-nav"

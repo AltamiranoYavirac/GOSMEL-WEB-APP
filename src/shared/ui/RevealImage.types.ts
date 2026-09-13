@@ -6,6 +6,6 @@ export interface IRevealImageProps {
   sizes: string;
   className?: string;
   style?: CSSProperties;
-  priority?: boolean;
+  preload?: boolean;
   fetchPriority?: "high" | "low" | "auto";
 }
