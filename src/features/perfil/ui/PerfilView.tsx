@@ -1,9 +1,6 @@
 "use client"
 
-import { useQueryClient } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
-
-import { ROLE_LABEL, sessionQueryKeys } from "@/entities/user"
+import { ROLE_LABEL } from "@/entities/user"
 import {
   AdminPageHeader,
   Badge,
@@ -17,21 +14,12 @@ import {
 } from "@/shared/ui"
 
 import { useEliminarAvatar } from "../hooks/useEliminarAvatar"
+import { useSubirAvatar } from "../hooks/useSubirAvatar"
 import type { IPerfilViewProps } from "./PerfilView.types"
 
 export default function PerfilView({ session }: IPerfilViewProps) {
-  const queryClient = useQueryClient()
-  const router = useRouter()
+  const subirAvatar = useSubirAvatar()
   const eliminarAvatar = useEliminarAvatar()
-
-  const handleAvatarChange = (value: string) => {
-    if (!value) {
-      eliminarAvatar.mutate()
-      return
-    }
-    queryClient.invalidateQueries({ queryKey: sessionQueryKeys.all })
-    router.refresh()
-  }
 
   return (
     <div className="space-y-6">
@@ -55,11 +43,13 @@ export default function PerfilView({ session }: IPerfilViewProps) {
           <CardContent>
             <ImageUploadField
               label=""
-              endpoint="/api/upload/avatar"
-              compress
               value={session.avatarPublicId}
-              onChange={handleAvatarChange}
-              helperText="JPG, PNG o WEBP · Máx. 2MB (se optimiza automáticamente)"
+              onFileChange={(file) => {
+                if (file) subirAvatar.mutate(file)
+              }}
+              onRemove={() => eliminarAvatar.mutate()}
+              disabled={subirAvatar.isPending || eliminarAvatar.isPending}
+              helperText="JPG, PNG o WEBP · Máx. 10 MB"
             />
           </CardContent>
         </Card>
