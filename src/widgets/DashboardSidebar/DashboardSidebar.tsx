@@ -40,7 +40,7 @@ export default function DashboardSidebar({ role, session, onNavigate }: IDashboa
         </span>
       </div>
 
-      <ScrollArea className="flex-1 px-3 py-3.5">
+      <ScrollArea className="min-h-0 flex-1 px-3 py-3.5">
         <nav className="space-y-0.5">
           {groups.map((group) => {
             if (group.href && !group.items) {

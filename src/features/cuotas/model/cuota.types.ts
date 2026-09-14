@@ -10,6 +10,7 @@ export interface ICuotaRow {
   monto: number;
   montoPagado: number;
   saldo: number;
+  saldoReservado?: number;
   fechaVencimiento: string | null;
   estado: TEstadoCuota;
 }
@@ -19,4 +20,5 @@ export const CUOTA_ESTADO_BADGE: Record<TEstadoCuota, { label: string; variant: 
   parcial: { label: "Parcial", variant: "outline" },
   pagada: { label: "Pagada", variant: "success" },
   condonada: { label: "Condonada", variant: "ghost" },
+  anulada: { label: "Anulada", variant: "destructive" },
 };

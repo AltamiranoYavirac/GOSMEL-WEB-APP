@@ -60,13 +60,6 @@ export type Database = {
             foreignKeyName: "actividades_estudiante_id_fkey"
             columns: ["estudiante_id"]
             isOneToOne: false
-            referencedRelation: "v_estado_cuenta"
-            referencedColumns: ["estudiante_id"]
-          },
-          {
-            foreignKeyName: "actividades_estudiante_id_fkey"
-            columns: ["estudiante_id"]
-            isOneToOne: false
             referencedRelation: "v_estudiantes"
             referencedColumns: ["id"]
           },
@@ -162,6 +155,71 @@ export type Database = {
           },
         ]
       }
+      acuerdo_condiciones: {
+        Row: {
+          acuerdo_id: string
+          creado_por: string | null
+          created_at: string
+          dia_cobro: number
+          id: string
+          moneda: string
+          monto_mensual: number
+          motivo: string | null
+          vigente_desde: string
+        }
+        Insert: {
+          acuerdo_id: string
+          creado_por?: string | null
+          created_at?: string
+          dia_cobro: number
+          id?: string
+          moneda?: string
+          monto_mensual: number
+          motivo?: string | null
+          vigente_desde: string
+        }
+        Update: {
+          acuerdo_id?: string
+          creado_por?: string | null
+          created_at?: string
+          dia_cobro?: number
+          id?: string
+          moneda?: string
+          monto_mensual?: number
+          motivo?: string | null
+          vigente_desde?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "acuerdo_condiciones_acuerdo_id_fkey"
+            columns: ["acuerdo_id"]
+            isOneToOne: false
+            referencedRelation: "acuerdos_pago"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "acuerdo_condiciones_creado_por_fkey"
+            columns: ["creado_por"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "acuerdo_condiciones_creado_por_fkey"
+            columns: ["creado_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "acuerdo_condiciones_creado_por_fkey"
+            columns: ["creado_por"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+        ]
+      }
       acuerdos_pago: {
         Row: {
           acordado_por: string | null
@@ -177,6 +235,7 @@ export type Database = {
           monto_mensual: number
           motivo_ajuste: string | null
           observaciones: string | null
+          responsable_representante_id: string | null
           updated_at: string
         }
         Insert: {
@@ -193,6 +252,7 @@ export type Database = {
           monto_mensual: number
           motivo_ajuste?: string | null
           observaciones?: string | null
+          responsable_representante_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -209,6 +269,7 @@ export type Database = {
           monto_mensual?: number
           motivo_ajuste?: string | null
           observaciones?: string | null
+          responsable_representante_id?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -239,13 +300,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "estudiantes"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "acuerdos_pago_estudiante_id_fkey"
-            columns: ["estudiante_id"]
-            isOneToOne: false
-            referencedRelation: "v_estado_cuenta"
-            referencedColumns: ["estudiante_id"]
           },
           {
             foreignKeyName: "acuerdos_pago_estudiante_id_fkey"
@@ -288,6 +342,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_solicitudes_matricula"
             referencedColumns: ["inscripcion_id"]
+          },
+          {
+            foreignKeyName: "acuerdos_pago_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "representantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "acuerdos_pago_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes"
+            referencedColumns: ["representante_id"]
+          },
+          {
+            foreignKeyName: "acuerdos_pago_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["representante_id"]
           },
         ]
       }
@@ -341,6 +416,58 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "sesiones"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      auditoria_financiera: {
+        Row: {
+          accion: string
+          actor_id: string | null
+          created_at: string
+          detalle: Json
+          entidad: string
+          entidad_id: string
+          id: string
+        }
+        Insert: {
+          accion: string
+          actor_id?: string | null
+          created_at?: string
+          detalle?: Json
+          entidad: string
+          entidad_id: string
+          id?: string
+        }
+        Update: {
+          accion?: string
+          actor_id?: string | null
+          created_at?: string
+          detalle?: Json
+          entidad?: string
+          entidad_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auditoria_financiera_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "auditoria_financiera_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "auditoria_financiera_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["perfil_sugerido"]
           },
         ]
       }
@@ -556,6 +683,240 @@ export type Database = {
           },
         ]
       }
+      cobro_aplicaciones: {
+        Row: {
+          cobro_id: string
+          created_at: string
+          cuota_id: string
+          id: string
+          monto: number
+        }
+        Insert: {
+          cobro_id: string
+          created_at?: string
+          cuota_id: string
+          id?: string
+          monto: number
+        }
+        Update: {
+          cobro_id?: string
+          created_at?: string
+          cuota_id?: string
+          id?: string
+          monto?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cobro_aplicaciones_cobro_id_fkey"
+            columns: ["cobro_id"]
+            isOneToOne: false
+            referencedRelation: "cobros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobro_aplicaciones_cuota_id_fkey"
+            columns: ["cuota_id"]
+            isOneToOne: false
+            referencedRelation: "cuotas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobro_aplicaciones_cuota_id_fkey"
+            columns: ["cuota_id"]
+            isOneToOne: false
+            referencedRelation: "v_estado_cuenta"
+            referencedColumns: ["cuota_id"]
+          },
+        ]
+      }
+      cobros: {
+        Row: {
+          anulado_en: string | null
+          anulado_por: string | null
+          comprobante_storage_path: string | null
+          created_at: string
+          estado: Database["public"]["Enums"]["estado_cobro"]
+          fecha_pago: string
+          id: string
+          metodo: Database["public"]["Enums"]["metodo_cobro"]
+          monto_total: number
+          motivo_anulacion: string | null
+          motivo_rechazo: string | null
+          numero: number
+          numero_recibo: string | null
+          observacion: string | null
+          origen: string
+          referencia: string | null
+          registrado_por: string | null
+          responsable_estudiante_id: string | null
+          responsable_representante_id: string | null
+          revisado_en: string | null
+          revisado_por: string | null
+          updated_at: string
+        }
+        Insert: {
+          anulado_en?: string | null
+          anulado_por?: string | null
+          comprobante_storage_path?: string | null
+          created_at?: string
+          estado?: Database["public"]["Enums"]["estado_cobro"]
+          fecha_pago?: string
+          id?: string
+          metodo: Database["public"]["Enums"]["metodo_cobro"]
+          monto_total: number
+          motivo_anulacion?: string | null
+          motivo_rechazo?: string | null
+          numero?: number
+          numero_recibo?: string | null
+          observacion?: string | null
+          origen: string
+          referencia?: string | null
+          registrado_por?: string | null
+          responsable_estudiante_id?: string | null
+          responsable_representante_id?: string | null
+          revisado_en?: string | null
+          revisado_por?: string | null
+          updated_at?: string
+        }
+        Update: {
+          anulado_en?: string | null
+          anulado_por?: string | null
+          comprobante_storage_path?: string | null
+          created_at?: string
+          estado?: Database["public"]["Enums"]["estado_cobro"]
+          fecha_pago?: string
+          id?: string
+          metodo?: Database["public"]["Enums"]["metodo_cobro"]
+          monto_total?: number
+          motivo_anulacion?: string | null
+          motivo_rechazo?: string | null
+          numero?: number
+          numero_recibo?: string | null
+          observacion?: string | null
+          origen?: string
+          referencia?: string | null
+          registrado_por?: string | null
+          responsable_estudiante_id?: string | null
+          responsable_representante_id?: string | null
+          revisado_en?: string | null
+          revisado_por?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cobros_anulado_por_fkey"
+            columns: ["anulado_por"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobros_anulado_por_fkey"
+            columns: ["anulado_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "cobros_anulado_por_fkey"
+            columns: ["anulado_por"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "cobros_registrado_por_fkey"
+            columns: ["registrado_por"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobros_registrado_por_fkey"
+            columns: ["registrado_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "cobros_registrado_por_fkey"
+            columns: ["registrado_por"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "cobros_responsable_estudiante_id_fkey"
+            columns: ["responsable_estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "estudiantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobros_responsable_estudiante_id_fkey"
+            columns: ["responsable_estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobros_responsable_estudiante_id_fkey"
+            columns: ["responsable_estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "cobros_responsable_estudiante_id_fkey"
+            columns: ["responsable_estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_solicitudes_matricula"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "cobros_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "representantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobros_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes"
+            referencedColumns: ["representante_id"]
+          },
+          {
+            foreignKeyName: "cobros_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["representante_id"]
+          },
+          {
+            foreignKeyName: "cobros_revisado_por_fkey"
+            columns: ["revisado_por"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cobros_revisado_por_fkey"
+            columns: ["revisado_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "cobros_revisado_por_fkey"
+            columns: ["revisado_por"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+        ]
+      }
       configuracion_sitio: {
         Row: {
           actualizado_por: string | null
@@ -625,37 +986,73 @@ export type Database = {
       }
       cuotas: {
         Row: {
-          acuerdo_id: string
+          acuerdo_id: string | null
+          anulada_en: string | null
+          anulada_por: string | null
+          concepto: string | null
+          condonada_en: string | null
+          condonada_por: string | null
+          creada_por: string | null
           created_at: string
           estado: Database["public"]["Enums"]["estado_cuota"]
+          estudiante_id: string
           fecha_pago: string | null
           fecha_vencimiento: string | null
           id: string
           monto: number
           monto_pagado: number
+          motivo_anulacion: string | null
+          motivo_condonacion: string | null
+          origen: Database["public"]["Enums"]["origen_cuota"]
           periodo_mes: string
+          responsable_representante_id: string | null
+          tipo: Database["public"]["Enums"]["tipo_cuota"]
         }
         Insert: {
-          acuerdo_id: string
+          acuerdo_id?: string | null
+          anulada_en?: string | null
+          anulada_por?: string | null
+          concepto?: string | null
+          condonada_en?: string | null
+          condonada_por?: string | null
+          creada_por?: string | null
           created_at?: string
           estado?: Database["public"]["Enums"]["estado_cuota"]
+          estudiante_id: string
           fecha_pago?: string | null
           fecha_vencimiento?: string | null
           id?: string
           monto: number
           monto_pagado?: number
+          motivo_anulacion?: string | null
+          motivo_condonacion?: string | null
+          origen?: Database["public"]["Enums"]["origen_cuota"]
           periodo_mes: string
+          responsable_representante_id?: string | null
+          tipo?: Database["public"]["Enums"]["tipo_cuota"]
         }
         Update: {
-          acuerdo_id?: string
+          acuerdo_id?: string | null
+          anulada_en?: string | null
+          anulada_por?: string | null
+          concepto?: string | null
+          condonada_en?: string | null
+          condonada_por?: string | null
+          creada_por?: string | null
           created_at?: string
           estado?: Database["public"]["Enums"]["estado_cuota"]
+          estudiante_id?: string
           fecha_pago?: string | null
           fecha_vencimiento?: string | null
           id?: string
           monto?: number
           monto_pagado?: number
+          motivo_anulacion?: string | null
+          motivo_condonacion?: string | null
+          origen?: Database["public"]["Enums"]["origen_cuota"]
           periodo_mes?: string
+          responsable_representante_id?: string | null
+          tipo?: Database["public"]["Enums"]["tipo_cuota"]
         }
         Relationships: [
           {
@@ -664,6 +1061,118 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "acuerdos_pago"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cuotas_anulada_por_fkey"
+            columns: ["anulada_por"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cuotas_anulada_por_fkey"
+            columns: ["anulada_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "cuotas_anulada_por_fkey"
+            columns: ["anulada_por"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "cuotas_condonada_por_fkey"
+            columns: ["condonada_por"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cuotas_condonada_por_fkey"
+            columns: ["condonada_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "cuotas_condonada_por_fkey"
+            columns: ["condonada_por"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "cuotas_creada_por_fkey"
+            columns: ["creada_por"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cuotas_creada_por_fkey"
+            columns: ["creada_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "cuotas_creada_por_fkey"
+            columns: ["creada_por"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "cuotas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "estudiantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cuotas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cuotas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "cuotas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_solicitudes_matricula"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "cuotas_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "representantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cuotas_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes"
+            referencedColumns: ["representante_id"]
+          },
+          {
+            foreignKeyName: "cuotas_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["representante_id"]
           },
         ]
       }
@@ -808,13 +1317,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "estudiantes"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "curso_resenas_estudiante_id_fkey"
-            columns: ["estudiante_id"]
-            isOneToOne: false
-            referencedRelation: "v_estado_cuenta"
-            referencedColumns: ["estudiante_id"]
           },
           {
             foreignKeyName: "curso_resenas_estudiante_id_fkey"
@@ -1175,6 +1677,64 @@ export type Database = {
           },
         ]
       }
+      ejecuciones_generacion_cuotas: {
+        Row: {
+          creadas: number
+          created_at: string
+          ejecutado_por: string | null
+          error: string | null
+          estado: string
+          finished_at: string | null
+          id: string
+          mes: string
+          origen: string
+        }
+        Insert: {
+          creadas?: number
+          created_at?: string
+          ejecutado_por?: string | null
+          error?: string | null
+          estado: string
+          finished_at?: string | null
+          id?: string
+          mes: string
+          origen: string
+        }
+        Update: {
+          creadas?: number
+          created_at?: string
+          ejecutado_por?: string | null
+          error?: string | null
+          estado?: string
+          finished_at?: string | null
+          id?: string
+          mes?: string
+          origen?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ejecuciones_generacion_cuotas_ejecutado_por_fkey"
+            columns: ["ejecutado_por"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ejecuciones_generacion_cuotas_ejecutado_por_fkey"
+            columns: ["ejecutado_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "ejecuciones_generacion_cuotas_ejecutado_por_fkey"
+            columns: ["ejecutado_por"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+        ]
+      }
       estudiante_instrumento: {
         Row: {
           estudiante_id: string
@@ -1198,13 +1758,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "estudiantes"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "estudiante_instrumento_estudiante_id_fkey"
-            columns: ["estudiante_id"]
-            isOneToOne: false
-            referencedRelation: "v_estado_cuenta"
-            referencedColumns: ["estudiante_id"]
           },
           {
             foreignKeyName: "estudiante_instrumento_estudiante_id_fkey"
@@ -1270,13 +1823,6 @@ export type Database = {
             foreignKeyName: "estudiante_representante_estudiante_id_fkey"
             columns: ["estudiante_id"]
             isOneToOne: false
-            referencedRelation: "v_estado_cuenta"
-            referencedColumns: ["estudiante_id"]
-          },
-          {
-            foreignKeyName: "estudiante_representante_estudiante_id_fkey"
-            columns: ["estudiante_id"]
-            isOneToOne: false
             referencedRelation: "v_estudiantes"
             referencedColumns: ["id"]
           },
@@ -1300,13 +1846,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "representantes"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "estudiante_representante_representante_id_fkey"
-            columns: ["representante_id"]
-            isOneToOne: false
-            referencedRelation: "v_cobranza_familia"
-            referencedColumns: ["representante_id"]
           },
           {
             foreignKeyName: "estudiante_representante_representante_id_fkey"
@@ -1676,13 +2215,6 @@ export type Database = {
             foreignKeyName: "inscripciones_estudiante_id_fkey"
             columns: ["estudiante_id"]
             isOneToOne: false
-            referencedRelation: "v_estado_cuenta"
-            referencedColumns: ["estudiante_id"]
-          },
-          {
-            foreignKeyName: "inscripciones_estudiante_id_fkey"
-            columns: ["estudiante_id"]
-            isOneToOne: false
             referencedRelation: "v_estudiantes"
             referencedColumns: ["id"]
           },
@@ -1891,84 +2423,6 @@ export type Database = {
           {
             foreignKeyName: "metricas_academia_actualizado_por_fkey"
             columns: ["actualizado_por"]
-            isOneToOne: false
-            referencedRelation: "v_representantes_vinculables"
-            referencedColumns: ["perfil_sugerido"]
-          },
-        ]
-      }
-      pagos: {
-        Row: {
-          comprobante_storage_path: string | null
-          created_at: string
-          cuota_id: string
-          estado: string
-          fecha_pago: string
-          id: string
-          metodo: string | null
-          monto: number
-          observacion: string | null
-          referencia: string | null
-          registrado_por: string | null
-        }
-        Insert: {
-          comprobante_storage_path?: string | null
-          created_at?: string
-          cuota_id: string
-          estado?: string
-          fecha_pago?: string
-          id?: string
-          metodo?: string | null
-          monto: number
-          observacion?: string | null
-          referencia?: string | null
-          registrado_por?: string | null
-        }
-        Update: {
-          comprobante_storage_path?: string | null
-          created_at?: string
-          cuota_id?: string
-          estado?: string
-          fecha_pago?: string
-          id?: string
-          metodo?: string | null
-          monto?: number
-          observacion?: string | null
-          referencia?: string | null
-          registrado_por?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "pagos_cuota_id_fkey"
-            columns: ["cuota_id"]
-            isOneToOne: false
-            referencedRelation: "cuotas"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pagos_cuota_id_fkey"
-            columns: ["cuota_id"]
-            isOneToOne: false
-            referencedRelation: "v_estado_cuenta"
-            referencedColumns: ["cuota_id"]
-          },
-          {
-            foreignKeyName: "pagos_registrado_por_fkey"
-            columns: ["registrado_por"]
-            isOneToOne: false
-            referencedRelation: "perfiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "pagos_registrado_por_fkey"
-            columns: ["registrado_por"]
-            isOneToOne: false
-            referencedRelation: "v_estudiantes_emancipables"
-            referencedColumns: ["perfil_sugerido"]
-          },
-          {
-            foreignKeyName: "pagos_registrado_por_fkey"
-            columns: ["registrado_por"]
             isOneToOne: false
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
@@ -2290,13 +2744,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "estudiantes"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "registros_practica_estudiante_id_fkey"
-            columns: ["estudiante_id"]
-            isOneToOne: false
-            referencedRelation: "v_estado_cuenta"
-            referencedColumns: ["estudiante_id"]
           },
           {
             foreignKeyName: "registros_practica_estudiante_id_fkey"
@@ -2716,13 +3163,6 @@ export type Database = {
             foreignKeyName: "testimonios_estudiante_id_fkey"
             columns: ["estudiante_id"]
             isOneToOne: false
-            referencedRelation: "v_estado_cuenta"
-            referencedColumns: ["estudiante_id"]
-          },
-          {
-            foreignKeyName: "testimonios_estudiante_id_fkey"
-            columns: ["estudiante_id"]
-            isOneToOne: false
             referencedRelation: "v_estudiantes"
             referencedColumns: ["id"]
           },
@@ -2765,33 +3205,39 @@ export type Database = {
       }
     }
     Views: {
-      v_cobranza_familia: {
+      v_cobranza_responsables: {
         Row: {
           celular: string | null
-          detalle: string | null
           dias_mora_max: number | null
-          hijos_con_cuota: number | null
-          periodo_mes: string | null
-          representante: string | null
-          representante_id: string | null
+          estudiantes_con_cargo: number | null
+          responsable: string | null
+          responsable_id: string | null
+          responsable_tipo: string | null
+          saldo_mes: number | null
           saldo_total: number | null
-          total_mes: number | null
         }
         Relationships: []
       }
       v_estado_cuenta: {
         Row: {
           acuerdo_id: string | null
+          concepto: string | null
           cuota_id: string | null
           dias_mora: number | null
+          estado: Database["public"]["Enums"]["estado_cuota"] | null
           estado_efectivo: string | null
           estudiante: string | null
           estudiante_id: string | null
+          fecha_pago: string | null
           fecha_vencimiento: string | null
           monto: number | null
           monto_pagado: number | null
+          origen: Database["public"]["Enums"]["origen_cuota"] | null
           periodo_mes: string | null
+          responsable_representante_id: string | null
           saldo: number | null
+          saldo_reservado: number | null
+          tipo: Database["public"]["Enums"]["tipo_cuota"] | null
         }
         Relationships: [
           {
@@ -2800,6 +3246,55 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "acuerdos_pago"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cuotas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "estudiantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cuotas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cuotas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "cuotas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "v_solicitudes_matricula"
+            referencedColumns: ["estudiante_id"]
+          },
+          {
+            foreignKeyName: "cuotas_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "representantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cuotas_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes"
+            referencedColumns: ["representante_id"]
+          },
+          {
+            foreignKeyName: "cuotas_responsable_representante_id_fkey"
+            columns: ["responsable_representante_id"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["representante_id"]
           },
         ]
       }
@@ -2894,13 +3389,6 @@ export type Database = {
             foreignKeyName: "inscripciones_estudiante_id_fkey"
             columns: ["estudiante_id"]
             isOneToOne: false
-            referencedRelation: "v_estado_cuenta"
-            referencedColumns: ["estudiante_id"]
-          },
-          {
-            foreignKeyName: "inscripciones_estudiante_id_fkey"
-            columns: ["estudiante_id"]
-            isOneToOne: false
             referencedRelation: "v_estudiantes"
             referencedColumns: ["id"]
           },
@@ -2962,13 +3450,6 @@ export type Database = {
             foreignKeyName: "curso_resenas_estudiante_id_fkey"
             columns: ["estudiante_id"]
             isOneToOne: false
-            referencedRelation: "v_estado_cuenta"
-            referencedColumns: ["estudiante_id"]
-          },
-          {
-            foreignKeyName: "curso_resenas_estudiante_id_fkey"
-            columns: ["estudiante_id"]
-            isOneToOne: false
             referencedRelation: "v_estudiantes"
             referencedColumns: ["id"]
           },
@@ -3005,6 +3486,46 @@ export type Database = {
       }
     }
     Functions: {
+      actualizar_acuerdo_administrativo: {
+        Args: {
+          p_acuerdo_id: string
+          p_estado: Database["public"]["Enums"]["estado_acuerdo"]
+          p_fecha_fin: string
+          p_observaciones: string
+        }
+        Returns: undefined
+      }
+      actualizar_acuerdo_completo: {
+        Args: {
+          p_acuerdo_id: string
+          p_dia_cobro: number
+          p_estado: Database["public"]["Enums"]["estado_acuerdo"]
+          p_fecha_fin: string
+          p_monto_mensual: number
+          p_motivo: string
+          p_observaciones: string
+          p_vigente_desde: string
+        }
+        Returns: undefined
+      }
+      actualizar_condiciones_acuerdo: {
+        Args: {
+          p_acuerdo_id: string
+          p_dia_cobro: number
+          p_monto_mensual: number
+          p_motivo?: string
+          p_vigente_desde: string
+        }
+        Returns: undefined
+      }
+      anular_cobro: {
+        Args: { p_cobro_id: string; p_motivo: string }
+        Returns: undefined
+      }
+      anular_cuota: {
+        Args: { p_cuota_id: string; p_motivo: string }
+        Returns: undefined
+      }
       aprobar_matricula: {
         Args: {
           p_dia_cobro?: number
@@ -3015,12 +3536,96 @@ export type Database = {
         }
         Returns: undefined
       }
+      cambiar_responsable_acuerdo: {
+        Args: {
+          p_acuerdo_id: string
+          p_motivo: string
+          p_representante_id: string
+        }
+        Returns: undefined
+      }
+      cerrar_acuerdo: {
+        Args: { p_acuerdo_id: string; p_motivo: string; p_resoluciones: Json }
+        Returns: undefined
+      }
+      condonar_cuota: {
+        Args: { p_cuota_id: string; p_motivo: string }
+        Returns: undefined
+      }
+      crear_acuerdo_pago: {
+        Args: {
+          p_dia_cobro: number
+          p_estudiante_id: string
+          p_fecha_fin: string
+          p_fecha_inicio: string
+          p_monto_mensual: number
+          p_motivo_ajuste: string
+          p_observaciones: string
+          p_responsable_representante_id: string
+        }
+        Returns: string
+      }
+      crear_cargo_extraordinario: {
+        Args: {
+          p_concepto: string
+          p_estudiante_id: string
+          p_fecha_vencimiento: string
+          p_monto: number
+          p_observacion?: string
+          p_responsable_representante_id: string
+        }
+        Returns: {
+          acuerdo_id: string | null
+          anulada_en: string | null
+          anulada_por: string | null
+          concepto: string | null
+          condonada_en: string | null
+          condonada_por: string | null
+          creada_por: string | null
+          created_at: string
+          estado: Database["public"]["Enums"]["estado_cuota"]
+          estudiante_id: string
+          fecha_pago: string | null
+          fecha_vencimiento: string | null
+          id: string
+          monto: number
+          monto_pagado: number
+          motivo_anulacion: string | null
+          motivo_condonacion: string | null
+          origen: Database["public"]["Enums"]["origen_cuota"]
+          periodo_mes: string
+          responsable_representante_id: string | null
+          tipo: Database["public"]["Enums"]["tipo_cuota"]
+        }
+        SetofOptions: {
+          from: "*"
+          to: "cuotas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       crear_catedra_con_horario: {
         Args: { p_catedra: Json; p_horario?: Json }
         Returns: string
       }
       crear_curso_con_catedra: {
         Args: { p_catedra?: Json; p_curso: Json }
+        Returns: string
+      }
+      crear_estudiante_administrativo: {
+        Args: {
+          p_apellidos: string
+          p_biografia_corta: string
+          p_cedula: string
+          p_celular: string
+          p_email: string
+          p_fecha_nacimiento: string
+          p_instrumento_id: string
+          p_nivel_musical: Database["public"]["Enums"]["nivel_curso"]
+          p_nombres: string
+          p_parentesco: Database["public"]["Enums"]["parentesco"]
+          p_representante_id: string
+        }
         Returns: string
       }
       cuenta_activa: { Args: never; Returns: boolean }
@@ -3033,6 +3638,19 @@ export type Database = {
         }
         Returns: undefined
       }
+      desvincular_representante_estudiante: {
+        Args: { p_estudiante_id: string; p_representante_id: string }
+        Returns: undefined
+      }
+      editar_cuota: {
+        Args: {
+          p_cuota_id: string
+          p_fecha_vencimiento: string
+          p_monto: number
+          p_motivo: string
+        }
+        Returns: undefined
+      }
       emitir_certificado: {
         Args: { p_forzar?: boolean; p_inscripcion_id: string }
         Returns: string
@@ -3041,6 +3659,11 @@ export type Database = {
       es_docente: { Args: never; Returns: boolean }
       estudiantes_accesibles: { Args: never; Returns: string[] }
       generar_cuotas_mes: { Args: { p_mes: string }; Returns: number }
+      generar_cuotas_mes_cron: { Args: never; Returns: undefined }
+      generar_cuotas_mes_interno: {
+        Args: { p_actor?: string; p_mes: string }
+        Returns: number
+      }
       generar_sesiones_catedra: {
         Args: {
           p_catedra_id: string
@@ -3065,6 +3688,10 @@ export type Database = {
         Args: { p_catedra_ids: string[]; p_docente_id: string }
         Returns: number
       }
+      recalcular_cuota_desde_cobros: {
+        Args: { p_cuota_id: string }
+        Returns: undefined
+      }
       rechazar_matricula: {
         Args: { p_inscripcion_id: string; p_motivo: string }
         Returns: undefined
@@ -3077,20 +3704,54 @@ export type Database = {
         }
         Returns: undefined
       }
-      registrar_docente: {
+      registrar_cobro: {
         Args: {
-          p_perfil_id: string
-          p_slug?: string
-          p_titulo_profesional?: string
-          p_biografia?: string
-          p_frase_destacada?: string
-          p_anios_experiencia?: number
-          p_publicado?: boolean
-          p_destacado?: boolean
-          p_instrumento_ids?: string[]
-          p_instrumento_principal_id?: string
+          p_aplicaciones: Json
+          p_comprobante_storage_path: string
+          p_fecha_pago: string
+          p_metodo: Database["public"]["Enums"]["metodo_cobro"]
+          p_observacion: string
+          p_origen: string
+          p_referencia: string
+          p_responsable_estudiante_id: string
+          p_responsable_representante_id: string
         }
         Returns: string
+      }
+      registrar_docente: {
+        Args: {
+          p_anios_experiencia?: number
+          p_biografia?: string
+          p_destacado?: boolean
+          p_frase_destacada?: string
+          p_instrumento_ids?: string[]
+          p_instrumento_principal_id?: string
+          p_perfil_id: string
+          p_publicado?: boolean
+          p_slug?: string
+          p_titulo_profesional?: string
+        }
+        Returns: string
+      }
+      reportar_cobro_portal: {
+        Args: {
+          p_comprobante_storage_path: string
+          p_cuota_id: string
+          p_fecha_pago: string
+          p_metodo: Database["public"]["Enums"]["metodo_cobro"]
+          p_monto: number
+          p_observacion?: string
+          p_referencia: string
+        }
+        Returns: string
+      }
+      restaurar_cuota_condonada: {
+        Args: { p_cuota_id: string; p_motivo: string }
+        Returns: undefined
+      }
+      revisar_cobro: {
+        Args: { p_aprobar: boolean; p_cobro_id: string; p_motivo?: string }
+        Returns: undefined
       }
       roles_actuales: { Args: never; Returns: string[] }
       solicitar_matricula: {
@@ -3114,6 +3775,16 @@ export type Database = {
         Args: { p_perfil_id: string; p_representante_id: string }
         Returns: undefined
       }
+      vincular_representante_estudiante: {
+        Args: {
+          p_autoriza_retiro: boolean
+          p_contacto_principal: boolean
+          p_estudiante_id: string
+          p_parentesco: Database["public"]["Enums"]["parentesco"]
+          p_representante_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       categoria_curso: "instrumento" | "lenguaje_musical" | "otro"
@@ -3121,7 +3792,12 @@ export type Database = {
       estado_acuerdo: "vigente" | "suspendido" | "finalizado"
       estado_asistencia: "presente" | "ausente" | "justificado" | "atraso"
       estado_catedra: "planificada" | "en_curso" | "finalizada" | "cancelada"
-      estado_cuota: "pendiente" | "parcial" | "pagada" | "condonada"
+      estado_cobro:
+        | "pendiente_verificacion"
+        | "aprobado"
+        | "rechazado"
+        | "anulado"
+      estado_cuota: "pendiente" | "parcial" | "pagada" | "condonada" | "anulada"
       estado_inscripcion:
         | "pendiente"
         | "activa"
@@ -3130,6 +3806,13 @@ export type Database = {
         | "retirada"
       estado_sesion: "programada" | "realizada" | "cancelada" | "reprogramada"
       estado_solicitud: "nueva" | "contactada" | "convertida" | "descartada"
+      metodo_cobro:
+        | "transferencia"
+        | "deposito"
+        | "efectivo"
+        | "tarjeta"
+        | "punto_de_venta"
+        | "otro"
       modalidad_curso: "presencial" | "virtual" | "hibrido"
       nivel_curso:
         | "iniciacion"
@@ -3137,6 +3820,7 @@ export type Database = {
         | "intermedio"
         | "avanzado"
         | "maestria"
+      origen_cuota: "matricula" | "generacion_mensual" | "manual"
       parentesco:
         | "madre"
         | "padre"
@@ -3146,6 +3830,7 @@ export type Database = {
         | "tutor_legal"
         | "otro"
       rol_usuario: "estudiante" | "representante" | "docente" | "admin"
+      tipo_cuota: "mensualidad" | "extraordinaria"
       tipo_evaluacion:
         | "diagnostica"
         | "formativa"
@@ -3293,7 +3978,13 @@ export const Constants = {
       estado_acuerdo: ["vigente", "suspendido", "finalizado"],
       estado_asistencia: ["presente", "ausente", "justificado", "atraso"],
       estado_catedra: ["planificada", "en_curso", "finalizada", "cancelada"],
-      estado_cuota: ["pendiente", "parcial", "pagada", "condonada"],
+      estado_cobro: [
+        "pendiente_verificacion",
+        "aprobado",
+        "rechazado",
+        "anulado",
+      ],
+      estado_cuota: ["pendiente", "parcial", "pagada", "condonada", "anulada"],
       estado_inscripcion: [
         "pendiente",
         "activa",
@@ -3303,6 +3994,14 @@ export const Constants = {
       ],
       estado_sesion: ["programada", "realizada", "cancelada", "reprogramada"],
       estado_solicitud: ["nueva", "contactada", "convertida", "descartada"],
+      metodo_cobro: [
+        "transferencia",
+        "deposito",
+        "efectivo",
+        "tarjeta",
+        "punto_de_venta",
+        "otro",
+      ],
       modalidad_curso: ["presencial", "virtual", "hibrido"],
       nivel_curso: [
         "iniciacion",
@@ -3311,6 +4010,7 @@ export const Constants = {
         "avanzado",
         "maestria",
       ],
+      origen_cuota: ["matricula", "generacion_mensual", "manual"],
       parentesco: [
         "madre",
         "padre",
@@ -3321,6 +4021,7 @@ export const Constants = {
         "otro",
       ],
       rol_usuario: ["estudiante", "representante", "docente", "admin"],
+      tipo_cuota: ["mensualidad", "extraordinaria"],
       tipo_evaluacion: [
         "diagnostica",
         "formativa",

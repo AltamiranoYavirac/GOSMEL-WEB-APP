@@ -1,12 +1,12 @@
 import { z } from "zod";
 
-import type { TEstadoAcuerdo } from "./acuerdo.types";
 
 export const editarAcuerdoFormSchema = z.object({
   montoMensual: z.number().min(0, "El monto no puede ser negativo"),
   diaCobro: z.number().int().min(1).max(28).optional(),
+  vigenteDesde: z.string().min(1, "Selecciona el mes de vigencia"),
   fechaFin: z.string().optional(),
-  estado: z.enum(["vigente", "suspendido", "finalizado"]),
+  estado: z.enum(["vigente", "suspendido"]),
   motivoAjuste: z.string().optional(),
   observaciones: z.string().optional(),
 });
@@ -17,8 +17,9 @@ export function getEditarAcuerdoFormDefaults(initial?: Partial<IEditarAcuerdoFor
   return {
     montoMensual: initial?.montoMensual ?? 0,
     diaCobro: initial?.diaCobro ?? 5,
+    vigenteDesde: initial?.vigenteDesde ?? `${new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toISOString().slice(0, 10)}`,
     fechaFin: initial?.fechaFin ?? "",
-    estado: (initial?.estado as TEstadoAcuerdo) ?? "vigente",
+    estado: initial?.estado === "suspendido" ? "suspendido" : "vigente",
     motivoAjuste: initial?.motivoAjuste ?? "",
     observaciones: initial?.observaciones ?? "",
   };
@@ -27,5 +28,4 @@ export function getEditarAcuerdoFormDefaults(initial?: Partial<IEditarAcuerdoFor
 export const ESTADO_ACUERDO_OPCIONES = [
   { value: "vigente", label: "Vigente" },
   { value: "suspendido", label: "Suspendido" },
-  { value: "finalizado", label: "Finalizado" },
 ];

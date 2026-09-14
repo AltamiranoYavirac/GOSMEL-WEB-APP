@@ -7,12 +7,13 @@ import { solicitarMatriculaFormSchema } from "./SolicitarMatriculaForm.config"
 
 describe("reportarPagoFormSchema", () => {
   it("valida monto, método y límites", () => {
-    const base = { monto: 50, metodo: "transferencia", referencia: "", comprobanteStoragePath: "", observacion: "" }
+    const base = { monto: 50, metodo: "transferencia", referencia: "", comprobanteStoragePath: "comprobantes/recibo.pdf", observacion: "" }
 
     expect(reportarPagoFormSchema.safeParse(base).success).toBe(true)
     expect(reportarPagoFormSchema.safeParse({ ...base, monto: "50" }).success).toBe(true)
     expect(reportarPagoFormSchema.safeParse({ ...base, monto: 0 }).success).toBe(false)
     expect(reportarPagoFormSchema.safeParse({ ...base, metodo: "" }).success).toBe(false)
+    expect(reportarPagoFormSchema.safeParse({ ...base, comprobanteStoragePath: "" }).success).toBe(false)
     expect(reportarPagoFormSchema.safeParse({ ...base, referencia: "x".repeat(101) }).success).toBe(false)
     expect(reportarPagoFormSchema.safeParse({ ...base, observacion: "x".repeat(301) }).success).toBe(false)
   })

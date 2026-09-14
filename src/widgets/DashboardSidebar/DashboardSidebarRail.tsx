@@ -35,14 +35,14 @@ export default function DashboardSidebarRail({ role, session, onExpand }: IDashb
         ))}
       </button>
 
-      <div className="flex w-full flex-col items-center gap-1.5">
+      <div className="flex w-full min-h-0 flex-1 flex-col items-center gap-1.5 overflow-y-auto">
         {groups.map((group) => {
           const hrefs = group.href
             ? [group.href]
             : (group.items ?? []).map((item) => item.href);
           const active = isGroupActive(hrefs);
           const className = cn(
-            "flex size-10 items-center justify-center rounded-[10px] transition-colors",
+            "flex size-10 shrink-0 items-center justify-center rounded-[10px] transition-colors",
             active
               ? "bg-primary/15 text-primary"
               : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
@@ -65,8 +65,6 @@ export default function DashboardSidebarRail({ role, session, onExpand }: IDashb
           );
         })}
       </div>
-
-      <div className="flex-1" />
 
       {footerLinks.map((item) => {
         const active = pathname === item.href || pathname.startsWith(`${item.href}/`);

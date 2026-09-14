@@ -36,17 +36,18 @@ function buildTables() {
       { id: "c4", estado: "finalizada" },
     ],
     sesiones: [{ id: "se1", fecha: "2026-06-15" }],
-    pagos: [
+    cobros: [
       {
         id: "p1",
-        monto: 100,
+        monto_total: 100,
+        estado: "aprobado",
         fecha_pago: "2026-06-10",
         created_at: "2026-06-10T10:00:00",
-        cuotas: { acuerdos_pago: { estudiantes: { nombres: "Ada", apellidos: "Lovelace" } } },
+        cobro_aplicaciones: [{ cuotas: { estudiantes: { nombres: "Ada", apellidos: "Lovelace" } } }],
       },
-      { id: "p2", monto: 50, fecha_pago: "2026-06-05", created_at: "2026-06-05T10:00:00", cuotas: null },
-      { id: "p3", monto: 100, fecha_pago: "2026-05-10", created_at: "2026-05-10T10:00:00", cuotas: null },
-      { id: "p4", monto: 20, fecha_pago: "2026-02-10", created_at: "2026-02-10T10:00:00", cuotas: null },
+      { id: "p2", monto_total: 50, estado: "aprobado", fecha_pago: "2026-06-05", created_at: "2026-06-05T10:00:00", cobro_aplicaciones: [] },
+      { id: "p3", monto_total: 100, estado: "aprobado", fecha_pago: "2026-05-10", created_at: "2026-05-10T10:00:00", cobro_aplicaciones: [] },
+      { id: "p4", monto_total: 20, estado: "aprobado", fecha_pago: "2026-02-10", created_at: "2026-02-10T10:00:00", cobro_aplicaciones: [] },
     ],
     cuotas: [
       { id: "q1", estado: "pendiente", fecha_vencimiento: "2026-05-01" },
@@ -152,7 +153,7 @@ describe("getDashboardOverview", () => {
 
   it("propaga el primer error", async () => {
     createSupabaseServerClientMock.mockResolvedValue(
-      createFakeSupabase.withError("pagos", "boom", buildTables(), { user: USER }),
+      createFakeSupabase.withError("cobros", "boom", buildTables(), { user: USER }),
     )
 
     const result = await getDashboardOverview()

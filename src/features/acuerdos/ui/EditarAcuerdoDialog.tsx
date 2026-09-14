@@ -36,7 +36,7 @@ export default function EditarAcuerdoDialog({ acuerdo }: IEditarAcuerdoDialogPro
       montoMensual: acuerdo.montoMensual,
       diaCobro: acuerdo.diaCobro ?? 5,
       fechaFin: acuerdo.fechaFin ?? "",
-      estado: acuerdo.estado,
+      estado: acuerdo.estado === "suspendido" ? "suspendido" : "vigente",
       motivoAjuste: acuerdo.motivoAjuste ?? "",
       observaciones: acuerdo.observaciones ?? "",
     }),
@@ -79,6 +79,8 @@ export default function EditarAcuerdoDialog({ acuerdo }: IEditarAcuerdoDialogPro
             />
             <NumberField name="diaCobro" label="Día de cobro (1–28)" asNumber />
           </div>
+
+          <DateField name="vigenteDesde" label="Cambio de monto/día vigente desde" />
 
           <div className="grid grid-cols-2 gap-3">
             <SelectField name="estado" label="Estado del acuerdo" options={ESTADO_ACUERDO_OPCIONES} />

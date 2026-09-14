@@ -4,16 +4,11 @@ export async function aprobarPago(
   pagoId: string
 ): Promise<{ data: { id: string } | null; error: string | null }> {
   const supabase = createSupabaseBrowserClient();
-  const { data, error } = await supabase
-    .from("pagos")
-    .update({ estado: "aprobado" })
-    .eq("id", pagoId)
-    .select("id")
-    .single();
+  const { error } = await supabase.rpc("revisar_cobro", { p_cobro_id: pagoId, p_aprobar: true, p_motivo: null } as never);
 
   if (error) {
     return { data: null, error: error.message };
   }
 
-  return { data, error: null };
+  return { data: { id: pagoId }, error: null };
 }

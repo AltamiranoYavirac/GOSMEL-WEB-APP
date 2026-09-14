@@ -6,35 +6,7 @@ import { getCobranza } from "./getCobranza"
 
 function buildTables() {
   return {
-    estudiantes: [
-      { id: "e1", perfil_id: "p1", nombres: "Ada", apellidos: "Lovelace" },
-      { id: "e2", perfil_id: "p2", nombres: "Alan", apellidos: "Turing" },
-    ],
-    estudiante_representante: [
-      { representante_id: "r1", estudiante_id: "e1" },
-      { representante_id: "r1", estudiante_id: "e2" },
-    ],
-    representantes: [
-      { id: "r1", nombres: "Grace", apellidos: "Hopper", celular: "0991234567" },
-      { id: "r2", nombres: "Sin", apellidos: "Hijos", celular: null },
-    ],
-    acuerdos_pago: [
-      {
-        estudiante_id: "e1",
-        cuotas: [
-          { periodo_mes: "2026-06", monto: 50, monto_pagado: 20, fecha_vencimiento: "2026-06-05", estado: "parcial" },
-          { periodo_mes: "2026-05", monto: 50, monto_pagado: 50, fecha_vencimiento: "2026-05-05", estado: "pagada" },
-          { periodo_mes: "2026-04", monto: 50, monto_pagado: 0, fecha_vencimiento: "2026-04-05", estado: "pendiente" },
-          { periodo_mes: "2026-03", monto: 50, monto_pagado: 0, fecha_vencimiento: null, estado: "pendiente" },
-        ],
-      },
-      {
-        estudiante_id: "e2",
-        cuotas: [
-          { periodo_mes: "2026-06", monto: 30, monto_pagado: 0, fecha_vencimiento: "2026-06-10", estado: "condonada" },
-        ],
-      },
-    ],
+    v_cobranza_responsables: [{ responsable_id: "r1", responsable: "Grace Hopper", responsable_tipo: "representante", celular: "0991234567", estudiantes_con_cargo: 2, saldo_total: 130, saldo_mes: 30, dias_mora_max: 71 }],
   }
 }
 
@@ -66,15 +38,7 @@ describe("getCobranza", () => {
   })
 
   it("devuelve diasMoraMax null si nada está vencido", async () => {
-    const tables = buildTables()
-    tables.acuerdos_pago = [
-      {
-        estudiante_id: "e1",
-        cuotas: [
-          { periodo_mes: "2026-06", monto: 50, monto_pagado: 50, fecha_vencimiento: "2026-06-05", estado: "pagada" },
-        ],
-      },
-    ]
+    const tables = { v_cobranza_responsables: [{ responsable_id: "r1", responsable: "Grace Hopper", responsable_tipo: "representante", celular: "099", estudiantes_con_cargo: 1, saldo_total: 0, saldo_mes: 0, dias_mora_max: null }] }
 
     const result = await getCobranza(createFakeSupabase(tables))
 
@@ -84,7 +48,7 @@ describe("getCobranza", () => {
 
   it("propaga el primer error de cualquier query", async () => {
     const result = await getCobranza(
-      createFakeSupabase.withError("representantes", "boom", buildTables()),
+      createFakeSupabase.withError("v_cobranza_responsables", "boom", buildTables()),
     )
 
     expect(result).toEqual({ data: null, error: "boom" })
