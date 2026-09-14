@@ -29,44 +29,62 @@ describe("slugifyNombre", () => {
 })
 
 describe("crearDocenteFormSchema", () => {
-  it("rechaza perfilId vacío y experiencia negativa o no numérica", () => {
+  it("rechaza perfilId vacío y experiencia negativa", () => {
     const result = crearDocenteFormSchema.safeParse({
+      ...getCrearDocenteFormDefaults(),
       perfilId: "",
       aniosExperiencia: -1,
-      publicado: true,
-      destacado: false,
     })
     expect(result.success).toBe(false)
   })
 
-  it("coerciona aniosExperiencia y acepta el payload válido", () => {
+  it("acepta experiencia nula y varios instrumentos", () => {
     const result = crearDocenteFormSchema.parse({
+      ...getCrearDocenteFormDefaults(),
       perfilId: "p1",
-      slug: "",
-      tituloProfesional: "",
-      instrumentoId: "",
-      aniosExperiencia: "5",
-      fraseDestacada: "",
-      biografia: "",
-      publicado: true,
-      destacado: false,
+      instrumentoIds: ["i1", "i2"],
+      instrumentoPrincipalId: "i2",
+      aniosExperiencia: null,
     })
 
-    expect(result.aniosExperiencia).toBe(5)
+    expect(result.aniosExperiencia).toBeNull()
+    expect(result.instrumentoIds).toEqual(["i1", "i2"])
+  })
+
+  it("exige que el instrumento principal esté entre los seleccionados", () => {
+    const result = crearDocenteFormSchema.safeParse({
+      ...getCrearDocenteFormDefaults(),
+      perfilId: "p1",
+      instrumentoIds: ["i1"],
+      instrumentoPrincipalId: "i2",
+    })
+
+    expect(result.success).toBe(false)
+  })
+
+  it("rechaza slugs que no son kebab-case", () => {
+    const result = crearDocenteFormSchema.safeParse({
+      ...getCrearDocenteFormDefaults(),
+      perfilId: "p1",
+      slug: "Leo Brouwer",
+    })
+
+    expect(result.success).toBe(false)
   })
 })
 
 describe("getCrearDocenteFormDefaults", () => {
-  it("devuelve defaults publicados", () => {
+  it("devuelve defaults sin publicar y sin experiencia", () => {
     expect(getCrearDocenteFormDefaults()).toEqual({
       perfilId: "",
       slug: "",
       tituloProfesional: "",
-      instrumentoId: "",
-      aniosExperiencia: 3,
+      instrumentoIds: [],
+      instrumentoPrincipalId: "",
+      aniosExperiencia: null,
       fraseDestacada: "",
       biografia: "",
-      publicado: true,
+      publicado: false,
       destacado: false,
     })
   })
@@ -91,10 +109,27 @@ describe("buildCrearDocentePayload", () => {
       biografia: undefined,
       frase_destacada: undefined,
       anios_experiencia: 4,
-      instrumento_id: undefined,
-      publicado: true,
+      instrumento_ids: [],
+      instrumento_principal_id: undefined,
+      publicado: false,
       destacado: false,
     })
+  })
+
+  it("envía instrumentos seleccionados y el principal", () => {
+    const payload = buildCrearDocentePayload(
+      {
+        ...getCrearDocenteFormDefaults(),
+        perfilId: "p1",
+        instrumentoIds: ["i1", "i2"],
+        instrumentoPrincipalId: "i1",
+      },
+      "José Núñez",
+    )
+
+    expect(payload.instrumento_ids).toEqual(["i1", "i2"])
+    expect(payload.instrumento_principal_id).toBe("i1")
+    expect(payload.anios_experiencia).toBeUndefined()
   })
 
   it("deriva el slug del nombre del perfil cuando no se provee", () => {

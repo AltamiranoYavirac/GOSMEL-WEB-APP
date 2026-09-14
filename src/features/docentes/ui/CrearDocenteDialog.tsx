@@ -17,6 +17,7 @@ import {
 } from "@/shared/ui";
 import {
   Form,
+  MultiSelectField,
   NumberField,
   SelectField,
   SwitchField,
@@ -69,6 +70,12 @@ export default function CrearDocenteDialog({
   const instrumentoOpciones = useMemo(
     () => instrumentos.map((i) => ({ value: i.id, label: i.nombre })),
     [instrumentos]
+  );
+
+  const instrumentoIds = form.watch("instrumentoIds");
+  const instrumentoPrincipalOpciones = useMemo(
+    () => instrumentoOpciones.filter((opcion) => instrumentoIds.includes(opcion.value)),
+    [instrumentoOpciones, instrumentoIds]
   );
 
   const handleOpenChange = (next: boolean) => {
@@ -141,13 +148,33 @@ export default function CrearDocenteDialog({
               placeholder="Ej. Licenciado en Música, Concertista..."
             />
 
+            <div className="sm:col-span-2">
+              <MultiSelectField
+                name="instrumentoIds"
+                label="Instrumentos que enseña"
+                placeholder="Seleccione uno o varios instrumentos..."
+                emptyLabel="No hay instrumentos registrados"
+                options={instrumentoOpciones}
+              />
+            </div>
+
             <SelectField
-              name="instrumentoId"
+              name="instrumentoPrincipalId"
               label="Instrumento principal"
-              placeholder="Seleccione instrumento..."
-              options={instrumentoOpciones}
+              placeholder={
+                instrumentoPrincipalOpciones.length > 0
+                  ? "Seleccione instrumento..."
+                  : "Selecciona primero los instrumentos"
+              }
+              disabled={instrumentoPrincipalOpciones.length === 0}
+              options={instrumentoPrincipalOpciones}
             />
-            <NumberField name="aniosExperiencia" label="Años de experiencia" asNumber />
+            <NumberField
+              name="aniosExperiencia"
+              label="Años de experiencia"
+              placeholder="Sin especificar"
+              asNumber
+            />
 
             <div className="sm:col-span-2">
               <TextField

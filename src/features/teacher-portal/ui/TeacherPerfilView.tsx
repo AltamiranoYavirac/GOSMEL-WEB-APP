@@ -14,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
   Skeleton,
+  Switch,
   Tabs,
   TabsContent,
   TabsList,
@@ -32,6 +33,7 @@ import { useDeleteTeacherPortafolio } from "../hooks/useDeleteTeacherPortafolio"
 import { useDeleteTeacherReconocimiento } from "../hooks/useDeleteTeacherReconocimiento";
 import { useTeacherPerfil } from "../hooks/useTeacherPerfil";
 import { useUpdateTeacherPerfil } from "../hooks/useUpdateTeacherPerfil";
+import { useUpdateTeacherPortafolioPublicado } from "../hooks/useUpdateTeacherPortafolioPublicado";
 import {
   getTeacherPerfilFormDefaults,
   mapTeacherPerfilToFormValues,
@@ -50,6 +52,7 @@ export default function TeacherPerfilView({ className }: ITeacherPerfilViewProps
   const deleteFormacionMutation = useDeleteTeacherFormacion();
   const deleteReconocimientoMutation = useDeleteTeacherReconocimiento();
   const deletePortafolioMutation = useDeleteTeacherPortafolio();
+  const portafolioPublicadoMutation = useUpdateTeacherPortafolioPublicado();
 
   const [formacionDialogOpen, setFormacionDialogOpen] = useState(false);
   const [reconocimientoDialogOpen, setReconocimientoDialogOpen] = useState(false);
@@ -351,7 +354,8 @@ export default function TeacherPerfilView({ className }: ITeacherPerfilViewProps
                   Portafolio Multimedia
                 </CardTitle>
                 <CardDescription>
-                  Muestras de presentaciones en vivo, grabaciones de audio o videos.
+                  Muestras de presentaciones en vivo, grabaciones de audio o videos. Solo los elementos visibles se
+                  muestran en tu perfil público.
                 </CardDescription>
               </div>
               <Button
@@ -390,28 +394,42 @@ export default function TeacherPerfilView({ className }: ITeacherPerfilViewProps
                           </p>
                         ) : null}
                       </div>
-                      <div className="flex items-center justify-between border-t border-border/40 pt-2">
-                        {item.urlExterna ? (
-                          <Button variant="ghost" size="sm" asChild className="h-7 text-xs">
-                            <a
-                              href={item.urlExterna}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1"
-                            >
-                              <Icon icon="ph:arrow-square-out" className="size-3.5" />
-                              Ver medio
-                            </a>
+                      <div className="flex items-center justify-between gap-2 border-t border-border/40 pt-2">
+                        <label className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <Switch
+                            size="sm"
+                            checked={item.publicado}
+                            disabled={portafolioPublicadoMutation.isPending}
+                            onCheckedChange={(value) =>
+                              portafolioPublicadoMutation.mutate({ portafolioId: item.id, publicado: value })
+                            }
+                            aria-label={`Mostrar "${item.titulo}" en el perfil público`}
+                          />
+                          {item.publicado ? "Visible en tu perfil" : "Oculto"}
+                        </label>
+                        <div className="flex items-center gap-1">
+                          {item.urlExterna ? (
+                            <Button variant="ghost" size="sm" asChild className="h-7 text-xs">
+                              <a
+                                href={item.urlExterna}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1"
+                              >
+                                <Icon icon="ph:arrow-square-out" className="size-3.5" />
+                                Ver medio
+                              </a>
+                            </Button>
+                          ) : null}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeletePortafolio(item.id)}
+                            className="h-7 text-xs text-destructive hover:bg-destructive/10"
+                          >
+                            <Icon icon="ph:trash" className="size-4" />
                           </Button>
-                        ) : <span />}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeletePortafolio(item.id)}
-                          className="h-7 text-xs text-destructive hover:bg-destructive/10"
-                        >
-                          <Icon icon="ph:trash" className="size-4" />
-                        </Button>
+                        </div>
                       </div>
                     </div>
                   ))}

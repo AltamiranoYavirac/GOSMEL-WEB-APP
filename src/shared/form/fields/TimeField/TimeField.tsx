@@ -15,7 +15,7 @@ export function TimeField<TFieldValues extends Record<string, unknown> = Record<
   errorClassName,
   size = "lg",
 }: ITimeFieldProps<TFieldValues>) {
-  const { fieldName, fieldRef, fieldValue, fieldOnChange, fieldOnBlur, error, touched } =
+  const { fieldValue, fieldOnChange, fieldOnBlur, error, touched } =
     useConnectedField<TFieldValues>(name)
   const showError = touched && !!error
 
@@ -34,10 +34,8 @@ export function TimeField<TFieldValues extends Record<string, unknown> = Record<
       <TimeInput
         id={name}
         disabled={disabled}
-        name={fieldName}
-        ref={fieldRef}
         value={(fieldValue ?? "") as string}
-        onChange={(e) => fieldOnChange(e.target.value)}
+        onChange={fieldOnChange}
         onBlur={fieldOnBlur}
         aria-invalid={showError || undefined}
         size={size}

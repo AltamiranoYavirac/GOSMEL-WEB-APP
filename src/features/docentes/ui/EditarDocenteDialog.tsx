@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Icon } from "@iconify/react";
 
 import {
@@ -13,13 +14,25 @@ import {
   Button,
   Spinner,
 } from "@/shared/ui";
-import { Form, NumberField, SwitchField, TextareaField, TextField, useAppForm } from "@/shared/form";
+import {
+  Form,
+  MultiSelectField,
+  NumberField,
+  SelectField,
+  SwitchField,
+  TextareaField,
+  TextField,
+  useAppForm,
+} from "@/shared/form";
+import { useInstrumentoOptions } from "@/entities/instrument";
 
 import { useDocenteDetalle } from "../hooks/useDocenteDetalle";
 import { useUpdateDocente } from "../hooks/useUpdateDocente";
 import {
+  buildDocentePatch,
+  buildInstrumentosPayload,
   editarDocenteFormSchema,
-  getEditarDocenteFormDefaults,
+  mapDocenteToFormValues,
   type IEditarDocenteFormValues,
 } from "../model/EditarDocenteForm.config";
 import type { IEditarDocenteDialogProps } from "./EditarDocenteDialog.types";
@@ -31,19 +44,36 @@ export default function EditarDocenteDialog({
   onSuccess,
 }: IEditarDocenteDialogProps) {
   const { data: detalle } = useDocenteDetalle(docente?.id ?? "", Boolean(open && docente));
+  const { data: instrumentos = [], isLoading: loadingInstrumentos } = useInstrumentoOptions(Boolean(open));
   const updateMutation = useUpdateDocente();
 
   const form = useAppForm<IEditarDocenteFormValues>({
     schema: editarDocenteFormSchema,
-    values: getEditarDocenteFormDefaults({
-      titulo: detalle?.titulo ?? "",
-      aniosExperiencia: detalle?.aniosExperiencia ?? 0,
-      biografia: detalle?.biografia ?? "",
+    values: mapDocenteToFormValues({
+      slug: detalle?.slug ?? "",
+      titulo: detalle?.titulo ?? null,
+      aniosExperiencia: detalle?.aniosExperiencia ?? null,
+      fraseDestacada: detalle?.fraseDestacada ?? null,
+      biografia: detalle?.biografia ?? null,
+      redesSociales: detalle?.redesSociales ?? {},
+      instrumentoIds: detalle?.instrumentoIds ?? [],
+      instrumentoPrincipalId: detalle?.instrumentoPrincipalId ?? null,
       publicado: detalle?.publicado ?? false,
       destacado: detalle?.destacado ?? false,
     }),
     resetOptions: { keepDirtyValues: false, keepErrors: false },
   });
+
+  const instrumentoOpciones = useMemo(
+    () => instrumentos.map((instrumento) => ({ value: instrumento.id, label: instrumento.nombre })),
+    [instrumentos]
+  );
+
+  const instrumentoIds = form.watch("instrumentoIds");
+  const instrumentoPrincipalOpciones = useMemo(
+    () => instrumentoOpciones.filter((opcion) => instrumentoIds.includes(opcion.value)),
+    [instrumentoOpciones, instrumentoIds]
+  );
 
   if (!docente) return null;
 
@@ -51,13 +81,8 @@ export default function EditarDocenteDialog({
     updateMutation.mutate(
       {
         id: docente.id,
-        patch: {
-          titulo_profesional: values.titulo?.trim() || undefined,
-          anios_experiencia: values.aniosExperiencia,
-          biografia: values.biografia?.trim() || undefined,
-          publicado: values.publicado,
-          destacado: values.destacado,
-        },
+        patch: buildDocentePatch(values),
+        instrumentos: buildInstrumentosPayload(values),
       },
       {
         onSuccess: () => {
@@ -79,25 +104,76 @@ export default function EditarDocenteDialog({
             <div>
               <AlertDialogTitle className="text-xl font-bold">Editar Perfil Docente</AlertDialogTitle>
               <AlertDialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                Actualice los datos profesionales y de difusión de {docente.nombre}.
+                Actualice los datos profesionales, instrumentos y redes de {docente.nombre}.
               </AlertDialogDescription>
             </div>
           </div>
         </AlertDialogHeader>
 
-        <Form form={form} onSubmit={onSubmit} id="editar-docente" className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-1">
-            <TextField name="titulo" label="Título Profesional" placeholder="Ej. Lic. en Música" />
-            <NumberField name="aniosExperiencia" label="Años de Experiencia" placeholder="0" asNumber />
+        <Form form={form} onSubmit={onSubmit} id="editar-docente" className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <TextField
+            name="slug"
+            label="Slug público (URL)"
+            required
+            placeholder="Ej. leo-brouwer"
+            hint={`Se verá como /teachers/${(form.watch("slug") || "slug").toString()}`}
+          />
+          <TextField name="titulo" label="Título profesional" placeholder="Ej. Lic. en Música" />
 
-            <div className="sm:col-span-2">
-              <TextareaField name="biografia" label="Biografía" rows={4} />
-            </div>
+          <div className="sm:col-span-2">
+            <MultiSelectField
+              name="instrumentoIds"
+              label="Instrumentos que enseña"
+              placeholder="Seleccione uno o varios instrumentos..."
+              emptyLabel="No hay instrumentos registrados"
+              options={instrumentoOpciones}
+              disabled={loadingInstrumentos}
+            />
+          </div>
 
-            <div className="sm:col-span-2 flex flex-wrap items-center gap-6 pt-3 border-t border-border/40">
-              <SwitchField name="publicado" label="Publicado en facultad" />
-              <SwitchField name="destacado" label="Docente destacado" />
+          <SelectField
+            name="instrumentoPrincipalId"
+            label="Instrumento principal"
+            placeholder={
+              instrumentoPrincipalOpciones.length > 0
+                ? "Seleccione instrumento..."
+                : "Selecciona primero los instrumentos"
+            }
+            disabled={instrumentoPrincipalOpciones.length === 0}
+            options={instrumentoPrincipalOpciones}
+          />
+          <NumberField
+            name="aniosExperiencia"
+            label="Años de experiencia"
+            placeholder="Sin especificar"
+            asNumber
+          />
+
+          <div className="sm:col-span-2">
+            <TextField
+              name="fraseDestacada"
+              label="Frase destacada"
+              placeholder="Ej. 'La disciplina en el piano transforma el alma.'"
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <TextareaField name="biografia" label="Biografía / trayectoria" rows={4} />
+          </div>
+
+          <div className="sm:col-span-2 space-y-1.5">
+            <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">Redes sociales</span>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <TextField name="instagram" label="Instagram" placeholder="usuario o enlace" />
+              <TextField name="facebook" label="Facebook" placeholder="usuario o enlace" />
+              <TextField name="youtube" label="YouTube" placeholder="canal o enlace" />
+              <TextField name="linkedin" label="LinkedIn" placeholder="usuario o enlace" />
             </div>
+          </div>
+
+          <div className="sm:col-span-2 flex flex-wrap items-center gap-6 pt-3 border-t border-border/40">
+            <SwitchField name="publicado" label="Publicado en facultad" />
+            <SwitchField name="destacado" label="Docente destacado" />
           </div>
         </Form>
 

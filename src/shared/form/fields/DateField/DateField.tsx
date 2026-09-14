@@ -14,6 +14,7 @@ export function DateField<TFieldValues extends Record<string, unknown> = Record<
   errorIcon,
   errorClassName,
   placeholder,
+  min,
   max,
 }: IDateFieldProps<TFieldValues>) {
   const { fieldValue, fieldOnChange, fieldOnBlur, error, touched } =
@@ -36,6 +37,7 @@ export function DateField<TFieldValues extends Record<string, unknown> = Record<
         onChange={fieldOnChange}
         onBlur={fieldOnBlur}
         disabled={disabled}
+        min={min}
         max={max}
         placeholder={placeholder}
       />
