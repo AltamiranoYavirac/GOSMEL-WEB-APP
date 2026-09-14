@@ -16,7 +16,7 @@ export default function TeachersGrid({
     isPending,
     isError,
     refetch,
-  } = usePublicDocentes();
+  } = usePublicDocentes(!teachersProp);
 
   const teachers = teachersProp ?? supabaseTeachers ?? [];
   const hasTeachers = teachers.length > 0;

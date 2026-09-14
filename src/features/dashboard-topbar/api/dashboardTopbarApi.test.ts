@@ -64,11 +64,10 @@ describe("dashboard-topbar API", () => {
     expect(result).toEqual({ data: null, error: "boom" })
   })
 
-  it("searchEntities mapea resultados de las tres tablas", async () => {
+  it("searchEntities mapea estudiantes y cursos", async () => {
     createSupabaseBrowserClientMock.mockReturnValue(
       createFakeSupabase({
         estudiantes: [{ id: "e1", nombres: "Ada", apellidos: "Lovelace" }],
-        docentes: [{ perfil_id: "d1", nombres: "Marta", apellidos: "Argerich", perfiles: { nombres: "Marta", apellidos: "Argerich" } }],
         cursos: [{ id: "k1", nombre: "Guitarra", nivel: "basico" }, { id: "k2", nombre: "Piano", nivel: null }],
       }),
     )
@@ -77,7 +76,6 @@ describe("dashboard-topbar API", () => {
 
     expect(result.error).toBeNull()
     expect(result.data!.estudiantes[0]).toMatchObject({ label: "Ada Lovelace", subtitle: "Estudiante" })
-    expect(result.data!.docentes[0]).toMatchObject({ label: "Marta Argerich", subtitle: "Docente" })
     expect(result.data!.cursos[0]).toMatchObject({ subtitle: "Nivel basico" })
     expect(result.data!.cursos[1].subtitle).toBe("Curso")
   })

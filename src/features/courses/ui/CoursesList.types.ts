@@ -1,5 +1,5 @@
-import type { ICourseCardTeacher } from "./CourseCard.types";
+import type { IPublicCourseCard } from "../model/course-public.types"
 
 export interface ICoursesListProps {
-  teachersByCourse: Record<string, ICourseCardTeacher[]>;
+  courses: IPublicCourseCard[]
 }

@@ -106,10 +106,10 @@ describe("cursos read APIs", () => {
             precio_referencial: 45,
             etiqueta_precio: null,
             mostrar_precio: null,
-            video_intro_url: null,
             portada_public_id: null,
             publicado: null,
             destacado: null,
+            orden: 4,
           },
         ],
       }),
@@ -124,6 +124,7 @@ describe("cursos read APIs", () => {
       horasTotales: "",
       precioReferencial: "45",
       mostrarPrecio: false,
+      orden: 4,
     })
   })
 
@@ -134,27 +135,19 @@ describe("cursos read APIs", () => {
     expect(result.error).toBeTruthy()
   })
 
-  it("getCursoOptions marca admins sin rol docente y trae instrumentos", async () => {
+  it("getCursoOptions trae instrumentos y sugiere el siguiente orden", async () => {
     const fake = configure({
-      perfil_rol: [
-        { perfil_id: "p1", rol: "docente" },
-        { perfil_id: "p2", rol: "admin" },
-      ],
-      perfiles: [
-        { id: "p1", nombres: "Leo", apellidos: "Brouwer" },
-        { id: "p2", nombres: "Ada", apellidos: "Admin" },
-      ],
+      cursos: [{ id: "k1", orden: 7 }],
       instrumentos: [{ id: "i1", nombre: "Guitarra", activo: true }],
     })
 
     const result = await getCursoOptions(fake)
 
     expect(result.error).toBeNull()
-    expect(result.data!.docentes).toEqual([
-      { id: "p2", nombre: "Ada Admin (Admin)" },
-      { id: "p1", nombre: "Leo Brouwer" },
-    ])
-    expect(result.data!.instrumentos).toEqual([{ id: "i1", nombre: "Guitarra" }])
+    expect(result.data).toEqual({
+      instrumentos: [{ id: "i1", nombre: "Guitarra" }],
+      nextOrden: 8,
+    })
   })
 
   it("getCursoGuia ordena módulos y lecciones", async () => {
@@ -238,92 +231,74 @@ describe("cursos write APIs", () => {
     createSupabaseBrowserClientMock.mockReset()
   })
 
-  it("crearCurso resuelve colisión de slug y asigna docente", async () => {
-    const fake = configure({
-      cursos: [{ id: "k0", nombre: "Guitarra", slug: "guitarra" }],
-      docentes: [],
-      perfiles: [{ id: "p1", nombres: "Leo", apellidos: "Brouwer" }],
-    })
-    const calls = instrument(fake)
+  it("crearCurso resuelve colisión de slug en la operación remota", async () => {
+    const fake = createFakeSupabase(
+      { cursos: [{ id: "k0", nombre: "Guitarra", slug: "guitarra" }] },
+      { rpcResults: { crear_curso_con_catedra: "k1" } },
+    )
+    createSupabaseBrowserClientMock.mockReturnValue(fake)
 
     const result = await crearCurso({
       nombre: "Guitarra",
       descripcion: "Curso de guitarra",
-      resumen: " Resumen ",
+      resumen: "Resumen",
+      categoria: "instrumento",
       nivel: "basico",
       modalidad: "presencial",
       instrumentoId: "i1",
+      duracionPermanente: false,
       duracionSemanas: 12,
       horasTotales: 24,
-      publicado: true,
-      destacado: false,
-      portadaPublicId: " p/1 ",
-      asignarDocente: true,
-      docenteId: "p1",
-      aula: " A1 ",
-      cupoMaximo: 10,
-    })
+      mostrarPrecio: false,
+      publicado: false,
+      orden: 4,
+      portadaTextoAlt: "Portada de guitarra",
+    }, "gosmel/cursos/portada")
 
-    expect(result.error).toBeNull()
-    expect(result.data).toEqual({ id: expect.any(String) })
-
-    expect(calls.filter((table) => table === "cursos")).toHaveLength(3)
-    expect(calls).toContain("docentes")
-    expect(calls).toContain("perfiles")
-    expect(calls).toContain("catedras")
+    expect(result).toEqual({ data: { id: "k1" }, error: null })
   })
 
-  it("crearCurso usa slug por defecto y omite docentes si no se asigna", async () => {
-    const fake = configure({ cursos: [] })
-    const calls = instrument(fake)
+  it("crearCurso admite un nombre sin caracteres para slug", async () => {
+    const fake = createFakeSupabase({ cursos: [] }, { rpcResults: { crear_curso_con_catedra: "k2" } })
+    createSupabaseBrowserClientMock.mockReturnValue(fake)
 
-    await expect(
-      crearCurso({
-        nombre: "¡!",
-        descripcion: "Descripción larga",
-        resumen: "",
-        nivel: "basico",
-        modalidad: "virtual",
-        instrumentoId: "",
-        duracionSemanas: null,
-        horasTotales: null,
-        publicado: false,
-        destacado: true,
-        portadaPublicId: "",
-        asignarDocente: false,
-        docenteId: "",
-        aula: "",
-        cupoMaximo: 10,
-      }),
-    ).resolves.toEqual({ data: { id: expect.any(String) }, error: null })
-
-    expect(calls).not.toContain("catedras")
+    await expect(crearCurso({
+      nombre: "¡!",
+      descripcion: "Descripción larga",
+      resumen: "",
+      categoria: "otro",
+      nivel: "basico",
+      modalidad: "virtual",
+      instrumentoId: "",
+      orden: 1,
+      duracionPermanente: true,
+      duracionSemanas: null,
+      horasTotales: null,
+      mostrarPrecio: false,
+      publicado: false,
+      portadaTextoAlt: "",
+    })).resolves.toEqual({ data: { id: "k2" }, error: null })
   })
 
-  it("crearCurso propaga error de curso y de cátedra", async () => {
-    configure()
-    createSupabaseBrowserClientMock.mockReturnValueOnce(
-      createFakeSupabase.withError("cursos", "boom curso", {}),
-    )
-    await expect(
-      crearCurso({
-        nombre: "Curso",
-        descripcion: "Descripción larga",
-        resumen: "",
-        nivel: "basico",
-        modalidad: "virtual",
-        instrumentoId: "",
-        duracionSemanas: null,
-        horasTotales: null,
-        publicado: false,
-        destacado: false,
-        portadaPublicId: "",
-        asignarDocente: false,
-        docenteId: "",
-        aula: "",
-        cupoMaximo: 10,
-      }),
-    ).resolves.toEqual({ data: null, error: "boom curso" })
+  it("crearCurso propaga el error de la operación remota", async () => {
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase({}, { rpcError: "boom curso" }))
+
+    await expect(crearCurso({
+      nombre: "Curso",
+      descripcion: "Descripción larga",
+      resumen: "",
+      categoria: "otro",
+      nivel: "basico",
+      modalidad: "virtual",
+      instrumentoId: "",
+      orden: 1,
+      duracionPermanente: true,
+      duracionSemanas: null,
+      horasTotales: null,
+      mostrarPrecio: false,
+      publicado: false,
+      portadaTextoAlt: "",
+    })).resolves.toEqual({ data: null, error: "boom curso" })
   })
 
   it("updateCurso responde con id", async () => {
@@ -337,6 +312,7 @@ describe("cursos write APIs", () => {
 
   it("eliminarCurso bloquea si hay matrículas activas", async () => {
     configure({
+      cursos: [{ id: "k1", portada_public_id: null, galeria_medios: [] }],
       catedras: [{ id: "c1", curso_id: "k1", inscripciones: [{ id: "i1", estado: "activa" }] }],
     })
 
@@ -348,14 +324,19 @@ describe("cursos write APIs", () => {
 
   it("eliminarCurso borra en cascada", async () => {
     const fake = configure({
+      cursos: [{ id: "k1", portada_public_id: "gosmel/cursos/portada", galeria_medios: [] }],
       catedras: [{ id: "c1", curso_id: "k1", inscripciones: [{ id: "i1", estado: "finalizada" }] }],
       curso_modulos: [{ id: "m1", curso_id: "k1" }],
     })
     const calls = instrument(fake)
 
-    await expect(eliminarCurso("k1")).resolves.toEqual({ error: null })
+    await expect(eliminarCurso("k1")).resolves.toEqual({
+      data: { publicIds: ["gosmel/cursos/portada"] },
+      error: null,
+    })
 
     expect(calls).toEqual([
+      "cursos",
       "catedras",
       "curso_habilidades",
       "programa_curso",
@@ -371,10 +352,12 @@ describe("cursos write APIs", () => {
 
   it("eliminarCurso propaga error al listar cátedras", async () => {
     createSupabaseBrowserClientMock.mockReturnValue(
-      createFakeSupabase.withError("catedras", "boom catedras"),
+      createFakeSupabase.withError("catedras", "boom catedras", {
+        cursos: [{ id: "k1", portada_public_id: null, galeria_medios: [] }],
+      }),
     )
 
-    await expect(eliminarCurso("k1")).resolves.toEqual({ error: "boom catedras" })
+    await expect(eliminarCurso("k1")).resolves.toEqual({ data: null, error: "boom catedras" })
   })
 
   it("gestiona módulos y lecciones", async () => {

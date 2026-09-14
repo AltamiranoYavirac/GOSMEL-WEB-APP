@@ -4,8 +4,8 @@ export interface IFinalCtaLink {
 }
 
 export interface IFinalCtaProps {
-  image: string;
-  imageAlt: string;
+  image?: string | null;
+  imageAlt?: string;
   titleId: string;
   title: string;
   description?: string;

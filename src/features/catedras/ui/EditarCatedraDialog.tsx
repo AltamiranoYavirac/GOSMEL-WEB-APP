@@ -13,7 +13,7 @@ import {
   Button,
   Spinner,
 } from "@/shared/ui";
-import { Form, NumberField, SelectField, TextField, useAppForm } from "@/shared/form";
+import { DateField, Form, NumberField, SelectField, TextField, useAppForm } from "@/shared/form";
 
 import { useCatedraOptions } from "../hooks/useCatedraOptions";
 import { useUpdateCatedra } from "../hooks/useUpdateCatedra";
@@ -32,19 +32,20 @@ export default function EditarCatedraDialog({
   onOpenChange,
   onSuccess,
 }: IEditarCatedraDialogProps) {
-  const { data: options } = useCatedraOptions(open);
-  const docentes = options?.docentes ?? [];
+  const { data: options, isPending: optionsPending } = useCatedraOptions(open);
   const updateMutation = useUpdateCatedra();
-
-  const matchDoc = docentes.find((d) => d.nombre === catedra?.docente);
 
   const form = useAppForm<IEditarCatedraFormValues>({
     schema: editarCatedraFormSchema,
     values: getEditarCatedraFormDefaults({
-      cupoMaximo: catedra?.cupoMaximo ?? 15,
-      aula: catedra?.aula ?? "",
+      codigo: catedra?.codigo ?? "",
+      cursoId: catedra?.cursoId ?? "",
+      docenteId: catedra?.docenteId ?? "",
       modalidad: catedra?.modalidad ?? "presencial",
-      docenteId: matchDoc?.id ?? "",
+      aula: catedra?.aula ?? "",
+      cupoMaximo: catedra?.cupoMaximo ?? 15,
+      fechaInicio: catedra?.fechaInicio ?? "",
+      fechaFin: catedra?.fechaFin ?? "",
       estado: catedra?.estado ?? "planificada",
     }),
     resetOptions: { keepDirtyValues: false, keepErrors: false },
@@ -56,11 +57,15 @@ export default function EditarCatedraDialog({
     updateMutation.mutate(
       {
         id: catedra.id,
+        codigo: values.codigo,
+        curso_id: values.cursoId,
+        docente_id: values.docenteId,
         cupo_maximo: values.cupoMaximo,
         aula: values.aula?.trim() || null,
         modalidad: values.modalidad,
-        docente_id: values.docenteId || undefined,
         estado: values.estado,
+        fecha_inicio: values.fechaInicio,
+        fecha_fin: values.fechaFin || null,
       },
       {
         onSuccess: () => {
@@ -84,7 +89,7 @@ export default function EditarCatedraDialog({
                 Editar Cátedra {catedra.codigo}
               </AlertDialogTitle>
               <AlertDialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                Curso: <strong>{catedra.curso}</strong>. Modifique las condiciones operativas y de aula.
+                Modifique los datos de la cátedra. Todos los campos requeridos deben estar completos.
               </AlertDialogDescription>
             </div>
           </div>
@@ -92,12 +97,23 @@ export default function EditarCatedraDialog({
 
         <Form form={form} onSubmit={onSubmit} id="editar-catedra" className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-1">
+            <TextField name="codigo" label="Código" placeholder="Ej. CAT-2026-01" />
+
+            <SelectField
+              name="cursoId"
+              label="Curso"
+              placeholder="Seleccione un curso"
+              disabled={optionsPending}
+              options={(options?.cursos ?? []).map((curso) => ({ value: curso.id, label: curso.nombre }))}
+            />
+
             <div className="sm:col-span-2">
               <SelectField
                 name="docenteId"
                 label="Docente Asignado"
                 placeholder="Seleccione docente responsable..."
-                options={docentes.map((d) => ({ value: d.id, label: d.nombre }))}
+                disabled={optionsPending}
+                options={(options?.docentes ?? []).map((d) => ({ value: d.id, label: d.nombre }))}
               />
             </div>
 
@@ -108,6 +124,10 @@ export default function EditarCatedraDialog({
             <SelectField name="modalidad" label="Modalidad" options={MODALIDAD_OPCIONES} />
 
             <SelectField name="estado" label="Estado Operativo" options={ESTADO_CATEDRA_OPCIONES} />
+
+            <DateField name="fechaInicio" label="Inicio" />
+
+            <DateField name="fechaFin" label="Fin (opcional)" />
           </div>
         </Form>
 

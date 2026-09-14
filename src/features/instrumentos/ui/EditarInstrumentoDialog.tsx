@@ -15,7 +15,15 @@ import {
   Button,
   Spinner,
 } from "@/shared/ui";
-import { Form, NumberField, SelectField, SwitchField, TextField, useAppForm } from "@/shared/form";
+import {
+  Form,
+  IconPickerField,
+  NumberField,
+  SelectField,
+  SwitchField,
+  TextField,
+  useAppForm,
+} from "@/shared/form";
 
 import { useUpdateInstrumento, useEliminarInstrumento } from "../hooks/useCrearInstrumento";
 import { useTiposInstrumento } from "../hooks/useTiposInstrumento";
@@ -24,6 +32,7 @@ import {
   instrumentoFormSchema,
   type IInstrumentoFormValues,
 } from "../model/InstrumentoForm.config";
+import { INSTRUMENT_ICON_OPTIONS } from "../model/instrumento-icons";
 import type { IEditarInstrumentoDialogProps } from "./EditarInstrumentoDialog.types";
 
 export default function EditarInstrumentoDialog({ instrumento }: IEditarInstrumentoDialogProps) {
@@ -81,7 +90,12 @@ export default function EditarInstrumentoDialog({ instrumento }: IEditarInstrume
             placeholder="Seleccionar familia"
             options={(tipos.data ?? []).map((t) => ({ value: t.id, label: t.nombre }))}
           />
-          <TextField name="icono" label="Icono Iconify (opcional)" />
+          <IconPickerField
+            name="icono"
+            label="Icono"
+            required
+            suggestedIcons={INSTRUMENT_ICON_OPTIONS}
+          />
           <div className="grid grid-cols-2 items-center gap-3">
             <NumberField name="orden" label="Orden" asNumber />
             <div className="pt-5">

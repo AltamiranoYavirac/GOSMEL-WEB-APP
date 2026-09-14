@@ -1,89 +1,22 @@
 "use client";
 
-import { Icon } from "@iconify/react";
+import { useState } from "react";
 
 import {
-  AdminDataTable,
   AdminPageHeader,
-  Badge,
-  Switch,
-  type IAdminColumn,
-  type IAdminDataTableFilter,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
 } from "@/shared/ui";
 
-import { useInstrumentos } from "../hooks/useInstrumentos";
-import { useUpdateInstrumento } from "../hooks/useCrearInstrumento";
-import type { IInstrumentoRow } from "../model/instrumento.types";
 import CrearInstrumentoDialog from "./CrearInstrumentoDialog";
-import EditarInstrumentoDialog from "./EditarInstrumentoDialog";
 import CrearTipoInstrumentoDialog from "./CrearTipoInstrumentoDialog";
-import EliminarInstrumentoDialog from "./EliminarInstrumentoDialog";
+import InstrumentosTab from "./InstrumentosTab";
+import TiposInstrumentoTab from "./TiposInstrumentoTab";
 
 export default function InstrumentosList() {
-  const { data, isPending } = useInstrumentos();
-  const mutation = useUpdateInstrumento();
-  const rows = data ?? [];
-
-  const columns: IAdminColumn<IInstrumentoRow>[] = [
-    {
-      key: "nombre",
-      label: "Instrumento",
-      render: (row) => (
-        <div className="flex items-center gap-2.5">
-          {row.icono ? (
-            <Icon icon={row.icono} className="size-5 text-primary" aria-hidden="true" />
-          ) : (
-            <Icon icon="ph:music-notes" className="size-5 text-muted-foreground" aria-hidden="true" />
-          )}
-          <span className="font-medium">{row.nombre}</span>
-        </div>
-      ),
-    },
-    {
-      key: "tipo",
-      label: "Familia",
-      render: (row) => <Badge variant="outline">{row.tipo}</Badge>,
-    },
-    {
-      key: "slug",
-      label: "Slug",
-      render: (row) => <span className="font-mono text-xs text-muted-foreground">{row.slug}</span>,
-    },
-    {
-      key: "orden",
-      label: "Orden",
-      render: (row) => <span className="font-mono text-xs">{row.orden}</span>,
-    },
-    {
-      key: "activo",
-      label: "Activo",
-      render: (row) => (
-        <Switch
-          size="sm"
-          checked={row.activo}
-          disabled={mutation.isPending}
-          onCheckedChange={(value) =>
-            mutation.mutate({
-              instrumentoId: row.id,
-              values: {
-                nombre: row.nombre,
-                tipoInstrumentoId: row.tipoInstrumentoId,
-                icono: row.icono ?? "",
-                orden: row.orden,
-                activo: value,
-              },
-            })
-          }
-          aria-label={`Activar o desactivar ${row.nombre}`}
-        />
-      ),
-    },
-  ];
-
-  const filters: IAdminDataTableFilter<IInstrumentoRow>[] = [
-    { value: "activos", label: "Activos", match: (row) => row.activo },
-    { value: "inactivos", label: "Inactivos", match: (row) => !row.activo },
-  ];
+  const [tab, setTab] = useState("instrumentos");
 
   return (
     <div className="space-y-6">
@@ -94,29 +27,22 @@ export default function InstrumentosList() {
           description="Catálogo de instrumentos y familias musicales ofertadas por la academia."
           icon="ph:guitar"
         />
-        <div className="flex items-center gap-2">
-          <CrearTipoInstrumentoDialog />
-          <CrearInstrumentoDialog />
-        </div>
+        {tab === "instrumentos" ? <CrearInstrumentoDialog /> : <CrearTipoInstrumentoDialog />}
       </div>
 
-      <AdminDataTable
-        data={rows}
-        columns={columns}
-        loading={isPending}
-        keyId={(row) => row.id}
-        searchKeys={[(row) => row.nombre, (row) => row.tipo, (row) => row.slug]}
-        filters={filters}
-        emptyTitle="Sin instrumentos"
-        emptyDescription="Cuando se creen instrumentos aparecerán aquí."
-        countLabel="instrumentos"
-        rowActions={(row) => (
-          <div className="flex items-center justify-end gap-1.5">
-            <EditarInstrumentoDialog instrumento={row} />
-            <EliminarInstrumentoDialog instrumento={row} />
-          </div>
-        )}
-      />
+      <Tabs value={tab} onValueChange={setTab} className="space-y-4">
+        <TabsList className="grid w-full grid-cols-2 sm:w-fit">
+          <TabsTrigger value="instrumentos">Instrumentos</TabsTrigger>
+          <TabsTrigger value="familias">Familias</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="instrumentos" className="pt-2">
+          <InstrumentosTab />
+        </TabsContent>
+        <TabsContent value="familias" className="pt-2">
+          <TiposInstrumentoTab />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

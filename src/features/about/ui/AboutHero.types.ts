@@ -1,5 +1,5 @@
 export interface IAboutHeroProps {
-  image: string;
+  image?: string | null;
   imageAlt: string;
   eyebrow: string;
   title: string;

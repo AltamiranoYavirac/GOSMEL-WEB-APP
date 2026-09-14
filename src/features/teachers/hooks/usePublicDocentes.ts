@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getPublicDocentes } from "../api";
 import { teachersPublicQueryKeys } from "../model/query-keys";
 
-export function usePublicDocentes() {
+export function usePublicDocentes(enabled = true) {
   return useQuery({
     queryKey: teachersPublicQueryKeys.lists(),
     queryFn: async () => {
@@ -15,5 +15,6 @@ export function usePublicDocentes() {
       }
       return data;
     },
+    enabled,
   });
 }

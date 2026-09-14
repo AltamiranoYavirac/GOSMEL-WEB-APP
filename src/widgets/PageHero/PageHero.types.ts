@@ -1,6 +1,6 @@
 export interface IPageHeroProps {
-  image: string;
-  imageAlt: string;
+  image?: string | null;
+  imageAlt?: string;
   titleId: string;
   eyebrow: string;
   title: string;

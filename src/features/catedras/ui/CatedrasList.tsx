@@ -15,6 +15,7 @@ import {
 import { useCatedras } from "../hooks/useCatedras";
 import { CATEDRA_ESTADO_BADGE, MODALIDAD_BADGE, type ICatedraRow } from "../model/catedra.types";
 import CatedraEstudiantesSheet from "./CatedraEstudiantesSheet";
+import CatedraHorariosSheet from "./CatedraHorariosSheet";
 import CrearCatedraDialog from "./CrearCatedraDialog";
 import EditarCatedraDialog from "./EditarCatedraDialog";
 import EliminarCatedraDialog from "./EliminarCatedraDialog";
@@ -30,6 +31,9 @@ export default function CatedrasList() {
   const [genTarget, setGenTarget] = useState<ICatedraRow | null>(null);
   const [genOpen, setGenOpen] = useState(false);
 
+  const [horariosTarget, setHorariosTarget] = useState<ICatedraRow | null>(null);
+  const [horariosOpen, setHorariosOpen] = useState(false);
+
   const [estudiantesTarget, setEstudiantesTarget] = useState<ICatedraRow | null>(null);
   const [estudiantesOpen, setEstudiantesOpen] = useState(false);
   const [estudiantesDefaultTab, setEstudiantesDefaultTab] = useState<"matriculados" | "pendientes">("matriculados");
@@ -42,6 +46,11 @@ export default function CatedrasList() {
   const handleOpenGen = (catedra: ICatedraRow) => {
     setGenTarget(catedra);
     setGenOpen(true);
+  };
+
+  const handleOpenHorarios = (catedra: ICatedraRow) => {
+    setHorariosTarget(catedra);
+    setHorariosOpen(true);
   };
 
   const handleOpenEstudiantes = (catedra: ICatedraRow, tab: "matriculados" | "pendientes" = "matriculados") => {
@@ -173,6 +182,16 @@ export default function CatedrasList() {
               type="button"
               variant="ghost"
               size="sm"
+              onClick={() => handleOpenHorarios(row)}
+              title={`Horarios (${row.numHorarios})`}
+              className="size-8 p-0"
+            >
+              <Icon icon="ph:calendar-dots" width={16} height={16} aria-hidden="true" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
               onClick={() => handleOpenGen(row)}
               title="Generar sesiones del ciclo"
               className="size-8 p-0"
@@ -205,6 +224,13 @@ export default function CatedrasList() {
         catedra={genTarget}
         open={genOpen}
         onOpenChange={setGenOpen}
+      />
+
+      <CatedraHorariosSheet
+        key={horariosTarget?.id ?? "none"}
+        catedra={horariosTarget}
+        open={horariosOpen}
+        onOpenChange={setHorariosOpen}
       />
 
       <CatedraEstudiantesSheet

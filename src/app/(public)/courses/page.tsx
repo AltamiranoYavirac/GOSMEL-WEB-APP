@@ -1,43 +1,43 @@
-import { CoursesList, COURSES } from "@/features/courses";
-import type { ICourseCardTeacher } from "@/features/courses";
-import { TEACHERS } from "@/features/teachers";
-import { AppImages } from "@/shared/config";
+import { getPublicSiteAssets } from "@/entities/site-asset";
+import { CoursesList, getPublicCourses } from "@/features/courses";
+import { buildCloudinaryImageUrl } from "@/shared/lib";
 import { FinalCta } from "@/widgets/FinalCta";
 import { PageHero } from "@/widgets/PageHero";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Cursos | GOSMEL Music Academy",
-  description:
-    "Siete programas de música en Quito: piano, violín, guitarra, guitarra eléctrica, solfeo, charango y quena.",
+  description: "Cursos de música publicados por GOSMEL Music Academy.",
 };
 
-const teachersByCourse: Record<string, ICourseCardTeacher[]> = Object.fromEntries(
-  COURSES.map((course) => [
-    course.slug,
-    TEACHERS.filter((teacher) => teacher.courseSlug === course.slug).map((teacher) => ({
-      slug: teacher.slug,
-      name: teacher.name,
-      photo: teacher.photo,
-      photoAlt: teacher.photoAlt,
-    })),
-  ])
-);
+export default async function CoursesPage() {
+  const [coursesResult, assetsResult] = await Promise.all([
+    getPublicCourses(),
+    getPublicSiteAssets(),
+  ]);
 
-export default function CoursesPage() {
+  if (coursesResult.error) throw new Error(coursesResult.error);
+  if (assetsResult.error) throw new Error(assetsResult.error);
+
+  const assets = assetsResult.data ?? {};
+  const hero = assets.page_hero_courses;
+  const cta = assets.landing_cta;
+
   return (
     <div className="flex-1 bg-background">
       <PageHero
-        image={AppImages.PAGE_HERO_COURSES}
-        imageAlt="Estudiante interpretando piano en un concierto de GOSMEL"
+        image={buildCloudinaryImageUrl(hero?.publicId, "ar_16:9,c_fill,g_auto,w_1920,q_auto,f_auto")}
+        imageAlt={hero?.alt}
         titleId="courses-title"
         eyebrow="Cursos · GOSMEL"
         title="Elige tu camino musical."
         description="Aprender se disfruta cuando el proceso te representa. Instrumento o lenguaje musical, a tu ritmo."
       />
-      <CoursesList teachersByCourse={teachersByCourse} />
+      <CoursesList courses={coursesResult.data ?? []} />
       <FinalCta
-        image={AppImages.LANDING_CTA}
-        imageAlt="Estudiantes de GOSMEL agradeciendo al público al final de un concierto"
+        image={buildCloudinaryImageUrl(cta?.publicId, "ar_16:9,c_fill,g_south,w_1920,q_auto,f_auto")}
+        imageAlt={cta?.alt}
         titleId="courses-cta-title"
         title="Tu próxima canción empieza aquí."
         description="Cuéntanos qué te gustaría aprender y te ayudamos a encontrar el curso que mejor se adapta a tu momento."

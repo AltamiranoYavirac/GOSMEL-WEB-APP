@@ -10,15 +10,24 @@ export interface IProgramaCursoItem {
   orden: number;
 }
 
+export interface IProgramaObjetivoItem {
+  id: string;
+  objetivo: string;
+  orden: number;
+}
+
 export interface IProgramaDetalle {
   id: string;
   nombre: string;
   slug: string;
   descripcion: string | null;
-  objetivos: string | null;
-  instrumentoId: string | null;
-  instrumento: string | null;
+  objetivos: IProgramaObjetivoItem[];
   nivel: TNivelCurso | null;
+  imagenPublicId: string | null;
+  imagenTextoAlt: string | null;
+  precioReferencial: string | null;
+  etiquetaPrecio: string | null;
+  mostrarPrecio: boolean;
   publicado: boolean;
   orden: number;
   cursos: IProgramaCursoItem[];

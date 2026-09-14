@@ -52,17 +52,7 @@ export default function LoginForm({ onSubmitSuccess, nextPath, notice }: ILoginF
           </p>
         ) : null}
 
-        <SocialAuthButtons
-          dividerLabel="O con tu correo"
-          ariaLabelPrefix="Continuar con"
-          layout="stacked"
-          onProviderSelect={(provider) => socialLogin.mutate(provider.id as TAuthProvider)}
-          disabledProviders={["apple"]}
-          isPending={socialLogin.isPending}
-          className="mt-8"
-        />
-
-        <Form form={form} onSubmit={onSubmit} className="mt-7 flex flex-col gap-5">
+        <Form form={form} onSubmit={onSubmit} className="mt-8 flex flex-col gap-5">
           <TextField
             name="email"
             label="Correo electrónico"
@@ -99,6 +89,16 @@ export default function LoginForm({ onSubmitSuccess, nextPath, notice }: ILoginF
             {login.isPending ? "Entrando…" : "Iniciar sesión"}
           </Button>
         </Form>
+
+        <SocialAuthButtons
+          dividerLabel="O inicia sesión con"
+          ariaLabelPrefix="Continuar con"
+          layout="stacked"
+          onProviderSelect={(provider) => socialLogin.mutate(provider.id as TAuthProvider)}
+          disabledProviders={["apple"]}
+          isPending={socialLogin.isPending}
+          className="mt-7"
+        />
 
         <p className="mt-7 text-center text-sm text-muted-foreground">
           ¿No tienes cuenta?{" "}

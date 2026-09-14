@@ -3,6 +3,7 @@ import type { TBadgeVariant } from "@/shared/ui";
 
 export type TNivelCurso = Database["public"]["Enums"]["nivel_curso"];
 export type TModalidadCurso = Database["public"]["Enums"]["modalidad_curso"];
+export type TCategoriaCurso = Database["public"]["Enums"]["categoria_curso"];
 
 export interface ICursoRow {
   id: string;
@@ -13,7 +14,6 @@ export interface ICursoRow {
   rating: number;
   totalResenas: number;
   modulos: number;
-  destacado: boolean;
   publicado: boolean;
 }
 
@@ -22,6 +22,8 @@ export interface ICursoDetalle {
   nombre: string;
   resumen: string;
   descripcion: string;
+  instrumentoId: string;
+  categoria: TCategoriaCurso;
   nivel: TNivelCurso;
   modalidad: TModalidadCurso;
   duracionSemanas: string;
@@ -29,10 +31,19 @@ export interface ICursoDetalle {
   precioReferencial: string;
   etiquetaPrecio: string;
   mostrarPrecio: boolean;
-  videoIntroUrl: string;
   portadaPublicId: string;
+  portadaTextoAlt: string;
+  publicoEdad: string;
+  publicoNivel: string;
+  formatoClase: string;
+  horarioResumen: string;
+  cierreEtapa: string;
+  ctaTitulo: string;
+  ctaDescripcion: string;
+  ctaPrimarioTexto: string;
+  ctaSecundarioTexto: string;
   publicado: boolean;
-  destacado: boolean;
+  orden: number;
 }
 
 export const NIVEL_BADGE: Record<TNivelCurso, { label: string; variant: TBadgeVariant }> = {

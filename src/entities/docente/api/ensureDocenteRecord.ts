@@ -3,33 +3,22 @@ import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 export async function ensureDocenteRecord(
   supabase: ReturnType<typeof createSupabaseBrowserClient>,
   perfilId: string
-): Promise<void> {
-  if (!perfilId) return;
+): Promise<{ error: string | null }> {
+  if (!perfilId) return { error: "Selecciona un docente." };
 
-  const { data: existing } = await supabase
+  const { data: existing, error: readError } = await supabase
     .from("docentes")
     .select("perfil_id")
     .eq("perfil_id", perfilId)
     .maybeSingle();
 
-  if (existing) return;
+  if (readError) return { error: readError.message };
+  if (existing) return { error: null };
 
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("nombres, apellidos")
-    .eq("id", perfilId)
-    .maybeSingle();
-
-  const baseSlug = `${perfil?.nombres ?? "docente"}-${perfil?.apellidos ?? ""}`
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "") || `docente-${perfilId.slice(0, 6)}`;
-
-  await supabase.from("docentes").insert({
+  const { error } = await supabase.from("docentes").insert({
     perfil_id: perfilId,
-    slug: `${baseSlug}-${perfilId.slice(0, 4)}`,
+    slug: `docente-${perfilId.slice(0, 8)}`,
   });
+
+  return { error: error?.message ?? null };
 }
