@@ -1,181 +1,155 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { toast } from "sonner";
 
+import { CLOUDINARY_IMAGE_TYPES, CLOUDINARY_MAX_IMAGE_SIZE } from "@/shared/config";
 import { compressImageFile } from "@/shared/lib/image-compression";
+import { buildCloudinaryImageUrl } from "@/shared/lib";
 import { Button, Spinner } from "@/shared/ui";
 
 import type { IImageUploadFieldProps } from "./ImageUploadField.types";
 
 export function ImageUploadField({
   value,
-  onChange,
-  label = "Foto de portada / Curso",
-  folder = "gosmel/cursos",
-  helperText = "Formatos soportados: JPG, PNG, WEBP (Máx. 10MB)",
-  endpoint = "/api/upload/cloudinary",
-  compress = false,
+  file,
+  onFileChange,
+  onRemove,
+  label = "Imagen",
+  helperText = "JPG, PNG o WEBP · Máx. 10 MB",
+  disabled = false,
 }: IImageUploadFieldProps) {
-  const [uploading, setUploading] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const localPreviewRef = useRef<string | null>(null);
 
-  const getPreviewUrl = (val: string | null | undefined): string | null => {
-    if (!val) return null;
-    if (val.startsWith("http://") || val.startsWith("https://")) return val;
-    return `https://res.cloudinary.com/dv9lm0fnm/image/upload/q_auto,f_auto,w_800/${val}`;
+  useEffect(() => () => {
+    if (localPreviewRef.current) URL.revokeObjectURL(localPreviewRef.current);
+  }, []);
+
+  const clearLocalPreview = () => {
+    if (localPreviewRef.current) URL.revokeObjectURL(localPreviewRef.current);
+    localPreviewRef.current = null;
+    setLocalPreviewUrl(null);
   };
 
-  const previewUrl = getPreviewUrl(value);
+  const previewUrl = localPreviewUrl ?? buildCloudinaryImageUrl(value, "q_auto,f_auto,w_800");
 
-  const handleUpload = async (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      toast.error("Por favor selecciona un archivo de imagen válido");
+  const handleFile = async (selectedFile: File) => {
+    if (!(CLOUDINARY_IMAGE_TYPES as readonly string[]).includes(selectedFile.type)) {
+      toast.error("Selecciona una imagen JPG, PNG o WEBP.");
+      return;
+    }
+    if (selectedFile.size > CLOUDINARY_MAX_IMAGE_SIZE) {
+      toast.error("La imagen supera el límite de 10 MB.");
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("La imagen supera el límite de 10MB");
-      return;
-    }
-
+    setProcessing(true);
     try {
-      setUploading(true);
-      const fileToUpload = compress ? await compressImageFile(file) : file;
-      const formData = new FormData();
-      formData.append("file", fileToUpload);
-      formData.append("folder", folder);
-
-      const res = await fetch(endpoint, {
-        method: "POST",
-        body: formData,
+      const compressed = await compressImageFile(selectedFile, {
+        maxWidth: 1800,
+        maxHeight: 1800,
+        maxSizeInBytes: 4 * 1024 * 1024,
       });
-
-      const json = await res.json();
-
-      if (!res.ok || json.error) {
-        throw new Error(json.error || "Error al subir la imagen");
-      }
-
-      onChange(json.public_id || json.secure_url);
-      toast.success("Foto subida a Cloudinary correctamente");
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Error al subir la foto";
-      toast.error(message);
+      clearLocalPreview();
+      const preview = URL.createObjectURL(compressed);
+      localPreviewRef.current = preview;
+      setLocalPreviewUrl(preview);
+      onFileChange(compressed);
+    } catch {
+      toast.error("No se pudo procesar la imagen. Intenta con otro archivo.");
     } finally {
-      setUploading(false);
+      setProcessing(false);
     }
   };
 
-  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleUpload(file);
-    }
-  };
-
-  const onDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) {
-      handleUpload(file);
-    }
+  const openPicker = () => {
+    if (!disabled && !processing) fileInputRef.current?.click();
   };
 
   return (
     <div className="space-y-2">
-      {label && <label className="block text-xs font-semibold text-foreground/90 uppercase tracking-wider">{label}</label>}
+      <span className="block text-xs font-semibold uppercase tracking-wider text-foreground/90">{label}</span>
 
       {previewUrl ? (
-        <div className="relative overflow-hidden rounded-xl border border-border bg-card p-2">
+        <div className="overflow-hidden rounded-xl border border-border bg-card p-2">
           <div className="relative h-44 w-full overflow-hidden rounded-lg bg-accent-muted">
-            <Image
-              src={previewUrl}
-              alt="Vista previa de portada"
-              fill
-              unoptimized
-              className="object-cover"
-            />
-            {uploading && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-scrim-strong backdrop-blur-xs text-surface-dark-foreground">
+            <Image src={previewUrl} alt="Vista previa" fill unoptimized className="object-cover" />
+            {processing ? (
+              <div className="absolute inset-0 flex items-center justify-center bg-scrim-strong text-surface-dark-foreground">
                 <Spinner className="size-6" />
-                <span className="text-xs font-medium">Subiendo foto a Cloudinary...</span>
               </div>
-            )}
+            ) : null}
           </div>
-
-          <div className="mt-2 flex items-center justify-between gap-2 px-1">
-            <span className="truncate text-xs text-muted-foreground font-mono">
-              {value}
-            </span>
-
-            <div className="flex items-center gap-1.5 shrink-0">
-              <Button
-                type="button"
-                variant="outline"
-                size="xs"
-                disabled={uploading}
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <Icon icon="ph:arrows-clockwise" className="size-3.5" aria-hidden="true" />
-                Cambiar foto
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="xs"
-                disabled={uploading}
-                className="text-destructive hover:bg-destructive/10"
-                onClick={() => onChange("")}
-              >
-                <Icon icon="ph:trash" className="size-3.5" aria-hidden="true" />
-                Quitar
-              </Button>
-            </div>
+          <div className="mt-2 flex items-center justify-between gap-1.5 px-1">
+            <span className="min-w-0 truncate text-xs text-muted-foreground">{file?.name ?? value}</span>
+            <Button type="button" variant="outline" size="xs" disabled={disabled || processing} onClick={openPicker}>
+              <Icon icon="ph:arrows-clockwise" className="size-3.5" aria-hidden="true" />
+              Cambiar imagen
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              disabled={disabled || processing}
+              className="text-destructive hover:bg-destructive/10"
+              onClick={() => {
+                clearLocalPreview();
+                onFileChange(null);
+                onRemove();
+              }}
+            >
+              <Icon icon="ph:trash" className="size-3.5" aria-hidden="true" />
+              Quitar
+            </Button>
           </div>
         </div>
       ) : (
-        <div
-          onDragOver={(e) => {
-            e.preventDefault();
+        <button
+          type="button"
+          disabled={disabled || processing}
+          onDragOver={(event) => {
+            event.preventDefault();
             setIsDragOver(true);
           }}
           onDragLeave={() => setIsDragOver(false)}
-          onDrop={onDrop}
-          onClick={() => !uploading && fileInputRef.current?.click()}
-          className={`group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-6 text-center transition-all ${
-            isDragOver
-              ? "border-primary bg-primary/5"
-              : "border-border/80 hover:border-primary/50 hover:bg-card/50"
+          onDrop={(event) => {
+            event.preventDefault();
+            setIsDragOver(false);
+            const selectedFile = event.dataTransfer.files?.[0];
+            if (selectedFile) void handleFile(selectedFile);
+          }}
+          onClick={openPicker}
+          className={`group flex min-h-36 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed p-6 text-center transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+            isDragOver ? "border-primary bg-primary/5" : "border-border/80 hover:border-primary/50 hover:bg-card/50"
           }`}
         >
-          <div className="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary transition-transform group-hover:scale-110">
-            {uploading ? (
-              <Spinner className="size-5" />
-            ) : (
-              <Icon icon="ph:cloud-arrow-up" className="size-6" aria-hidden="true" />
-            )}
-          </div>
-
-          <div className="space-y-0.5">
-            <p className="text-sm font-medium text-foreground">
-              {uploading ? "Subiendo a Cloudinary..." : "Haz clic para subir o arrastra la foto aquí"}
-            </p>
-            <p className="text-xs text-muted-foreground">{helperText}</p>
-          </div>
-        </div>
+          <span className="flex size-11 items-center justify-center rounded-full bg-primary/10 text-primary">
+            {processing ? <Spinner className="size-5" /> : <Icon icon="ph:image-square" className="size-6" aria-hidden="true" />}
+          </span>
+          <span className="text-sm font-medium text-foreground">
+            {processing ? "Procesando imagen…" : "Selecciona o arrastra una imagen"}
+          </span>
+          <span className="text-xs text-muted-foreground">{helperText}</span>
+        </button>
       )}
 
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp,image/jpg"
+        accept={CLOUDINARY_IMAGE_TYPES.join(",")}
         className="hidden"
-        onChange={onFileChange}
+        disabled={disabled || processing}
+        onChange={(event) => {
+          const selectedFile = event.target.files?.[0];
+          if (selectedFile) void handleFile(selectedFile);
+          event.target.value = "";
+        }}
       />
     </div>
   );

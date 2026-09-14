@@ -4,40 +4,29 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 
-import { cn } from "@/shared/lib/utils";
+import { buildCloudinaryImageUrl } from "@/shared/lib";
 import { AdminPageHeader, Badge, Card, CardContent, Input, Skeleton, Switch } from "@/shared/ui";
 
 import { useGaleria } from "../hooks/useGaleria";
 import { useUpdateGaleriaPublicado } from "../hooks/useUpdateGaleriaPublicado";
-import { CATEGORIA_MEDIO_BADGE, galeriaImageUrl, type IGaleriaMedioRow } from "../model/galeria.types";
+import { CATEGORIA_MEDIO_BADGE, type IGaleriaMedioRow } from "../model/galeria.types";
+import CrearGaleriaDialog from "./CrearGaleriaDialog";
+import EditarGaleriaDialog from "./EditarGaleriaDialog";
+import EliminarGaleriaDialog from "./EliminarGaleriaDialog";
 
 const CATEGORIAS = Object.keys(CATEGORIA_MEDIO_BADGE) as IGaleriaMedioRow["categoria"][];
-
-function chipClasses(active: boolean) {
-  return cn(
-    "shrink-0 rounded-full border px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider transition-all",
-    active
-      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25"
-      : "border-border bg-background text-muted-foreground hover:text-foreground"
-  );
-}
 
 export default function GaleriaList() {
   const { data, isPending } = useGaleria();
   const mutation = useUpdateGaleriaPublicado();
   const [categoria, setCategoria] = useState<string>("all");
   const [search, setSearch] = useState("");
-
   const items = useMemo(() => {
-    let filtered = data ?? [];
-    if (categoria !== "all") {
-      filtered = filtered.filter((item) => item.categoria === categoria);
-    }
     const query = search.trim().toLowerCase();
-    if (query) {
-      filtered = filtered.filter((item) => (item.titulo ?? "").toLowerCase().includes(query));
-    }
-    return filtered;
+    return (data ?? []).filter((item) =>
+      (categoria === "all" || item.categoria === categoria)
+      && (!query || `${item.titulo ?? ""} ${item.curso ?? ""}`.toLowerCase().includes(query))
+    );
   }, [data, categoria, search]);
 
   return (
@@ -45,13 +34,20 @@ export default function GaleriaList() {
       <AdminPageHeader
         eyebrow="Sitio · GOSMEL"
         title="Galería"
-        description="Fotos y videos de instalaciones, conciertos y aulas para el sitio público."
+        description="Administra imágenes generales y asociadas a cursos."
         icon="ph:image"
-      />
+      >
+        <CrearGaleriaDialog />
+      </AdminPageHeader>
 
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-1.5">
-          <button type="button" onClick={() => setCategoria("all")} aria-pressed={categoria === "all"} className={chipClasses(categoria === "all")}>
+          <button
+            type="button"
+            onClick={() => setCategoria("all")}
+            aria-pressed={categoria === "all"}
+            className="min-h-9 rounded-full border border-border px-3.5 text-xs font-bold uppercase tracking-wider aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground"
+          >
             Todos
           </button>
           {CATEGORIAS.map((value) => (
@@ -60,17 +56,16 @@ export default function GaleriaList() {
               type="button"
               onClick={() => setCategoria(value)}
               aria-pressed={categoria === value}
-              className={chipClasses(categoria === value)}
+              className="min-h-9 rounded-full border border-border px-3.5 text-xs font-bold uppercase tracking-wider aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground"
             >
               {CATEGORIA_MEDIO_BADGE[value].label}
             </button>
           ))}
         </div>
-
         <Input
           icon={<Icon icon="ph:magnifying-glass" aria-hidden="true" />}
           iconPosition="start"
-          placeholder="Buscar por título…"
+          placeholder="Buscar por título o curso…"
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           className="w-full lg:w-72"
@@ -78,47 +73,51 @@ export default function GaleriaList() {
       </div>
 
       {isPending ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-6">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <Skeleton key={index} className="h-64 rounded-xl" />
-          ))}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, index) => <Skeleton key={index} className="h-64 rounded-xl" />)}
         </div>
       ) : items.length === 0 ? (
         <div className="flex flex-col items-center justify-center gap-2 py-16 text-center">
           <Icon icon="ph:image" className="size-8 text-muted-foreground/60" aria-hidden="true" />
           <p className="font-heading text-lg text-foreground">Sin medios</p>
-          <p className="text-sm text-muted-foreground">Cuando se suban fotos o videos aparecerán aquí.</p>
+          <p className="text-sm text-muted-foreground">Agrega la primera imagen desde el dashboard.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-6">
-          {items.map((item) => (
-            <Card key={item.id} className="gap-0 overflow-hidden">
-              <div className="relative aspect-4/3 w-full bg-muted">
-                <Image
-                  src={galeriaImageUrl(item.publicId, 600)}
-                  alt={item.textoAlt}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1280px) 33vw, 25vw"
-                  className="object-cover"
-                />
-                <div className="absolute right-2 top-2">
-                  <Badge variant={CATEGORIA_MEDIO_BADGE[item.categoria].variant}>
-                    {CATEGORIA_MEDIO_BADGE[item.categoria].label}
-                  </Badge>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {items.map((item) => {
+            const imageUrl = buildCloudinaryImageUrl(item.publicId, "q_auto,f_auto,w_600");
+            return (
+              <Card key={item.id} className="gap-0 overflow-hidden">
+                <div className="relative aspect-4/3 w-full bg-muted">
+                  {imageUrl ? (
+                    <Image src={imageUrl} alt={item.textoAlt} fill sizes="(max-width: 640px) 100vw, 33vw" className="object-cover" />
+                  ) : null}
+                  <div className="absolute right-2 top-2">
+                    <Badge variant={CATEGORIA_MEDIO_BADGE[item.categoria].variant}>{CATEGORIA_MEDIO_BADGE[item.categoria].label}</Badge>
+                  </div>
                 </div>
-              </div>
-              <CardContent className="flex items-center justify-between gap-3 pt-3">
-                <span className="truncate text-sm font-medium">{item.titulo ?? "Sin título"}</span>
-                <Switch
-                  size="sm"
-                  checked={item.publicado}
-                  disabled={mutation.isPending}
-                  onCheckedChange={(value) => mutation.mutate({ id: item.id, publicado: value })}
-                  aria-label={`Publicar o despublicar ${item.titulo ?? "medio"}`}
-                />
-              </CardContent>
-            </Card>
-          ))}
+                <CardContent className="space-y-2 pt-3">
+                  <div>
+                    <p className="truncate text-sm font-medium">{item.titulo ?? "Sin título"}</p>
+                    {item.curso ? <p className="truncate text-xs text-muted-foreground">{item.curso}</p> : null}
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <Switch
+                      size="sm"
+                      checked={item.publicado}
+                      disabled={mutation.isPending}
+                      onCheckedChange={(value) => mutation.mutate({ id: item.id, publicado: value })}
+                      aria-label={`Publicar o despublicar ${item.titulo ?? "medio"}`}
+                    />
+                    <div className="flex items-center gap-1">
+                      <EditarGaleriaDialog item={item} />
+                      <EliminarGaleriaDialog item={item} />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>

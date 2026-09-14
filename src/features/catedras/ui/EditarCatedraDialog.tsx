@@ -36,15 +36,13 @@ export default function EditarCatedraDialog({
   const docentes = options?.docentes ?? [];
   const updateMutation = useUpdateCatedra();
 
-  const matchDoc = docentes.find((d) => d.nombre === catedra?.docente);
-
   const form = useAppForm<IEditarCatedraFormValues>({
     schema: editarCatedraFormSchema,
     values: getEditarCatedraFormDefaults({
       cupoMaximo: catedra?.cupoMaximo ?? 15,
       aula: catedra?.aula ?? "",
       modalidad: catedra?.modalidad ?? "presencial",
-      docenteId: matchDoc?.id ?? "",
+      docenteId: catedra?.docenteId ?? "",
       estado: catedra?.estado ?? "planificada",
     }),
     resetOptions: { keepDirtyValues: false, keepErrors: false },

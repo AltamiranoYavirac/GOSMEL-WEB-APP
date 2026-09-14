@@ -9,6 +9,7 @@ import CrearProgramaDialog from "./CrearProgramaDialog";
 import EditarProgramaDialog from "./EditarProgramaDialog";
 import EliminarProgramaDialog from "./EliminarProgramaDialog";
 import ProgramaCursosSheet from "./ProgramaCursosSheet";
+import ProgramaObjetivosSheet from "./ProgramaObjetivosSheet";
 
 export default function ProgramasList() {
   const { data, isPending } = useProgramas();
@@ -90,6 +91,7 @@ export default function ProgramasList() {
         rowActions={(row) => (
           <div className="flex items-center justify-end gap-2">
             <ProgramaCursosSheet programaId={row.id} programaNombre={row.nombre} />
+            <ProgramaObjetivosSheet programaId={row.id} programaNombre={row.nombre} />
             <EditarProgramaDialog programa={row} />
             <EliminarProgramaDialog programa={row} />
           </div>

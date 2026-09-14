@@ -8,6 +8,7 @@ export interface ICatedraRow {
   codigo: string;
   curso: string;
   docente: string | null;
+  docenteId: string;
   modalidad: TModalidadCurso;
   aula: string | null;
   cupoMaximo: number;

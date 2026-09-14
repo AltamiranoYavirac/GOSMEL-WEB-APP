@@ -3,55 +3,33 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/shared/api/supabase/database.types";
 import { getInstrumentoOptions } from "@/entities/instrument";
 
-import type { IDocenteOption, IInstrumentoOption } from "../model/CrearCursoForm.config";
+import type { ICursoOptions } from "../model/curso-option.types";
 
 export async function getCursoOptions(
   supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
 ): Promise<{
-  data: { instrumentos: IInstrumentoOption[]; docentes: IDocenteOption[] } | null;
+  data: ICursoOptions | null;
   error: string | null;
 }> {
-
-  const { data: rolesDocente } = await supabase
-    .from("perfil_rol")
-    .select("perfil_id, rol")
-    .in("rol", ["docente", "admin"]);
-
-  const docentePerfilIds = Array.from(new Set((rolesDocente ?? []).map((r) => r.perfil_id)));
-
-  const [instrumentosResult, perfilesDocentes] = await Promise.all([
-    getInstrumentoOptions(),
+  const [instrumentosResult, ultimoCursoResult] = await Promise.all([
+    getInstrumentoOptions(supabase),
     supabase
-      .from("perfiles")
-      .select("id, nombres, apellidos")
-      .in("id", docentePerfilIds.length > 0 ? docentePerfilIds : ["00000000-0000-0000-0000-000000000000"])
-      .order("nombres", { ascending: true })
-      .limit(300),
+      .from("cursos")
+      .select("orden")
+      .order("orden", { ascending: false })
+      .limit(1)
+      .maybeSingle(),
   ]);
 
-  const firstError = instrumentosResult.error ?? perfilesDocentes.error?.message ?? null;
+  const firstError = instrumentosResult.error ?? ultimoCursoResult.error?.message ?? null;
   if (firstError) {
     return { data: null, error: firstError };
-  }
-
-  const roleMap = new Map<string, Set<string>>();
-  for (const r of rolesDocente ?? []) {
-    if (!roleMap.has(r.perfil_id)) roleMap.set(r.perfil_id, new Set());
-    roleMap.get(r.perfil_id)?.add(r.rol);
   }
 
   return {
     data: {
       instrumentos: instrumentosResult.data ?? [],
-      docentes: (perfilesDocentes.data ?? []).map((perfil) => {
-        const roles = roleMap.get(perfil.id);
-        const esAdmin = roles?.has("admin") && !roles?.has("docente");
-        const nombreCompleto = `${perfil.nombres} ${perfil.apellidos}`.trim();
-        return {
-          id: perfil.id,
-          nombre: esAdmin ? `${nombreCompleto} (Admin)` : nombreCompleto,
-        };
-      }),
+      nextOrden: (ultimoCursoResult.data?.orden ?? 0) + 1,
     },
     error: null,
   };

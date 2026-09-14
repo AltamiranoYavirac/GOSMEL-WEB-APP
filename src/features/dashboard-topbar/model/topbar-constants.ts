@@ -36,6 +36,5 @@ export const QUICK_ACTIONS = [
 
 export const GROUP_META: Record<TSearchGroup, { label: string; icon: string }> = {
   estudiantes: { label: "Estudiantes", icon: "ph:student" },
-  docentes: { label: "Docentes", icon: "ph:chalkboard-teacher" },
   cursos: { label: "Cursos", icon: "ph:books" },
 };

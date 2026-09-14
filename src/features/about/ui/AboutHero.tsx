@@ -15,14 +15,16 @@ export default function AboutHero({
       className="grid border-b border-border bg-warm-50 lg:grid-cols-[1.2fr_0.8fr]"
     >
       <div className="relative min-h-[390px] overflow-hidden sm:min-h-[520px] lg:min-h-[680px]">
-        <RevealImage
-          src={image}
-          alt={imageAlt}
-          preload
-          fetchPriority="high"
-          sizes="(max-width: 1023px) 100vw, 60vw"
-          className="object-cover object-center"
-        />
+        {image ? (
+          <RevealImage
+            src={image}
+            alt={imageAlt}
+            preload
+            fetchPriority="high"
+            sizes="(max-width: 1023px) 100vw, 60vw"
+            className="object-cover object-center"
+          />
+        ) : null}
       </div>
 
       <div className="flex flex-col justify-end border-t border-border px-[22px] py-14 md:px-14 md:py-20 lg:border-t-0 lg:border-l lg:px-[clamp(3rem,6vw,8rem)] lg:py-24">

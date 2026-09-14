@@ -1,109 +1,61 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Icon } from "@iconify/react";
 
-import { COURSES } from "@/features/courses";
 import { Reveal } from "@/shared/ui";
 
-import {
-  LANDING_PROGRAM_DESCRIPTIONS,
-  LANDING_PROGRAM_IMAGE_ALTS,
-  LANDING_PROGRAM_IMAGES,
-  LANDING_PROGRAM_ORDER,
-} from "./LandingPage.constants";
+import type { IProgramsSectionProps } from "./ProgramsSection.types";
 
-const LANDING_PROGRAMS = LANDING_PROGRAM_ORDER.map((title) => {
-  const courseIndex = COURSES.findIndex((course) => course.title === title);
+export default function ProgramsSection({ programs }: IProgramsSectionProps) {
+  if (!programs.length) return null;
 
-  return {
-    ...COURSES[courseIndex],
-    description: LANDING_PROGRAM_DESCRIPTIONS[title],
-    image: LANDING_PROGRAM_IMAGES[title],
-    imageAlt: LANDING_PROGRAM_IMAGE_ALTS[title],
-  };
-});
-
-export default function ProgramsSection() {
   return (
-    <section id="programas" className="bg-warm-50 py-[72px] md:py-[112px]">
+    <section id="programas" className="bg-background py-[72px] md:py-[112px]">
       <div className="mx-auto w-full max-w-[1600px] px-[22px] md:px-14">
-        <Reveal className="flex items-end justify-between border-b border-warm-300 pb-6 md:pb-8">
-          <h2 className="text-[34px] font-semibold tracking-[-0.035em] md:text-[48px]">
-            Programas
-          </h2>
-          <Link
-            href="/courses"
-            className="inline-flex min-h-11 items-center text-sm font-semibold text-primary-700 transition-colors hover:text-primary-900 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:text-base"
-          >
-            Ver todos →
-          </Link>
+        <Reveal className="border-b border-warm-300 pb-6 md:pb-8">
+          <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-primary">Rutas formativas</p>
+          <h2 className="mt-3 text-[34px] font-semibold tracking-[-0.035em] md:text-[48px]">Programas</h2>
         </Reveal>
-
         <div>
-          {LANDING_PROGRAMS.map(
-            (
-              {
-                slug,
-                title,
-                category,
-                description,
-                image,
-                imageAlt,
-              },
-              index,
-            ) => {
-              const imageFirst = index % 2 === 1;
-
-              return (
-                <article
-                  key={title}
-                  className="grid items-center gap-8 border-b border-warm-300 py-12 md:gap-12 md:py-16 lg:grid-cols-2 lg:gap-16 xl:gap-24"
-                >
-                  <Reveal
-                    className={
-                      imageFirst
-                        ? "lg:order-2 lg:pl-6 xl:pl-12"
-                        : "lg:order-1 lg:pr-6 xl:pr-12"
-                    }
-                  >
-                    <p className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-primary-700 md:text-xs">
-                      {category}
-                    </p>
-                    <h3 className="mt-4 text-[40px] font-semibold leading-[1.02] tracking-[-0.04em] text-foreground md:text-[52px] xl:text-[60px]">
-                      {title}
-                    </h3>
-                    <p className="mt-5 max-w-[560px] text-[17px] leading-[1.65] text-warm-700 md:text-lg">
-                      {description}
-                    </p>
-                    <Link
-                      href={`/courses/${slug}`}
-                      className="mt-7 inline-flex min-h-12 items-center border-b-2 border-primary-700 text-[17px] font-bold text-primary-800 transition-colors hover:border-primary-950 hover:text-primary-950 focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                      Conocer el programa →
-                    </Link>
-                  </Reveal>
-
-                  <Reveal
-                    delay={0.1}
-                    className={imageFirst ? "lg:order-1" : "lg:order-2"}
-                  >
-                    <Link
-                      href={`/courses/${slug}`}
-                      aria-label={`Ver programa de ${title}`}
-                      className="group relative block aspect-[4/3] overflow-hidden rounded-[18px] border border-warm-300 bg-warm-100 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-warm-50 md:rounded-[20px]"
-                    >
-                      <Image
-                        src={image}
-                        alt={imageAlt}
-                        fill
-                        sizes="(max-width: 1023px) 100vw, min(50vw, 740px)"
-                        className="object-cover transition-transform duration-500 group-hover:scale-[1.02] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-                      />
-                    </Link>
-                  </Reveal>
-                </article>
-              );
-            },
-          )}
+          {programs.map((program, index) => (
+            <article key={program.id} className="grid items-center gap-8 border-b border-warm-300 py-12 lg:grid-cols-2 lg:gap-16">
+              <Reveal className={index % 2 ? "lg:order-2" : ""}>
+                <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-primary-700">
+                  {[program.instrument, program.level].filter(Boolean).join(" · ") || "Programa formativo"}
+                </p>
+                <div className="mt-4 flex flex-wrap items-center gap-4">
+                  <h3 className="text-[40px] font-semibold leading-[1.02] tracking-[-0.04em] md:text-[52px]">{program.title}</h3>
+                  {program.priceLabel ? (
+                    <span className="inline-flex min-h-9 shrink-0 items-center gap-2 rounded-full border border-border px-4 text-sm font-semibold text-foreground">
+                      <Icon icon="ph:tag" className="size-4 text-primary-700" aria-hidden="true" />
+                      {program.priceLabel}
+                    </span>
+                  ) : null}
+                </div>
+                {program.description ? <p className="mt-5 max-w-[560px] text-[17px] leading-[1.65] text-warm-700">{program.description}</p> : null}
+                {program.objectives.length ? (
+                  <div className="mt-6">
+                    <p className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-primary">Objetivos</p>
+                    <ul className="mt-3 flex flex-wrap gap-2">
+                      {program.objectives.map((objective) => (
+                        <li key={objective} className="rounded-full bg-accent-muted px-4 py-2 text-[13px] font-medium">{objective}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+                {program.courses.length ? (
+                  <ul className="mt-6 flex flex-wrap gap-2">
+                    {program.courses.map((course) => (
+                      <li key={course.id}><Link href={`/courses/${course.slug}`} className="inline-flex min-h-9 items-center rounded-full border border-border px-3 text-sm font-medium hover:border-primary hover:text-primary">{course.name}</Link></li>
+                    ))}
+                  </ul>
+                ) : null}
+              </Reveal>
+              <Reveal delay={0.1} className={`relative aspect-[4/3] overflow-hidden rounded-[20px] border border-warm-300 bg-warm-100 ${index % 2 ? "lg:order-1" : ""}`}>
+                {program.image ? <Image src={program.image} alt={program.imageAlt} fill sizes="(max-width: 1023px) 100vw, 50vw" className="object-cover" /> : null}
+              </Reveal>
+            </article>
+          ))}
         </div>
       </div>
     </section>

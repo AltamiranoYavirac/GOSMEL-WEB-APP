@@ -31,6 +31,7 @@ export async function getCatedras(
       codigo: catedra.codigo,
       curso: catedra.cursos?.nombre ?? "Sin curso",
       docente: docente ? `${docente.nombres} ${docente.apellidos}`.trim() : null,
+      docenteId: catedra.docente_id,
       modalidad: catedra.modalidad as TModalidadCurso,
       aula: catedra.aula,
       cupoMaximo: catedra.cupo_maximo,

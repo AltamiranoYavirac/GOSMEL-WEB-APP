@@ -17,7 +17,8 @@ export async function updateCatedra(input: IUpdateCatedraInput): Promise<{
   const supabase = createSupabaseBrowserClient();
 
   if (input.docente_id) {
-    await ensureDocenteRecord(supabase, input.docente_id);
+    const docente = await ensureDocenteRecord(supabase, input.docente_id);
+    if (docente.error) return { error: docente.error };
   }
 
   const { error } = await supabase

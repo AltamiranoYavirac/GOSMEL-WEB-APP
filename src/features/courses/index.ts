@@ -1,5 +1,12 @@
-export { COURSES, COURSE_DETAILS } from "./model/courses.constants";
-export type { ICourseDetail } from "./model/courses.constants";
-export type { ICourseCardTeacher } from "./ui/CourseCard.types";
-export { default as CourseDetail } from "./ui/CourseDetail";
-export { default as CoursesList } from "./ui/CoursesList";
+export { getPublicCourseBySlug } from "./api/getPublicCourseBySlug"
+export { getPublicCourses } from "./api/getPublicCourses"
+export type {
+  IPublicCourseCard,
+  IPublicCourseDetail,
+  IPublicCourseGalleryItem,
+  IPublicCourseTeacher,
+  IPublicCourseTestimonial,
+  TPublicCourseCategory,
+} from "./model/course-public.types"
+export { default as CourseDetail } from "./ui/CourseDetail"
+export { default as CoursesList } from "./ui/CoursesList"

@@ -26,6 +26,7 @@ import { useProgramaDetalle } from "../hooks/useProgramaDetalle";
 import { useProgramaOptions } from "../hooks/useProgramaOptions";
 import { useAsociarCursoPrograma } from "../hooks/useAsociarCursoPrograma";
 import { useDesasociarCursoPrograma } from "../hooks/useDesasociarCursoPrograma";
+import { useMoverCursoPrograma } from "../hooks/useMoverCursoPrograma";
 import type { IProgramaCursosSheetProps } from "./ProgramaCursosSheet.types";
 
 export default function ProgramaCursosSheet({
@@ -38,19 +39,31 @@ export default function ProgramaCursosSheet({
   const options = useProgramaOptions(open);
   const asociar = useAsociarCursoPrograma(programaId);
   const desasociar = useDesasociarCursoPrograma(programaId);
+  const mover = useMoverCursoPrograma(programaId);
 
+  const cursosVinculados = detalle.data?.cursos ?? [];
   const cursosDisponibles = (options.data?.cursos ?? []).filter(
-    (c) => !(detalle.data?.cursos ?? []).some((item) => item.cursoId === c.id)
+    (c) => !cursosVinculados.some((item) => item.cursoId === c.id)
   );
 
   const onAgregarCurso = () => {
     if (!cursoSeleccionado) return;
     asociar.mutate(
-      { cursoId: cursoSeleccionado, orden: (detalle.data?.cursos.length ?? 0) },
+      { cursoId: cursoSeleccionado, orden: Math.max(-1, ...cursosVinculados.map((item) => item.orden)) + 1 },
       {
         onSuccess: () => setCursoSeleccionado(""),
       }
     );
+  };
+
+  const onMover = (index: number, direccion: -1 | 1) => {
+    const origen = cursosVinculados[index];
+    const destino = cursosVinculados[index + direccion];
+    if (!origen || !destino) return;
+    mover.mutate({
+      origen: { cursoId: origen.cursoId, orden: origen.orden },
+      destino: { cursoId: destino.cursoId, orden: destino.orden },
+    });
   };
 
   return (
@@ -65,13 +78,13 @@ export default function ProgramaCursosSheet({
       <SheetContent className="sm:max-w-md">
         <SheetHeader>
           <SheetTitle>Cursos del programa</SheetTitle>
-          <SheetDescription>{programaNombre}</SheetDescription>
+          <SheetDescription>{programaNombre} · El orden define la secuencia formativa.</SheetDescription>
         </SheetHeader>
 
-        <div className="flex flex-col gap-5 py-4">
+        <div className="flex min-h-0 flex-1 flex-col gap-5 px-4 pb-4">
           <div className="flex items-center gap-2">
             <Select value={cursoSeleccionado} onValueChange={setCursoSeleccionado}>
-              <SelectTrigger className="flex-1">
+              <SelectTrigger className="min-w-0 flex-1">
                 <SelectValue placeholder="Seleccionar curso para vincular" />
               </SelectTrigger>
               <SelectContent>
@@ -93,7 +106,7 @@ export default function ProgramaCursosSheet({
             </Button>
           </div>
 
-          <ScrollArea className="max-h-[60vh]">
+          <ScrollArea className="min-h-0 flex-1">
             <div className="space-y-2 pr-3">
               <p className="font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Cursos asociados ({detalle.data?.cursos.length ?? 0})
@@ -128,15 +141,37 @@ export default function ProgramaCursosSheet({
                         </div>
                       </div>
 
-                      <Button
-                        size="icon-xs"
-                        variant="ghost"
-                        disabled={desasociar.isPending}
-                        onClick={() => desasociar.mutate(item.cursoId)}
-                        aria-label={`Desvincular ${item.nombre}`}
-                      >
-                        <Icon icon="ph:x" className="size-4 text-muted-foreground hover:text-destructive" aria-hidden="true" />
-                      </Button>
+                      <div className="flex shrink-0 items-center gap-0.5">
+                        <div className="flex flex-col">
+                          <Button
+                            size="icon-xs"
+                            variant="ghost"
+                            disabled={index === 0 || mover.isPending}
+                            onClick={() => onMover(index, -1)}
+                            aria-label={`Subir ${item.nombre}`}
+                          >
+                            <Icon icon="ph:caret-up" className="size-3.5" aria-hidden="true" />
+                          </Button>
+                          <Button
+                            size="icon-xs"
+                            variant="ghost"
+                            disabled={index === cursosVinculados.length - 1 || mover.isPending}
+                            onClick={() => onMover(index, 1)}
+                            aria-label={`Bajar ${item.nombre}`}
+                          >
+                            <Icon icon="ph:caret-down" className="size-3.5" aria-hidden="true" />
+                          </Button>
+                        </div>
+                        <Button
+                          size="icon-xs"
+                          variant="ghost"
+                          disabled={desasociar.isPending || mover.isPending}
+                          onClick={() => desasociar.mutate(item.cursoId)}
+                          aria-label={`Desvincular ${item.nombre}`}
+                        >
+                          <Icon icon="ph:x" className="size-4 text-muted-foreground hover:text-destructive" aria-hidden="true" />
+                        </Button>
+                      </div>
                     </li>
                   ))}
                 </ul>

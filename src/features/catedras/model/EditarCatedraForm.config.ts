@@ -6,7 +6,7 @@ export const editarCatedraFormSchema = z.object({
   cupoMaximo: z.coerce.number().int().min(1, "Ingresa un cupo válido").max(200, "Máximo 200"),
   aula: z.string().optional(),
   modalidad: z.enum(["presencial", "virtual", "hibrido"]),
-  docenteId: z.string().optional(),
+  docenteId: z.string().min(1, "Selecciona un docente"),
   estado: z.enum(["planificada", "en_curso", "finalizada", "cancelada"]),
 });
 

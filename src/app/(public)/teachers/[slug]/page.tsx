@@ -1,36 +1,25 @@
 import { notFound } from "next/navigation";
 
-import { TeacherProfile, TEACHERS, getTeacherBySlug } from "@/features/teachers";
+import { TeacherProfile } from "@/features/teachers";
+import { getPublicDocentesServer } from "@/features/teachers/server";
 import { CtaPanel } from "@/widgets/CtaPanel";
 
-export function generateStaticParams() {
-  return TEACHERS.map((teacher) => ({ slug: teacher.slug }));
-}
+export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const teacher = getTeacherBySlug(slug);
-
+  const { data } = await getPublicDocentesServer();
+  const teacher = (data ?? []).find((item) => item.slug === slug);
   if (!teacher) return {};
-
-  return {
-    title: `${teacher.name} | GOSMEL Music Academy`,
-    description: teacher.bio,
-  };
+  return { title: `${teacher.name} | GOSMEL Music Academy`, description: teacher.bio };
 }
 
-export default async function TeacherPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function TeacherPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const teacher = getTeacherBySlug(slug);
+  const { data, error } = await getPublicDocentesServer();
+  if (error) throw new Error(error);
 
+  const teacher = (data ?? []).find((item) => item.slug === slug);
   if (!teacher) notFound();
 
   return (
@@ -38,7 +27,7 @@ export default async function TeacherPage({
       <TeacherProfile teacher={teacher} />
       <CtaPanel
         titleId="teacher-cta-title"
-        title={`Aprende ${teacher.instrument.toLowerCase()} con ${teacher.name.split(" ")[0]}.`}
+        title={`Aprende ${teacher.instrument.toLowerCase() || "música"} con ${teacher.name.split(" ")[0]}.`}
         description="Reserva una clase de prueba gratuita y conoce su forma de enseñar."
         primary={{ label: "Reservar clase de prueba", href: "/contact" }}
         secondary={{ label: "Ver otros profesores", href: "/teachers" }}

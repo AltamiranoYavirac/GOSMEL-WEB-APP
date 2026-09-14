@@ -1,9 +1,9 @@
 export interface IImageUploadFieldProps {
   value?: string | null;
-  onChange: (value: string) => void;
+  file?: File | null;
+  onFileChange: (file: File | null) => void;
+  onRemove: () => void;
   label?: string;
-  folder?: string;
   helperText?: string;
-  endpoint?: string;
-  compress?: boolean;
+  disabled?: boolean;
 }

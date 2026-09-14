@@ -16,14 +16,16 @@ export default function PageHero({
       aria-labelledby={titleId}
       className="relative h-[420px] overflow-hidden md:h-[560px]"
     >
-      <RevealImage
-        src={image}
-        alt={imageAlt}
-        fetchPriority="high"
-        preload
-        sizes="100vw"
-        className="object-cover object-center"
-      />
+      {image ? (
+        <RevealImage
+          src={image}
+          alt={imageAlt ?? ""}
+          fetchPriority="high"
+          preload
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      ) : null}
       <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/95 via-surface-dark/40 to-surface-dark/10" />
 
       <div className="absolute inset-x-0 bottom-0 z-10 mx-auto w-full max-w-[1600px] px-[22px] pb-9 text-surface-dark-foreground md:px-14 md:pb-[62px]">

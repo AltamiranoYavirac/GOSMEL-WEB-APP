@@ -2,7 +2,7 @@ import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/shared/api/supabase/database.types";
 
-import type { IDocenteOption, ICursoOption } from "../model/CrearCatedraForm.config";
+import type { IDocenteOption, ICursoOption } from "../model/catedra-option.types";
 
 export async function getCatedraOptions(
   supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),

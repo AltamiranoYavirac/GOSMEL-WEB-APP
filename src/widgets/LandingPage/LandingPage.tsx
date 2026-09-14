@@ -1,5 +1,9 @@
-import FaqSection from "./FaqSection";
+import { getPublicCourses } from "@/features/courses";
+import { getPublicPrograms } from "@/features/programas";
+
+import CoursesSection from "./CoursesSection";
 import ExperienceGallerySection from "./ExperienceGallerySection";
+import FaqSection from "./FaqSection";
 import FinalCtaSection from "./FinalCtaSection";
 import HeroSection from "./HeroSection";
 import HighlightsSection from "./HighlightsSection";
@@ -8,14 +12,26 @@ import PhilosophySection from "./PhilosophySection";
 import ProgramsSection from "./ProgramsSection";
 import TestimonialsSection from "./TestimonialsSection";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const [coursesResult, programsResult] = await Promise.all([
+    getPublicCourses(),
+    getPublicPrograms(),
+  ]);
+
+  if (coursesResult.error) throw new Error(coursesResult.error);
+  if (programsResult.error) throw new Error(programsResult.error);
+
   return (
     <>
       <HeroSection />
       <HighlightsSection />
-      <PhilosophySection />
+      <PhilosophySection
+        coursesCount={coursesResult.data?.length ?? 0}
+        programsCount={programsResult.data?.length ?? 0}
+      />
       <ExperienceGallerySection />
-      <ProgramsSection />
+      <CoursesSection courses={coursesResult.data ?? []} />
+      <ProgramsSection programs={programsResult.data ?? []} />
       <HowItWorksSection />
       <TestimonialsSection />
       <FaqSection />

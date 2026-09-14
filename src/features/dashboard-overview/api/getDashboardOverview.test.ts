@@ -23,7 +23,6 @@ function buildTables() {
       { id: "e3", activo: true, created_at: "2026-06-01" },
       { id: "e4", activo: false, created_at: "2025-12-15" },
     ],
-    docentes: [{ perfil_id: "d1" }, { perfil_id: "d2" }],
     solicitudes: [
       { id: "s1", estado: "nueva", tipo: "clase_prueba", nombre_completo: "Juan Pérez", created_at: "2026-06-14" },
       { id: "s2", estado: "contactada", tipo: "admision", nombre_completo: "Ana Gómez", created_at: "2026-06-02" },
@@ -90,25 +89,24 @@ describe("getDashboardOverview", () => {
 
     expect(data.adminName).toBe("Ada")
     expect(data.solicitudesPendientes).toBe(2)
-    expect(data.kpis).toHaveLength(8)
+    expect(data.kpis).toHaveLength(7)
 
     expect(data.kpis[0]).toMatchObject({ label: "Estudiantes activos", value: 3 })
     expect(data.kpis[0].spark).toHaveLength(6)
     expect(data.kpis[0].spark!.at(-1)).toBe(3)
-    expect(data.kpis[1].value).toBe(2)
-    expect(data.kpis[2]).toMatchObject({ value: 2, trend: 0 })
+    expect(data.kpis[1]).toMatchObject({ value: 2, trend: 0 })
 
-    const ingresos = data.kpis[3]
+    const ingresos = data.kpis[2]
     expect(ingresos.value).toBe(150)
     expect(ingresos.trend).toBe(50)
     expect(ingresos.spark).toEqual(
       expect.arrayContaining([150, 100, 20]),
     )
 
-    expect(data.kpis[4].value).toBe(2)
-    expect(data.kpis[5]).toMatchObject({ value: 1, pill: "Requieren atención" })
-    expect(data.kpis[6].value).toBe(1)
-    expect(data.kpis[7]).toMatchObject({ value: 2, trend: 0 })
+    expect(data.kpis[3].value).toBe(2)
+    expect(data.kpis[4]).toMatchObject({ value: 1, pill: "Requieren atención" })
+    expect(data.kpis[5].value).toBe(1)
+    expect(data.kpis[6]).toMatchObject({ value: 2, trend: 0 })
 
     expect(data.revenue).toHaveLength(6)
     expect(data.revenue.reduce((sum, point) => sum + point.total, 0)).toBe(270)

@@ -45,7 +45,7 @@ const CATEDRA_VALUES = {
   fechaInicio: "2026-06-01",
   fechaFin: "",
   estado: "planificada" as const,
-  diaSemana: "1",
+  diaSemana: "1" as const,
   horaInicio: "15:00",
   horaFin: "16:00",
 }
@@ -55,23 +55,20 @@ describe("catedras API", () => {
     createSupabaseBrowserClientMock.mockReset()
   })
 
-  it("crearCatedra asegura docente e inserta horario", async () => {
-    const fake = configure({ catedras: [], docentes: [], perfiles: [{ id: "p1", nombres: "Leo", apellidos: "Brouwer" }], catedra_horarios: [] })
-    const calls = track(fake)
+  it("crearCatedra usa la operación transaccional", async () => {
+    const fake = createFakeSupabase({}, { rpcResults: { crear_catedra_con_horario: "cat1" } })
+    createSupabaseBrowserClientMock.mockReturnValue(fake)
 
-    const result = await crearCatedra(CATEDRA_VALUES)
-
-    expect(result).toEqual({ data: { id: expect.any(String) }, error: null })
-    expect(calls).toEqual(["docentes", "perfiles", "docentes", "catedras", "catedra_horarios"])
+    await expect(crearCatedra(CATEDRA_VALUES)).resolves.toEqual({ data: { id: "cat1" }, error: null })
   })
 
-  it("crearCatedra omite horario sin día y horas", async () => {
-    const fake = configure({ catedras: [], docentes: [{ perfil_id: "p1" }] })
-    const calls = track(fake)
+  it("crearCatedra admite una cátedra sin horario", async () => {
+    const fake = createFakeSupabase({}, { rpcResults: { crear_catedra_con_horario: "cat2" } })
+    createSupabaseBrowserClientMock.mockReturnValue(fake)
 
-    await crearCatedra({ ...CATEDRA_VALUES, diaSemana: "", horaInicio: "", horaFin: "" })
-
-    expect(calls).toEqual(["docentes", "catedras"])
+    await expect(
+      crearCatedra({ ...CATEDRA_VALUES, diaSemana: "", horaInicio: "", horaFin: "" }),
+    ).resolves.toEqual({ data: { id: "cat2" }, error: null })
   })
 
   it("getCatedraOptions marca admins y lista cursos", async () => {

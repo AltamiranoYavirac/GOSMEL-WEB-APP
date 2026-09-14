@@ -18,12 +18,14 @@ export default function FinalCta({
       aria-labelledby={titleId}
       className="relative mt-[70px] h-[460px] overflow-hidden md:mt-[110px] md:h-[520px]"
     >
-      <RevealImage
-        src={image}
-        alt={imageAlt}
-        sizes="100vw"
-        className="object-cover object-center"
-      />
+      {image ? (
+        <RevealImage
+          src={image}
+          alt={imageAlt ?? ""}
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      ) : null}
       <div className="absolute inset-0 bg-gradient-to-r from-surface-dark/92 via-surface-dark/55 to-surface-dark/20" />
       <div className="absolute inset-0 mx-auto flex w-full max-w-[1600px] flex-col justify-center px-[22px] text-surface-dark-foreground md:px-14">
         <Reveal
