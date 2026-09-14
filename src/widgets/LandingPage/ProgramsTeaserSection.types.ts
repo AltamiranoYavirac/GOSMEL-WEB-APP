@@ -1,5 +1,5 @@
 import type { IPublicProgram } from "@/features/programas"
 
-export interface IProgramsSectionProps {
+export interface IProgramsTeaserSectionProps {
   programs: IPublicProgram[]
 }

@@ -9,7 +9,7 @@ import HeroSection from "./HeroSection";
 import HighlightsSection from "./HighlightsSection";
 import HowItWorksSection from "./HowItWorksSection";
 import PhilosophySection from "./PhilosophySection";
-import ProgramsSection from "./ProgramsSection";
+import ProgramsTeaserSection from "./ProgramsTeaserSection";
 import TestimonialsSection from "./TestimonialsSection";
 
 export default async function LandingPage() {
@@ -31,7 +31,7 @@ export default async function LandingPage() {
       />
       <ExperienceGallerySection />
       <CoursesSection courses={coursesResult.data ?? []} />
-      <ProgramsSection programs={programsResult.data ?? []} />
+      <ProgramsTeaserSection programs={programsResult.data ?? []} />
       <HowItWorksSection />
       <TestimonialsSection />
       <FaqSection />

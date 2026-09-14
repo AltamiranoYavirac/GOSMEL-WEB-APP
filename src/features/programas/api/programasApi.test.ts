@@ -1,11 +1,16 @@
 import { beforeEach, describe, expect, it } from "vitest"
 
-const { createSupabaseBrowserClientMock } = vi.hoisted(() => ({
+const { createSupabaseBrowserClientMock, createSupabasePublicClientMock } = vi.hoisted(() => ({
   createSupabaseBrowserClientMock: vi.fn(),
+  createSupabasePublicClientMock: vi.fn(),
 }))
 
 vi.mock("@/shared/api/supabase/client", () => ({
   createSupabaseBrowserClient: createSupabaseBrowserClientMock,
+}))
+
+vi.mock("@/shared/api/supabase/public", () => ({
+  createSupabasePublicClient: createSupabasePublicClientMock,
 }))
 
 import { createFakeSupabase } from "@/test/supabase"
@@ -20,6 +25,7 @@ import {
 } from "./getProgramaDetalle"
 import { getProgramaOptions } from "./getProgramaOptions"
 import { getProgramas } from "./getProgramas"
+import { getPublicProgramBySlug } from "./getPublicProgramBySlug"
 import { agregarObjetivoPrograma, eliminarObjetivoPrograma, updateOrdenObjetivoPrograma } from "./programaObjetivos"
 import { updatePrograma } from "./updatePrograma"
 import { updateProgramaPublicado } from "./updateProgramaPublicado"
@@ -48,6 +54,7 @@ const PROGRAMA_VALUES = {
 describe("programas API", () => {
   beforeEach(() => {
     createSupabaseBrowserClientMock.mockReset()
+    createSupabasePublicClientMock.mockReset()
   })
 
   it("getProgramas deriva el instrumento de los cursos vinculados", async () => {
@@ -221,6 +228,43 @@ describe("programas API", () => {
 
     await expect(eliminarObjetivoPrograma("o1")).resolves.toEqual({ error: null })
     expect(tables.programa_objetivos).toHaveLength(1)
+  })
+
+  it("getPublicProgramBySlug devuelve el programa publicado o null", async () => {
+    const fake = createFakeSupabase({
+      programas: [
+        {
+          id: "pg1",
+          slug: "integral",
+          nombre: "Integral",
+          descripcion: "Ruta completa",
+          nivel: "intermedio",
+          imagen_public_id: null,
+          imagen_texto_alt: null,
+          etiqueta_precio: "$150 / mes",
+          mostrar_precio: true,
+          publicado: true,
+          programa_curso: [
+            { orden: 1, cursos: { id: "k1", slug: "guitarra-i", nombre: "Guitarra I", instrumentos: { nombre: "Guitarra", tipos_instrumento: { nombre: "Cuerda Pulsada" } } } },
+          ],
+          programa_objetivos: [{ objetivo: "Tocar en conjunto", orden: 1 }],
+        },
+        { id: "pg2", slug: "borrador", nombre: "Borrador", publicado: false, programa_curso: [], programa_objetivos: [] },
+      ],
+    })
+    createSupabasePublicClientMock.mockReturnValue(fake)
+
+    const found = await getPublicProgramBySlug("integral")
+    expect(found.data).toMatchObject({
+      slug: "integral",
+      title: "Integral",
+      priceLabel: "$150 / mes",
+      instrument: "Guitarra",
+      objectives: ["Tocar en conjunto"],
+      courses: [{ slug: "guitarra-i", name: "Guitarra I" }],
+    })
+    await expect(getPublicProgramBySlug("borrador")).resolves.toEqual({ data: null, error: null })
+    await expect(getPublicProgramBySlug("inexistente")).resolves.toEqual({ data: null, error: null })
   })
 
   it("propaga errores", async () => {
