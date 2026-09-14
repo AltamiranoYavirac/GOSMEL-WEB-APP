@@ -4,6 +4,7 @@ export { default as EditarCatedraDialog } from "./ui/EditarCatedraDialog";
 export { default as GenerarSesionesCatedraDialog } from "./ui/GenerarSesionesCatedraDialog";
 export { default as CatedraMatriculasDialog } from "./ui/CatedraMatriculasDialog";
 export { default as CatedraEstudiantesSheet } from "./ui/CatedraEstudiantesSheet";
+export { default as CatedraHorariosSheet } from "./ui/CatedraHorariosSheet";
 export { default as CatedraMatriculadoItemRow } from "./ui/CatedraMatriculadoItemRow";
 export { default as CatedraSolicitudItemCard } from "./ui/CatedraSolicitudItemCard";
 export * from "./model/catedra.types";

@@ -8,7 +8,7 @@ describe("crearCatedraFormSchema", () => {
 
     expect(defaults.modalidad).toBe("presencial")
     expect(defaults.estado).toBe("planificada")
-    expect(defaults.cupoMaximo).toBe(10)
+    expect(defaults.cupoMaximo).toBe(15)
   })
 
   it("rechaza requeridos y enums inválidos", () => {
@@ -18,6 +18,7 @@ describe("crearCatedraFormSchema", () => {
       docenteId: "p1",
       modalidad: "presencial",
       cupoMaximo: 10,
+      fechaInicio: "2026-06-01",
       estado: "planificada",
     }
 
@@ -27,6 +28,8 @@ describe("crearCatedraFormSchema", () => {
     expect(crearCatedraFormSchema.safeParse({ ...base, docenteId: "" }).success).toBe(false)
     expect(crearCatedraFormSchema.safeParse({ ...base, modalidad: "mixta" }).success).toBe(false)
     expect(crearCatedraFormSchema.safeParse({ ...base, estado: "pausada" }).success).toBe(false)
+    expect(crearCatedraFormSchema.safeParse({ ...base, fechaInicio: "" }).success).toBe(false)
+    expect(crearCatedraFormSchema.safeParse({ ...base, fechaFin: "2026-05-01" }).success).toBe(false)
   })
 
   it("coerciona cupo y acepta opcionales", () => {
@@ -48,6 +51,6 @@ describe("crearCatedraFormSchema", () => {
     expect(parsed.cupoMaximo).toBe(15)
     expect(parsed.aula).toBe("A1")
 
-    expect(crearCatedraFormSchema.safeParse({ codigo: "C-01", cursoId: "k1", docenteId: "p1", modalidad: "virtual", cupoMaximo: 500, estado: "en_curso" }).success).toBe(false)
+    expect(crearCatedraFormSchema.safeParse({ codigo: "C-01", cursoId: "k1", docenteId: "p1", modalidad: "virtual", cupoMaximo: 500, fechaInicio: "2026-06-01", estado: "en_curso" }).success).toBe(false)
   })
 })

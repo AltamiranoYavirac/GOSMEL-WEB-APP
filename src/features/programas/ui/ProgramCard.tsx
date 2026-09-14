@@ -20,19 +20,6 @@ export default function ProgramCard({ program, number, total, isFirst, isLast }:
           </p>
           <h3 className="mt-5 text-[clamp(2rem,4vw,3.5rem)] font-semibold leading-[1.02] tracking-[-0.045em] text-foreground">{program.title}</h3>
           <p className="mt-5 max-w-[38rem] text-base leading-[1.75] text-muted-foreground md:text-lg">{program.description}</p>
-          {program.objectives.length ? (
-            <>
-              <p className="mb-4 mt-7 text-sm font-semibold text-foreground md:mt-8">Lo que lograrás</p>
-              <ul className="flex flex-col gap-3">
-                {program.objectives.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <Icon icon="ph:check" className="mt-0.5 size-5 shrink-0 text-primary-700" aria-hidden="true" />
-                    <span className="text-base leading-6 text-foreground">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : null}
           {program.courses.length ? (
             <ul className="mt-7 flex flex-wrap gap-2">
               {program.courses.map((course) => (

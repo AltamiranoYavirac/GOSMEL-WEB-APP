@@ -24,9 +24,10 @@ export async function eliminarCatedra(
     };
   }
 
-  await supabase.from("sesiones").delete().eq("catedra_id", catedraId);
-  await supabase.from("catedra_horarios").delete().eq("catedra_id", catedraId);
-  await supabase.from("inscripciones").delete().eq("catedra_id", catedraId);
+  const { error: inscDelError } = await supabase.from("inscripciones").delete().eq("catedra_id", catedraId);
+  if (inscDelError) {
+    return { error: inscDelError.message };
+  }
 
   const { error: deleteError } = await supabase.from("catedras").delete().eq("id", catedraId);
   if (deleteError) {

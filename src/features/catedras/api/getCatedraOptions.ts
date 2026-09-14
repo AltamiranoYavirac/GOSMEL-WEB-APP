@@ -2,12 +2,22 @@ import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/shared/api/supabase/database.types";
 
-import type { IDocenteOption, ICursoOption } from "../model/catedra-option.types";
+import type { ICatedraOptions } from "../model/catedra-option.types";
+
+export function sugerirCodigoCatedra(codigos: string[], fecha = new Date()): string {
+  const prefix = `CAT-${fecha.getFullYear()}-`;
+  const maximo = codigos.reduce((acc, codigo) => {
+    const match = codigo.match(/^CAT-\d{4}-(\d+)$/i);
+    if (!match || !codigo.toUpperCase().startsWith(prefix)) return acc;
+    return Math.max(acc, Number(match[1]));
+  }, 0);
+  return `${prefix}${String(maximo + 1).padStart(2, "0")}`;
+}
 
 export async function getCatedraOptions(
   supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
 ): Promise<{
-  data: { cursos: ICursoOption[]; docentes: IDocenteOption[] } | null;
+  data: ICatedraOptions | null;
   error: string | null;
 }> {
 
@@ -18,7 +28,7 @@ export async function getCatedraOptions(
 
   const docentePerfilIds = Array.from(new Set((rolesDocente ?? []).map((r) => r.perfil_id)));
 
-  const [cursos, perfilesDocentes] = await Promise.all([
+  const [cursos, perfilesDocentes, catedras] = await Promise.all([
     supabase
       .from("cursos")
       .select("id, nombre")
@@ -30,9 +40,10 @@ export async function getCatedraOptions(
       .in("id", docentePerfilIds.length > 0 ? docentePerfilIds : ["00000000-0000-0000-0000-000000000000"])
       .order("nombres", { ascending: true })
       .limit(300),
+    supabase.from("catedras").select("codigo").limit(1000),
   ]);
 
-  const firstError = [cursos, perfilesDocentes].map((result) => result.error).find(Boolean);
+  const firstError = [cursos, perfilesDocentes, catedras].map((result) => result.error).find(Boolean);
   if (firstError) {
     return { data: null, error: firstError.message };
   }
@@ -55,6 +66,7 @@ export async function getCatedraOptions(
           nombre: esAdmin ? `${nombreCompleto} (Admin)` : nombreCompleto,
         };
       }),
+      sugerenciaCodigo: sugerirCodigoCatedra((catedras.data ?? []).map((catedra) => catedra.codigo)),
     },
     error: null,
   };

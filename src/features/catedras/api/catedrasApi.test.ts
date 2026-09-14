@@ -12,11 +12,12 @@ import { createFakeSupabase } from "@/test/supabase"
 import type { TFakeSupabaseClient } from "@/test/supabase.types"
 
 import { crearCatedra } from "./crearCatedra"
+import { agregarHorarioCatedra, eliminarHorarioCatedra, getCatedraHorarios } from "./catedraHorarios"
 import { eliminarCatedra } from "./eliminarCatedra"
 import { eliminarInscripcionCatedra } from "./eliminarInscripcionCatedra"
 import { generarSesionesCatedra } from "./generarSesionesCatedra"
 import { getCatedraEstudiantes } from "./getCatedraEstudiantes"
-import { getCatedraOptions } from "./getCatedraOptions"
+import { getCatedraOptions, sugerirCodigoCatedra } from "./getCatedraOptions"
 import { updateCatedra } from "./updateCatedra"
 
 function configure(tables: Record<string, Record<string, unknown>[]> = {}): TFakeSupabaseClient {
@@ -71,7 +72,7 @@ describe("catedras API", () => {
     ).resolves.toEqual({ data: { id: "cat2" }, error: null })
   })
 
-  it("getCatedraOptions marca admins y lista cursos", async () => {
+  it("getCatedraOptions marca admins, lista cursos y sugiere el siguiente código", async () => {
     const fake = configure({
       perfil_rol: [
         { perfil_id: "p1", rol: "docente" },
@@ -82,12 +83,56 @@ describe("catedras API", () => {
         { id: "p2", nombres: "Ada", apellidos: "Admin" },
       ],
       cursos: [{ id: "k1", nombre: "Guitarra" }],
+      catedras: [{ codigo: `CAT-${new Date().getFullYear()}-03` }],
     })
 
     const result = await getCatedraOptions(fake)
 
     expect(result.data!.cursos).toEqual([{ id: "k1", nombre: "Guitarra" }])
     expect(result.data!.docentes.map((d) => d.nombre)).toEqual(["Ada Admin (Admin)", "Leo Brouwer"])
+    expect(result.data!.sugerenciaCodigo).toBe(`CAT-${new Date().getFullYear()}-04`)
+  })
+
+  it("sugerirCodigoCatedra ignora otros años y reinicia el correlativo", () => {
+    const fecha = new Date("2026-03-01")
+
+    expect(sugerirCodigoCatedra([], fecha)).toBe("CAT-2026-01")
+    expect(sugerirCodigoCatedra(["CAT-2025-09", "CAT-2026-02", "CAT-2026-10"], fecha)).toBe("CAT-2026-11")
+    expect(sugerirCodigoCatedra(["OTRO-1"], fecha)).toBe("CAT-2026-01")
+  })
+
+  it("crearCatedra traduce la colisión de código único", async () => {
+    createSupabaseBrowserClientMock.mockReturnValue(
+      createFakeSupabase({}, { rpcError: 'duplicate key value violates unique constraint "catedras_codigo_key"' }),
+    )
+
+    await expect(crearCatedra(CATEDRA_VALUES)).resolves.toEqual({
+      data: null,
+      error: "Ya existe una cátedra con ese código.",
+    })
+  })
+
+  it("gestiona los horarios de la cátedra", async () => {
+    const tables = {
+      catedra_horarios: [
+        { id: "h1", catedra_id: "c1", dia_semana: 3, hora_inicio: "18:00:00", hora_fin: "19:00:00" },
+        { id: "h2", catedra_id: "c1", dia_semana: 1, hora_inicio: "15:00:00", hora_fin: "16:00:00" },
+        { id: "h3", catedra_id: "c2", dia_semana: 2, hora_inicio: "10:00:00", hora_fin: "11:00:00" },
+      ],
+    }
+    configure(tables)
+
+    const result = await getCatedraHorarios("c1", createFakeSupabase(tables))
+    expect(result.data).toEqual([
+      { id: "h2", diaSemana: 1, horaInicio: "15:00", horaFin: "16:00" },
+      { id: "h1", diaSemana: 3, horaInicio: "18:00", horaFin: "19:00" },
+    ])
+
+    const added = await agregarHorarioCatedra({ catedraId: "c1", diaSemana: 5, horaInicio: "09:00", horaFin: "10:30" })
+    expect(added.error).toBeNull()
+    expect(tables.catedra_horarios.at(-1)).toMatchObject({ catedra_id: "c1", dia_semana: 5, hora_inicio: "09:00:00", hora_fin: "10:30:00" })
+
+    await expect(eliminarHorarioCatedra("h1")).resolves.toEqual({ error: null })
   })
 
   it("getCatedraEstudiantes separa matriculados y pendientes", async () => {
@@ -156,7 +201,18 @@ describe("catedras API", () => {
     const calls = track(fake)
 
     await expect(
-      updateCatedra({ id: "c1", cupo_maximo: 12, aula: " A2 ", modalidad: "virtual", docente_id: "p1", estado: "en_curso" }),
+      updateCatedra({
+        id: "c1",
+        codigo: "C-01",
+        curso_id: "k1",
+        docente_id: "p1",
+        cupo_maximo: 12,
+        aula: " A2 ",
+        modalidad: "virtual",
+        estado: "en_curso",
+        fecha_inicio: "2026-06-01",
+        fecha_fin: null,
+      }),
     ).resolves.toEqual({ error: null })
 
     expect(calls).toEqual(["docentes", "catedras"])

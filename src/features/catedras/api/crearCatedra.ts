@@ -31,7 +31,11 @@ export async function crearCatedra(
   });
 
   if (error || !data) {
-    return { data: null, error: error?.message ?? "No se pudo crear la cátedra." };
+    const message = error?.message ?? "No se pudo crear la cátedra.";
+    if (message.includes("catedras_codigo_key") || message.includes("duplicate key")) {
+      return { data: null, error: "Ya existe una cátedra con ese código." };
+    }
+    return { data: null, error: message };
   }
 
   return { data: { id: data }, error: null };

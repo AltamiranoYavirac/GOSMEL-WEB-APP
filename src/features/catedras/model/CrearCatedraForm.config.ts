@@ -33,7 +33,7 @@ export const crearCatedraFormSchema = z
     modalidad: z.enum(["presencial", "virtual", "hibrido"]),
     aula: z.string().optional(),
     cupoMaximo: z.coerce.number().int().min(1, "El cupo mínimo es 1").max(200, "Máximo 200"),
-    fechaInicio: z.string().optional(),
+    fechaInicio: z.string().min(1, "Selecciona la fecha de inicio"),
     fechaFin: z.string().optional(),
     estado: z.enum(["planificada", "en_curso", "finalizada", "cancelada"]),
     diaSemana: z.enum(["0", "1", "2", "3", "4", "5", "6"]).or(z.literal("")).default(""),
@@ -63,19 +63,19 @@ export const crearCatedraFormSchema = z
 
 export type ICrearCatedraFormValues = z.infer<typeof crearCatedraFormSchema>;
 
-export function getCrearCatedraFormDefaults(): ICrearCatedraFormValues {
+export function getCrearCatedraFormDefaults(initial?: Partial<ICrearCatedraFormValues>): ICrearCatedraFormValues {
   return {
-    codigo: "",
-    cursoId: "",
-    docenteId: "",
-    modalidad: "presencial",
-    aula: "",
-    cupoMaximo: 10,
-    fechaInicio: "",
-    fechaFin: "",
-    estado: "planificada",
-    diaSemana: "",
-    horaInicio: "",
-    horaFin: "",
+    codigo: initial?.codigo ?? "",
+    cursoId: initial?.cursoId ?? "",
+    docenteId: initial?.docenteId ?? "",
+    modalidad: initial?.modalidad ?? "presencial",
+    aula: initial?.aula ?? "",
+    cupoMaximo: initial?.cupoMaximo ?? 15,
+    fechaInicio: initial?.fechaInicio ?? "",
+    fechaFin: initial?.fechaFin ?? "",
+    estado: initial?.estado ?? "planificada",
+    diaSemana: initial?.diaSemana ?? "",
+    horaInicio: initial?.horaInicio ?? "",
+    horaFin: initial?.horaFin ?? "",
   };
 }

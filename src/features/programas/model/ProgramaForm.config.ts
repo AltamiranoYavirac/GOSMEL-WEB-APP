@@ -70,7 +70,7 @@ export function mapProgramaToFormValues(programa: IProgramaDetalle): IProgramaFo
     nivel: programa.nivel ?? undefined,
     imagenPublicId: programa.imagenPublicId ?? "",
     imagenTextoAlt: programa.imagenTextoAlt ?? "",
-    precioReferencial: programa.precioReferencial ? Number(programa.precioReferencial) : null,
+    precioReferencial: programa.precioReferencial === null ? null : Number(programa.precioReferencial),
     etiquetaPrecio: programa.etiquetaPrecio ?? "",
     mostrarPrecio: programa.mostrarPrecio,
     publicado: programa.publicado,

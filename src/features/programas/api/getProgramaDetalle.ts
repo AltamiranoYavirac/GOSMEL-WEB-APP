@@ -50,7 +50,7 @@ export async function getProgramaDetalle(
       nivel: data.nivel as TNivelCurso | null,
       imagenPublicId: data.imagen_public_id,
       imagenTextoAlt: data.imagen_texto_alt,
-      precioReferencial: data.precio_referencial ? String(data.precio_referencial) : null,
+      precioReferencial: data.precio_referencial === null ? null : String(data.precio_referencial),
       etiquetaPrecio: data.etiqueta_precio,
       mostrarPrecio: data.mostrar_precio,
       publicado: data.publicado,
