@@ -14,6 +14,9 @@ export const registerFormSchema = z
     acceptTerms: z.boolean().refine((value) => value, {
       message: "Debes aceptar los términos y condiciones",
     }),
+    acceptPrivacy: z.boolean().refine((value) => value, {
+      message: "Debes aceptar la política de privacidad",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
@@ -31,5 +34,6 @@ export function getRegisterFormDefaults(): IRegisterFormValues {
     password: "",
     confirmPassword: "",
     acceptTerms: false,
+    acceptPrivacy: false,
   }
 }

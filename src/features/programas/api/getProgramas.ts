@@ -2,6 +2,7 @@ import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/shared/api/supabase/database.types";
 
+import { resolveProgramaInstrumento } from "../model/programa-instrumento";
 import type { IProgramaRow, TNivelCurso } from "../model/programa.types";
 
 export async function getProgramas(
@@ -13,7 +14,7 @@ export async function getProgramas(
   const { data, error } = await supabase
     .from("programas")
     .select(
-      "id, nombre, nivel, instrumento_id, instrumentos(nombre), publicado, programa_curso!programa_curso_programa_id_fkey(programa_id)"
+      "id, nombre, nivel, publicado, orden, programa_curso!programa_curso_programa_id_fkey(cursos(instrumentos(nombre, tipos_instrumento(nombre))))"
     )
     .order("nombre", { ascending: true })
     .limit(200);
@@ -26,9 +27,15 @@ export async function getProgramas(
     id: programa.id,
     nombre: programa.nombre,
     nivel: programa.nivel as TNivelCurso | null,
-    instrumento: programa.instrumentos?.nombre ?? null,
+    instrumento: resolveProgramaInstrumento(
+      (programa.programa_curso ?? []).map((vinculo) => ({
+        instrumento: vinculo.cursos?.instrumentos?.nombre ?? null,
+        familia: vinculo.cursos?.instrumentos?.tipos_instrumento?.nombre ?? null,
+      }))
+    ),
     numCursos: programa.programa_curso?.length ?? 0,
     publicado: programa.publicado,
+    orden: programa.orden,
   }));
 
   return { data: rows, error: null };

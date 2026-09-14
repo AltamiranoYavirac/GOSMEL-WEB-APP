@@ -10,6 +10,7 @@ export interface IProgramaRow {
   instrumento: string | null;
   numCursos: number;
   publicado: boolean;
+  orden: number;
 }
 
 export const NIVEL_BADGE: Record<TNivelCurso, { label: string; variant: TBadgeVariant }> = {

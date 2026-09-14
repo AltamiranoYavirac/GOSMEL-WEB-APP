@@ -1,33 +1,37 @@
+import { getPublicSiteAssets } from "@/entities/site-asset";
 import { ContactForm, ContactInfo } from "@/features/contact";
-import { AppImages } from "@/shared/config";
+import { buildCloudinaryImageUrl } from "@/shared/lib";
 import { CtaPanel } from "@/widgets/CtaPanel";
 import { PageHero } from "@/widgets/PageHero";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Contacto | GOSMEL Music Academy",
-  description:
-    "Escríbenos para solicitar más información o resolver cualquier duda sobre nuestros programas.",
+  description: "Escríbenos para solicitar más información o resolver cualquier duda sobre nuestros programas.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const { data: assets, error } = await getPublicSiteAssets();
+  if (error) throw new Error(error);
+  const hero = assets?.page_hero_contact;
+
   return (
     <div className="flex-1 bg-background">
       <PageHero
-        image={AppImages.PAGE_HERO_CONTACT}
-        imageAlt="Estudiante de canto en una clase de GOSMEL"
+        image={buildCloudinaryImageUrl(hero?.publicId, "ar_16:9,c_fill,g_auto,w_1920,q_auto,f_auto")}
+        imageAlt={hero?.alt}
         titleId="contact-title"
         eyebrow="Contacto · Quito, Ecuador"
         title="Hablemos de tu música."
         description="Estamos aquí para acompañarte en tu viaje musical. Escríbenos para más información o resolver cualquier duda sobre nuestros programas."
       />
-
       <section className="bg-background pb-[70px] pt-[52px] md:pb-[110px] md:pt-[70px]">
         <div className="mx-auto grid w-full max-w-[1600px] grid-cols-1 gap-3.5 px-[22px] md:px-14 lg:grid-cols-[0.85fr_1fr]">
           <ContactInfo />
           <ContactForm />
         </div>
       </section>
-
       <CtaPanel
         titleId="contact-cta-title"
         title="¿Listo para subir al escenario?"

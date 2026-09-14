@@ -24,7 +24,7 @@ export default function CtaPanel({
           >
             {title}
           </h2>
-          <p className="mx-auto mt-5 max-w-[480px] text-[15px] leading-[1.6] text-muted-foreground md:text-base">
+          <p className="mx-auto mt-5 max-w-[480px] text-pretty text-[15px] leading-[1.6] text-muted-foreground md:max-w-[720px] md:text-base">
             {description}
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">

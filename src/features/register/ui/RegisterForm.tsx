@@ -56,17 +56,7 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
           Únete a GOSMEL y empieza tu camino musical.
         </p>
 
-        <SocialAuthButtons
-          dividerLabel="O con tu correo"
-          ariaLabelPrefix="Continuar con"
-          layout="stacked"
-          onProviderSelect={(provider) => socialLogin.mutate(provider.id as TAuthProvider)}
-          disabledProviders={["apple"]}
-          isPending={socialLogin.isPending}
-          className="mt-8"
-        />
-
-        <Form form={form} onSubmit={onSubmit} className="mt-7 flex flex-col gap-5">
+        <Form form={form} onSubmit={onSubmit} className="mt-8 flex flex-col gap-5">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <TextField name="firstName" label="Nombre" autoComplete="given-name" placeholder="Tu nombre" />
             <TextField name="lastName" label="Apellido" autoComplete="family-name" placeholder="Tu apellido" />
@@ -105,21 +95,30 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
             placeholder="••••••••"
           />
 
-          <CheckboxField
-            name="acceptTerms"
-            label={
-              <>
-                Acepto los{" "}
-                <Link href="/terms" className="text-primary underline underline-offset-2">
-                  términos y condiciones
-                </Link>{" "}
-                y la{" "}
-                <Link href="/privacy" className="text-primary underline underline-offset-2">
-                  política de privacidad
-                </Link>
-              </>
-            }
-          />
+          <div className="flex flex-col gap-3">
+            <CheckboxField
+              name="acceptTerms"
+              label={
+                <>
+                  Acepto los{" "}
+                  <Link href="/terms" className="text-primary underline underline-offset-2">
+                    términos y condiciones
+                  </Link>
+                </>
+              }
+            />
+            <CheckboxField
+              name="acceptPrivacy"
+              label={
+                <>
+                  Acepto la{" "}
+                  <Link href="/privacy" className="text-primary underline underline-offset-2">
+                    política de privacidad
+                  </Link>
+                </>
+              }
+            />
+          </div>
 
           <Button
             type="submit"
@@ -130,6 +129,16 @@ export default function RegisterForm({ onSubmitSuccess }: IRegisterFormProps) {
             {register.isPending ? "Procesando…" : "Crear cuenta"}
           </Button>
         </Form>
+
+        <SocialAuthButtons
+          dividerLabel="O inicia sesión con"
+          ariaLabelPrefix="Continuar con"
+          layout="stacked"
+          onProviderSelect={(provider) => socialLogin.mutate(provider.id as TAuthProvider)}
+          disabledProviders={["apple"]}
+          isPending={socialLogin.isPending}
+          className="mt-7"
+        />
 
         <p className="mt-7 text-center text-sm text-muted-foreground">
           ¿Ya tienes cuenta?{" "}

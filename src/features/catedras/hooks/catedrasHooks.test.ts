@@ -4,6 +4,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 const api = vi.hoisted(() => ({
   getCatedraEstudiantes: vi.fn(),
   getCatedraOptions: vi.fn(),
+  getCatedraHorarios: vi.fn(),
+  agregarHorarioCatedra: vi.fn(),
+  eliminarHorarioCatedra: vi.fn(),
   crearCatedra: vi.fn(),
   updateCatedra: vi.fn(),
   eliminarCatedra: vi.fn(),
@@ -13,6 +16,11 @@ const api = vi.hoisted(() => ({
 
 vi.mock("../api/getCatedraEstudiantes", () => ({ getCatedraEstudiantes: api.getCatedraEstudiantes }))
 vi.mock("../api/getCatedraOptions", () => ({ getCatedraOptions: api.getCatedraOptions }))
+vi.mock("../api/catedraHorarios", () => ({
+  getCatedraHorarios: api.getCatedraHorarios,
+  agregarHorarioCatedra: api.agregarHorarioCatedra,
+  eliminarHorarioCatedra: api.eliminarHorarioCatedra,
+}))
 vi.mock("../api/crearCatedra", () => ({ crearCatedra: api.crearCatedra }))
 vi.mock("../api/updateCatedra", () => ({ updateCatedra: api.updateCatedra }))
 vi.mock("../api/eliminarCatedra", () => ({ eliminarCatedra: api.eliminarCatedra }))
@@ -23,6 +31,7 @@ vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
 import { createQueryWrapper, createTestQueryClient } from "@/test/query"
 
 import { useCatedraEstudiantes } from "./useCatedraEstudiantes"
+import { useAgregarHorarioCatedra, useCatedraHorarios, useEliminarHorarioCatedra } from "./useCatedraHorarios"
 import { useCatedraOptions } from "./useCatedraOptions"
 import { useCrearCatedra } from "./useCrearCatedra"
 import { useEliminarCatedra } from "./useEliminarCatedra"
@@ -41,7 +50,7 @@ describe("catedras hooks", () => {
   })
 
   it("las queries resuelven", async () => {
-    const hooks: Array<() => { isSuccess: boolean }> = [() => useCatedraEstudiantes("c1"), () => useCatedraOptions()]
+    const hooks: Array<() => { isSuccess: boolean }> = [() => useCatedraEstudiantes("c1"), () => useCatedraOptions(), () => useCatedraHorarios("c1")]
 
     for (const hook of hooks) {
       const { result, unmount } = renderHook(hook, { wrapper: wrapper() })
@@ -57,6 +66,8 @@ describe("catedras hooks", () => {
       [useEliminarCatedra, api.eliminarCatedra],
       [() => useEliminarInscripcionCatedra("c1"), api.eliminarInscripcionCatedra],
       [useGenerarSesionesCatedra, api.generarSesionesCatedra],
+      [() => useAgregarHorarioCatedra("c1"), api.agregarHorarioCatedra],
+      [() => useEliminarHorarioCatedra("c1"), api.eliminarHorarioCatedra],
     ]
 
     for (const [hook, expected] of cases) {
@@ -82,6 +93,8 @@ describe("catedras hooks", () => {
       useEliminarCatedra,
       () => useEliminarInscripcionCatedra("c1"),
       useGenerarSesionesCatedra,
+      () => useAgregarHorarioCatedra("c1"),
+      () => useEliminarHorarioCatedra("c1"),
     ]
 
     for (const hook of mutations) {

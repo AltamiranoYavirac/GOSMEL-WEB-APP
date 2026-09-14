@@ -1,14 +1,5 @@
-import { createSupabaseServerClient } from "@/shared/api/supabase/server";
-import { HydrateQuery } from "@/shared/api/prefetch";
-import { DocentesList } from "@/features/docentes";
-import { docentesListQuery } from "@/features/docentes/server";
+import { redirect } from "next/navigation";
 
-export default async function DocentesPage() {
-  const supabase = await createSupabaseServerClient();
-
-  return (
-    <HydrateQuery queries={[docentesListQuery(supabase)]}>
-      <DocentesList />
-    </HydrateQuery>
-  );
+export default function DocentesPage() {
+  redirect("/dashboard/admin");
 }

@@ -1,15 +1,17 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { Database } from "@/shared/api/supabase/database.types";
+import { buildCloudinaryImageUrl } from "@/shared/lib";
 
 import type { ITeacher, ITeacherFormacion } from "../model/teachers.types";
 
-const CLOUDINARY_BASE = "https://res.cloudinary.com/dv9lm0fnm/image/upload";
-
-export async function getPublicDocentes(): Promise<{
+export async function getPublicDocentes(
+  supabase: SupabaseClient<Database> = createSupabaseBrowserClient()
+): Promise<{
   data: ITeacher[] | null;
   error: string | null;
 }> {
-  const supabase = createSupabaseBrowserClient();
-
   const { data, error } = await supabase
     .from("docentes")
     .select(
@@ -74,9 +76,10 @@ export async function getPublicDocentes(): Promise<{
       : docente.titulo_profesional ?? null;
 
     const avatarPublicId = perfil?.avatar_public_id ?? null;
-    const photo = avatarPublicId
-      ? `${CLOUDINARY_BASE}/ar_1:1,c_fill,g_auto,w_800,q_auto,f_auto/${avatarPublicId}`
-      : "";
+    const photo = buildCloudinaryImageUrl(
+      avatarPublicId,
+      "ar_1:1,c_fill,g_auto,w_800,q_auto,f_auto"
+    ) ?? "";
 
 
     return {

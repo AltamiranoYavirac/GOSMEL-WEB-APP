@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { ITipoInstrumentoRow } from "./instrumento.types";
+
 export const tipoInstrumentoFormSchema = z.object({
   nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
   orden: z.number().int().min(0).default(0),
@@ -13,5 +15,13 @@ export function getTipoInstrumentoFormDefaults(initial?: Partial<ITipoInstrument
     nombre: initial?.nombre ?? "",
     orden: initial?.orden ?? 0,
     activo: initial?.activo ?? true,
+  };
+}
+
+export function mapTipoInstrumentoToFormValues(tipo: ITipoInstrumentoRow): ITipoInstrumentoFormValues {
+  return {
+    nombre: tipo.nombre,
+    orden: tipo.orden,
+    activo: tipo.activo,
   };
 }

@@ -14,8 +14,9 @@ describe("instrumentoFormSchema", () => {
     expect(instrumentoFormSchema.safeParse({ nombre: "G", tipoInstrumentoId: "t1" }).success).toBe(false)
     expect(instrumentoFormSchema.safeParse({ nombre: "Guitarra", tipoInstrumentoId: "" }).success).toBe(false)
     expect(instrumentoFormSchema.safeParse({ nombre: "Guitarra", tipoInstrumentoId: "t1", orden: -1 }).success).toBe(false)
+    expect(instrumentoFormSchema.safeParse({ nombre: "Guitarra", tipoInstrumentoId: "t1" }).success).toBe(false)
 
-    const parsed = instrumentoFormSchema.parse({ nombre: "Guitarra", tipoInstrumentoId: "t1" })
+    const parsed = instrumentoFormSchema.parse({ nombre: "Guitarra", tipoInstrumentoId: "t1", icono: "ph:guitar" })
     expect(parsed.orden).toBe(0)
     expect(parsed.activo).toBe(true)
   })

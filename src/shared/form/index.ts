@@ -15,6 +15,7 @@ export {
   SwitchField,
   FileField,
   PhotoField,
+  IconPickerField,
 } from "./fields"
 export type {
   IBaseFieldProps,
@@ -30,4 +31,6 @@ export type {
   ISwitchFieldProps,
   IFileFieldProps,
   IPhotoFieldProps,
+  IIconPickerFieldProps,
+  IIconPickerOption,
 } from "./fields"

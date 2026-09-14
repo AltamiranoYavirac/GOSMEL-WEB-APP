@@ -2,8 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-import { COURSES } from "../model/courses.constants";
-import type { ICourseCardTeacher } from "./CourseCard.types";
+import type { IPublicCourseCard } from "../model/course-public.types";
 import CoursesList from "./CoursesList";
 
 vi.mock("@/shared/ui", () => ({
@@ -14,59 +13,57 @@ vi.mock("@/shared/ui", () => ({
 }));
 
 vi.mock("next/image", () => ({
-  default: ({ fill: _fill, ...props }: ComponentPropsWithoutRef<"img"> & { fill?: boolean }) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img {...props} />
-  ),
+  default: ({ fill, ...props }: ComponentPropsWithoutRef<"img"> & { fill?: boolean }) => {
+    void fill;
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img {...props} alt={props.alt ?? ""} />
+    );
+  },
 }));
 
-vi.mock("@iconify/react", () => ({
-  Icon: () => <span aria-hidden="true" />,
-}));
+vi.mock("@iconify/react", () => ({ Icon: () => <span aria-hidden="true" /> }));
 
-const teachersByCourse: Record<string, ICourseCardTeacher[]> = Object.fromEntries(
-  COURSES.map((course, index) => [
-    course.slug,
-    [
-      {
-        slug: `docente-${index + 1}`,
-        name: `Docente ${index + 1}`,
-        photo: `/docente-${index + 1}.jpg`,
-        photoAlt: `Retrato del docente ${index + 1}`,
-      },
-    ],
-  ])
-);
+const COURSES: IPublicCourseCard[] = ["Piano", "Guitarra"].map((title, index) => ({
+  id: `c${index}`,
+  slug: title.toLowerCase(),
+  title,
+  category: "Instrumento",
+  categoryValue: "instrumento",
+  icon: "ph:music-notes",
+  description: `Curso de ${title}`,
+  learns: ["Técnica"],
+  image: `/curso-${index}.jpg`,
+  imageAlt: `Portada de ${title}`,
+  priceLabel: index === 0 ? "Desde $40 / mes" : null,
+  teachers: [{
+    id: `d${index}`,
+    slug: `docente-${index}`,
+    name: `Docente ${index}`,
+    headline: "Docente",
+    photo: `/docente-${index}.jpg`,
+    photoAlt: `Retrato del docente ${index}`,
+  }],
+}));
 
 describe("CoursesList", () => {
-  it("muestra los siete cursos y enlaza sus imágenes, acciones y docentes", () => {
-    render(<CoursesList teachersByCourse={teachersByCourse} />);
+  it("muestra los cursos y enlaza imágenes, acciones y docentes", () => {
+    render(<CoursesList courses={COURSES} />);
 
     const articles = screen.getAllByRole("article");
-    expect(articles).toHaveLength(7);
+    expect(articles).toHaveLength(2);
 
     COURSES.forEach((course, index) => {
       const article = articles[index];
-      const courseHref = `/courses/${course.slug}`;
-      const teacherHref = `/teachers/docente-${index + 1}`;
-
       expect(within(article).getByRole("heading", { name: course.title })).toBeVisible();
-      expect(
-        within(article).getByText(`${String(index + 1).padStart(2, "0")} / 07`)
-      ).toBeVisible();
-      expect(
-        within(article).getByRole("link", { name: `Ver el curso de ${course.title}` })
-      ).toHaveAttribute("href", courseHref);
-      expect(within(article).getByRole("link", { name: "Ver curso" })).toHaveAttribute(
-        "href",
-        courseHref
-      );
-      expect(
-        within(article).getByRole("link", { name: `Ver perfil de Docente ${index + 1}` })
-      ).toHaveAttribute("href", teacherHref);
-      expect(
-        within(article).getByRole("img", { name: course.catalogImageAlt })
-      ).toHaveAttribute("loading", "lazy");
+      expect(within(article).getByText(`${String(index + 1).padStart(2, "0")} / 02`)).toBeVisible();
+      expect(within(article).getByRole("link", { name: `Ver el curso de ${course.title}` })).toHaveAttribute("href", `/courses/${course.slug}`);
+      expect(within(article).getByRole("link", { name: "Ver curso" })).toHaveAttribute("href", `/courses/${course.slug}`);
+      expect(within(article).getByRole("link", { name: new RegExp(`Docente ${index}`) })).toHaveAttribute("href", `/teachers/docente-${index}`);
+      expect(within(article).getByRole("img", { name: course.imageAlt })).toHaveAttribute("loading", "lazy");
     });
+
+    expect(within(articles[0]).getByText("Desde $40 / mes")).toBeVisible();
+    expect(within(articles[1]).queryByText(/Desde/)).toBeNull();
   });
 });

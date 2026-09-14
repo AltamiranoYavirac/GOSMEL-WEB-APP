@@ -128,7 +128,7 @@ export default function GlobalSearchDialog() {
                 value={query}
                 onChange={(event) => onQueryChange(event.target.value)}
                 onKeyDown={onInputKeyDown}
-                placeholder="Busca estudiantes, docentes o cursos…"
+                placeholder="Busca estudiantes o cursos…"
                 className="h-12 min-w-0 flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
               />
               <kbd className="shrink-0 rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">

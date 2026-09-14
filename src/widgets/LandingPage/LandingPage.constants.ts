@@ -1,5 +1,3 @@
-import { AppImages } from "@/shared/config";
-
 export const LANDING_HIGHLIGHTS = [
   {
     title: "Cada etapa cierra en escena",
@@ -12,53 +10,6 @@ export const LANDING_HIGHLIGHTS = [
       "Instructores graduados de conservatorios de prestigio con años de experiencia pedagógica y artística.",
   },
 ] as const;
-
-export const LANDING_STATS = [
-  { value: "5+", label: "Años de experiencia" },
-  { value: "07", label: "Programas" },
-  { value: "100%", label: "Clases personalizadas" },
-  { value: "Lun—Sáb", label: "Horarios" },
-] as const;
-
-export const LANDING_PROGRAM_ORDER = [
-  "Piano",
-  "Violín",
-  "Guitarra",
-  "Solfeo",
-  "Guitarra eléctrica",
-  "Charango",
-  "Quena",
-] as const;
-
-export const LANDING_PROGRAM_IMAGES = {
-  Piano: AppImages.LANDING_PROGRAM_PIANO,
-  Violín: AppImages.LANDING_PROGRAM_VIOLIN,
-  Guitarra: AppImages.LANDING_PROGRAM_GUITAR,
-  Solfeo: AppImages.LANDING_PROGRAM_SOLFEO,
-  "Guitarra eléctrica": AppImages.LANDING_PROGRAM_ELECTRIC_GUITAR,
-  Charango: AppImages.LANDING_PROGRAM_CHARANGO,
-  Quena: AppImages.LANDING_PROGRAM_QUENA,
-} as const;
-
-export const LANDING_PROGRAM_IMAGE_ALTS = {
-  Piano: "Estudiante interpretando piano en una presentación de GOSMEL",
-  Violín: "Estudiante de violín durante una presentación de GOSMEL",
-  Guitarra: "Profesora acompañando a un estudiante durante una clase de guitarra",
-  Solfeo: "Teclado con una partitura de estudio sobre el atril",
-  "Guitarra eléctrica": "Programa de guitarra eléctrica de GOSMEL",
-  Charango: "Programa de charango de GOSMEL",
-  Quena: "Programa de quena de GOSMEL",
-} as const;
-
-export const LANDING_PROGRAM_DESCRIPTIONS = {
-  Piano: "Técnica y expresión, desde tus primeras melodías hasta un repertorio más personal.",
-  Violín: "Oído, precisión y sensibilidad con uno de los instrumentos más expresivos.",
-  Guitarra: "Acordes, punteos y teoría aplicada para tocar canciones y construir tu estilo.",
-  Solfeo: "La base para leer, comprender y expresar la música con mayor libertad.",
-  "Guitarra eléctrica": "Riffs, efectos y técnica para encontrar tu sonido y tocar con mayor seguridad.",
-  Charango: "La sonoridad y la tradición de este instrumento andino, con técnica y musicalidad.",
-  Quena: "Uno de los instrumentos ancestrales de los Andes y su particular color sonoro.",
-} as const;
 
 export const LANDING_STEPS = [
   {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 
 import {
@@ -37,6 +37,13 @@ export default function CrearCatedraDialog() {
     defaultValues: getCrearCatedraFormDefaults(),
   });
 
+  useEffect(() => {
+    const sugerido = options.data?.sugerenciaCodigo;
+    if (open && sugerido && !form.getValues("codigo")) {
+      form.setValue("codigo", sugerido);
+    }
+  }, [open, options.data?.sugerenciaCodigo, form]);
+
   const onSubmit = (values: ICrearCatedraFormValues) => {
     mutation.mutate(values, {
       onSuccess: () => {
@@ -64,7 +71,7 @@ export default function CrearCatedraDialog() {
         </AlertDialogHeader>
 
         <Form form={form} onSubmit={onSubmit} id="crear-catedra" className="flex flex-col gap-4">
-          <TextField name="codigo" label="Código" placeholder="Ej. CAT-2026-01" />
+          <TextField name="codigo" label="Código" placeholder={options.data?.sugerenciaCodigo ?? "Ej. CAT-2026-01"} />
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <SelectField
@@ -90,18 +97,18 @@ export default function CrearCatedraDialog() {
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <TextField name="aula" label="Aula (opcional)" placeholder="Ej. Sala 1" />
-            <NumberField name="cupoMaximo" label="Cupo máximo" placeholder="10" asNumber />
+            <NumberField name="cupoMaximo" label="Cupo máximo" placeholder="15" asNumber />
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <DateField name="fechaInicio" label="Inicio (opcional)" />
+            <DateField name="fechaInicio" label="Inicio" />
             <DateField name="fechaFin" label="Fin (opcional)" />
           </div>
 
           <div className="flex items-center gap-3 pt-1">
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">Horario</span>
             <span className="h-px flex-1 bg-border" aria-hidden="true" />
-            <span className="text-xs text-muted-foreground">Opcional</span>
+            <span className="text-xs text-muted-foreground">Opcional · podrás agregar más después</span>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">

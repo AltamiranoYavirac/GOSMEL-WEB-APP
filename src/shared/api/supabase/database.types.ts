@@ -107,6 +107,61 @@ export type Database = {
           },
         ]
       }
+      activos_sitio: {
+        Row: {
+          actualizado_por: string | null
+          clave: string
+          nombre: string
+          orden: number
+          public_id: string | null
+          publicado: boolean
+          texto_alt: string | null
+          updated_at: string
+        }
+        Insert: {
+          actualizado_por?: string | null
+          clave: string
+          nombre: string
+          orden?: number
+          public_id?: string | null
+          publicado?: boolean
+          texto_alt?: string | null
+          updated_at?: string
+        }
+        Update: {
+          actualizado_por?: string | null
+          clave?: string
+          nombre?: string
+          orden?: number
+          public_id?: string | null
+          publicado?: boolean
+          texto_alt?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activos_sitio_actualizado_por_fkey"
+            columns: ["actualizado_por"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "activos_sitio_actualizado_por_fkey"
+            columns: ["actualizado_por"]
+            isOneToOne: false
+            referencedRelation: "v_estudiantes_emancipables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "activos_sitio_actualizado_por_fkey"
+            columns: ["actualizado_por"]
+            isOneToOne: false
+            referencedRelation: "v_representantes_vinculables"
+            referencedColumns: ["perfil_sugerido"]
+          },
+        ]
+      }
       acuerdos_pago: {
         Row: {
           acordado_por: string | null
@@ -786,11 +841,19 @@ export type Database = {
       }
       cursos: {
         Row: {
+          categoria: Database["public"]["Enums"]["categoria_curso"]
+          cierre_etapa: string | null
           created_at: string
+          cta_descripcion: string | null
+          cta_primario_texto: string | null
+          cta_secundario_texto: string | null
+          cta_titulo: string | null
           descripcion: string
           destacado: boolean
           duracion_semanas: number | null
           etiqueta_precio: string | null
+          formato_clase: string | null
+          horario_resumen: string | null
           horas_totales: number | null
           id: string
           instrumento_id: string | null
@@ -800,8 +863,11 @@ export type Database = {
           nombre: string
           orden: number
           portada_public_id: string | null
+          portada_texto_alt: string | null
           precio_referencial: number | null
           publicado: boolean
+          publico_edad: string | null
+          publico_nivel: string | null
           puntuacion_promedio: number
           resumen: string | null
           slug: string
@@ -810,11 +876,19 @@ export type Database = {
           video_intro_url: string | null
         }
         Insert: {
+          categoria?: Database["public"]["Enums"]["categoria_curso"]
+          cierre_etapa?: string | null
           created_at?: string
+          cta_descripcion?: string | null
+          cta_primario_texto?: string | null
+          cta_secundario_texto?: string | null
+          cta_titulo?: string | null
           descripcion: string
           destacado?: boolean
           duracion_semanas?: number | null
           etiqueta_precio?: string | null
+          formato_clase?: string | null
+          horario_resumen?: string | null
           horas_totales?: number | null
           id?: string
           instrumento_id?: string | null
@@ -824,8 +898,11 @@ export type Database = {
           nombre: string
           orden?: number
           portada_public_id?: string | null
+          portada_texto_alt?: string | null
           precio_referencial?: number | null
           publicado?: boolean
+          publico_edad?: string | null
+          publico_nivel?: string | null
           puntuacion_promedio?: number
           resumen?: string | null
           slug: string
@@ -834,11 +911,19 @@ export type Database = {
           video_intro_url?: string | null
         }
         Update: {
+          categoria?: Database["public"]["Enums"]["categoria_curso"]
+          cierre_etapa?: string | null
           created_at?: string
+          cta_descripcion?: string | null
+          cta_primario_texto?: string | null
+          cta_secundario_texto?: string | null
+          cta_titulo?: string | null
           descripcion?: string
           destacado?: boolean
           duracion_semanas?: number | null
           etiqueta_precio?: string | null
+          formato_clase?: string | null
+          horario_resumen?: string | null
           horas_totales?: number | null
           id?: string
           instrumento_id?: string | null
@@ -848,8 +933,11 @@ export type Database = {
           nombre?: string
           orden?: number
           portada_public_id?: string | null
+          portada_texto_alt?: string | null
           precio_referencial?: number | null
           publicado?: boolean
+          publico_edad?: string | null
+          publico_nivel?: string | null
           puntuacion_promedio?: number
           resumen?: string | null
           slug?: string
@@ -2026,17 +2114,50 @@ export type Database = {
           },
         ]
       }
+      programa_objetivos: {
+        Row: {
+          id: string
+          objetivo: string
+          orden: number
+          programa_id: string
+        }
+        Insert: {
+          id?: string
+          objetivo: string
+          orden?: number
+          programa_id: string
+        }
+        Update: {
+          id?: string
+          objetivo?: string
+          orden?: number
+          programa_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "programa_objetivos_programa_id_fkey"
+            columns: ["programa_id"]
+            isOneToOne: false
+            referencedRelation: "programas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       programas: {
         Row: {
           created_at: string
           descripcion: string | null
+          etiqueta_precio: string | null
           id: string
           imagen_public_id: string | null
+          imagen_texto_alt: string | null
           instrumento_id: string | null
+          mostrar_precio: boolean
           nivel: Database["public"]["Enums"]["nivel_curso"] | null
           nombre: string
           objetivos: string | null
           orden: number
+          precio_referencial: number | null
           publicado: boolean
           slug: string
           updated_at: string
@@ -2044,13 +2165,17 @@ export type Database = {
         Insert: {
           created_at?: string
           descripcion?: string | null
+          etiqueta_precio?: string | null
           id?: string
           imagen_public_id?: string | null
+          imagen_texto_alt?: string | null
           instrumento_id?: string | null
+          mostrar_precio?: boolean
           nivel?: Database["public"]["Enums"]["nivel_curso"] | null
           nombre: string
           objetivos?: string | null
           orden?: number
+          precio_referencial?: number | null
           publicado?: boolean
           slug: string
           updated_at?: string
@@ -2058,13 +2183,17 @@ export type Database = {
         Update: {
           created_at?: string
           descripcion?: string | null
+          etiqueta_precio?: string | null
           id?: string
           imagen_public_id?: string | null
+          imagen_texto_alt?: string | null
           instrumento_id?: string | null
+          mostrar_precio?: boolean
           nivel?: Database["public"]["Enums"]["nivel_curso"] | null
           nombre?: string
           objetivos?: string | null
           orden?: number
+          precio_referencial?: number | null
           publicado?: boolean
           slug?: string
           updated_at?: string
@@ -2498,6 +2627,7 @@ export type Database = {
           autor_rol: string | null
           cita: string
           created_at: string
+          curso_id: string | null
           estudiante_id: string | null
           foto_public_id: string | null
           id: string
@@ -2512,6 +2642,7 @@ export type Database = {
           autor_rol?: string | null
           cita: string
           created_at?: string
+          curso_id?: string | null
           estudiante_id?: string | null
           foto_public_id?: string | null
           id?: string
@@ -2526,6 +2657,7 @@ export type Database = {
           autor_rol?: string | null
           cita?: string
           created_at?: string
+          curso_id?: string | null
           estudiante_id?: string | null
           foto_public_id?: string | null
           id?: string
@@ -2555,6 +2687,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_representantes_vinculables"
             referencedColumns: ["perfil_sugerido"]
+          },
+          {
+            foreignKeyName: "testimonios_curso_id_fkey"
+            columns: ["curso_id"]
+            isOneToOne: false
+            referencedRelation: "cursos"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "testimonios_estudiante_id_fkey"
@@ -2866,6 +3005,14 @@ export type Database = {
         }
         Returns: undefined
       }
+      crear_catedra_con_horario: {
+        Args: { p_catedra: Json; p_horario?: Json }
+        Returns: string
+      }
+      crear_curso_con_catedra: {
+        Args: { p_catedra?: Json; p_curso: Json }
+        Returns: string
+      }
       cuenta_activa: { Args: never; Returns: boolean }
       custom_access_token_hook: { Args: { event: Json }; Returns: Json }
       dar_de_baja_estudiante: {
@@ -2932,6 +3079,7 @@ export type Database = {
       }
     }
     Enums: {
+      categoria_curso: "instrumento" | "lenguaje_musical" | "otro"
       categoria_medio: "instalaciones" | "conciertos" | "aulas" | "general"
       estado_acuerdo: "vigente" | "suspendido" | "finalizado"
       estado_asistencia: "presente" | "ausente" | "justificado" | "atraso"
@@ -3103,6 +3251,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      categoria_curso: ["instrumento", "lenguaje_musical", "otro"],
       categoria_medio: ["instalaciones", "conciertos", "aulas", "general"],
       estado_acuerdo: ["vigente", "suspendido", "finalizado"],
       estado_asistencia: ["presente", "ausente", "justificado", "atraso"],

@@ -11,7 +11,7 @@ export function useCatedraOptions(enabled = true) {
     queryFn: async () => {
       const { data, error } = await getCatedraOptions();
       if (error) throw new Error(error);
-      return data ?? { cursos: [], docentes: [] };
+      return data ?? { cursos: [], docentes: [], sugerenciaCodigo: "" };
     },
     retry: false,
     enabled,

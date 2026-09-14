@@ -13,7 +13,7 @@ export async function getCursos(
   const { data, error } = await supabase
     .from("cursos")
     .select(
-      "id, nombre, nivel, modalidad, instrumento_id, instrumentos(nombre), puntuacion_promedio, total_resenas, publicado, destacado, curso_modulos(id)"
+      "id, nombre, nivel, modalidad, instrumento_id, instrumentos(nombre), puntuacion_promedio, total_resenas, publicado, curso_modulos(id)"
     )
     .order("nombre", { ascending: true })
     .limit(300);
@@ -31,7 +31,6 @@ export async function getCursos(
     rating: curso.puntuacion_promedio,
     totalResenas: curso.total_resenas,
     modulos: curso.curso_modulos?.length ?? 0,
-    destacado: curso.destacado,
     publicado: curso.publicado,
   }));
 

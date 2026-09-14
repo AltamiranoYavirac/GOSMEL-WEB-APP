@@ -7,7 +7,6 @@ import { AdminDataTable, AdminPageHeader, Avatar, AvatarFallback, Badge, Button,
 import { initialsOf } from "@/shared/lib/formatters";
 
 import { useUsuarios } from "../hooks/useUsuarios";
-import { useAsignarRolDocente } from "../hooks/useAsignarRolDocente";
 import { useQuitarRol } from "../hooks/useQuitarRol";
 import { useUpdateUsuarioActivo } from "../hooks/useUpdateUsuarioActivo";
 import { ROL_BADGE, type IUsuarioRow } from "../model/usuario.types";
@@ -17,7 +16,6 @@ import EditarContactoDialog from "./EditarContactoDialog";
 export default function UsuariosList() {
   const { data, isPending } = useUsuarios();
   const mutation = useUpdateUsuarioActivo();
-  const asignarDocente = useAsignarRolDocente();
   const quitarRol = useQuitarRol();
   const [estudianteAsignar, setEstudianteAsignar] = useState<IUsuarioRow | null>(null);
   const rows = data ?? [];
@@ -111,15 +109,11 @@ export default function UsuariosList() {
         emptyDescription="Cuando se registren cuentas aparecerán aquí."
         countLabel="usuarios"
         rowActions={(row) => {
-          const puedeAsignarDocente = !row.roles.includes("docente");
           const puedeAsignarEstudiante = !row.roles.includes("estudiante");
-          const puedeQuitarDocente = row.roles.includes("docente");
           const puedeQuitarEstudiante = row.roles.includes("estudiante");
           const puedeQuitarRepresentante = row.roles.includes("representante");
           const sinOpciones =
-            !puedeAsignarDocente &&
             !puedeAsignarEstudiante &&
-            !puedeQuitarDocente &&
             !puedeQuitarEstudiante &&
             !puedeQuitarRepresentante;
 
@@ -135,14 +129,6 @@ export default function UsuariosList() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {puedeAsignarDocente ? (
-                    <DropdownMenuItem
-                      onSelect={() => asignarDocente.mutate({ perfilId: row.id, nombre: row.nombre })}
-                    >
-                      <Icon icon="ph:chalkboard-teacher" aria-hidden="true" />
-                      Asignar docente
-                    </DropdownMenuItem>
-                  ) : null}
                   {puedeAsignarEstudiante ? (
                     <DropdownMenuItem onSelect={() => setEstudianteAsignar(row)}>
                       <Icon icon="ph:student" aria-hidden="true" />
@@ -150,14 +136,8 @@ export default function UsuariosList() {
                     </DropdownMenuItem>
                   ) : null}
 
-                  {puedeQuitarDocente || puedeQuitarEstudiante || puedeQuitarRepresentante ? (
+                  {puedeQuitarEstudiante || puedeQuitarRepresentante ? (
                     <DropdownMenuSeparator />
-                  ) : null}
-                  {puedeQuitarDocente ? (
-                    <DropdownMenuItem onSelect={() => quitarRol.mutate({ perfilId: row.id, rol: "docente" })}>
-                      <Icon icon="ph:minus-circle" aria-hidden="true" />
-                      Quitar docente
-                    </DropdownMenuItem>
                   ) : null}
                   {puedeQuitarEstudiante ? (
                     <DropdownMenuItem onSelect={() => quitarRol.mutate({ perfilId: row.id, rol: "estudiante" })}>

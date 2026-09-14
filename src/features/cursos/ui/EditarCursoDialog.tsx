@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { Icon } from "@iconify/react";
 
+import { Form, NumberField, SelectField, SwitchField, TextareaField, TextField, useAppForm } from "@/shared/form";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -16,21 +17,14 @@ import {
   Skeleton,
   Spinner,
 } from "@/shared/ui";
-import {
-  Form,
-  NumberField,
-  SelectField,
-  SwitchField,
-  TextField,
-  TextareaField,
-  useAppForm,
-} from "@/shared/form";
 
-import { useUpdateCurso } from "../hooks/useUpdateCurso";
 import { useCurso } from "../hooks/useCurso";
+import { useCursoOptions } from "../hooks/useCursoOptions";
+import { useUpdateCurso } from "../hooks/useUpdateCurso";
 import {
-  buildEditarCursoPayload,
+  CATEGORIA_EDITAR_CURSO_OPCIONES,
   editarCursoFormSchema,
+  getEditarCursoFormDefaults,
   mapCursoDetalleToFormValues,
   MODALIDAD_CURSO_OPCIONES,
   NIVEL_CURSO_OPCIONES,
@@ -38,47 +32,45 @@ import {
 } from "../model/EditarCursoForm.config";
 import type { IEditarCursoDialogProps } from "./EditarCursoDialog.types";
 
-const EMPTY_DEFAULTS: IEditarCursoFormValues = {
-  nombre: "",
-  resumen: "",
-  descripcion: "",
-  nivel: "basico",
-  modalidad: "presencial",
-  duracionSemanas: null,
-  horasTotales: null,
-  precioReferencial: null,
-  etiquetaPrecio: "",
-  mostrarPrecio: false,
-  videoIntroUrl: "",
-  portadaPublicId: "",
-  publicado: false,
-  destacado: false,
-};
-
 export default function EditarCursoDialog({ curso, open, onOpenChange, onSuccess }: IEditarCursoDialogProps) {
   const { data: detalle, isLoading } = useCurso(open && curso ? curso.id : null);
+  const options = useCursoOptions(open);
   const updateMutation = useUpdateCurso();
-
   const form = useAppForm<IEditarCursoFormValues>({
     schema: editarCursoFormSchema,
-    defaultValues: EMPTY_DEFAULTS,
+    defaultValues: getEditarCursoFormDefaults(),
   });
+  const portadaArchivo = form.watch("portadaArchivo");
+  const portadaPublicId = form.watch("portadaPublicId");
+  const categoria = form.watch("categoria");
+  const duracionPermanente = form.watch("duracionPermanente");
 
   useEffect(() => {
-    if (detalle) {
-      form.reset(mapCursoDetalleToFormValues(detalle));
-    }
+    if (detalle) form.reset(mapCursoDetalleToFormValues(detalle));
   }, [detalle, form]);
+
+  useEffect(() => {
+    if (categoria !== "instrumento") {
+      form.setValue("instrumentoId", "", { shouldDirty: true });
+    }
+  }, [categoria, form]);
+
+  useEffect(() => {
+    if (duracionPermanente) {
+      form.setValue("duracionSemanas", null, { shouldDirty: true });
+      form.setValue("horasTotales", null, { shouldDirty: true });
+    }
+  }, [duracionPermanente, form]);
 
   if (!curso) return null;
 
   const onSubmit = (values: IEditarCursoFormValues) => {
     updateMutation.mutate(
-      { id: curso.id, patch: buildEditarCursoPayload(values) },
+      { id: curso.id, values, currentPublicId: detalle?.portadaPublicId || null },
       {
         onSuccess: () => {
           onOpenChange(false);
-          if (onSuccess) onSuccess();
+          onSuccess?.();
         },
       }
     );
@@ -86,19 +78,10 @@ export default function EditarCursoDialog({ curso, open, onOpenChange, onSuccess
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="w-full max-w-3xl sm:max-w-4xl max-h-[90vh] overflow-y-auto p-6 sm:p-8">
+      <AlertDialogContent className="max-h-[90vh] w-full max-w-2xl overflow-y-auto p-6 sm:max-w-4xl sm:p-8">
         <AlertDialogHeader>
-          <div className="flex items-center gap-3 text-primary">
-            <div className="p-2.5 rounded-xl bg-primary/10">
-              <Icon icon="ph:book-open" width={24} height={24} />
-            </div>
-            <div>
-              <AlertDialogTitle className="text-xl font-bold">Editar Curso: {curso.nombre}</AlertDialogTitle>
-              <AlertDialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                Modifique la información académica, comercial y de presentación del curso.
-              </AlertDialogDescription>
-            </div>
-          </div>
+          <AlertDialogTitle>Editar curso: {curso.nombre}</AlertDialogTitle>
+          <AlertDialogDescription>Actualiza su contenido académico, comercial y público.</AlertDialogDescription>
         </AlertDialogHeader>
 
         {isLoading ? (
@@ -108,65 +91,90 @@ export default function EditarCursoDialog({ curso, open, onOpenChange, onSuccess
             <Skeleton className="h-24 w-full" />
           </div>
         ) : (
-          <Form form={form} onSubmit={onSubmit} id={`editar-curso-${curso.id}`} className="flex flex-col gap-4">
+          <Form form={form} onSubmit={onSubmit} id={`editar-curso-${curso.id}`} className="flex flex-col gap-5">
             <ImageUploadField
-              label="Foto de portada para la web pública"
-              value={form.watch("portadaPublicId")}
-              onChange={(val) => form.setValue("portadaPublicId", val, { shouldDirty: true })}
-              folder="gosmel/cursos"
+              label="Portada pública"
+              value={portadaPublicId}
+              file={portadaArchivo}
+              onFileChange={(file) => {
+                form.setValue("portadaArchivo", file, { shouldDirty: true });
+                if (file) form.setValue("quitarPortada", false, { shouldDirty: true });
+              }}
+              onRemove={() => {
+                form.setValue("portadaPublicId", "", { shouldDirty: true });
+                form.setValue("quitarPortada", true, { shouldDirty: true });
+              }}
+              disabled={updateMutation.isPending}
             />
+            <TextField name="portadaTextoAlt" label="Texto alternativo de portada" />
 
-            <TextField name="nombre" label="Nombre del curso" required />
-            <TextField name="resumen" label="Resumen corto" placeholder="Frase breve para tarjetas y catálogo..." />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <TextField name="nombre" label="Nombre del curso" required />
+              <SelectField name="categoria" label="Categoría" options={CATEGORIA_EDITAR_CURSO_OPCIONES} required />
+            </div>
+            <TextField name="resumen" label="Resumen para catálogo" />
             <TextareaField name="descripcion" label="Descripción completa" required rows={4} />
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <SelectField name="nivel" label="Nivel" options={NIVEL_CURSO_OPCIONES} />
               <SelectField name="modalidad" label="Modalidad" options={MODALIDAD_CURSO_OPCIONES} />
-            </div>
-
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <NumberField name="duracionSemanas" label="Duración (semanas)" placeholder="—" asNumber />
-              <NumberField name="horasTotales" label="Horas totales" placeholder="—" asNumber />
-            </div>
-
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <NumberField
-                name="precioReferencial"
-                label="Precio referencial ($ USD)"
-                placeholder="—"
-                asNumber
-                integerOnly={false}
+              <SelectField
+                name="instrumentoId"
+                label="Instrumento"
+                placeholder="Seleccione instrumento"
+                required={categoria === "instrumento"}
+                disabled={options.isPending || categoria !== "instrumento"}
+                options={(options.data?.instrumentos ?? []).map((instrumento) => ({
+                  value: instrumento.id,
+                  label: instrumento.nombre,
+                }))}
               />
-              <TextField name="etiquetaPrecio" label="Etiqueta de precio" placeholder="Ej. Desde $40 / mes" />
+              <NumberField name="orden" label="Orden" asNumber />
             </div>
 
-            <TextField
-              name="videoIntroUrl"
-              label="URL video intro / muestra"
-              placeholder="https://www.youtube.com/watch?v=..."
-            />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="space-y-2">
+                <NumberField
+                  name="duracionSemanas"
+                  label="Duración en semanas"
+                  asNumber
+                  disabled={duracionPermanente}
+                />
+                <SwitchField name="duracionPermanente" label="Curso permanente" />
+              </div>
+              <NumberField name="horasTotales" label="Horas totales" asNumber disabled={duracionPermanente} />
+              <NumberField name="precioReferencial" label="Precio referencial" asNumber integerOnly={false} />
+            </div>
+            <TextField name="etiquetaPrecio" label="Etiqueta de precio" placeholder="Ej. Desde $40 / mes" />
 
-            <div className="flex flex-wrap items-center gap-6 pt-3 border-t border-border/40">
-              <SwitchField name="publicado" label="Publicar en el catálogo web" />
-              <SwitchField name="destacado" label="Curso destacado" />
-              <SwitchField name="mostrarPrecio" label="Mostrar precio en catálogo" />
+            <div className="flex items-center gap-3 pt-1">
+              <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">Detalle público</span>
+              <span className="h-px flex-1 bg-border" aria-hidden="true" />
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <TextField name="publicoEdad" label="Público por edad" />
+              <TextField name="publicoNivel" label="Público por nivel" />
+              <TextField name="formatoClase" label="Formato de clase" />
+              <TextField name="horarioResumen" label="Resumen de horarios" />
+            </div>
+            <TextField name="cierreEtapa" label="Cierre de etapa" />
+            <TextareaField name="ctaTitulo" label="Título de la sección de inscripción" placeholder="Ej. ¿Listo para empezar?" rows={2} />
+            <TextareaField name="ctaDescripcion" label="Descripción de la sección de inscripción" placeholder="Ej. Reserva una clase de prueba sin compromiso" rows={3} />
+            <TextareaField name="ctaPrimarioTexto" label="Texto del botón de inscripción" placeholder="Ej. Reservar clase de prueba" rows={2} />
+            <TextareaField name="ctaSecundarioTexto" label="Texto del botón secundario" placeholder="Ej. Ver otros cursos" rows={2} />
+
+            <div className="flex flex-wrap items-center gap-6 border-t border-border/40 pt-3">
+              <SwitchField name="publicado" label="Publicar en catálogo" />
+              <SwitchField name="mostrarPrecio" label="Mostrar precio" />
             </div>
           </Form>
         )}
 
-        <AlertDialogFooter className="pt-2 gap-3">
-          <AlertDialogCancel type="button" disabled={updateMutation.isPending} className="h-10 px-5">
-            Cancelar
-          </AlertDialogCancel>
-          <Button
-            form={`editar-curso-${curso.id}`}
-            type="submit"
-            disabled={updateMutation.isPending || isLoading}
-            className="h-10 px-6 font-semibold"
-          >
-            {updateMutation.isPending && <Spinner className="size-4 mr-2" />}
-            Guardar Cambios
+        <AlertDialogFooter>
+          <AlertDialogCancel type="button" disabled={updateMutation.isPending}>Cancelar</AlertDialogCancel>
+          <Button form={`editar-curso-${curso.id}`} type="submit" disabled={updateMutation.isPending || isLoading}>
+            {updateMutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:check" aria-hidden="true" />}
+            Guardar cambios
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -11,7 +11,7 @@ export function useCursoOptions(enabled = true) {
     queryFn: async () => {
       const { data, error } = await getCursoOptions();
       if (error) throw new Error(error);
-      return data ?? { instrumentos: [], docentes: [] };
+      return data ?? { instrumentos: [], nextOrden: 1 };
     },
     retry: false,
     enabled,

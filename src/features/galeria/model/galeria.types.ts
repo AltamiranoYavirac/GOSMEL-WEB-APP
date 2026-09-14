@@ -9,6 +9,9 @@ export interface IGaleriaMedioRow {
   textoAlt: string;
   categoria: TCategoriaMedio;
   publicId: string;
+  cursoId: string | null;
+  curso: string | null;
+  orden: number;
   publicado: boolean;
 }
 
@@ -18,9 +21,3 @@ export const CATEGORIA_MEDIO_BADGE: Record<TCategoriaMedio, { label: string; var
   aulas: { label: "Aulas", variant: "outline" },
   general: { label: "General", variant: "ghost" },
 };
-
-const CLOUDINARY_IMAGE_BASE = "https://res.cloudinary.com/dv9lm0fnm/image/upload";
-
-export function galeriaImageUrl(publicId: string, width: number): string {
-  return `${CLOUDINARY_IMAGE_BASE}/q_auto,f_auto,w_${width}/${publicId}`;
-}

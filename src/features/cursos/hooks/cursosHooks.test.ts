@@ -38,7 +38,14 @@ vi.mock("../api/eliminarModulo", () => ({ eliminarModulo: api.eliminarModulo }))
 vi.mock("../api/crearLeccion", () => ({ crearLeccion: api.crearLeccion }))
 vi.mock("../api/updateLeccion", () => ({ updateLeccion: api.updateLeccion }))
 vi.mock("../api/eliminarLeccion", () => ({ eliminarLeccion: api.eliminarLeccion }))
-vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
+vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn(), warning: vi.fn() } }))
+vi.mock("@/shared/api/persist-cloudinary-image", () => ({
+  persistCloudinaryImage: async ({ persist }: { persist: (publicId: string | null) => Promise<{ data: unknown; error: string | null }> }) => ({
+    ...(await persist(null)),
+    cleanupError: null,
+  }),
+}))
+vi.mock("@/shared/api/cloudinary-client", () => ({ deleteCloudinaryImage: vi.fn().mockResolvedValue({ error: null }) }))
 
 import { createQueryWrapper, createTestQueryClient } from "@/test/query"
 
@@ -58,6 +65,7 @@ import { useEliminarModulo } from "./useEliminarModulo"
 import { useUpdateCurso } from "./useUpdateCurso"
 import { useUpdateLeccion } from "./useUpdateLeccion"
 import { useUpdateModulo } from "./useUpdateModulo"
+import { getCrearCursoFormDefaults } from "../model/CrearCursoForm.config"
 
 const OK = { data: [], error: null }
 
@@ -69,6 +77,7 @@ describe("cursos hooks", () => {
   beforeEach(() => {
     vi.clearAllMocks()
     for (const fn of Object.values(api)) fn.mockResolvedValue(OK)
+    api.eliminarCurso.mockResolvedValue({ data: { publicIds: [] }, error: null })
   })
 
   it("las queries resuelven", async () => {
@@ -88,24 +97,25 @@ describe("cursos hooks", () => {
   })
 
   it("las mutations llaman a la api alineada", async () => {
-    const cases: Array<[() => { mutateAsync: (v: never) => Promise<unknown> }, ReturnType<typeof vi.fn>]> = [
-      [useCrearCurso, api.crearCurso],
-      [useUpdateCurso, api.updateCurso],
-      [useEliminarCurso, api.eliminarCurso],
-      [() => useCrearModulo("k1"), api.crearModulo],
-      [() => useUpdateModulo("k1"), api.updateModulo],
-      [() => useEliminarModulo("k1"), api.eliminarModulo],
-      [() => useCrearLeccion("m1"), api.crearLeccion],
-      [() => useUpdateLeccion("m1"), api.updateLeccion],
-      [() => useEliminarLeccion("m1"), api.eliminarLeccion],
-      [() => useCrearHabilidad("k1"), api.crearHabilidad],
-      [() => useEliminarHabilidad("k1"), api.eliminarHabilidad],
+    const courseValues = { ...getCrearCursoFormDefaults(), nombre: "Curso", descripcion: "Descripción válida" }
+    const cases: Array<[() => { mutateAsync: (v: never) => Promise<unknown> }, ReturnType<typeof vi.fn>, unknown]> = [
+      [useCrearCurso, api.crearCurso, courseValues],
+      [useUpdateCurso, api.updateCurso, { id: "k1", patch: { nombre: "Nuevo" } }],
+      [useEliminarCurso, api.eliminarCurso, "k1"],
+      [() => useCrearModulo("k1"), api.crearModulo, "x"],
+      [() => useUpdateModulo("k1"), api.updateModulo, "x"],
+      [() => useEliminarModulo("k1"), api.eliminarModulo, "x"],
+      [() => useCrearLeccion("m1"), api.crearLeccion, "x"],
+      [() => useUpdateLeccion("m1"), api.updateLeccion, "x"],
+      [() => useEliminarLeccion("m1"), api.eliminarLeccion, "x"],
+      [() => useCrearHabilidad("k1"), api.crearHabilidad, "x"],
+      [() => useEliminarHabilidad("k1"), api.eliminarHabilidad, "x"],
     ]
 
-    for (const [hook, expected] of cases) {
+    for (const [hook, expected, input] of cases) {
       const { result, unmount } = renderHook(hook, { wrapper: wrapper() })
       await act(async () => {
-        await result.current.mutateAsync("x" as never)
+        await result.current.mutateAsync(input as never)
       })
       expect(expected).toHaveBeenCalled()
       unmount()
@@ -124,24 +134,25 @@ describe("cursos hooks", () => {
   it("propaga errores en mutations", async () => {
     for (const fn of Object.values(api)) fn.mockResolvedValue({ data: null, error: "boom" })
 
-    const mutations: Array<() => { mutateAsync: (v: never) => Promise<unknown> }> = [
-      useCrearCurso,
-      useUpdateCurso,
-      useEliminarCurso,
-      () => useCrearModulo("k1"),
-      () => useUpdateModulo("k1"),
-      () => useEliminarModulo("k1"),
-      () => useCrearLeccion("m1"),
-      () => useUpdateLeccion("m1"),
-      () => useEliminarLeccion("m1"),
-      () => useCrearHabilidad("k1"),
-      () => useEliminarHabilidad("k1"),
+    const courseValues = { ...getCrearCursoFormDefaults(), nombre: "Curso", descripcion: "Descripción válida" }
+    const mutations: Array<[() => { mutateAsync: (v: never) => Promise<unknown> }, unknown]> = [
+      [useCrearCurso, courseValues],
+      [useUpdateCurso, { id: "k1", patch: { nombre: "Nuevo" } }],
+      [useEliminarCurso, "k1"],
+      [() => useCrearModulo("k1"), "x"],
+      [() => useUpdateModulo("k1"), "x"],
+      [() => useEliminarModulo("k1"), "x"],
+      [() => useCrearLeccion("m1"), "x"],
+      [() => useUpdateLeccion("m1"), "x"],
+      [() => useEliminarLeccion("m1"), "x"],
+      [() => useCrearHabilidad("k1"), "x"],
+      [() => useEliminarHabilidad("k1"), "x"],
     ]
 
-    for (const hook of mutations) {
+    for (const [hook, input] of mutations) {
       const { result, unmount } = renderHook(hook, { wrapper: wrapper() })
       await act(async () => {
-        await expect(result.current.mutateAsync("x" as never)).rejects.toThrow("boom")
+        await expect(result.current.mutateAsync(input as never)).rejects.toThrow("boom")
       })
       unmount()
     }
