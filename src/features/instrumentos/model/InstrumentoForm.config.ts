@@ -3,7 +3,7 @@ import { z } from "zod";
 export const instrumentoFormSchema = z.object({
   nombre: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
   tipoInstrumentoId: z.string().min(1, "Debe seleccionar una familia de instrumento"),
-  icono: z.string().optional(),
+  icono: z.string().min(1, "Selecciona un icono"),
   orden: z.number().int().min(0).default(0),
   activo: z.boolean().default(true),
 });

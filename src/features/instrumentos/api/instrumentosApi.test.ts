@@ -15,6 +15,7 @@ import { crearInstrumento, eliminarInstrumento as eliminarInstrumentoDirecto, up
 import { eliminarInstrumento } from "./eliminarInstrumento"
 import { getInstrumentos } from "./getInstrumentos"
 import { crearTipoInstrumento, eliminarTipoInstrumento, getTiposInstrumento } from "./getTiposInstrumento"
+import { updateTipoInstrumento } from "./updateTipoInstrumento"
 
 function configure(tables: Record<string, Record<string, unknown>[]> = {}): TFakeSupabaseClient {
   const fake = createFakeSupabase(tables)
@@ -72,6 +73,14 @@ describe("instrumentos API", () => {
     await expect(updateInstrumento("i1", INSTRUMENTO_VALUES)).resolves.toEqual({ data: { id: "i1" }, error: null })
   })
 
+  it("crearInstrumento resuelve colisión de slug de forma secuencial", async () => {
+    const tables = { instrumentos: [{ id: "i1", slug: "guitarra" }] }
+    configure(tables)
+
+    await crearInstrumento(INSTRUMENTO_VALUES)
+    expect(tables.instrumentos[1].slug).toBe("guitarra-2")
+  })
+
   it("eliminarInstrumento del módulo crear responde sin error", async () => {
     configure({ instrumentos: [{ id: "i1" }] })
 
@@ -97,6 +106,10 @@ describe("instrumentos API", () => {
     configure({ tipos_instrumento: [{ id: "t1" }] })
     await expect(crearTipoInstrumento({ nombre: " Viento ", orden: 2, activo: true })).resolves.toEqual({
       data: { id: expect.any(String) },
+      error: null,
+    })
+    await expect(updateTipoInstrumento("t1", { nombre: " Cuerdas ", orden: 1, activo: false })).resolves.toEqual({
+      data: { id: "t1" },
       error: null,
     })
     await expect(eliminarTipoInstrumento("t1")).resolves.toEqual({ error: null })

@@ -12,12 +12,27 @@ function slugify(text: string): string {
     .replace(/(^-|-$)+/g, "");
 }
 
+async function generarSlugUnico(
+  supabase: ReturnType<typeof createSupabaseBrowserClient>,
+  base: string
+): Promise<string> {
+  let slug = base;
+  let intento = 1;
+
+  while (true) {
+    const { data } = await supabase.from("instrumentos").select("slug").eq("slug", slug).maybeSingle();
+    if (!data) return slug;
+    intento += 1;
+    slug = `${base}-${intento}`;
+  }
+}
+
 export async function crearInstrumento(
   values: IInstrumentoFormValues
 ): Promise<{ data: { id: string } | null; error: string | null }> {
   const supabase = createSupabaseBrowserClient();
   const baseSlug = slugify(values.nombre) || "instrumento";
-  const slug = `${baseSlug}-${Date.now().toString(36)}`;
+  const slug = await generarSlugUnico(supabase, baseSlug);
 
   const { data, error } = await supabase
     .from("instrumentos")

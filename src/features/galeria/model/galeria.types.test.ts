@@ -1,16 +1,17 @@
 import { describe, expect, it } from "vitest"
 
-import { CATEGORIA_MEDIO_BADGE, galeriaImageUrl } from "./galeria.types"
+import { buildCloudinaryImageUrl } from "@/shared/lib"
+import { CATEGORIA_MEDIO_BADGE } from "./galeria.types"
 
-describe("galeriaImageUrl", () => {
+describe("buildCloudinaryImageUrl", () => {
   it("construye la URL de Cloudinary con transformaciones", () => {
-    expect(galeriaImageUrl("gosmel/galeria/foto1", 800)).toBe(
+    expect(buildCloudinaryImageUrl("gosmel/galeria/foto1", "q_auto,f_auto,w_800")).toBe(
       "https://res.cloudinary.com/dv9lm0fnm/image/upload/q_auto,f_auto,w_800/gosmel/galeria/foto1",
     )
   })
 
-  it("respeta el ancho solicitado", () => {
-    expect(galeriaImageUrl("a", 320)).toContain("w_320")
+  it("respeta la transformación solicitada", () => {
+    expect(buildCloudinaryImageUrl("a", "q_auto,w_320")).toContain("w_320")
   })
 })
 

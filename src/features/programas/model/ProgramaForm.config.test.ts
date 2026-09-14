@@ -21,14 +21,32 @@ describe("programaFormSchema", () => {
     const parsed = programaFormSchema.parse({
       nombre: "Integral",
       descripcion: "Desc",
-      objetivos: "Obj",
       nivel: "intermedio",
-      instrumentoId: "i1",
+      imagenPublicId: "gosmel/programas/integral",
+      imagenTextoAlt: "Programa integral",
       publicado: true,
       orden: 2,
     })
 
-    expect(parsed.instrumentoId).toBe("i1")
+    expect(parsed.nivel).toBe("intermedio")
     expect(programaFormSchema.safeParse({ nombre: "Integral", orden: -1 }).success).toBe(false)
+  })
+
+  it("exige precio y etiqueta cuando mostrarPrecio está activo", () => {
+    const result = programaFormSchema.safeParse({ nombre: "Integral", mostrarPrecio: true })
+
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues.some((issue) => issue.path[0] === "precioReferencial")).toBe(true)
+      expect(result.error.issues.some((issue) => issue.path[0] === "etiquetaPrecio")).toBe(true)
+    }
+    expect(
+      programaFormSchema.safeParse({
+        nombre: "Integral",
+        mostrarPrecio: true,
+        precioReferencial: 150,
+        etiquetaPrecio: "$150 / mes",
+      }).success,
+    ).toBe(true)
   })
 })

@@ -1,30 +1,23 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 
-import type { IProgramaFormValues } from "../model/ProgramaForm.config";
+import {
+  buildProgramaUpdatePayload,
+  type IProgramaFormValues,
+} from "../model/ProgramaForm.config";
 
 export async function updatePrograma(
   programaId: string,
-  values: IProgramaFormValues
+  values: IProgramaFormValues,
+  imagenPublicId: string | null = values.quitarImagen ? null : values.imagenPublicId || null
 ): Promise<{ data: { id: string } | null; error: string | null }> {
   const supabase = createSupabaseBrowserClient();
   const { data, error } = await supabase
     .from("programas")
-    .update({
-      nombre: values.nombre.trim(),
-      descripcion: values.descripcion?.trim() || null,
-      objetivos: values.objetivos?.trim() || null,
-      instrumento_id: values.instrumentoId || null,
-      nivel: values.nivel || null,
-      publicado: values.publicado,
-      orden: values.orden,
-    })
+    .update(buildProgramaUpdatePayload(values, imagenPublicId))
     .eq("id", programaId)
     .select("id")
     .single();
 
-  if (error) {
-    return { data: null, error: error.message };
-  }
-
+  if (error) return { data: null, error: error.message };
   return { data, error: null };
 }

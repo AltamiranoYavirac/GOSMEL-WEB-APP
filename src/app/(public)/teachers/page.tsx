@@ -1,18 +1,20 @@
 import { TeachersGrid } from "@/features/teachers";
+import { getPublicDocentesServer } from "@/features/teachers/server";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Profesores | GOSMEL Music Academy",
-  description:
-    "Conoce a los maestros de GOSMEL: un profesor dedicado por disciplina, formado en conservatorio.",
+  description: "Conoce a los docentes publicados de GOSMEL Music Academy.",
 };
 
-export default function TeachersPage() {
+export default async function TeachersPage() {
+  const { data, error } = await getPublicDocentesServer();
+  if (error) throw new Error(error);
+
   return (
     <div className="flex-1 bg-background">
-      <TeachersGrid />
+      <TeachersGrid teachers={data ?? []} />
     </div>
   );
 }
-
-
-

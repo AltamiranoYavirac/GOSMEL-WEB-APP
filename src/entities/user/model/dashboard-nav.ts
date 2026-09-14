@@ -30,7 +30,6 @@ const ADMIN_NAV: IDashboardNavGroup[] = [
     icon: "ph:users-three",
     items: [
       { label: "Estudiantes", href: "/dashboard/admin/estudiantes", icon: "ph:student" },
-      { label: "Docentes", href: "/dashboard/admin/docentes", icon: "ph:chalkboard-teacher" },
       { label: "Representantes", href: "/dashboard/admin/representantes", icon: "ph:identification-badge" },
       { label: "Usuarios y roles", href: "/dashboard/admin/usuarios", icon: "ph:users-three" },
     ],
@@ -56,6 +55,7 @@ const ADMIN_NAV: IDashboardNavGroup[] = [
       { label: "Testimonios", href: "/dashboard/admin/testimonios", icon: "ph:chat-centered-text" },
       { label: "Reseñas", href: "/dashboard/admin/resenas", icon: "ph:chat-centered-dots" },
       { label: "Galería", href: "/dashboard/admin/galeria", icon: "ph:image" },
+      { label: "Imágenes del sitio", href: "/dashboard/admin/activos-sitio", icon: "ph:image-square" },
       { label: "Secciones", href: "/dashboard/admin/secciones", icon: "ph:layout" },
       { label: "Métricas", href: "/dashboard/admin/metricas", icon: "ph:chart-line-up" },
     ],

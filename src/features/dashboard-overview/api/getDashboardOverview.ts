@@ -66,7 +66,6 @@ export async function getDashboardOverview(): Promise<{
   const [
     perfilAdmin,
     estudiantesActivos,
-    docentesTotal,
     solicitudesPendientes,
     catedrasEnCurso,
     sesionesHoy,
@@ -89,7 +88,6 @@ export async function getDashboardOverview(): Promise<{
   ] = await Promise.all([
     user ? supabase.from("perfiles").select("nombres").eq("id", user.id).maybeSingle() : Promise.resolve({ data: null, error: null }),
     supabase.from("estudiantes").select("id", { count: "exact", head: true }).eq("activo", true),
-    supabase.from("docentes").select("perfil_id", { count: "exact", head: true }),
     supabase.from("solicitudes").select("id", { count: "exact", head: true }).in("estado", ["nueva", "contactada"]),
     supabase.from("catedras").select("id", { count: "exact", head: true }).eq("estado", "en_curso"),
     supabase.from("sesiones").select("id", { count: "exact", head: true }).eq("fecha", today),
@@ -135,7 +133,6 @@ export async function getDashboardOverview(): Promise<{
   const firstError = [
     perfilAdmin.error,
     estudiantesActivos.error,
-    docentesTotal.error,
     solicitudesPendientes.error,
     catedrasEnCurso.error,
     sesionesHoy.error,
@@ -266,14 +263,6 @@ export async function getDashboardOverview(): Promise<{
           href: "/dashboard/admin/estudiantes",
           tone: "info",
           spark: estudiantesSpark,
-        },
-        {
-          label: "Docentes",
-          value: docentesTotal.count ?? 0,
-          format: "number",
-          icon: "ph:chalkboard-teacher",
-          href: "/dashboard/admin/docentes",
-          tone: "neutral",
         },
         {
           label: "Solicitudes pendientes",

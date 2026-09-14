@@ -68,19 +68,6 @@ export default function CursosList() {
       render: (row) => row.modulos,
     },
     {
-      key: "destacado",
-      label: "Destacado",
-      render: (row) => (
-        <Switch
-          size="sm"
-          checked={row.destacado}
-          disabled={mutation.isPending}
-          onCheckedChange={(value) => mutation.mutate({ id: row.id, patch: { destacado: value } })}
-          aria-label={`Destacar o quitar de destacados ${row.nombre}`}
-        />
-      ),
-    },
-    {
       key: "publicado",
       label: "Publicado",
       render: (row) => (
@@ -100,7 +87,6 @@ export default function CursosList() {
     { value: "virtual", label: "Virtual", match: (row) => row.modalidad === "virtual" },
     { value: "hibrido", label: "Híbrido", match: (row) => row.modalidad === "hibrido" },
     { value: "publicados", label: "Publicados", match: (row) => row.publicado },
-    { value: "destacados", label: "Destacados", match: (row) => row.destacado },
   ];
 
   return (

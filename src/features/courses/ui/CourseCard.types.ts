@@ -1,16 +1,9 @@
-import type { COURSES } from "../model/courses.constants";
-
-export interface ICourseCardTeacher {
-  slug: string;
-  name: string;
-  photo: string;
-  photoAlt: string;
-}
+import type { IPublicCourseCard } from "../model/course-public.types"
 
 export interface ICourseCardProps {
-  course: (typeof COURSES)[number];
-  teachers: ICourseCardTeacher[];
-  number: string;
-  isFirst: boolean;
-  isLast: boolean;
+  course: IPublicCourseCard
+  number: string
+  total: string
+  isFirst: boolean
+  isLast: boolean
 }

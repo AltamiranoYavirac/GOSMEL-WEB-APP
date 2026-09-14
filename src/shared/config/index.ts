@@ -3,3 +3,8 @@ export type { AppImageKey } from "./images";
 export { SOCIAL_PROVIDERS, SOCIAL_LINKS } from "./social";
 export type { ISocialProvider, ISocialLink } from "./social";
 export { UI_ICONS } from "./ui-icons";
+export {
+  CLOUDINARY_IMAGE_FOLDERS,
+  CLOUDINARY_IMAGE_TYPES,
+  CLOUDINARY_MAX_IMAGE_SIZE,
+} from "./cloudinary";

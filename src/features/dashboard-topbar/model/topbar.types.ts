@@ -19,7 +19,7 @@ export interface ITopbarSummary {
   activities: ITopbarActivity[];
 }
 
-export type TSearchGroup = "estudiantes" | "docentes" | "cursos";
+export type TSearchGroup = "estudiantes" | "cursos";
 
 export interface ISearchResultItem {
   id: string;

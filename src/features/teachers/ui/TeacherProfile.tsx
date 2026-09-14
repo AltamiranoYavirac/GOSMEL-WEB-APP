@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Icon } from "@iconify/react";
 
 import { Button, Reveal } from "@/shared/ui";
 
@@ -21,14 +22,18 @@ export default function TeacherProfile({ teacher }: ITeacherProfileProps) {
       <section className="mx-auto mt-6 w-full max-w-[1600px] px-[22px] md:px-14">
         <div className="grid gap-0.5 overflow-hidden rounded-[26px] lg:grid-cols-2">
           <div className="relative h-[360px] sm:h-[460px] lg:h-[520px]">
-            <Image
-              src={teacher.photo}
-              alt={teacher.photoAlt}
-              fill
-              priority
-              sizes="(max-width: 1023px) 100vw, 50vw"
-              className="object-cover"
-            />
+            {teacher.photo ? (
+              <Image
+                src={teacher.photo}
+                alt={teacher.photoAlt}
+                fill
+                priority
+                sizes="(max-width: 1023px) 100vw, 50vw"
+                className="object-cover"
+              />
+            ) : (
+              <Icon icon="ph:user" className="absolute left-1/2 top-1/2 size-20 -translate-x-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+            )}
           </div>
           <Reveal className="flex flex-col justify-center bg-card px-[22px] py-12 md:px-12 md:py-14 lg:px-[52px]">
             <p className="mb-4 font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-primary md:text-[11px]">
