@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { toast } from "sonner";
 
+import { compressImageFile } from "@/shared/lib/image-compression";
 import { Button, Spinner } from "@/shared/ui";
 
 import type { IImageUploadFieldProps } from "./ImageUploadField.types";
@@ -15,6 +16,8 @@ export function ImageUploadField({
   label = "Foto de portada / Curso",
   folder = "gosmel/cursos",
   helperText = "Formatos soportados: JPG, PNG, WEBP (Máx. 10MB)",
+  endpoint = "/api/upload/cloudinary",
+  compress = false,
 }: IImageUploadFieldProps) {
   const [uploading, setUploading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -41,11 +44,12 @@ export function ImageUploadField({
 
     try {
       setUploading(true);
+      const fileToUpload = compress ? await compressImageFile(file) : file;
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", fileToUpload);
       formData.append("folder", folder);
 
-      const res = await fetch("/api/upload/cloudinary", {
+      const res = await fetch(endpoint, {
         method: "POST",
         body: formData,
       });
