@@ -163,6 +163,7 @@ export interface ITeacherPortafolioItem {
   titulo: string;
   urlExterna: string | null;
   orden: number;
+  publicado: boolean;
 }
 
 export interface ITeacherInstrumentoItem {

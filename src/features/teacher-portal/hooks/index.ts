@@ -23,5 +23,6 @@ export { useCreateTeacherReconocimiento } from "./useCreateTeacherReconocimiento
 export { useDeleteTeacherReconocimiento } from "./useDeleteTeacherReconocimiento";
 export { useCreateTeacherPortafolio } from "./useCreateTeacherPortafolio";
 export { useDeleteTeacherPortafolio } from "./useDeleteTeacherPortafolio";
+export { useUpdateTeacherPortafolioPublicado } from "./useUpdateTeacherPortafolioPublicado";
 export { useUpdateTeacherInstrumentos } from "./useUpdateTeacherInstrumentos";
 export { useTeacherCatalogos } from "./useTeacherCatalogos";

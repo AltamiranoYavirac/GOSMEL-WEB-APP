@@ -2628,6 +2628,7 @@ export type Database = {
           cita: string
           created_at: string
           curso_id: string | null
+          docente_id: string | null
           estudiante_id: string | null
           foto_public_id: string | null
           id: string
@@ -2643,6 +2644,7 @@ export type Database = {
           cita: string
           created_at?: string
           curso_id?: string | null
+          docente_id?: string | null
           estudiante_id?: string | null
           foto_public_id?: string | null
           id?: string
@@ -2658,6 +2660,7 @@ export type Database = {
           cita?: string
           created_at?: string
           curso_id?: string | null
+          docente_id?: string | null
           estudiante_id?: string | null
           foto_public_id?: string | null
           id?: string
@@ -2694,6 +2697,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "cursos"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "testimonios_docente_id_fkey"
+            columns: ["docente_id"]
+            isOneToOne: false
+            referencedRelation: "docentes"
+            referencedColumns: ["perfil_id"]
           },
           {
             foreignKeyName: "testimonios_estudiante_id_fkey"
@@ -3051,9 +3061,36 @@ export type Database = {
         }
         Returns: string
       }
+      reasignar_catedras: {
+        Args: { p_catedra_ids: string[]; p_docente_id: string }
+        Returns: number
+      }
       rechazar_matricula: {
         Args: { p_inscripcion_id: string; p_motivo: string }
         Returns: undefined
+      }
+      reemplazar_instrumentos_docente: {
+        Args: {
+          p_docente_id: string
+          p_instrumento_ids?: string[]
+          p_instrumento_principal_id?: string
+        }
+        Returns: undefined
+      }
+      registrar_docente: {
+        Args: {
+          p_perfil_id: string
+          p_slug?: string
+          p_titulo_profesional?: string
+          p_biografia?: string
+          p_frase_destacada?: string
+          p_anios_experiencia?: number
+          p_publicado?: boolean
+          p_destacado?: boolean
+          p_instrumento_ids?: string[]
+          p_instrumento_principal_id?: string
+        }
+        Returns: string
       }
       roles_actuales: { Args: never; Returns: string[] }
       solicitar_matricula: {

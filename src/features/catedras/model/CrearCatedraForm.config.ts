@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { toLocalDateString } from "@/shared/lib";
 import type { ISelectFieldOption } from "@/shared/form";
 
 export const MODALIDAD_OPCIONES: ISelectFieldOption[] = [
@@ -41,6 +42,14 @@ export const crearCatedraFormSchema = z
     horaFin: z.string().optional(),
   })
   .superRefine((values, ctx) => {
+    if (values.fechaInicio && values.fechaInicio < toLocalDateString()) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["fechaInicio"],
+        message: "La fecha de inicio no puede ser anterior a hoy",
+      });
+    }
+
     if (values.fechaInicio && values.fechaFin && values.fechaFin < values.fechaInicio) {
       ctx.addIssue({ code: "custom", path: ["fechaFin"], message: "La fecha final debe ser posterior al inicio" });
     }

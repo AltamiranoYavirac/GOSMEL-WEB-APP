@@ -115,6 +115,6 @@ export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableC
 export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from "./tabs";
 export { Textarea } from "./textarea";
 export { TimeInput } from "./time-input";
-export type { ITimeInputProps } from "./time-input";
+export type { ITimeInputProps } from "./time-input.types";
 export { Toggle, toggleVariants } from "./toggle";
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";

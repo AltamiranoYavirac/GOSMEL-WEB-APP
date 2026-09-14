@@ -17,6 +17,7 @@ export default function TestimoniosList() {
   const columns: IAdminColumn<ITestimonioRow>[] = [
     { key: "autor", label: "Autor", render: (row) => <span className="font-medium">{row.autor}</span> },
     { key: "curso", label: "Curso", render: (row) => row.curso ?? <span className="text-muted-foreground">General</span> },
+    { key: "docente", label: "Docente", render: (row) => row.docente ?? <span className="text-muted-foreground">—</span> },
     { key: "cita", label: "Cita", render: (row) => <span className="line-clamp-2 max-w-md whitespace-normal text-muted-foreground">&ldquo;{row.cita}&rdquo;</span> },
     {
       key: "puntuacion",
@@ -41,13 +42,13 @@ export default function TestimoniosList() {
 
   return (
     <div className="space-y-6">
-      <AdminPageHeader eyebrow="Sitio · GOSMEL" title="Testimonios" description="Testimonios generales y específicos de cursos." icon="ph:chat-centered-text"><TestimonioFormDialog /></AdminPageHeader>
+      <AdminPageHeader eyebrow="Sitio · GOSMEL" title="Testimonios" description="Testimonios generales, de cursos y de docentes (se muestran en el perfil público del docente)." icon="ph:chat-centered-text"><TestimonioFormDialog /></AdminPageHeader>
       <AdminDataTable
         data={rows}
         columns={columns}
         loading={isPending}
         keyId={(row) => row.id}
-        searchKeys={[(row) => row.autor, (row) => row.rol ?? "", (row) => row.cita, (row) => row.curso ?? ""]}
+        searchKeys={[(row) => row.autor, (row) => row.rol ?? "", (row) => row.cita, (row) => row.curso ?? "", (row) => row.docente ?? ""]}
         filters={filters}
         emptyTitle="Sin testimonios"
         emptyDescription="Agrega el primer testimonio desde el dashboard."

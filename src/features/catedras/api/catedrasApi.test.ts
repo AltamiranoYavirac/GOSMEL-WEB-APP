@@ -17,7 +17,7 @@ import { eliminarCatedra } from "./eliminarCatedra"
 import { eliminarInscripcionCatedra } from "./eliminarInscripcionCatedra"
 import { generarSesionesCatedra } from "./generarSesionesCatedra"
 import { getCatedraEstudiantes } from "./getCatedraEstudiantes"
-import { getCatedraOptions, sugerirCodigoCatedra } from "./getCatedraOptions"
+import { filtrarDocentesPorCurso, getCatedraOptions, sugerirCodigoCatedra } from "./getCatedraOptions"
 import { updateCatedra } from "./updateCatedra"
 
 function configure(tables: Record<string, Record<string, unknown>[]> = {}): TFakeSupabaseClient {
@@ -82,14 +82,16 @@ describe("catedras API", () => {
         { id: "p1", nombres: "Leo", apellidos: "Brouwer" },
         { id: "p2", nombres: "Ada", apellidos: "Admin" },
       ],
-      cursos: [{ id: "k1", nombre: "Guitarra" }],
+      cursos: [{ id: "k1", nombre: "Guitarra", instrumento_id: "i1" }],
       catedras: [{ codigo: `CAT-${new Date().getFullYear()}-03` }],
+      docente_instrumento: [{ docente_id: "p1", instrumento_id: "i1" }],
     })
 
     const result = await getCatedraOptions(fake)
 
-    expect(result.data!.cursos).toEqual([{ id: "k1", nombre: "Guitarra" }])
+    expect(result.data!.cursos).toEqual([{ id: "k1", nombre: "Guitarra", instrumentoId: "i1" }])
     expect(result.data!.docentes.map((d) => d.nombre)).toEqual(["Ada Admin (Admin)", "Leo Brouwer"])
+    expect(result.data!.docentes.find((d) => d.id === "p1")!.instrumentoIds).toEqual(["i1"])
     expect(result.data!.sugerenciaCodigo).toBe(`CAT-${new Date().getFullYear()}-04`)
   })
 
@@ -196,8 +198,33 @@ describe("catedras API", () => {
     expect(rpc).toHaveBeenCalledWith({ p_catedra_id: "c1", p_fecha_desde: "2026-06-01", p_fecha_hasta: "2026-06-30" })
   })
 
+  it("filtrarDocentesPorCurso filtra por instrumento del curso", () => {
+    const docentes = [
+      { id: "p1", nombre: "Leo", instrumentoIds: ["i1"] },
+      { id: "p2", nombre: "Ada", instrumentoIds: [] },
+    ]
+    const cursos = [{ id: "k1", nombre: "Guitarra", instrumentoId: "i1" }]
+
+    expect(filtrarDocentesPorCurso(docentes, cursos, "k1").map((d) => d.id)).toEqual(["p1"])
+    expect(filtrarDocentesPorCurso(docentes, cursos, "k1", true).map((d) => d.id)).toEqual(["p1", "p2"])
+    expect(
+      filtrarDocentesPorCurso(docentes, cursos, "k1", false, "p2").map((d) => d.id),
+    ).toEqual(["p1", "p2"])
+    expect(
+      filtrarDocentesPorCurso(docentes, [{ id: "k2", nombre: "Otro", instrumentoId: null }], "k2"),
+    ).toEqual(docentes)
+    expect(filtrarDocentesPorCurso([{ id: "p2", nombre: "Ada", instrumentoIds: [] }], cursos, "k1")).toEqual([
+      { id: "p2", nombre: "Ada", instrumentoIds: [] },
+    ])
+  })
+
   it("updateCatedra asegura docente y actualiza", async () => {
-    const fake = configure({ catedras: [{ id: "c1" }], docentes: [{ perfil_id: "p1" }] })
+    const rpc = vi.fn(() => "p1")
+    const fake = createFakeSupabase(
+      { catedras: [{ id: "c1" }] },
+      { rpcResults: { registrar_docente: rpc } },
+    )
+    createSupabaseBrowserClientMock.mockReturnValue(fake)
     const calls = track(fake)
 
     await expect(
@@ -215,7 +242,8 @@ describe("catedras API", () => {
       }),
     ).resolves.toEqual({ error: null })
 
-    expect(calls).toEqual(["docentes", "catedras"])
+    expect(rpc).toHaveBeenCalledWith({ p_perfil_id: "p1" })
+    expect(calls).toEqual(["catedras"])
   })
 
   it("eliminarCatedra bloquea con matrículas activas y borra si no", async () => {

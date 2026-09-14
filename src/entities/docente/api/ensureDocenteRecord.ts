@@ -6,18 +6,8 @@ export async function ensureDocenteRecord(
 ): Promise<{ error: string | null }> {
   if (!perfilId) return { error: "Selecciona un docente." };
 
-  const { data: existing, error: readError } = await supabase
-    .from("docentes")
-    .select("perfil_id")
-    .eq("perfil_id", perfilId)
-    .maybeSingle();
-
-  if (readError) return { error: readError.message };
-  if (existing) return { error: null };
-
-  const { error } = await supabase.from("docentes").insert({
-    perfil_id: perfilId,
-    slug: `docente-${perfilId.slice(0, 8)}`,
+  const { error } = await supabase.rpc("registrar_docente", {
+    p_perfil_id: perfilId,
   });
 
   return { error: error?.message ?? null };

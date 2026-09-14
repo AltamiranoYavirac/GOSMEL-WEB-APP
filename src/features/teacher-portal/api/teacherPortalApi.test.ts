@@ -35,6 +35,7 @@ import { guardarTeacherAsistencias } from "./guardarTeacherAsistencias"
 import { guardarTeacherCalificaciones } from "./guardarTeacherCalificaciones"
 import { updateTeacherInstrumentos } from "./updateTeacherInstrumentos"
 import { updateTeacherPerfil } from "./updateTeacherPerfil"
+import { updateTeacherPortafolioPublicado } from "./updateTeacherPortafolioPublicado"
 import { updateTeacherSesionEstado } from "./updateTeacherSesionEstado"
 
 const USER = { id: "u1", email: "docente@x.com" }
@@ -468,6 +469,17 @@ describe("teacher-portal mutators", () => {
       "docente_portafolio",
       "docente_reconocimientos",
     ])
+  })
+
+  it("updateTeacherPortafolioPublicado cambia la visibilidad del elemento", async () => {
+    const tables = { docente_portafolio: [{ id: "p1", titulo: "Video", publicado: false }] }
+    configureClient(createFakeSupabase(tables))
+
+    await expect(updateTeacherPortafolioPublicado("p1", true)).resolves.toEqual({ error: null })
+    expect(tables.docente_portafolio[0]).toMatchObject({ publicado: true })
+
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase.withError("docente_portafolio", "boom"))
+    await expect(updateTeacherPortafolioPublicado("p1", false)).resolves.toEqual({ error: "boom" })
   })
 
   it("guardar asistencias hace upsert con observación normalizada", async () => {

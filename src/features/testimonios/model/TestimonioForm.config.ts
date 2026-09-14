@@ -10,6 +10,7 @@ export const testimonioFormSchema = z.object({
   cita: z.string().trim().min(10, "La cita debe tener al menos 10 caracteres"),
   puntuacion: z.number().int().min(1).max(5).nullable().optional(),
   cursoId: z.string().optional(),
+  docenteId: z.string().optional(),
   orden: z.number().int().min(0, "El orden no puede ser negativo"),
   publicado: z.boolean(),
 });
@@ -23,6 +24,7 @@ export function getTestimonioFormDefaults(item?: ITestimonioRow): ITestimonioFor
     cita: item?.cita ?? "",
     puntuacion: item?.puntuacion ?? null,
     cursoId: item?.cursoId ?? "",
+    docenteId: item?.docenteId ?? "",
     orden: item?.orden ?? 0,
     publicado: item?.publicado ?? false,
   };
@@ -35,6 +37,7 @@ export function buildTestimonioPayload(values: ITestimonioFormValues): TablesIns
     cita: values.cita.trim(),
     puntuacion: values.puntuacion ?? null,
     curso_id: values.cursoId || null,
+    docente_id: values.docenteId || null,
     orden: values.orden,
     publicado: values.publicado,
   };
