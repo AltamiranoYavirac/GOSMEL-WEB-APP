@@ -41,12 +41,17 @@ export interface IDocenteDetalle {
   id: string;
   nombre: string;
   email: string | null;
+  slug: string;
   titulo: string | null;
   biografia: string | null;
+  fraseDestacada: string | null;
   aniosExperiencia: number | null;
+  redesSociales: Record<string, string>;
   destacado: boolean;
   publicado: boolean;
   instrumentos: string[];
+  instrumentoIds: string[];
+  instrumentoPrincipalId: string | null;
   formacion: IDocenteFormacion[];
   reconocimientos: IDocenteReconocimiento[];
   portafolio: IDocentePortafolio[];

@@ -1,2 +1,2 @@
-export { getCurrentYear } from "./date";
+export { getCurrentYear, toLocalDateString } from "./date";
 export { buildCloudinaryImageUrl } from "./cloudinary-url";

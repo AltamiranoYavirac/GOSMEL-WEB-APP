@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 
 import {
@@ -15,6 +16,9 @@ import {
 } from "@/shared/ui";
 import { DateField, Form, NumberField, SelectField, TextField, useAppForm } from "@/shared/form";
 
+import { toLocalDateString } from "@/shared/lib";
+
+import { filtrarDocentesPorCurso } from "../api/getCatedraOptions";
 import { useCatedraOptions } from "../hooks/useCatedraOptions";
 import { useUpdateCatedra } from "../hooks/useUpdateCatedra";
 import {
@@ -50,6 +54,22 @@ export default function EditarCatedraDialog({
     }),
     resetOptions: { keepDirtyValues: false, keepErrors: false },
   });
+
+  const [mostrarTodosDocentes, setMostrarTodosDocentes] = useState(false);
+  const hoy = toLocalDateString();
+  const cursoId = form.watch("cursoId");
+  const fechaInicio = form.watch("fechaInicio");
+  const inicioActual = catedra?.fechaInicio ?? "";
+  const minInicio = inicioActual && inicioActual < hoy ? inicioActual : hoy;
+  const instrumentoCurso =
+    (options?.cursos ?? []).find((curso) => curso.id === cursoId)?.instrumentoId ?? null;
+  const docentesFiltrados = filtrarDocentesPorCurso(
+    options?.docentes ?? [],
+    options?.cursos ?? [],
+    cursoId,
+    mostrarTodosDocentes,
+    catedra?.docenteId
+  );
 
   if (!catedra) return null;
 
@@ -107,14 +127,25 @@ export default function EditarCatedraDialog({
               options={(options?.cursos ?? []).map((curso) => ({ value: curso.id, label: curso.nombre }))}
             />
 
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-2 flex flex-col gap-1.5">
               <SelectField
                 name="docenteId"
                 label="Docente Asignado"
                 placeholder="Seleccione docente responsable..."
                 disabled={optionsPending}
-                options={(options?.docentes ?? []).map((d) => ({ value: d.id, label: d.nombre }))}
+                options={docentesFiltrados.map((d) => ({ value: d.id, label: d.nombre }))}
               />
+              {instrumentoCurso ? (
+                <button
+                  type="button"
+                  onClick={() => setMostrarTodosDocentes((value) => !value)}
+                  className="self-start text-xs font-medium text-primary underline-offset-3 hover:underline"
+                >
+                  {mostrarTodosDocentes
+                    ? "Mostrar solo docentes del instrumento"
+                    : "Ver todos los docentes"}
+                </button>
+              ) : null}
             </div>
 
             <NumberField name="cupoMaximo" label="Cupo Máximo" placeholder="15" asNumber />
@@ -125,9 +156,9 @@ export default function EditarCatedraDialog({
 
             <SelectField name="estado" label="Estado Operativo" options={ESTADO_CATEDRA_OPCIONES} />
 
-            <DateField name="fechaInicio" label="Inicio" />
+            <DateField name="fechaInicio" label="Inicio" min={minInicio} />
 
-            <DateField name="fechaFin" label="Fin (opcional)" />
+            <DateField name="fechaFin" label="Fin (opcional)" min={fechaInicio || minInicio} />
           </div>
         </Form>
 

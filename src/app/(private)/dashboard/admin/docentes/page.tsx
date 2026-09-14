@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { DocentesList } from "@/features/docentes";
 
 export default function DocentesPage() {
-  redirect("/dashboard/admin");
+  return <DocentesList />;
 }

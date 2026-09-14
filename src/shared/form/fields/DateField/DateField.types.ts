@@ -4,5 +4,6 @@ import type { IBaseFieldProps } from "../useConnectedField"
 export interface IDateFieldProps<TFieldValues extends FieldValues = FieldValues>
   extends IBaseFieldProps<TFieldValues> {
   placeholder?: string
+  min?: string
   max?: string
 }

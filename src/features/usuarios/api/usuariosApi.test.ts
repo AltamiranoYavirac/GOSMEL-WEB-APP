@@ -109,7 +109,9 @@ describe("usuarios API", () => {
     configure({ perfil_rol: [{ perfil_id: "p1", rol: "docente" }], docentes: [{ perfil_id: "p1" }] })
     await expect(asignarRolDocente("p1", "Ada")).resolves.toEqual({ data: { perfilId: "p1" }, error: null })
 
-    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase.withError("perfil_rol", "boom"))
+    createSupabaseBrowserClientMock.mockReturnValue(
+      createFakeSupabase.withError("rpc:registrar_docente", "boom"),
+    )
     await expect(asignarRolDocente("p1", "Ada")).resolves.toEqual({ data: null, error: "boom" })
   })
 

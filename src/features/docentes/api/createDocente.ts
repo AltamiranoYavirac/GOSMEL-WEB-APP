@@ -9,7 +9,8 @@ export interface ICreateDocenteInput {
   anios_experiencia?: number;
   publicado?: boolean;
   destacado?: boolean;
-  instrumento_id?: string;
+  instrumento_ids?: string[];
+  instrumento_principal_id?: string;
 }
 
 export async function createDocente(input: ICreateDocenteInput): Promise<{
@@ -18,37 +19,26 @@ export async function createDocente(input: ICreateDocenteInput): Promise<{
 }> {
   const supabase = createSupabaseBrowserClient();
 
-  const { data, error } = await supabase
-    .from("docentes")
-    .insert({
-      perfil_id: input.perfil_id,
-      slug: input.slug.toLowerCase().trim(),
-      titulo_profesional: input.titulo_profesional?.trim() || null,
-      biografia: input.biografia?.trim() || null,
-      frase_destacada: input.frase_destacada?.trim() || null,
-      anios_experiencia: input.anios_experiencia || 0,
-      publicado: Boolean(input.publicado),
-      destacado: Boolean(input.destacado),
-    })
-    .select("perfil_id")
-    .single();
-
-  if (error || !data) {
-    return { data: null, error: error?.message ?? "Error al registrar docente" };
-  }
-
-  await supabase.from("perfil_rol").insert({
-    perfil_id: input.perfil_id,
-    rol: "docente",
+  const { data, error } = await supabase.rpc("registrar_docente", {
+    p_perfil_id: input.perfil_id,
+    p_slug: input.slug.toLowerCase().trim(),
+    p_titulo_profesional: input.titulo_profesional?.trim() || undefined,
+    p_biografia: input.biografia?.trim() || undefined,
+    p_frase_destacada: input.frase_destacada?.trim() || undefined,
+    p_anios_experiencia: input.anios_experiencia ?? undefined,
+    p_publicado: Boolean(input.publicado),
+    p_destacado: Boolean(input.destacado),
+    p_instrumento_ids: input.instrumento_ids ?? [],
+    p_instrumento_principal_id: input.instrumento_principal_id || undefined,
   });
 
-  if (input.instrumento_id) {
-    await supabase.from("docente_instrumento").insert({
-      docente_id: input.perfil_id,
-      instrumento_id: input.instrumento_id,
-      es_principal: true,
-    });
+  if (error || !data) {
+    const message = error?.message ?? "Error al registrar docente";
+    if (message.includes("docentes_slug_key") || message.includes("duplicate key")) {
+      return { data: null, error: "Ya existe un docente con ese slug." };
+    }
+    return { data: null, error: message };
   }
 
-  return { data, error: null };
+  return { data: { perfil_id: data }, error: null };
 }

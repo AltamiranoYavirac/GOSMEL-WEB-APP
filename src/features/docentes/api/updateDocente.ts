@@ -3,6 +3,7 @@ import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 import type { Json } from "@/shared/api/supabase/database.types";
 
 export interface IUpdateDocentePatch {
+  slug?: string;
   titulo_profesional?: string | null;
   biografia?: string | null;
   frase_destacada?: string | null;

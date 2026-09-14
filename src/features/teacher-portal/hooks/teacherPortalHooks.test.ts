@@ -29,6 +29,7 @@ const api = vi.hoisted(() => ({
   updateTeacherPerfil: vi.fn(),
   updateTeacherInstrumentos: vi.fn(),
   updateTeacherSesionEstado: vi.fn(),
+  updateTeacherPortafolioPublicado: vi.fn(),
 }))
 
 vi.mock("../api/getTeacherDashboard", () => ({ getTeacherDashboard: api.getTeacherDashboard }))
@@ -58,6 +59,7 @@ vi.mock("../api/guardarTeacherCalificaciones", () => ({ guardarTeacherCalificaci
 vi.mock("../api/updateTeacherPerfil", () => ({ updateTeacherPerfil: api.updateTeacherPerfil }))
 vi.mock("../api/updateTeacherInstrumentos", () => ({ updateTeacherInstrumentos: api.updateTeacherInstrumentos }))
 vi.mock("../api/updateTeacherSesionEstado", () => ({ updateTeacherSesionEstado: api.updateTeacherSesionEstado }))
+vi.mock("../api/updateTeacherPortafolioPublicado", () => ({ updateTeacherPortafolioPublicado: api.updateTeacherPortafolioPublicado }))
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
 
 import { createQueryWrapper, createTestQueryClient } from "@/test/query"
@@ -88,6 +90,7 @@ import { useTeacherSesionAsistencia } from "./useTeacherSesionAsistencia"
 import { useTeacherSesiones } from "./useTeacherSesiones"
 import { useUpdateTeacherInstrumentos } from "./useUpdateTeacherInstrumentos"
 import { useUpdateTeacherPerfil } from "./useUpdateTeacherPerfil"
+import { useUpdateTeacherPortafolioPublicado } from "./useUpdateTeacherPortafolioPublicado"
 import { useUpdateTeacherSesionEstado } from "./useUpdateTeacherSesionEstado"
 
 function wrapper() {
@@ -139,6 +142,7 @@ describe("teacher-portal hooks", () => {
       [useGuardarTeacherCalificaciones, api.guardarTeacherCalificaciones],
       [useUpdateTeacherPerfil, api.updateTeacherPerfil],
       [useUpdateTeacherInstrumentos, api.updateTeacherInstrumentos],
+      [useUpdateTeacherPortafolioPublicado, api.updateTeacherPortafolioPublicado],
       [useUpdateTeacherSesionEstado, api.updateTeacherSesionEstado],
     ]
 
@@ -175,6 +179,7 @@ describe("teacher-portal hooks", () => {
       useUpdateTeacherPerfil,
       useUpdateTeacherInstrumentos,
       useUpdateTeacherSesionEstado,
+      useUpdateTeacherPortafolioPublicado,
     ]
 
     for (const hook of mutations) {
