@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 
 import { cn } from "@/shared/lib/utils";
-import { Button, Input, Skeleton, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/ui";
+import { Button, Checkbox, Input, Skeleton, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/ui";
 
 import type { IAdminDataTableProps } from "./AdminDataTable.types";
 
@@ -32,6 +32,7 @@ export default function AdminDataTable<T>({
   rowActions,
   countLabel = "registros",
   pageSize = DEFAULT_PAGE_SIZE,
+  selection,
 }: IAdminDataTableProps<T>) {
   const [search, setSearch] = useState("");
   const [filterValue, setFilterValue] = useState<string>("all");
@@ -53,6 +54,11 @@ export default function AdminDataTable<T>({
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const safePage = Math.min(page, totalPages);
   const pageRows = filtered.slice((safePage - 1) * pageSize, safePage * pageSize);
+
+  const pageIds = pageRows.map(keyId);
+  const selectedOnPage = selection ? pageIds.filter((id) => selection.selectedIds.includes(id)).length : 0;
+  const allPageSelected = pageIds.length > 0 && selectedOnPage === pageIds.length;
+  const somePageSelected = selectedOnPage > 0 && !allPageSelected;
 
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card">
@@ -98,6 +104,7 @@ export default function AdminDataTable<T>({
           <Table>
             <TableHeader>
               <TableRow>
+                {selection ? <TableHead className="w-10" /> : null}
                 {columns.map((column) => (
                   <TableHead key={column.key}>{column.label}</TableHead>
                 ))}
@@ -107,6 +114,11 @@ export default function AdminDataTable<T>({
             <TableBody>
               {Array.from({ length: 6 }).map((_, index) => (
                 <TableRow key={index}>
+                  {selection ? (
+                    <TableCell>
+                      <Skeleton className="size-4" />
+                    </TableCell>
+                  ) : null}
                   {columns.map((column) => (
                     <TableCell key={column.key}>
                       <Skeleton className="h-5 w-24" />
@@ -131,6 +143,15 @@ export default function AdminDataTable<T>({
           <Table>
             <TableHeader>
               <TableRow>
+                {selection ? (
+                  <TableHead className="w-10">
+                    <Checkbox
+                      checked={allPageSelected ? true : somePageSelected ? "indeterminate" : false}
+                      onCheckedChange={() => selection.onToggleAll(pageIds)}
+                      aria-label="Seleccionar todas las filas de la página"
+                    />
+                  </TableHead>
+                ) : null}
                 {columns.map((column) => (
                   <TableHead key={column.key} className={column.headerClassName}>
                     {column.label}
@@ -142,6 +163,15 @@ export default function AdminDataTable<T>({
             <TableBody>
               {pageRows.map((row) => (
                 <TableRow key={keyId(row)} className="transition-colors hover:bg-muted/30">
+                  {selection ? (
+                    <TableCell>
+                      <Checkbox
+                        checked={selection.selectedIds.includes(keyId(row))}
+                        onCheckedChange={() => selection.onToggle(keyId(row))}
+                        aria-label="Seleccionar fila"
+                      />
+                    </TableCell>
+                  ) : null}
                   {columns.map((column) => (
                     <TableCell key={column.key} className={column.cellClassName}>
                       {column.render(row)}

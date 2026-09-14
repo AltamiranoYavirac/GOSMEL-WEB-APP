@@ -33,6 +33,7 @@ export { createTeacherReconocimiento } from "./createTeacherReconocimiento";
 export { deleteTeacherReconocimiento } from "./deleteTeacherReconocimiento";
 export { createTeacherPortafolio } from "./createTeacherPortafolio";
 export { deleteTeacherPortafolio } from "./deleteTeacherPortafolio";
+export { updateTeacherPortafolioPublicado } from "./updateTeacherPortafolioPublicado";
 export { updateTeacherInstrumentos } from "./updateTeacherInstrumentos";
 export type { ITeacherInstrumentoUpdateItem } from "./updateTeacherInstrumentos";
 export { getTeacherCatalogos } from "./getTeacherCatalogos";

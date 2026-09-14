@@ -85,8 +85,8 @@ export default function CatedraHorariosSheet({ catedra, open, onOpenChange }: IC
                 </SelectContent>
               </Select>
             </div>
-            <TimeInput value={horaInicio} onChange={(event) => setHoraInicio(event.target.value)} aria-label="Hora de inicio" className="min-w-0 flex-1" />
-            <TimeInput value={horaFin} onChange={(event) => setHoraFin(event.target.value)} aria-label="Hora de fin" className="min-w-0 flex-1" />
+            <TimeInput value={horaInicio} onChange={setHoraInicio} aria-label="Hora de inicio" className="min-w-0 flex-1" />
+            <TimeInput value={horaFin} onChange={setHoraFin} aria-label="Hora de fin" className="min-w-0 flex-1" />
             <Button size="default" disabled={agregar.isPending} onClick={onAgregar}>
               {agregar.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:plus" aria-hidden="true" />}
               Agregar

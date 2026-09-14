@@ -57,13 +57,14 @@ export default function TestimonioFormDialog({ item }: ITestimonioFormDialogProp
       <AlertDialogContent className="max-h-[90vh] w-full max-w-2xl overflow-y-auto">
         <AlertDialogHeader>
           <AlertDialogTitle>{item ? "Editar testimonio" : "Nuevo testimonio"}</AlertDialogTitle>
-          <AlertDialogDescription>Asócialo a un curso para mostrarlo en su detalle o déjalo como testimonio general.</AlertDialogDescription>
+          <AlertDialogDescription>Asócialo a un curso, a un docente o déjalo como testimonio general del sitio.</AlertDialogDescription>
         </AlertDialogHeader>
         <Form form={form} onSubmit={onSubmit} id={`testimonio-${item?.id ?? "nuevo"}`} className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2"><TextField name="autor" label="Autor" required /><TextField name="rol" label="Rol o descripción" /></div>
           <TextareaField name="cita" label="Testimonio" rows={4} required />
           <div className="grid gap-3 sm:grid-cols-2">
-            <SelectField name="cursoId" label="Curso" placeholder="Testimonio general" disabled={options.isPending} options={(options.data ?? []).map((course) => ({ value: course.id, label: course.nombre }))} />
+            <SelectField name="cursoId" label="Curso" placeholder="Testimonio general" disabled={options.isPending} options={(options.data?.cursos ?? []).map((course) => ({ value: course.id, label: course.nombre }))} />
+            <SelectField name="docenteId" label="Docente" placeholder="Sin docente" disabled={options.isPending} options={(options.data?.docentes ?? []).map((docente) => ({ value: docente.id, label: docente.nombre }))} />
             <NumberField name="puntuacion" label="Puntuación" asNumber />
           </div>
           <div className="grid grid-cols-2 items-center gap-3"><NumberField name="orden" label="Orden" asNumber /><div className="pt-5"><SwitchField name="publicado" label="Publicado" /></div></div>

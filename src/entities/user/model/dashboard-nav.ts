@@ -30,6 +30,7 @@ const ADMIN_NAV: IDashboardNavGroup[] = [
     icon: "ph:users-three",
     items: [
       { label: "Estudiantes", href: "/dashboard/admin/estudiantes", icon: "ph:student" },
+      { label: "Docentes", href: "/dashboard/admin/docentes", icon: "ph:chalkboard-teacher" },
       { label: "Representantes", href: "/dashboard/admin/representantes", icon: "ph:identification-badge" },
       { label: "Usuarios y roles", href: "/dashboard/admin/usuarios", icon: "ph:users-three" },
     ],
@@ -41,6 +42,7 @@ const ADMIN_NAV: IDashboardNavGroup[] = [
       { label: "Programas", href: "/dashboard/admin/programas", icon: "ph:graduation-cap" },
       { label: "Cursos", href: "/dashboard/admin/cursos", icon: "ph:books" },
       { label: "Cátedras", href: "/dashboard/admin/catedras", icon: "ph:chalkboard" },
+      { label: "Asignaciones", href: "/dashboard/admin/asignaciones", icon: "ph:arrows-left-right" },
       { label: "Horarios y sesiones", href: "/dashboard/admin/horarios", icon: "ph:calendar-check" },
       { label: "Evaluaciones", href: "/dashboard/admin/evaluaciones", icon: "ph:exam" },
       { label: "Materiales", href: "/dashboard/admin/materiales", icon: "ph:file-audio" },

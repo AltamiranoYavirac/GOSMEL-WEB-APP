@@ -19,7 +19,7 @@ export async function getDocenteDetalle(
     supabase
       .from("docentes")
       .select(
-        "perfil_id, titulo_profesional, biografia, anios_experiencia, destacado, publicado, perfiles!docentes_perfil_id_fkey(nombres, apellidos, email), docente_instrumento(instrumentos(nombre))"
+        "perfil_id, slug, titulo_profesional, biografia, frase_destacada, anios_experiencia, redes_sociales, destacado, publicado, perfiles!docentes_perfil_id_fkey(nombres, apellidos, email), docente_instrumento(instrumento_id, es_principal, instrumentos(nombre))"
       )
       .eq("perfil_id", docenteId)
       .maybeSingle(),
@@ -68,19 +68,27 @@ export async function getDocenteDetalle(
     estado: catedra.estado as TEstadoCatedra,
   }));
 
+  const instrumentoRows = docente.data.docente_instrumento ?? [];
+
   return {
     data: {
       id: docente.data.perfil_id,
       nombre: `${docente.data.perfiles?.nombres ?? ""} ${docente.data.perfiles?.apellidos ?? ""}`.trim(),
       email: docente.data.perfiles?.email ?? null,
+      slug: docente.data.slug,
       titulo: docente.data.titulo_profesional,
       biografia: docente.data.biografia,
+      fraseDestacada: docente.data.frase_destacada,
       aniosExperiencia: docente.data.anios_experiencia,
+      redesSociales: (docente.data.redes_sociales ?? {}) as Record<string, string>,
       destacado: docente.data.destacado,
       publicado: docente.data.publicado,
-      instrumentos: (docente.data.docente_instrumento ?? [])
+      instrumentos: instrumentoRows
         .map((item) => item.instrumentos?.nombre ?? "")
         .filter(Boolean),
+      instrumentoIds: instrumentoRows.map((item) => item.instrumento_id),
+      instrumentoPrincipalId:
+        instrumentoRows.find((item) => item.es_principal)?.instrumento_id ?? null,
       formacion: (formacion.data ?? []).map((item) => ({
         id: item.id,
         institucion: item.institucion,

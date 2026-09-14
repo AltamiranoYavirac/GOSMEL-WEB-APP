@@ -3,6 +3,7 @@ export interface IDatePickerProps {
   onChange: (value: string) => void
   onBlur?: () => void
   disabled?: boolean
+  min?: string
   max?: string
   placeholder?: string
 }

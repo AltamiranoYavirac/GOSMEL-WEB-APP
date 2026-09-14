@@ -11,7 +11,7 @@ export function useTestimonioOptions(enabled: boolean) {
     queryFn: async () => {
       const { data, error } = await getTestimonioOptions();
       if (error) throw new Error(error);
-      return data ?? [];
+      return data ?? { cursos: [], docentes: [] };
     },
     enabled,
   });

@@ -48,7 +48,7 @@ export async function getTeacherPerfil(
         .order("anio", { ascending: false }),
       supabase
         .from("docente_portafolio")
-        .select("id, tipo, titulo, url_externa, orden")
+        .select("id, tipo, titulo, url_externa, orden, publicado")
         .eq("docente_id", user.id)
         .order("orden", { ascending: true }),
       supabase
@@ -116,6 +116,7 @@ export async function getTeacherPerfil(
     titulo: p.titulo ?? "Sin título",
     urlExterna: p.url_externa,
     orden: p.orden,
+    publicado: p.publicado,
   }));
 
   const instrumentos: ITeacherInstrumentoItem[] = (instrumentosRes.data ?? []).map((inst) => ({

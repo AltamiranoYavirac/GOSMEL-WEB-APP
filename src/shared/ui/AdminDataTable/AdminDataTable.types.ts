@@ -14,6 +14,12 @@ export interface IAdminDataTableFilter<T> {
   match: (row: T) => boolean;
 }
 
+export interface IAdminDataTableSelection {
+  selectedIds: string[];
+  onToggle: (id: string) => void;
+  onToggleAll: (ids: string[]) => void;
+}
+
 export interface IAdminDataTableProps<T> {
   data: T[];
   columns: IAdminColumn<T>[];
@@ -27,4 +33,5 @@ export interface IAdminDataTableProps<T> {
   rowActions?: (row: T) => ReactNode;
   countLabel?: string;
   pageSize?: number;
+  selection?: IAdminDataTableSelection;
 }

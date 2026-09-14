@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { format, isValid, parse } from "date-fns"
+import { addYears, format, isValid, parse } from "date-fns"
 import { es } from "date-fns/locale/es"
 import { Icon } from "@iconify/react"
+import type { Matcher } from "react-day-picker"
 
 import { cn } from "@/shared/lib/utils"
 import { Button, Calendar, Popover, PopoverContent, PopoverTrigger } from "@/shared/ui"
@@ -22,12 +23,19 @@ export function DatePicker({
   onChange,
   onBlur,
   disabled,
+  min,
   max,
   placeholder = "Selecciona una fecha",
 }: IDatePickerProps) {
   const [open, setOpen] = useState(false)
   const selected = parseValue(value)
+  const minDate = parseValue(min ?? null)
   const maxDate = parseValue(max ?? null)
+  const today = new Date()
+
+  const matchers: Matcher[] = []
+  if (minDate) matchers.push({ before: minDate })
+  if (maxDate) matchers.push({ after: maxDate })
 
   return (
     <Popover open={open} onOpenChange={(nextOpen) => {
@@ -58,10 +66,10 @@ export function DatePicker({
           locale={es}
           captionLayout="dropdown"
           selected={selected}
-          defaultMonth={selected ?? maxDate}
-          startMonth={new Date(new Date().getFullYear() - 100, 0)}
-          endMonth={maxDate ?? new Date()}
-          disabled={maxDate ? { after: maxDate } : undefined}
+          defaultMonth={selected ?? minDate ?? maxDate}
+          startMonth={minDate ?? addYears(today, -100)}
+          endMonth={maxDate ?? addYears(today, 5)}
+          disabled={matchers.length > 0 ? matchers : undefined}
           onSelect={(date) => {
             if (!date) return
             onChange(format(date, VALUE_FORMAT))

@@ -13,7 +13,7 @@ export default function TeacherCard({ teacher, className }: ITeacherCardProps) {
       ? `${teacher.education[0].title} - ${teacher.education[0].detail}`
       : teacher.tituloProfesional || null);
 
-  const quote = teacher.fraseDestacada || teacher.philosophy || null;
+  const quote = teacher.fraseDestacada?.trim() || null;
 
   const aniosExpText =
     teacher.aniosExperiencia != null

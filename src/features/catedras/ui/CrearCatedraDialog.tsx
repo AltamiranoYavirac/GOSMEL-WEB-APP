@@ -17,6 +17,9 @@ import {
 } from "@/shared/ui";
 import { DateField, Form, NumberField, SelectField, TextField, TimeField, useAppForm } from "@/shared/form";
 
+import { toLocalDateString } from "@/shared/lib";
+
+import { filtrarDocentesPorCurso } from "../api/getCatedraOptions";
 import { useCatedraOptions } from "../hooks/useCatedraOptions";
 import { useCrearCatedra } from "../hooks/useCrearCatedra";
 import {
@@ -30,12 +33,27 @@ import {
 
 export default function CrearCatedraDialog() {
   const [open, setOpen] = useState(false);
+  const [mostrarTodosDocentes, setMostrarTodosDocentes] = useState(false);
   const options = useCatedraOptions(open);
   const mutation = useCrearCatedra();
   const form = useAppForm<ICrearCatedraFormValues>({
     schema: crearCatedraFormSchema,
     defaultValues: getCrearCatedraFormDefaults(),
   });
+
+  const hoy = toLocalDateString();
+  const cursoId = form.watch("cursoId");
+  const docenteId = form.watch("docenteId");
+  const fechaInicio = form.watch("fechaInicio");
+  const instrumentoCurso =
+    (options.data?.cursos ?? []).find((curso) => curso.id === cursoId)?.instrumentoId ?? null;
+  const docentesFiltrados = filtrarDocentesPorCurso(
+    options.data?.docentes ?? [],
+    options.data?.cursos ?? [],
+    cursoId,
+    mostrarTodosDocentes,
+    docenteId
+  );
 
   useEffect(() => {
     const sugerido = options.data?.sugerenciaCodigo;
@@ -81,13 +99,26 @@ export default function CrearCatedraDialog() {
               disabled={options.isPending}
               options={(options.data?.cursos ?? []).map((curso) => ({ value: curso.id, label: curso.nombre }))}
             />
-            <SelectField
-              name="docenteId"
-              label="Docente"
-              placeholder="Seleccione un docente"
-              disabled={options.isPending}
-              options={(options.data?.docentes ?? []).map((docente) => ({ value: docente.id, label: docente.nombre }))}
-            />
+            <div className="flex flex-col gap-1.5">
+              <SelectField
+                name="docenteId"
+                label="Docente"
+                placeholder="Seleccione un docente"
+                disabled={options.isPending}
+                options={docentesFiltrados.map((docente) => ({ value: docente.id, label: docente.nombre }))}
+              />
+              {instrumentoCurso ? (
+                <button
+                  type="button"
+                  onClick={() => setMostrarTodosDocentes((value) => !value)}
+                  className="self-start text-xs font-medium text-primary underline-offset-3 hover:underline"
+                >
+                  {mostrarTodosDocentes
+                    ? "Mostrar solo docentes del instrumento"
+                    : "Ver todos los docentes"}
+                </button>
+              ) : null}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -101,8 +132,8 @@ export default function CrearCatedraDialog() {
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <DateField name="fechaInicio" label="Inicio" />
-            <DateField name="fechaFin" label="Fin (opcional)" />
+            <DateField name="fechaInicio" label="Inicio" min={hoy} />
+            <DateField name="fechaFin" label="Fin (opcional)" min={fechaInicio || hoy} />
           </div>
 
           <div className="flex items-center gap-3 pt-1">
