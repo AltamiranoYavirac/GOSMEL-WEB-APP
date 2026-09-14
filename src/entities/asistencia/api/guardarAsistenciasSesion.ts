@@ -1,16 +1,10 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 
-import type { TEstadoAsistencia } from "../model/teacher-dashboard.types";
+import type { IGuardarAsistenciaPayload } from "../model/asistencia.types";
 
-export interface IGuardarTeacherAsistenciaItem {
-  inscripcionId: string;
-  estado: TEstadoAsistencia;
-  observacion?: string | null;
-}
-
-export async function guardarTeacherAsistencias(
+export async function guardarAsistenciasSesion(
   sesionId: string,
-  asistencias: IGuardarTeacherAsistenciaItem[]
+  asistencias: IGuardarAsistenciaPayload[],
 ): Promise<{ error: string | null }> {
   const supabase = createSupabaseBrowserClient();
 

@@ -20,7 +20,9 @@ import { createFakeSupabase } from "@/test/supabase"
 import type { TFakeSupabaseClient } from "@/test/supabase.types"
 
 import { asignarEstudiante } from "./asignarEstudiante"
+import { asignarRolAdmin } from "./asignarRolAdmin"
 import { asignarRolDocente } from "./asignarRolDocente"
+import { getPerfilActual } from "./getPerfilActual"
 import { getUsuarios } from "./getUsuarios"
 import { quitarRol } from "./quitarRol"
 import { updateUsuarioActivo } from "./updateUsuarioActivo"
@@ -115,14 +117,52 @@ describe("usuarios API", () => {
     await expect(asignarRolDocente("p1", "Ada")).resolves.toEqual({ data: null, error: "boom" })
   })
 
-  it("quitarRol bloquea admin y elimina otros roles", async () => {
-    configure({ perfil_rol: [{ perfil_id: "p1", rol: "docente" }] })
+  it("quitarRol elimina el rol indicado, incluido admin", async () => {
+    configure({ perfil_rol: [{ perfil_id: "p1", rol: "admin" }, { perfil_id: "p1", rol: "docente" }] })
+
+    await expect(quitarRol("p1", "admin")).resolves.toEqual({ data: { perfilId: "p1" }, error: null })
+    await expect(quitarRol("p1", "docente")).resolves.toEqual({ data: { perfilId: "p1" }, error: null })
+  })
+
+  it("quitarRol propaga el error de la base", async () => {
+    createSupabaseBrowserClientMock.mockReturnValue(
+      createFakeSupabase.withError("perfil_rol", "No puedes quitarte a ti mismo el rol de administrador"),
+    )
 
     await expect(quitarRol("p1", "admin")).resolves.toEqual({
       data: null,
-      error: "No se puede quitar el rol de administrador",
+      error: "No puedes quitarte a ti mismo el rol de administrador",
     })
-    await expect(quitarRol("p1", "docente")).resolves.toEqual({ data: { perfilId: "p1" }, error: null })
+  })
+
+  it("asignarRolAdmin inserta el rol con el autor", async () => {
+    const tables = { perfil_rol: [] as Record<string, unknown>[] }
+    createSupabaseBrowserClientMock.mockReturnValue(
+      createFakeSupabase(tables, { user: { id: "u1" } }),
+    )
+
+    await expect(asignarRolAdmin("p1")).resolves.toEqual({ data: { perfilId: "p1" }, error: null })
+    expect(tables.perfil_rol[0]).toMatchObject({ perfil_id: "p1", rol: "admin", asignado_por: "u1" })
+  })
+
+  it("asignarRolAdmin propaga el error", async () => {
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase.withError("perfil_rol", "boom"))
+
+    await expect(asignarRolAdmin("p1")).resolves.toEqual({ data: null, error: "boom" })
+  })
+
+  it("getPerfilActual devuelve el id de la sesión", async () => {
+    configure({})
+
+    await expect(getPerfilActual()).resolves.toEqual({ data: { id: "u1" }, error: null })
+  })
+
+  it("getPerfilActual devuelve null sin sesión y propaga error", async () => {
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase({}))
+    await expect(getPerfilActual()).resolves.toEqual({ data: null, error: null })
+
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase({}, { userError: "boom" }))
+    await expect(getPerfilActual()).resolves.toEqual({ data: null, error: "boom" })
   })
 
   it("updateUsuarioContacto responde id", async () => {

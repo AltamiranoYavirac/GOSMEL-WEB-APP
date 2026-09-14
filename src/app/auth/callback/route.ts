@@ -19,6 +19,9 @@ export async function GET(request: NextRequest) {
       if (session.data?.isActive === false) {
         return NextResponse.redirect(`${origin}/auth/signout?reason=inactive`);
       }
+      if (session.data && session.data.roles.length === 0) {
+        return NextResponse.redirect(`${origin}/auth/signout?reason=sin_rol`);
+      }
       if (session.data) {
         return NextResponse.redirect(
           `${origin}${resolvePostLoginRoute(next, session.data.roles)}`,

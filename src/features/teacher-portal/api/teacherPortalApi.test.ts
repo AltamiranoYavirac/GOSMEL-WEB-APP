@@ -29,9 +29,7 @@ import { getTeacherEstudiantes } from "./getTeacherEstudiantes"
 import { getTeacherEvaluaciones } from "./getTeacherEvaluaciones"
 import { getTeacherMateriales } from "./getTeacherMateriales"
 import { getTeacherPerfil } from "./getTeacherPerfil"
-import { getTeacherSesionAsistencia } from "./getTeacherSesionAsistencia"
 import { getTeacherSesiones } from "./getTeacherSesiones"
-import { guardarTeacherAsistencias } from "./guardarTeacherAsistencias"
 import { guardarTeacherCalificaciones } from "./guardarTeacherCalificaciones"
 import { updateTeacherInstrumentos } from "./updateTeacherInstrumentos"
 import { updateTeacherPerfil } from "./updateTeacherPerfil"
@@ -294,46 +292,28 @@ describe("teacher-portal getters", () => {
     expect(result.data![0]).toMatchObject({ presentes: 1, totalAsistencia: 2, catedra: "C-01" })
   })
 
-  it("getTeacherSesionAsistencia mezcla inscripciones con asistencias y ordena", async () => {
-    const result = await getTeacherSesionAsistencia(
-      "s1",
+  it("getTeacherSesiones devuelve las sesiones en orden cronológico", async () => {
+    const sesion = (id: string, fecha: string) => ({
+      id,
+      fecha,
+      hora_inicio: "15:00",
+      hora_fin: "16:00",
+      tema: null,
+      estado: "programada",
+      catedra_id: "c1",
+      catedras: { codigo: "C-01", cursos: { nombre: "Guitarra" } },
+      asistencias: [],
+    })
+
+    const result = await getTeacherSesiones(
       clientWithTables({
-        sesiones: [
-          {
-            id: "s1",
-            catedra_id: "c1",
-            fecha: "2026-06-15",
-            hora_inicio: "15:00",
-            hora_fin: "16:00",
-            tema: null,
-            catedras: { codigo: "C-01", cursos: { nombre: "Guitarra" } },
-          },
-        ],
-        inscripciones: [
-          { id: "i2", estudiante_id: "e2", catedra_id: "c1", estado: "activa", estudiantes: { id: "e2", nombres: "Zoe", apellidos: "Zapata" } },
-          { id: "i1", estudiante_id: "e1", catedra_id: "c1", estado: "activa", estudiantes: { id: "e1", nombres: "Ada", apellidos: "Lovelace" } },
-        ],
-        asistencias: [{ sesion_id: "s1", inscripcion_id: "i1", estado: "ausente", observacion: "enferma" }],
+        perfil_rol: [],
+        catedras: [{ id: "c1", docente_id: "u1" }],
+        sesiones: [sesion("s3", "2026-10-14"), sesion("s1", "2026-09-23"), sesion("s2", "2026-09-30")],
       }),
     )
 
-    expect(result.error).toBeNull()
-    expect(result.data!.estudiantes.map((item) => item.estudianteNombre)).toEqual([
-      "Ada Lovelace",
-      "Zoe Zapata",
-    ])
-    expect(result.data!.estudiantes[0]).toMatchObject({ estado: "ausente", observacion: "enferma" })
-    expect(result.data!.estudiantes[1].estado).toBe("presente")
-  })
-
-  it("getTeacherSesionAsistencia propaga error de sesión", async () => {
-    const result = await getTeacherSesionAsistencia(
-      "missing",
-      clientWithTables({ sesiones: [] }),
-    )
-
-    expect(result.data).toBeNull()
-    expect(result.error).toBeTruthy()
+    expect(result.data!.map((item) => item.fecha)).toEqual(["2026-09-23", "2026-09-30", "2026-10-14"])
   })
 
   it("getEstudianteAsistencias mapea historial", async () => {
@@ -480,17 +460,6 @@ describe("teacher-portal mutators", () => {
 
     createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase.withError("docente_portafolio", "boom"))
     await expect(updateTeacherPortafolioPublicado("p1", false)).resolves.toEqual({ error: "boom" })
-  })
-
-  it("guardar asistencias hace upsert con observación normalizada", async () => {
-    configureClient(clientWithTables())
-
-    await expect(
-      guardarTeacherAsistencias("s1", [
-        { inscripcionId: "i1", estado: "presente", observacion: "  ok  " },
-        { inscripcionId: "i2", estado: "ausente" },
-      ]),
-    ).resolves.toEqual({ error: null })
   })
 
   it("guardar calificaciones omite notas nulas y no escribe si todo es null", async () => {

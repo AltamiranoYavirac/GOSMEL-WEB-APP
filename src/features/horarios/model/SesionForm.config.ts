@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { toLocalDateString } from "@/shared/lib";
+
 import type { TEstadoSesion } from "./horario.types";
 
 export const sesionFormSchema = z.object({
@@ -14,7 +16,7 @@ export const sesionFormSchema = z.object({
 export type ISesionFormValues = z.infer<typeof sesionFormSchema>;
 
 export function getSesionFormDefaults(initial?: Partial<ISesionFormValues>): ISesionFormValues {
-  const hoy = new Date().toISOString().slice(0, 10);
+  const hoy = toLocalDateString();
   return {
     catedraId: initial?.catedraId ?? "",
     fecha: initial?.fecha ?? hoy,

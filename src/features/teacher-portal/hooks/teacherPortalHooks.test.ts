@@ -10,7 +10,6 @@ const api = vi.hoisted(() => ({
   getTeacherMateriales: vi.fn(),
   getTeacherCatalogos: vi.fn(),
   getTeacherSesiones: vi.fn(),
-  getTeacherSesionAsistencia: vi.fn(),
   getTeacherCalificaciones: vi.fn(),
   getEstudianteAsistencias: vi.fn(),
   getCursoTemario: vi.fn(),
@@ -24,7 +23,6 @@ const api = vi.hoisted(() => ({
   deleteTeacherMaterial: vi.fn(),
   deleteTeacherPortafolio: vi.fn(),
   deleteTeacherReconocimiento: vi.fn(),
-  guardarTeacherAsistencias: vi.fn(),
   guardarTeacherCalificaciones: vi.fn(),
   updateTeacherPerfil: vi.fn(),
   updateTeacherInstrumentos: vi.fn(),
@@ -40,7 +38,6 @@ vi.mock("../api/getTeacherEvaluaciones", () => ({ getTeacherEvaluaciones: api.ge
 vi.mock("../api/getTeacherMateriales", () => ({ getTeacherMateriales: api.getTeacherMateriales }))
 vi.mock("../api/getTeacherCatalogos", () => ({ getTeacherCatalogos: api.getTeacherCatalogos }))
 vi.mock("../api/getTeacherSesiones", () => ({ getTeacherSesiones: api.getTeacherSesiones }))
-vi.mock("../api/getTeacherSesionAsistencia", () => ({ getTeacherSesionAsistencia: api.getTeacherSesionAsistencia }))
 vi.mock("../api/getTeacherCalificaciones", () => ({ getTeacherCalificaciones: api.getTeacherCalificaciones }))
 vi.mock("../api/getEstudianteAsistencias", () => ({ getEstudianteAsistencias: api.getEstudianteAsistencias }))
 vi.mock("../api/getCursoTemario", () => ({ getCursoTemario: api.getCursoTemario }))
@@ -54,7 +51,6 @@ vi.mock("../api/deleteTeacherFormacion", () => ({ deleteTeacherFormacion: api.de
 vi.mock("../api/deleteTeacherMaterial", () => ({ deleteTeacherMaterial: api.deleteTeacherMaterial }))
 vi.mock("../api/deleteTeacherPortafolio", () => ({ deleteTeacherPortafolio: api.deleteTeacherPortafolio }))
 vi.mock("../api/deleteTeacherReconocimiento", () => ({ deleteTeacherReconocimiento: api.deleteTeacherReconocimiento }))
-vi.mock("../api/guardarTeacherAsistencias", () => ({ guardarTeacherAsistencias: api.guardarTeacherAsistencias }))
 vi.mock("../api/guardarTeacherCalificaciones", () => ({ guardarTeacherCalificaciones: api.guardarTeacherCalificaciones }))
 vi.mock("../api/updateTeacherPerfil", () => ({ updateTeacherPerfil: api.updateTeacherPerfil }))
 vi.mock("../api/updateTeacherInstrumentos", () => ({ updateTeacherInstrumentos: api.updateTeacherInstrumentos }))
@@ -76,7 +72,6 @@ import { useDeleteTeacherMaterial } from "./useDeleteTeacherMaterial"
 import { useDeleteTeacherPortafolio } from "./useDeleteTeacherPortafolio"
 import { useDeleteTeacherReconocimiento } from "./useDeleteTeacherReconocimiento"
 import { useEstudianteAsistencias } from "./useEstudianteAsistencias"
-import { useGuardarTeacherAsistencias } from "./useGuardarTeacherAsistencias"
 import { useGuardarTeacherCalificaciones } from "./useGuardarTeacherCalificaciones"
 import { useTeacherCalificaciones } from "./useTeacherCalificaciones"
 import { useTeacherCatalogos } from "./useTeacherCatalogos"
@@ -86,7 +81,6 @@ import { useTeacherEstudiantes } from "./useTeacherEstudiantes"
 import { useTeacherEvaluaciones } from "./useTeacherEvaluaciones"
 import { useTeacherMateriales } from "./useTeacherMateriales"
 import { useTeacherPerfil } from "./useTeacherPerfil"
-import { useTeacherSesionAsistencia } from "./useTeacherSesionAsistencia"
 import { useTeacherSesiones } from "./useTeacherSesiones"
 import { useUpdateTeacherInstrumentos } from "./useUpdateTeacherInstrumentos"
 import { useUpdateTeacherPerfil } from "./useUpdateTeacherPerfil"
@@ -113,7 +107,6 @@ describe("teacher-portal hooks", () => {
       () => useTeacherMateriales(),
       () => useTeacherCatalogos(),
       () => useTeacherSesiones(),
-      () => useTeacherSesionAsistencia("s1"),
       () => useTeacherCalificaciones("ev1"),
       () => useEstudianteAsistencias("i1"),
       () => useCursoTemario("k1"),
@@ -138,7 +131,6 @@ describe("teacher-portal hooks", () => {
       [useDeleteTeacherMaterial, api.deleteTeacherMaterial],
       [useDeleteTeacherPortafolio, api.deleteTeacherPortafolio],
       [useDeleteTeacherReconocimiento, api.deleteTeacherReconocimiento],
-      [useGuardarTeacherAsistencias, api.guardarTeacherAsistencias],
       [useGuardarTeacherCalificaciones, api.guardarTeacherCalificaciones],
       [useUpdateTeacherPerfil, api.updateTeacherPerfil],
       [useUpdateTeacherInstrumentos, api.updateTeacherInstrumentos],
@@ -174,7 +166,6 @@ describe("teacher-portal hooks", () => {
       useDeleteTeacherMaterial,
       useDeleteTeacherPortafolio,
       useDeleteTeacherReconocimiento,
-      useGuardarTeacherAsistencias,
       useGuardarTeacherCalificaciones,
       useUpdateTeacherPerfil,
       useUpdateTeacherInstrumentos,

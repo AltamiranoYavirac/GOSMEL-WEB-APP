@@ -1,4 +1,5 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import { toLocalDateString } from "@/shared/lib";
 import type { TNivelCurso } from "../model/estudiante.types";
 
 export interface ICreateEstudianteInput {
@@ -32,7 +33,7 @@ export async function createEstudiante(input: ICreateEstudianteInput): Promise<{
       email: input.email?.trim() || null,
       nivel_musical: input.nivel_musical || "iniciacion",
       biografia_corta: input.biografia_corta?.trim() || null,
-      fecha_ingreso: new Date().toISOString().slice(0, 10),
+      fecha_ingreso: toLocalDateString(),
       activo: true,
     })
     .select("id")

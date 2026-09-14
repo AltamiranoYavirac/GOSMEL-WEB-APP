@@ -5,32 +5,29 @@ const api = vi.hoisted(() => ({
   getSesiones: vi.fn(),
   getHorariosRecurrentes: vi.fn(),
   getCatedrasParaHorarios: vi.fn(),
-  getAsistenciasSesion: vi.fn(),
   crearSesion: vi.fn(),
   crearHorarioRecurrente: vi.fn(),
   eliminarHorarioRecurrente: vi.fn(),
-  guardarAsistenciasSesion: vi.fn(),
   updateSesionEstado: vi.fn(),
+  generarSesionesCatedra: vi.fn(),
 }))
 
 vi.mock("../api/getSesiones", () => ({ getSesiones: api.getSesiones }))
 vi.mock("../api/getHorariosRecurrentes", () => ({ getHorariosRecurrentes: api.getHorariosRecurrentes }))
 vi.mock("../api/getCatedrasParaHorarios", () => ({ getCatedrasParaHorarios: api.getCatedrasParaHorarios }))
-vi.mock("../api/getAsistenciasSesion", () => ({ getAsistenciasSesion: api.getAsistenciasSesion }))
 vi.mock("../api/crearSesion", () => ({ crearSesion: api.crearSesion }))
 vi.mock("../api/crearHorarioRecurrente", () => ({ crearHorarioRecurrente: api.crearHorarioRecurrente }))
 vi.mock("../api/eliminarHorarioRecurrente", () => ({ eliminarHorarioRecurrente: api.eliminarHorarioRecurrente }))
-vi.mock("../api/guardarAsistenciasSesion", () => ({ guardarAsistenciasSesion: api.guardarAsistenciasSesion }))
 vi.mock("../api/updateSesionEstado", () => ({ updateSesionEstado: api.updateSesionEstado }))
+vi.mock("../api/generarSesionesCatedra", () => ({ generarSesionesCatedra: api.generarSesionesCatedra }))
 
 import { createQueryWrapper, createTestQueryClient } from "@/test/query"
 
-import { useAsistenciasSesion } from "./useAsistenciasSesion"
 import { useCatedrasParaHorarios } from "./useCatedrasParaHorarios"
 import { useCrearHorarioRecurrente } from "./useCrearHorarioRecurrente"
 import { useCrearSesion } from "./useCrearSesion"
 import { useEliminarHorarioRecurrente } from "./useEliminarHorarioRecurrente"
-import { useGuardarAsistenciasSesion } from "./useGuardarAsistenciasSesion"
+import { useGenerarSesionesCatedra } from "./useGenerarSesionesCatedra"
 import { useHorariosRecurrentes } from "./useHorariosRecurrentes"
 import { useSesiones } from "./useSesiones"
 
@@ -49,7 +46,6 @@ describe("horarios hooks", () => {
       () => useSesiones(),
       () => useHorariosRecurrentes(),
       () => useCatedrasParaHorarios(),
-      () => useAsistenciasSesion("s1"),
     ]
 
     for (const hook of hooks) {
@@ -64,7 +60,7 @@ describe("horarios hooks", () => {
       [useCrearSesion, api.crearSesion],
       [useCrearHorarioRecurrente, api.crearHorarioRecurrente],
       [useEliminarHorarioRecurrente, api.eliminarHorarioRecurrente],
-      [() => useGuardarAsistenciasSesion("s1"), api.guardarAsistenciasSesion],
+      [useGenerarSesionesCatedra, api.generarSesionesCatedra],
     ]
 
     for (const [hook, expected] of cases) {
@@ -88,7 +84,7 @@ describe("horarios hooks", () => {
       useCrearSesion,
       useCrearHorarioRecurrente,
       useEliminarHorarioRecurrente,
-      () => useGuardarAsistenciasSesion("s1"),
+      useGenerarSesionesCatedra,
     ]
 
     for (const hook of mutations) {

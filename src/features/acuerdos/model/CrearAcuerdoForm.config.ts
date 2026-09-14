@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { toLocalDateString } from "@/shared/lib";
+
 export const crearAcuerdoFormSchema = z.object({
   estudianteId: z.string().min(1, "Selecciona un estudiante"),
   montoMensual: z.coerce.number().positive("Ingresa una mensualidad válida"),
@@ -17,7 +19,7 @@ export function getCrearAcuerdoFormDefaults(): ICrearAcuerdoFormValues {
     estudianteId: "",
     montoMensual: 35,
     diaCobro: 5,
-    fechaInicio: new Date().toISOString().slice(0, 10),
+    fechaInicio: toLocalDateString(),
     fechaFin: "",
     motivoAjuste: "",
     observaciones: "",

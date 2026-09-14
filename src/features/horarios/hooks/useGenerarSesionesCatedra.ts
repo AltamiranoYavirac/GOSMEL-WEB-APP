@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { generarSesionesCatedra, type IGenerarSesionesInput } from "../api/generarSesionesCatedra";
+import { horariosQueryKeys } from "../model/query-keys";
 
 export function useGenerarSesionesCatedra() {
   const queryClient = useQueryClient();
@@ -15,8 +16,7 @@ export function useGenerarSesionesCatedra() {
       return data ?? 0;
     },
     onSuccess: (count) => {
-      queryClient.invalidateQueries({ queryKey: ["horarios"] });
-      queryClient.invalidateQueries({ queryKey: ["sesiones"] });
+      queryClient.invalidateQueries({ queryKey: horariosQueryKeys.all });
       toast.success(`Se generaron ${count} sesiones en el calendario de clases`);
     },
     onError: (error) => {

@@ -1,4 +1,5 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import { toLocalDateString } from "@/shared/lib";
 
 export interface IPagoItemInput {
   cuotaId: string;
@@ -18,7 +19,7 @@ export async function registrarPagoFamiliar(input: IRegistrarPagoFamiliarInput):
   const supabase = createSupabaseBrowserClient();
   const { data: userData } = await supabase.auth.getUser();
   const currentUid = userData?.user?.id;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = toLocalDateString();
 
   const activePagos = input.pagos.filter((p) => p.monto > 0);
 
