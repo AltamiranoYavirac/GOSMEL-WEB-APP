@@ -152,7 +152,7 @@ export default function TeacherResumenView({ className }: ITeacherResumenViewPro
             </CardContent>
           </Card>
         </Link>
-        <Link href="/dashboard/teacher/perfil" className="group">
+        <Link href="/dashboard/perfil" className="group">
           <Card className="h-full border-border/60 transition-all group-hover:border-primary/50 group-hover:shadow-sm">
             <CardContent className="flex flex-col items-center gap-2 p-4 text-center">
               <span className="flex size-10 items-center justify-center rounded-xl bg-muted text-foreground transition-colors group-hover:bg-primary-tint group-hover:text-primary">

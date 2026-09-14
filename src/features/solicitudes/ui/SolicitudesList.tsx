@@ -10,7 +10,6 @@ import { useSolicitudes } from "../hooks/useSolicitudes";
 import { useUpdateSolicitudEstado } from "../hooks/useUpdateSolicitudEstado";
 import { SOLICITUD_ESTADO_SIGUIENTE } from "../model/solicitudes.constants";
 import type { ISolicitudRow, TSolicitudEstado } from "../model/solicitud.types";
-import CrearMatriculaDialog from "./CrearMatriculaDialog";
 import SolicitudCard from "./SolicitudCard";
 
 const FILTROS: Array<{ value: "todas" | TSolicitudEstado; label: string }> = [
@@ -37,7 +36,6 @@ export default function SolicitudesList() {
   const [filtro, setFiltro] = useState<"todas" | TSolicitudEstado>("todas");
   const [search, setSearch] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [solicitudMatricula, setSolicitudMatricula] = useState<ISolicitudRow | null>(null);
 
   const counts = useMemo(() => {
     const base: Record<string, number> = { todas: rows.length };
@@ -130,7 +128,6 @@ export default function SolicitudesList() {
                 onMarkNext={() =>
                   siguiente ? mutation.mutate({ id: row.id, estado: siguiente }) : undefined
                 }
-                onConvert={() => setSolicitudMatricula(row)}
                 onDiscard={() => mutation.mutate({ id: row.id, estado: "descartada" })}
                 waUrl={getWhatsAppUrl(row)}
                 busy={mutation.isPending}
@@ -139,11 +136,6 @@ export default function SolicitudesList() {
           })}
         </div>
       )}
-
-      <CrearMatriculaDialog
-        solicitud={solicitudMatricula}
-        onClose={() => setSolicitudMatricula(null)}
-      />
     </div>
   );
 }

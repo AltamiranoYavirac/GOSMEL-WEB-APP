@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { DASHBOARD_NAV, getDashboardSectionGroup, getDashboardSectionLabel } from "./dashboard-nav"
+import { DASHBOARD_NAV, DASHBOARD_NAV_FOOTER, getDashboardSectionGroup, getDashboardSectionLabel } from "./dashboard-nav"
 
 const ADMIN = DASHBOARD_NAV.admin
 const STUDENT = DASHBOARD_NAV.estudiante
@@ -26,6 +26,20 @@ describe("getDashboardSectionLabel", () => {
 
   it("funciona con el nav de estudiante", () => {
     expect(getDashboardSectionLabel("/dashboard/student/notas", STUDENT)).toBe("Notas y asistencia")
+  })
+
+  it("resuelve items del footer de navegación", () => {
+    expect(getDashboardSectionLabel("/dashboard/perfil", ADMIN, DASHBOARD_NAV_FOOTER.admin)).toBe("Mi cuenta")
+    expect(getDashboardSectionLabel("/dashboard/perfil", STUDENT, DASHBOARD_NAV_FOOTER.estudiante)).toBe("Mi cuenta")
+    expect(getDashboardSectionLabel("/dashboard/perfil", STUDENT)).toBe("")
+  })
+
+  it("docente no tiene pestaña separada de perfil profesional y mantiene Mi cuenta en el footer", () => {
+    const docenteHrefs = DASHBOARD_NAV.docente.flatMap((group) =>
+      [group.href, ...(group.items ?? []).map((item) => item.href)].filter(Boolean),
+    )
+    expect(docenteHrefs).not.toContain("/dashboard/teacher/perfil")
+    expect(DASHBOARD_NAV_FOOTER.docente.map((item) => item.href)).toContain("/dashboard/perfil")
   })
 })
 
