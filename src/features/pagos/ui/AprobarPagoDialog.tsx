@@ -20,7 +20,7 @@ import { formatCurrency } from "@/shared/lib/formatters";
 import { useAprobarPago } from "../hooks/useAprobarPago";
 import type { IAprobarPagoDialogProps } from "./AprobarPagoDialog.types";
 
-export default function AprobarPagoDialog({ pago }: IAprobarPagoDialogProps) {
+export default function AprobarPagoDialog({ pago, trigger }: IAprobarPagoDialogProps) {
   const [open, setOpen] = useState(false);
   const mutation = useAprobarPago();
 
@@ -33,14 +33,16 @@ export default function AprobarPagoDialog({ pago }: IAprobarPagoDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button
-          size="xs"
-          className="bg-success text-success-foreground hover:bg-success/90 gap-1"
-          aria-label={`Aprobar pago de ${pago.estudiante}`}
-        >
-          <Icon icon="ph:check-circle" className="size-3.5" aria-hidden="true" />
-          Aprobar
-        </Button>
+        {trigger ?? (
+          <Button
+            size="sm"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
+            aria-label={`Aprobar pago de ${pago.estudiante}`}
+          >
+            <Icon icon="ph:check-circle" className="size-4" aria-hidden="true" />
+            Aprobar
+          </Button>
+        )}
       </AlertDialogTrigger>
 
       <AlertDialogContent className="w-full max-w-md p-6">
@@ -58,7 +60,7 @@ export default function AprobarPagoDialog({ pago }: IAprobarPagoDialogProps) {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction
-            className="bg-success text-success-foreground hover:bg-success/90"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
             onClick={onConfirm}
             disabled={mutation.isPending}
           >

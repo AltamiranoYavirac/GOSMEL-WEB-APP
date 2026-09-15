@@ -57,15 +57,20 @@ export default function EditarCuotaDialog({ cuota }: IEditarCuotaDialogProps) {
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent className="w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 sm:p-8">
-        <AlertDialogHeader>
-          <AlertDialogTitle>Editar cuota</AlertDialogTitle>
-          <AlertDialogDescription>
-            {cuota.estudiante} · {formatMonthPeriod(cuota.periodo)} (Pagado: {formatCurrency(cuota.montoPagado)})
+      <AlertDialogContent className="w-full max-w-xl gap-0 overflow-hidden rounded-xl p-0 shadow-xl">
+        <AlertDialogHeader className="gap-2 border-b border-border/70 px-6 py-5 sm:px-7">
+          <AlertDialogTitle className="text-xl leading-7">Editar cuota</AlertDialogTitle>
+          <AlertDialogDescription className="text-sm leading-6">
+            {cuota.estudiante} · {formatMonthPeriod(cuota.periodo)} · Pagado: {formatCurrency(cuota.montoPagado)}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <Form form={form} onSubmit={onSubmit} id={`editar-cuota-${cuota.id}`} className="flex flex-col gap-4">
+        <Form
+          form={form}
+          onSubmit={onSubmit}
+          id={`editar-cuota-${cuota.id}`}
+          className="flex flex-col gap-6 px-6 py-6 sm:px-7"
+        >
           <NumberField
             name="monto"
             label="Monto total de la cuota ($)"
@@ -77,9 +82,16 @@ export default function EditarCuotaDialog({ cuota }: IEditarCuotaDialogProps) {
           <DateField name="fechaVencimiento" label="Fecha de vencimiento" />
         </Form>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <Button form={`editar-cuota-${cuota.id}`} type="submit" disabled={mutation.isPending}>
+        <AlertDialogFooter className="gap-3 border-border/70 bg-muted/30 px-6 py-4 sm:px-7">
+          <AlertDialogCancel className="h-11 w-full px-5 text-sm font-semibold sm:w-auto sm:min-w-32">
+            Cancelar
+          </AlertDialogCancel>
+          <Button
+            form={`editar-cuota-${cuota.id}`}
+            type="submit"
+            disabled={mutation.isPending}
+            className="h-11 w-full gap-2 px-5 text-sm font-semibold sm:w-auto sm:min-w-44"
+          >
             {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:check" aria-hidden="true" />}
             Guardar cambios
           </Button>

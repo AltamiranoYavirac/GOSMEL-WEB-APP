@@ -7,10 +7,11 @@ import { Button } from "@/shared/ui";
 
 import {
   CONTACT_DETAILS,
-  CONTACT_SOCIAL_LINKS,
   CONTACT_WHATSAPP_HREF,
+  resolveSocialLinks,
 } from "../model/contact.constants";
 import ContactMap from "./ContactMap";
+import type { IContactRow } from "./ContactInfo.types";
 
 const whatsappHref = (raw: string | null): string => {
   if (!raw) return CONTACT_WHATSAPP_HREF;
@@ -26,8 +27,9 @@ export default function ContactInfo() {
   const phone = cfg?.telefono ?? CONTACT_DETAILS.phone;
   const email = cfg?.emailGeneral ?? CONTACT_DETAILS.email;
   const waHref = whatsappHref(cfg?.whatsapp ?? null);
+  const socialLinks = resolveSocialLinks(cfg?.redesSociales);
 
-  const rows = [
+  const rows: IContactRow[] = [
     {
       icon: "ph:map-pin",
       label: "Dirección",
@@ -46,7 +48,24 @@ export default function ContactInfo() {
       value: email,
       href: `mailto:${email}`,
     },
-  ] as const;
+  ];
+
+  if (cfg?.emailAdmisiones) {
+    rows.push({
+      icon: "ph:envelope-simple-open",
+      label: "Admisiones",
+      value: cfg.emailAdmisiones,
+      href: `mailto:${cfg.emailAdmisiones}`,
+    });
+  }
+
+  if (cfg?.horarioAtencion) {
+    rows.push({
+      icon: "ph:clock",
+      label: "Horario de atención",
+      value: cfg.horarioAtencion,
+    });
+  }
 
   return (
     <div className="flex flex-col gap-3.5">
@@ -92,7 +111,7 @@ export default function ContactInfo() {
         ) : null}
 
         <div className="mt-5 flex flex-wrap gap-2.5">
-          {CONTACT_SOCIAL_LINKS.map(({ href, icon, label }) => (
+          {socialLinks.map(({ href, icon, label }) => (
             <a
               key={label}
               href={href}

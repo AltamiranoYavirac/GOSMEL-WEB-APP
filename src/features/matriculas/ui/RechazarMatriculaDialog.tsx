@@ -44,14 +44,18 @@ export default function RechazarMatriculaDialog({ inscripcion, onClose }: IRecha
   return (
     <AlertDialog open={open} onOpenChange={(next) => (next ? null : onClose())}>
       <AlertDialogContent size="xl" className="w-full p-6 sm:p-7">
-        <AlertDialogHeader>
-          <AlertDialogMedia className="rounded-xl bg-danger-tint text-danger-fg">
-            <Icon icon="ph:prohibit" aria-hidden="true" />
+        <AlertDialogHeader className="flex-row items-center gap-4">
+          <AlertDialogMedia className="mb-0 size-12 rounded-2xl bg-danger-tint text-danger-fg">
+            <Icon icon="ph:prohibit" className="size-7" aria-hidden="true" />
           </AlertDialogMedia>
-          <AlertDialogTitle>Rechazar matrícula</AlertDialogTitle>
-          <AlertDialogDescription>
-            La inscripción se descartará y se notificará el motivo.
-          </AlertDialogDescription>
+          <div className="min-w-0">
+            <AlertDialogTitle className="font-heading text-xl font-extrabold tracking-tight">
+              Rechazar matrícula
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              La inscripción se descartará y se notificará el motivo.
+            </AlertDialogDescription>
+          </div>
         </AlertDialogHeader>
 
         {inscripcion ? (
@@ -85,11 +89,17 @@ export default function RechazarMatriculaDialog({ inscripcion, onClose }: IRecha
           />
         </Form>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <Button form="rechazar-matricula" type="submit" variant="destructive" disabled={mutation.isPending}>
-            {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:x" aria-hidden="true" />}
-            Confirmar rechazo
+        <AlertDialogFooter className="grid grid-cols-2 gap-3">
+          <AlertDialogCancel className="mt-0 h-12 w-full font-extrabold">Cancelar</AlertDialogCancel>
+          <Button
+            form="rechazar-matricula"
+            type="submit"
+            variant="destructive"
+            disabled={mutation.isPending}
+            className="h-12 w-full font-extrabold shadow-xs"
+          >
+            {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:x-circle" aria-hidden="true" />}
+            Confirmar
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -72,25 +72,25 @@ export default function SeleccionCuotas({
   };
 
   return (
-    <div className="space-y-5 py-1">
-      <div className="space-y-3">
+    <div className="space-y-6 py-1">
+      <section className="space-y-3" aria-labelledby="cuotas-pendientes-title">
         <div className="flex items-center justify-between">
-          <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          <Label id="cuotas-pendientes-title" className="text-sm font-semibold text-foreground">
             Cuotas Pendientes de los Estudiantes ({cuotas.length})
           </Label>
           <span className="text-xs text-muted-foreground">Seleccione las cuotas a incluir</span>
         </div>
 
-        <div className="space-y-2.5 max-h-64 overflow-y-auto pr-1">
+        <div className="max-h-64 space-y-2 overflow-y-auto pr-1">
           {cuotas.map((c) => {
             const isSelected = selectedCuotas[c.cuotaId] !== undefined;
             return (
               <div
                 key={c.cuotaId}
-                className={`flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-2xl border transition-all gap-3 ${
+                className={`flex flex-col justify-between gap-3 rounded-lg border p-3.5 transition-colors sm:flex-row sm:items-center ${
                   isSelected
-                    ? "border-primary/50 bg-primary/5 shadow-xs"
-                    : "border-border/60 bg-background/40 opacity-70"
+                    ? "border-primary border-l-[3px]"
+                    : "border-border hover:border-foreground/25"
                 }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -106,7 +106,7 @@ export default function SeleccionCuotas({
                     >
                       {c.estudianteNombre}
                     </label>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
                       <span>Período: <strong>{c.periodoMes}</strong></span>
                       <span>·</span>
                       <span>Saldo adeudado: <strong className="text-foreground">{formatCurrency(c.saldo)}</strong></span>
@@ -135,24 +135,24 @@ export default function SeleccionCuotas({
             );
           })}
         </div>
-      </div>
+      </section>
 
-      <div className="p-4 sm:p-5 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-between shadow-xs">
+      <section aria-label="Monto total consolidado" className="flex items-center justify-between gap-4 border-y border-border py-4">
         <div>
-          <span className="text-xs font-bold text-primary uppercase tracking-wider block">
+          <span className="block text-sm font-semibold text-foreground">
             Monto Total Consolidado
           </span>
-          <span className="text-[11px] text-muted-foreground">
+          <span className="text-xs text-muted-foreground">
             Suma total a registrar en este comprobante
           </span>
         </div>
-        <span className="text-2xl font-extrabold text-primary">
+        <span className="shrink-0 font-mono text-2xl font-bold tabular-nums text-primary sm:text-3xl">
           {formatCurrency(totalPagar)}
         </span>
-      </div>
+      </section>
 
-      <div className="p-4 sm:p-5 rounded-2xl bg-muted/30 border border-border/60 space-y-4">
-        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground block">
+      <section className="space-y-4 rounded-lg border border-border p-4 sm:p-5" aria-labelledby="comprobante-title">
+        <span id="comprobante-title" className="block text-sm font-semibold text-foreground">
           Detalles del Comprobante
         </span>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -163,10 +163,12 @@ export default function SeleccionCuotas({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Transferencia bancaria">Transferencia bancaria</SelectItem>
-                <SelectItem value="Efectivo en caja">Efectivo en caja</SelectItem>
-                <SelectItem value="Depósito bancario">Depósito bancario</SelectItem>
-                <SelectItem value="Tarjeta / Datáfono">Tarjeta de débito/crédito</SelectItem>
+                <SelectItem value="transferencia">Transferencia</SelectItem>
+                <SelectItem value="efectivo">Efectivo</SelectItem>
+                <SelectItem value="deposito">Depósito bancario</SelectItem>
+                <SelectItem value="tarjeta">Tarjeta</SelectItem>
+                <SelectItem value="punto_de_venta">Punto de venta</SelectItem>
+                <SelectItem value="otro">Otro</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -193,9 +195,9 @@ export default function SeleccionCuotas({
             />
           </div>
         </div>
-      </div>
+      </section>
 
-      <AlertDialogFooter className="pt-2 gap-3">
+      <AlertDialogFooter className="gap-3 pt-4">
         <AlertDialogCancel type="button" disabled={isSubmitting} className="h-10 px-5">
           Cancelar
         </AlertDialogCancel>

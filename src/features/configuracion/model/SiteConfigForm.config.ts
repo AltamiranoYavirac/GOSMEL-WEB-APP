@@ -2,27 +2,41 @@ import { z } from "zod";
 
 import type { ISiteConfig, ISiteConfigUpdate } from "@/entities/site-config";
 
-const optionalText = z.string().trim().optional();
+const optionalText = z.string().trim().max(100, "Máximo 100 caracteres").optional();
 const optionalEmail = z
   .string()
   .trim()
+  .max(100, "Máximo 100 caracteres")
   .email("Ingresa un correo válido")
+  .optional()
+  .or(z.literal(""));
+const optionalPhone = z
+  .string()
+  .trim()
+  .regex(/^[0-9]{0,10}$/, "Solo dígitos, máximo 10")
+  .optional()
+  .or(z.literal(""));
+const optionalUrl = z
+  .string()
+  .trim()
+  .max(100, "Máximo 100 caracteres")
+  .url("Ingresa una URL válida")
   .optional()
   .or(z.literal(""));
 
 export const siteConfigFormSchema = z.object({
   direccion: optionalText,
   ciudad: optionalText,
-  telefono: optionalText,
-  whatsapp: optionalText,
+  telefono: optionalPhone,
+  whatsapp: optionalPhone,
   emailGeneral: optionalEmail,
   emailAdmisiones: optionalEmail,
   horarioAtencion: optionalText,
-  mapaEmbed: optionalText,
-  instagram: optionalText,
-  facebook: optionalText,
-  tiktok: optionalText,
-  youtube: optionalText,
+  mapaEmbed: optionalUrl,
+  instagram: optionalUrl,
+  facebook: optionalUrl,
+  tiktok: optionalUrl,
+  youtube: optionalUrl,
 });
 
 export type ISiteConfigFormValues = z.infer<typeof siteConfigFormSchema>;

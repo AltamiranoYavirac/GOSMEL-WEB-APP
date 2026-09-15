@@ -7,9 +7,17 @@ export async function updateSolicitudEstado(
   estado: TSolicitudEstado
 ): Promise<{ data: { id: string } | null; error: string | null }> {
   const supabase = createSupabaseBrowserClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { data: null, error: "No hay sesión activa" };
+  }
+
   const { data, error } = await supabase
     .from("solicitudes")
-    .update({ estado })
+    .update({ estado, atendida_por: user.id })
     .eq("id", id)
     .select("id")
     .maybeSingle();

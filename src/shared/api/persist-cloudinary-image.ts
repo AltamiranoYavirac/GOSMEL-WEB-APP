@@ -6,6 +6,7 @@ export async function persistCloudinaryImage<TData>({
   folder,
   currentPublicId,
   removeCurrent = false,
+  deleteCurrentAfterPersist = true,
   meta,
   persist,
 }: ICloudinaryMutationInput<TData>) {
@@ -26,7 +27,7 @@ export async function persistCloudinaryImage<TData>({
   }
 
   let cleanupError: string | null = null
-  if (currentPublicId && currentPublicId !== nextPublicId) {
+  if (deleteCurrentAfterPersist && currentPublicId && currentPublicId !== nextPublicId) {
     const cleanup = await deleteCloudinaryImage(currentPublicId)
     cleanupError = cleanup.error
   }

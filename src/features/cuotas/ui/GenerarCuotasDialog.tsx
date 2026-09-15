@@ -50,7 +50,7 @@ export default function GenerarCuotasDialog() {
   return (
     <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogTrigger asChild>
-        <Button>
+        <Button className="w-full text-white sm:w-auto hover:text-white">
           <Icon icon="ph:plus" aria-hidden="true" />
           Generar cuotas
         </Button>
