@@ -21,7 +21,7 @@ import { formatCurrency } from "@/shared/lib/formatters";
 import { useAnularPago } from "../hooks/useAnularPago";
 import type { IAnularPagoDialogProps } from "./AnularPagoDialog.types";
 
-export default function AnularPagoDialog({ pago }: IAnularPagoDialogProps) {
+export default function AnularPagoDialog({ pago, trigger }: IAnularPagoDialogProps) {
   const [open, setOpen] = useState(false);
   const [motivo, setMotivo] = useState("");
   const mutation = useAnularPago();
@@ -36,9 +36,11 @@ export default function AnularPagoDialog({ pago }: IAnularPagoDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon-xs" className="text-destructive hover:bg-destructive/10" aria-label={`Anular pago de ${pago.estudiante}`}>
-          <Icon icon="ph:trash" className="size-4" aria-hidden="true" />
-        </Button>
+        {trigger ?? (
+          <Button variant="ghost" size="icon-xs" className="text-destructive hover:bg-destructive/10" aria-label={`Anular pago de ${pago.estudiante}`}>
+            <Icon icon="ph:trash" className="size-4" aria-hidden="true" />
+          </Button>
+        )}
       </AlertDialogTrigger>
 
       <AlertDialogContent className="w-full max-w-md p-6">

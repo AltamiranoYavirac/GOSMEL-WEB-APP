@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Icon } from "@iconify/react";
 
 import {
@@ -20,9 +20,10 @@ import type { IPagoRow } from "../model/pago.types";
 
 interface IReciboPagoDialogProps {
   pago: IPagoRow;
+  trigger?: ReactNode;
 }
 
-export default function ReciboPagoDialog({ pago }: IReciboPagoDialogProps) {
+export default function ReciboPagoDialog({ pago, trigger }: IReciboPagoDialogProps) {
   const [open, setOpen] = useState(false);
 
   if (!pago.numeroRecibo || pago.estado !== "aprobado") return null;
@@ -30,9 +31,11 @@ export default function ReciboPagoDialog({ pago }: IReciboPagoDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button size="icon-xs" variant="ghost" aria-label={`Ver recibo ${pago.numeroRecibo}`}>
-          <Icon icon="ph:receipt" className="size-4" aria-hidden="true" />
-        </Button>
+        {trigger ?? (
+          <Button size="icon-xs" variant="ghost" aria-label={`Ver recibo ${pago.numeroRecibo}`}>
+            <Icon icon="ph:receipt" className="size-4" aria-hidden="true" />
+          </Button>
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent className="w-full max-w-lg p-6 sm:p-8">
         <AlertDialogHeader>
