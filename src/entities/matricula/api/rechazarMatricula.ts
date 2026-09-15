@@ -6,11 +6,10 @@ export async function rechazarMatricula(
 ): Promise<{ error: string | null }> {
   const supabase = createSupabaseBrowserClient();
 
-  const { error } = await supabase
-    .from("inscripciones")
-    .update({ estado: "cancelada", motivo_rechazo: motivo })
-    .eq("id", inscripcionId)
-    .eq("estado", "pendiente");
+  const { error } = await supabase.rpc("rechazar_matricula", {
+    p_inscripcion_id: inscripcionId,
+    p_motivo: motivo,
+  });
 
   if (error) {
     return { error: error.message };

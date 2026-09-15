@@ -1,32 +1,59 @@
 "use client"
 
+import { Icon } from "@iconify/react"
+
 import { ROLE_LABEL } from "@/entities/user"
 import {
   AdminPageHeader,
   Badge,
+  Button,
   Card,
   CardContent,
-  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
   DataLabel,
   ImageUploadField,
+  Skeleton,
+  Spinner,
 } from "@/shared/ui"
+import { Form, TextField, useAppForm } from "@/shared/form"
 
 import { useEliminarAvatar } from "../hooks/useEliminarAvatar"
+import { useMiPerfil } from "../hooks/useMiPerfil"
 import { useSubirAvatar } from "../hooks/useSubirAvatar"
+import { useUpdateMiPerfil } from "../hooks/useUpdateMiPerfil"
+import {
+  datosCuentaFormSchema,
+  getDatosCuentaFormDefaults,
+  mapMiPerfilToFormValues,
+  type IDatosCuentaFormValues,
+} from "../model/DatosCuentaForm.config"
 import type { IPerfilViewProps } from "./PerfilView.types"
 
 export default function PerfilView({ session }: IPerfilViewProps) {
   const subirAvatar = useSubirAvatar()
   const eliminarAvatar = useEliminarAvatar()
+  const miPerfil = useMiPerfil(session.id)
+  const updateMiPerfil = useUpdateMiPerfil(session.id)
+
+  const form = useAppForm<IDatosCuentaFormValues>({
+    schema: datosCuentaFormSchema,
+    values: miPerfil.data ? mapMiPerfilToFormValues(miPerfil.data) : getDatosCuentaFormDefaults(),
+    resetOptions: { keepDirtyValues: false, keepErrors: false },
+  })
+
+  const onSubmit = (values: IDatosCuentaFormValues) => {
+    updateMiPerfil.mutate(values)
+  }
 
   return (
     <div className="space-y-6">
       <AdminPageHeader
         eyebrow="Panel · Cuenta"
         title="Mi cuenta"
-        description="Gestiona tu foto de perfil y revisa los datos de tu cuenta."
+        description="Gestiona tu foto de perfil y edita los datos de tu cuenta."
         icon="ph:user-circle"
       />
 
@@ -63,26 +90,56 @@ export default function PerfilView({ session }: IPerfilViewProps) {
               Información vinculada a tu acceso en la plataforma.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-1">
-              <DataLabel>Nombre</DataLabel>
-              <p className="text-sm font-medium text-foreground">{session.displayName}</p>
-            </div>
-            <div className="space-y-1">
-              <DataLabel>Correo</DataLabel>
-              <p className="text-sm font-medium text-foreground">{session.email}</p>
-            </div>
-            <div className="space-y-1.5">
-              <DataLabel>Roles</DataLabel>
-              <div className="flex flex-wrap gap-1.5">
-                {session.roles.map((rol) => (
-                  <Badge key={rol} variant="outline" className="capitalize">
-                    {ROLE_LABEL[rol]}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </CardContent>
+
+          {miPerfil.isLoading ? (
+            <CardContent className="space-y-4">
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-9 w-full" />
+              <Skeleton className="h-9 w-full" />
+            </CardContent>
+          ) : (
+            <Form form={form} onSubmit={onSubmit} id="datos-cuenta-form">
+              <CardContent className="space-y-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <TextField name="nombres" label="Nombres" />
+                  <TextField name="apellidos" label="Apellidos" />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <TextField
+                    name="cedula"
+                    label="Cédula"
+                    startIcon={<Icon icon="ph:identification-card" className="size-4" aria-hidden="true" />}
+                  />
+                  <TextField
+                    name="celular"
+                    label="Celular"
+                    startIcon={<Icon icon="ph:phone" className="size-4" aria-hidden="true" />}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <DataLabel>Correo</DataLabel>
+                  <p className="text-sm font-medium text-foreground">{session.email}</p>
+                </div>
+                <div className="space-y-1.5">
+                  <DataLabel>Roles</DataLabel>
+                  <div className="flex flex-wrap gap-1.5">
+                    {session.roles.map((rol) => (
+                      <Badge key={rol} variant="outline" className="capitalize">
+                        {ROLE_LABEL[rol]}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="justify-end">
+                <Button type="submit" form="datos-cuenta-form" disabled={updateMiPerfil.isPending}>
+                  {updateMiPerfil.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:check" aria-hidden="true" />}
+                  Guardar cambios
+                </Button>
+              </CardFooter>
+            </Form>
+          )}
         </Card>
       </div>
     </div>

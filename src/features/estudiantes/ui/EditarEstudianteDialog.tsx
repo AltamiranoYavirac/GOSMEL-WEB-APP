@@ -54,9 +54,8 @@ export default function EditarEstudianteDialog({ estudiante }: IEditarEstudiante
   return (
     <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="icon-sm" aria-label={`Editar a ${estudiante.nombreCompleto}`}>
           <Icon icon="ph:pencil-simple" aria-hidden="true" />
-          Editar
         </Button>
       </AlertDialogTrigger>
 

@@ -13,7 +13,7 @@ export async function getSolicitudes(
   const { data, error } = await supabase
     .from("solicitudes")
     .select(
-      "id, created_at, nombre_completo, email, telefono, tipo, estado, mensaje, origen_url, curso_id, cursos(nombre), instrumento_id, instrumentos(nombre), docente_id, docentes(perfiles!docentes_perfil_id_fkey(nombres, apellidos)), estudiante_nombre, estudiante_fecha_nacimiento, para_menor, parentesco, consentimiento_datos, consentimiento_en, consentimiento_otorgado_por, notas_internas, responsable:perfiles!solicitudes_atendida_por_fkey(nombres, apellidos, avatar_public_id)"
+      "id, created_at, nombre_completo, email, telefono, tipo, estado, mensaje, origen_url, instrumento_id, instrumentos(nombre), creada_por, consentimiento_datos, consentimiento_en, consentimiento_otorgado_por, notas_internas, responsable:perfiles!solicitudes_atendida_por_fkey(nombres, apellidos, avatar_public_id)"
     )
     .order("created_at", { ascending: false })
     .limit(300);
@@ -23,12 +23,7 @@ export async function getSolicitudes(
   }
 
   const rows: ISolicitudRow[] = (data ?? []).map((solicitud) => {
-    const docente = solicitud.docentes?.perfiles;
     const responsable = solicitud.responsable;
-    const interes =
-      solicitud.cursos?.nombre ??
-      solicitud.instrumentos?.nombre ??
-      (docente ? `${docente.nombres} ${docente.apellidos}`.trim() : null);
 
     return {
       id: solicitud.id,
@@ -40,11 +35,8 @@ export async function getSolicitudes(
       estado: solicitud.estado as TSolicitudEstado,
       mensaje: solicitud.mensaje,
       origenUrl: solicitud.origen_url,
-      interes,
-      estudianteNombre: solicitud.estudiante_nombre,
-      estudianteFechaNacimiento: solicitud.estudiante_fecha_nacimiento,
-      paraMenor: solicitud.para_menor,
-      parentesco: solicitud.parentesco,
+      interes: solicitud.instrumentos?.nombre ?? null,
+      creadaPor: solicitud.creada_por,
       consentimientoDatos: solicitud.consentimiento_datos,
       consentimientoEn: solicitud.consentimiento_en,
       consentimientoOtorgadoPor: solicitud.consentimiento_otorgado_por,

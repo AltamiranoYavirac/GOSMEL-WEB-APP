@@ -5,6 +5,7 @@ export interface ICloudinaryMutationInput<TData> {
   folder: TCloudinaryImageFolder
   currentPublicId?: string | null
   removeCurrent?: boolean
+  deleteCurrentAfterPersist?: boolean
   meta?: ICloudinaryImageMeta
   persist: (publicId: string | null) => Promise<{ data: TData | null; error: string | null }>
 }
