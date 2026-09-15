@@ -6,8 +6,6 @@ export { useEstudianteAsistencias } from "./useEstudianteAsistencias";
 export { useTeacherSesiones } from "./useTeacherSesiones";
 export { useCreateTeacherSesion } from "./useCreateTeacherSesion";
 export { useUpdateTeacherSesionEstado } from "./useUpdateTeacherSesionEstado";
-export { useTeacherSesionAsistencia } from "./useTeacherSesionAsistencia";
-export { useGuardarTeacherAsistencias } from "./useGuardarTeacherAsistencias";
 export { useTeacherEvaluaciones } from "./useTeacherEvaluaciones";
 export { useCreateTeacherEvaluacion } from "./useCreateTeacherEvaluacion";
 export { useTeacherCalificaciones } from "./useTeacherCalificaciones";

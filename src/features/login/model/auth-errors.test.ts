@@ -7,6 +7,7 @@ describe("getAuthErrorMessage", () => {
     expect(getAuthErrorMessage("invalid_credentials")).toBe("Correo o contraseña incorrectos.")
     expect(getAuthErrorMessage("email_not_confirmed")).toBe("Debes confirmar tu correo antes de entrar.")
     expect(getAuthErrorMessage("account_inactive")).toContain("desactivada")
+    expect(getAuthErrorMessage("sin_rol")).toContain("no ha sido inscrita")
     expect(getAuthErrorMessage("over_request_rate_limit")).toContain("Demasiados intentos")
   })
 

@@ -5,6 +5,10 @@ import type { Database } from "@/shared/api/supabase/database.types";
 export interface ICatedraSelectOption {
   id: string;
   label: string;
+  fechaInicio: string;
+  fechaFin: string | null;
+  activos: number;
+  pendientes: number;
 }
 
 export async function getCatedrasParaHorarios(
@@ -15,7 +19,7 @@ export async function getCatedrasParaHorarios(
 }> {
   const { data, error } = await supabase
     .from("catedras")
-    .select("id, codigo, cursos(nombre)")
+    .select("id, codigo, fecha_inicio, fecha_fin, cursos(nombre), inscripciones!inscripciones_catedra_id_fkey(estado)")
     .in("estado", ["planificada", "en_curso"])
     .order("codigo", { ascending: true });
 
@@ -23,10 +27,18 @@ export async function getCatedrasParaHorarios(
     return { data: null, error: error.message };
   }
 
-  const options: ICatedraSelectOption[] = (data ?? []).map((c) => ({
-    id: c.id,
-    label: `${c.codigo} · ${c.cursos?.nombre ?? "Sin curso"}`,
-  }));
+  const options: ICatedraSelectOption[] = (data ?? []).map((c) => {
+    const inscripciones = c.inscripciones ?? [];
+
+    return {
+      id: c.id,
+      label: `${c.codigo} · ${c.cursos?.nombre ?? "Sin curso"}`,
+      fechaInicio: c.fecha_inicio,
+      fechaFin: c.fecha_fin,
+      activos: inscripciones.filter((item) => item.estado === "activa").length,
+      pendientes: inscripciones.filter((item) => item.estado === "pendiente").length,
+    };
+  });
 
   return { data: options, error: null };
 }

@@ -16,6 +16,9 @@ export async function requireApiSession(allowed?: TRol[]): Promise<TApiSessionRe
   if (!result.data.isActive)
     return { ok: false, response: NextResponse.json({ data: null, error: "Cuenta inactiva" }, { status: 403 }) }
 
+  if (result.data.roles.length === 0)
+    return { ok: false, response: NextResponse.json({ data: null, error: "Sin permisos" }, { status: 403 }) }
+
   if (allowed && !allowed.some((rol) => result.data.roles.includes(rol)))
     return { ok: false, response: NextResponse.json({ data: null, error: "Sin permisos" }, { status: 403 }) }
 

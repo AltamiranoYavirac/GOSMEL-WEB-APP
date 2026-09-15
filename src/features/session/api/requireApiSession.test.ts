@@ -57,6 +57,16 @@ describe("requireApiSession", () => {
     await expectFailure(await requireApiSession(), 403, "Cuenta inactiva")
   })
 
+  it("responde 403 si la cuenta no tiene ningún rol", async () => {
+    getServerSessionMock.mockResolvedValue({
+      kind: "authenticated",
+      data: buildSession({ roles: [] }),
+      error: null,
+    })
+
+    await expectFailure(await requireApiSession(), 403, "Sin permisos")
+  })
+
   it("responde 403 si el rol no está permitido", async () => {
     getServerSessionMock.mockResolvedValue({
       kind: "authenticated",

@@ -11,7 +11,6 @@ const api = vi.hoisted(() => ({
   updateCatedra: vi.fn(),
   eliminarCatedra: vi.fn(),
   eliminarInscripcionCatedra: vi.fn(),
-  generarSesionesCatedra: vi.fn(),
 }))
 
 vi.mock("../api/getCatedraEstudiantes", () => ({ getCatedraEstudiantes: api.getCatedraEstudiantes }))
@@ -25,7 +24,6 @@ vi.mock("../api/crearCatedra", () => ({ crearCatedra: api.crearCatedra }))
 vi.mock("../api/updateCatedra", () => ({ updateCatedra: api.updateCatedra }))
 vi.mock("../api/eliminarCatedra", () => ({ eliminarCatedra: api.eliminarCatedra }))
 vi.mock("../api/eliminarInscripcionCatedra", () => ({ eliminarInscripcionCatedra: api.eliminarInscripcionCatedra }))
-vi.mock("../api/generarSesionesCatedra", () => ({ generarSesionesCatedra: api.generarSesionesCatedra }))
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
 
 import { createQueryWrapper, createTestQueryClient } from "@/test/query"
@@ -36,7 +34,6 @@ import { useCatedraOptions } from "./useCatedraOptions"
 import { useCrearCatedra } from "./useCrearCatedra"
 import { useEliminarCatedra } from "./useEliminarCatedra"
 import { useEliminarInscripcionCatedra } from "./useEliminarInscripcionCatedra"
-import { useGenerarSesionesCatedra } from "./useGenerarSesionesCatedra"
 import { useUpdateCatedra } from "./useUpdateCatedra"
 
 function wrapper() {
@@ -65,7 +62,6 @@ describe("catedras hooks", () => {
       [useUpdateCatedra, api.updateCatedra],
       [useEliminarCatedra, api.eliminarCatedra],
       [() => useEliminarInscripcionCatedra("c1"), api.eliminarInscripcionCatedra],
-      [useGenerarSesionesCatedra, api.generarSesionesCatedra],
       [() => useAgregarHorarioCatedra("c1"), api.agregarHorarioCatedra],
       [() => useEliminarHorarioCatedra("c1"), api.eliminarHorarioCatedra],
     ]
@@ -92,7 +88,6 @@ describe("catedras hooks", () => {
       useUpdateCatedra,
       useEliminarCatedra,
       () => useEliminarInscripcionCatedra("c1"),
-      useGenerarSesionesCatedra,
       () => useAgregarHorarioCatedra("c1"),
       () => useEliminarHorarioCatedra("c1"),
     ]

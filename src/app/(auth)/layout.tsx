@@ -18,7 +18,7 @@ export default async function AuthLayout({
     redirect("/auth/signout?reason=inactive");
   }
 
-  if (sessionResult.kind === "authenticated") {
+  if (sessionResult.kind === "authenticated" && sessionResult.data.roles.length > 0) {
     redirect(sessionResult.data.homeRoute);
   }
 

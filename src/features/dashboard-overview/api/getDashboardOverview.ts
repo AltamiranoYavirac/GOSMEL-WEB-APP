@@ -1,4 +1,6 @@
 import { createSupabaseServerClient } from "@/shared/api/supabase/server";
+import { ACADEMY_TIME_ZONE } from "@/shared/config";
+import { toDateStringInTimeZone } from "@/shared/lib";
 
 import { formatActivityMeta, formatActivitySubtitleDate, initialsOf } from "../model/format-activity-date";
 import type {
@@ -26,19 +28,19 @@ const SOLICITUD_TIPO_BADGE: Record<string, { label: string; tone: TAccentTone }>
 
 const MONTH_LABEL = new Intl.DateTimeFormat("es", { month: "short" });
 
-function monthsAgo(count: number) {
-  const date = new Date();
-  date.setDate(1);
-  date.setMonth(date.getMonth() - count);
-  return date;
-}
-
 function monthKey(date: Date) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
-function toIsoDate(date: Date) {
-  return date.toISOString().slice(0, 10);
+function monthStart(year: number, month: number, offset: number) {
+  const date = new Date(Date.UTC(year, month - 1 + offset, 1));
+  return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-01`;
+}
+
+function shiftDays(isoDate: string, days: number) {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  const shifted = new Date(Date.UTC(year, month - 1, day + days));
+  return `${shifted.getUTCFullYear()}-${String(shifted.getUTCMonth() + 1).padStart(2, "0")}-${String(shifted.getUTCDate()).padStart(2, "0")}`;
 }
 
 function percentChange(current: number, previous: number): number | undefined {
@@ -51,13 +53,16 @@ export async function getDashboardOverview(): Promise<{
   error: string | null;
 }> {
   const supabase = await createSupabaseServerClient();
-  const now = new Date();
-  const startOfMonth = toIsoDate(new Date(now.getFullYear(), now.getMonth(), 1));
-  const startOfPrevMonth = toIsoDate(monthsAgo(1));
-  const sixMonthsAgo = toIsoDate(monthsAgo(5));
-  const today = toIsoDate(now);
-  const sevenDaysAgo = toIsoDate(new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000));
-  const fourteenDaysAgo = toIsoDate(new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000));
+  const today = toDateStringInTimeZone(new Date(), ACADEMY_TIME_ZONE);
+  const [academyYear, academyMonth] = today.split("-").map(Number);
+  const startOfMonth = monthStart(academyYear, academyMonth, 0);
+  const startOfPrevMonth = monthStart(academyYear, academyMonth, -1);
+  const sixMonthsAgo = monthStart(academyYear, academyMonth, -5);
+  const sevenDaysAgo = shiftDays(today, -7);
+  const fourteenDaysAgo = shiftDays(today, -14);
+  const monthBuckets = Array.from({ length: 6 }, (_, index) =>
+    monthStart(academyYear, academyMonth, index - 5).slice(0, 7),
+  );
 
   const {
     data: { user },
@@ -163,8 +168,8 @@ export async function getDashboardOverview(): Promise<{
   const ingresosMesAnterior = (pagosMesAnterior.data ?? []).reduce((sum, pago) => sum + Number(pago.monto_total), 0);
 
   const revenueByMonth = new Map<string, number>();
-  for (let i = 5; i >= 0; i--) {
-    revenueByMonth.set(monthKey(monthsAgo(i)), 0);
+  for (const key of monthBuckets) {
+    revenueByMonth.set(key, 0);
   }
   for (const pago of pagosSeisMeses.data ?? []) {
     const key = monthKey(new Date(pago.fecha_pago));
@@ -177,8 +182,8 @@ export async function getDashboardOverview(): Promise<{
   const revenueSpark = revenue.map((point) => point.total);
 
   const estudiantesByMonth = new Map<string, number>();
-  for (let i = 5; i >= 0; i--) {
-    estudiantesByMonth.set(monthKey(monthsAgo(i)), 0);
+  for (const key of monthBuckets) {
+    estudiantesByMonth.set(key, 0);
   }
   for (const estudiante of estudiantesSeisMeses.data ?? []) {
     const key = monthKey(new Date(estudiante.created_at));
@@ -188,8 +193,8 @@ export async function getDashboardOverview(): Promise<{
   }
   let acumulado = Math.max((estudiantesActivos.count ?? 0) - (estudiantesSeisMeses.data?.length ?? 0), 0);
   const estudiantesSpark: number[] = [];
-  for (let i = 5; i >= 0; i--) {
-    acumulado += estudiantesByMonth.get(monthKey(monthsAgo(i))) ?? 0;
+  for (const key of monthBuckets) {
+    acumulado += estudiantesByMonth.get(key) ?? 0;
     estudiantesSpark.push(acumulado);
   }
 

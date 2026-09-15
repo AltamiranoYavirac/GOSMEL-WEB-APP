@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { toLocalDateString } from "@/shared/lib";
+
 import type { TTipoEvaluacion } from "./teacher-dashboard.types";
 
 export const EVALUACION_TIPO_OPCIONES: { value: TTipoEvaluacion; label: string }[] = [
@@ -28,7 +30,7 @@ export function getTeacherEvaluacionFormDefaults(defaultCatedraId = ""): ITeache
     catedraId: defaultCatedraId,
     titulo: "",
     tipo: "sumativa",
-    fecha: new Date().toISOString().slice(0, 10),
+    fecha: toLocalDateString(),
     notaMaxima: 10,
     ponderacion: 20,
     descripcion: "",

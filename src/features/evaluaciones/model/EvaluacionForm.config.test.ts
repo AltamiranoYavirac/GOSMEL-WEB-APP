@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 
 import { evaluacionFormSchema, getEvaluacionFormDefaults } from "./EvaluacionForm.config"
 
@@ -35,4 +35,17 @@ describe("evaluacionFormSchema", () => {
     expect(parsed.fecha).toBe("")
     expect(parsed.notaMaxima).toBe(20)
   })
+
+  it("propone la fecha local de hoy incluso de noche", () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date(2026, 8, 14, 22, 30))
+
+    expect(getEvaluacionFormDefaults().fecha).toBe("2026-09-14")
+
+    vi.useRealTimers()
+  })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })

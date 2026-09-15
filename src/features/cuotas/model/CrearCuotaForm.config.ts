@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { toLocalDateString } from "@/shared/lib";
+
 export const crearCuotaFormSchema = z.object({
   estudianteId: z.string().min(1, "Selecciona un estudiante"),
   responsableRepresentanteId: z.string().optional(),
@@ -16,7 +18,7 @@ export function getCrearCuotaFormDefaults(): ICrearCuotaFormValues {
     estudianteId: "",
     responsableRepresentanteId: "",
     monto: 35,
-    fechaVencimiento: new Date(now.getFullYear(), now.getMonth(), 5).toISOString().slice(0, 10),
+    fechaVencimiento: toLocalDateString(new Date(now.getFullYear(), now.getMonth(), 5)),
     concepto: "",
   };
 }

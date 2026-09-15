@@ -1,5 +1,8 @@
+import type { TEstadoAsistencia } from "@/entities/asistencia";
 import type { Database } from "@/shared/api/supabase/database.types";
 import type { TBadgeVariant } from "@/shared/ui";
+
+export type { TEstadoAsistencia };
 
 export type TModalidadCurso = Database["public"]["Enums"]["modalidad_curso"];
 export type TEstadoCatedra = Database["public"]["Enums"]["estado_catedra"];
@@ -7,7 +10,6 @@ export type TEstadoSesion = Database["public"]["Enums"]["estado_sesion"];
 export type TTipoMaterial = Database["public"]["Enums"]["tipo_material"];
 export type TVisibilidadMaterial = Database["public"]["Enums"]["visibilidad_material"];
 export type TTipoEvaluacion = Database["public"]["Enums"]["tipo_evaluacion"];
-export type TEstadoAsistencia = Database["public"]["Enums"]["estado_asistencia"];
 export type TTipoPortafolio = Database["public"]["Enums"]["tipo_portafolio"];
 
 export interface ITeacherHorario {
@@ -231,6 +233,13 @@ export const SESION_ESTADO_BADGE: Record<TEstadoSesion, { label: string; variant
   realizada: { label: "Realizada", variant: "default" },
   cancelada: { label: "Cancelada", variant: "destructive" },
   reprogramada: { label: "Reprogramada", variant: "secondary" },
+};
+
+export const SESION_ESTADO_DOT: Record<TEstadoSesion, string> = {
+  programada: "bg-muted-foreground",
+  realizada: "bg-success",
+  cancelada: "bg-destructive",
+  reprogramada: "bg-info",
 };
 
 export const MATERIAL_TIPO_BADGE: Record<TTipoMaterial, { label: string; variant: TBadgeVariant }> = {

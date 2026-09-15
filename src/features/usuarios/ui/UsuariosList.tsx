@@ -7,9 +7,11 @@ import { AdminDataTable, AdminPageHeader, Avatar, AvatarFallback, Badge, Button,
 import { initialsOf } from "@/shared/lib/formatters";
 
 import { useUsuarios } from "../hooks/useUsuarios";
+import { useAsignarRolAdmin } from "../hooks/useAsignarRolAdmin";
+import { usePerfilActual } from "../hooks/usePerfilActual";
 import { useQuitarRol } from "../hooks/useQuitarRol";
 import { useUpdateUsuarioActivo } from "../hooks/useUpdateUsuarioActivo";
-import { ROL_BADGE, type IUsuarioRow } from "../model/usuario.types";
+import { ADMIN_PROTEGIDO_EMAIL, ROL_BADGE, type IUsuarioRow } from "../model/usuario.types";
 import AsignarEstudianteDialog from "./AsignarEstudianteDialog";
 import EditarContactoDialog from "./EditarContactoDialog";
 
@@ -17,6 +19,8 @@ export default function UsuariosList() {
   const { data, isPending } = useUsuarios();
   const mutation = useUpdateUsuarioActivo();
   const quitarRol = useQuitarRol();
+  const asignarAdmin = useAsignarRolAdmin();
+  const perfilActual = usePerfilActual();
   const [estudianteAsignar, setEstudianteAsignar] = useState<IUsuarioRow | null>(null);
   const rows = data ?? [];
 
@@ -109,10 +113,23 @@ export default function UsuariosList() {
         emptyDescription="Cuando se registren cuentas aparecerán aquí."
         countLabel="usuarios"
         rowActions={(row) => {
+          const esAdmin = row.roles.includes("admin");
+          const esAdminProtegido = esAdmin && row.email?.toLowerCase() === ADMIN_PROTEGIDO_EMAIL;
+          const esUnoMismo = row.id === perfilActual.data?.id;
+          const puedeAsignarAdmin = !esAdmin;
+          const puedeQuitarAdmin = esAdmin && !esAdminProtegido && !esUnoMismo;
           const puedeAsignarEstudiante = !row.roles.includes("estudiante");
           const puedeQuitarEstudiante = row.roles.includes("estudiante");
           const puedeQuitarRepresentante = row.roles.includes("representante");
+          const motivoAdminBloqueado = esAdminProtegido
+            ? "Administrador protegido"
+            : esUnoMismo
+              ? "Tu propia cuenta"
+              : null;
           const sinOpciones =
+            !puedeAsignarAdmin &&
+            !puedeQuitarAdmin &&
+            !motivoAdminBloqueado &&
             !puedeAsignarEstudiante &&
             !puedeQuitarEstudiante &&
             !puedeQuitarRepresentante;
@@ -129,6 +146,32 @@ export default function UsuariosList() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  {puedeAsignarAdmin ? (
+                    <DropdownMenuItem onSelect={() => asignarAdmin.mutate(row.id)}>
+                      <Icon icon="ph:shield-check" aria-hidden="true" />
+                      Asignar administrador
+                    </DropdownMenuItem>
+                  ) : null}
+
+                  {puedeQuitarAdmin ? (
+                    <DropdownMenuItem
+                      className="text-destructive focus:text-destructive"
+                      onSelect={() => quitarRol.mutate({ perfilId: row.id, rol: "admin" })}
+                    >
+                      <Icon icon="ph:shield-slash" aria-hidden="true" />
+                      Quitar administrador
+                    </DropdownMenuItem>
+                  ) : null}
+
+                  {motivoAdminBloqueado ? (
+                    <DropdownMenuItem disabled>
+                      <Icon icon="ph:lock-simple" aria-hidden="true" />
+                      {motivoAdminBloqueado}
+                    </DropdownMenuItem>
+                  ) : null}
+
+                  {puedeAsignarAdmin || puedeQuitarAdmin || motivoAdminBloqueado ? <DropdownMenuSeparator /> : null}
+
                   {puedeAsignarEstudiante ? (
                     <DropdownMenuItem onSelect={() => setEstudianteAsignar(row)}>
                       <Icon icon="ph:student" aria-hidden="true" />
