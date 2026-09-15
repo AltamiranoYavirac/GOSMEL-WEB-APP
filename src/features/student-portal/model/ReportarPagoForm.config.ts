@@ -6,7 +6,7 @@ export const reportarPagoFormSchema = z.object({
   monto: z.coerce.number().positive("Ingresa un monto válido"),
   metodo: z.string().min(1, "Selecciona un método"),
   referencia: z.string().max(100, "Máximo 100 caracteres").optional(),
-  comprobanteStoragePath: z.string().optional(),
+  comprobanteStoragePath: z.string().min(1, "Adjunta el comprobante de pago"),
   observacion: z.string().max(300, "Máximo 300 caracteres").optional(),
 });
 

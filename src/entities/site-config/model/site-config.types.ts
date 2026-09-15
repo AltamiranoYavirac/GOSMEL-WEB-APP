@@ -12,3 +12,15 @@ export interface ISiteConfig {
   redesSociales: Json;
   actualizado: string;
 }
+
+export interface ISiteConfigUpdate {
+  ciudad: string | null;
+  direccion: string | null;
+  telefono: string | null;
+  whatsapp: string | null;
+  emailGeneral: string | null;
+  emailAdmisiones: string | null;
+  horarioAtencion: string | null;
+  mapaEmbed: string | null;
+  redesSociales: Record<string, string>;
+}

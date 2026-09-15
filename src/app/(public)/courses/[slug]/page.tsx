@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { CourseDetail, getPublicCourseBySlug } from "@/features/courses";
+import { CourseDetail, getPublicCourseBySlug, getPublicCourseReviews } from "@/features/courses";
 import { CtaPanel } from "@/widgets/CtaPanel";
 
 export const dynamic = "force-dynamic";
@@ -20,9 +20,12 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
   if (error) throw new Error(error);
   if (!course) notFound();
 
+  const { data: reviews, error: reviewsError } = await getPublicCourseReviews(course.id);
+  if (reviewsError) throw new Error(reviewsError);
+
   return (
     <div className="flex-1 bg-background">
-      <CourseDetail course={course} />
+      <CourseDetail course={course} reviews={reviews} />
       {course.ctaTitle && course.ctaDescription ? (
         <CtaPanel
           titleId="course-cta-title"

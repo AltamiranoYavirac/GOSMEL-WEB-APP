@@ -56,6 +56,11 @@ function cuotaColumns(): IAdminColumn<IStudentCuotaEstado>[] {
         ),
     },
     {
+      key: "reservado",
+      label: "En revisión",
+      render: (row) => row.saldoReservado > 0 ? <span className="font-medium text-warning-fg">{formatCurrency(row.saldoReservado)}</span> : <span className="text-muted-foreground">—</span>,
+    },
+    {
       key: "vencimiento",
       label: "Vencimiento",
       render: (row) => (row.fechaVencimiento ? formatDate(row.fechaVencimiento) : <span className="text-muted-foreground">—</span>),

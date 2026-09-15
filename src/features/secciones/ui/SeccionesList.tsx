@@ -1,11 +1,16 @@
 "use client";
 
+import Image from "next/image";
+
 import { AdminDataTable, AdminPageHeader, Badge, Switch, type IAdminColumn, type IAdminDataTableFilter } from "@/shared/ui";
 import { formatDateTime } from "@/shared/lib/formatters";
+import { buildCloudinaryImageUrl } from "@/shared/lib";
 
 import { useSecciones } from "../hooks/useSecciones";
 import { useUpdateSeccionPublicado } from "../hooks/useUpdateSeccionPublicado";
 import type { ISeccionRow } from "../model/seccion.types";
+import EliminarSeccionDialog from "./EliminarSeccionDialog";
+import SeccionFormDialog from "./SeccionFormDialog";
 
 export default function SeccionesList() {
   const { data, isPending } = useSecciones();
@@ -13,6 +18,19 @@ export default function SeccionesList() {
   const rows = data ?? [];
 
   const columns: IAdminColumn<ISeccionRow>[] = [
+    {
+      key: "imagen",
+      label: "Imagen",
+      render: (row) => {
+        const src = buildCloudinaryImageUrl(row.imagenPublicId, "ar_4:3,c_fill,g_auto,w_160,q_auto,f_auto");
+        if (!src) return <span className="text-muted-foreground">—</span>;
+        return (
+          <span className="relative block h-10 w-14 overflow-hidden rounded-md border border-border">
+            <Image src={src} alt={row.imagenTextoAlt ?? row.titulo} fill sizes="56px" className="object-cover" />
+          </span>
+        );
+      },
+    },
     {
       key: "titulo",
       label: "Sección",
@@ -46,6 +64,16 @@ export default function SeccionesList() {
         />
       ),
     },
+    {
+      key: "actions",
+      label: "",
+      render: (row) => (
+        <div className="flex justify-end gap-1">
+          <SeccionFormDialog item={row} />
+          <EliminarSeccionDialog item={row} />
+        </div>
+      ),
+    },
   ];
 
   const filters: IAdminDataTableFilter<ISeccionRow>[] = [
@@ -60,7 +88,9 @@ export default function SeccionesList() {
         title="Secciones institucionales"
         description="Bloques de contenido editables del sitio, como la página Nosotros."
         icon="ph:layout"
-      />
+      >
+        <SeccionFormDialog />
+      </AdminPageHeader>
 
       <AdminDataTable
         data={rows}

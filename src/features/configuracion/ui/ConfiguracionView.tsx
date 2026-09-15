@@ -2,12 +2,94 @@
 
 import { Icon } from "@iconify/react";
 
-import { AdminPageHeader, Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/shared/ui";
+import { AdminPageHeader, Button, Card, CardContent, CardHeader, CardTitle, Skeleton, Spinner } from "@/shared/ui";
+import { Form, TextareaField, TextField, useAppForm } from "@/shared/form";
 import { formatDateTime } from "@/shared/lib/formatters";
 
-import { useSiteConfig } from "@/entities/site-config";
+import { useSiteConfig, type ISiteConfig } from "@/entities/site-config";
 
-import ConfiguracionField from "./ConfiguracionField";
+import { useUpdateSiteConfig } from "../hooks/useUpdateSiteConfig";
+import {
+  getSiteConfigFormDefaults,
+  siteConfigFormSchema,
+  type ISiteConfigFormValues,
+} from "../model/SiteConfigForm.config";
+
+const FORM_ID = "configuracion-sitio";
+
+function ConfiguracionForm({ config }: { config: ISiteConfig | null }) {
+  const mutation = useUpdateSiteConfig();
+  const form = useAppForm<ISiteConfigFormValues>({
+    schema: siteConfigFormSchema,
+    values: getSiteConfigFormDefaults(config),
+    resetOptions: { keepDirtyValues: false, keepErrors: false },
+  });
+
+  return (
+    <>
+      <AdminPageHeader
+        eyebrow="Sitio · GOSMEL"
+        title="Configuración del sitio"
+        description="Datos de contacto, redes sociales y horario de atención de la academia."
+        icon="ph:gear-six"
+      >
+        <Button form={FORM_ID} type="submit" disabled={mutation.isPending}>
+          {mutation.isPending ? <Spinner className="size-4" /> : <Icon icon="ph:floppy-disk" aria-hidden="true" />}
+          Guardar cambios
+        </Button>
+      </AdminPageHeader>
+
+      <Form form={form} onSubmit={(values: ISiteConfigFormValues) => mutation.mutate(values)} id={FORM_ID} className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Contacto</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <TextField name="direccion" label="Dirección" />
+            <TextField name="ciudad" label="Ciudad" />
+            <TextField name="telefono" label="Teléfono" type="tel" />
+            <TextField name="whatsapp" label="WhatsApp" type="tel" />
+            <TextField name="emailGeneral" label="Email general" type="email" />
+            <TextField name="emailAdmisiones" label="Email de admisiones" type="email" />
+            <TextField name="horarioAtencion" label="Horario de atención" />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Redes sociales</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4 sm:grid-cols-2">
+            <TextField name="instagram" label="Instagram" type="url" placeholder="https://instagram.com/…" />
+            <TextField name="facebook" label="Facebook" type="url" placeholder="https://facebook.com/…" />
+            <TextField name="tiktok" label="TikTok" type="url" placeholder="https://tiktok.com/@…" />
+            <TextField name="youtube" label="YouTube" type="url" placeholder="https://youtube.com/@…" />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Mapa</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TextareaField
+              name="mapaEmbed"
+              label="URL del mapa embebido"
+              rows={2}
+              placeholder="https://www.google.com/maps/embed?pb=…"
+            />
+          </CardContent>
+        </Card>
+      </Form>
+
+      {config ? (
+        <p className="text-xs text-muted-foreground">Última actualización: {formatDateTime(config.actualizado)}</p>
+      ) : (
+        <p className="text-xs text-muted-foreground">Aún no se han registrado los datos del sitio.</p>
+      )}
+    </>
+  );
+}
 
 export default function ConfiguracionView() {
   const { data, isPending } = useSiteConfig();
@@ -30,96 +112,9 @@ export default function ConfiguracionView() {
     );
   }
 
-  if (!data) {
-    return (
-      <div className="space-y-6">
-        <AdminPageHeader
-          eyebrow="Sitio · GOSMEL"
-          title="Configuración del sitio"
-          description="Datos de contacto, redes sociales y horario de atención de la academia."
-          icon="ph:gear-six"
-        />
-        <div className="flex flex-col items-center justify-center gap-2 py-16 text-center">
-          <Icon icon="ph:gear-six" className="size-8 text-muted-foreground/60" aria-hidden="true" />
-          <p className="font-heading text-lg text-foreground">Sin configuración</p>
-          <p className="text-sm text-muted-foreground">Aún no se han registrado los datos del sitio.</p>
-        </div>
-      </div>
-    );
-  }
-
-  const redes = data.redesSociales && typeof data.redesSociales === "object" && !Array.isArray(data.redesSociales)
-    ? Object.entries(data.redesSociales as Record<string, unknown>).filter(([, value]) => typeof value === "string")
-    : [];
-
   return (
     <div className="space-y-6">
-      <AdminPageHeader
-        eyebrow="Sitio · GOSMEL"
-        title="Configuración del sitio"
-        description="Datos de contacto, redes sociales y horario de atención de la academia."
-        icon="ph:gear-six"
-      />
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Contacto y redes</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <ConfiguracionField label="Dirección" icon="ph:map-pin" value={data.direccion ?? "—"} />
-          <ConfiguracionField label="Ciudad" icon="ph:buildings" value={data.ciudad ?? "—"} />
-          <ConfiguracionField label="Teléfono" icon="ph:phone" value={data.telefono ?? "—"} />
-          <ConfiguracionField label="WhatsApp" icon="ph:whatsapp-logo" value={data.whatsapp ?? "—"} />
-          <ConfiguracionField label="Email general" icon="ph:envelope-simple" value={data.emailGeneral ?? "—"} />
-          <ConfiguracionField label="Email de admisiones" icon="ph:envelope" value={data.emailAdmisiones ?? "—"} />
-          <ConfiguracionField label="Horario de atención" icon="ph:clock" value={data.horarioAtencion ?? "—"} />
-          <ConfiguracionField
-            label="Redes sociales"
-            icon="ph:share-network"
-            value={
-              redes.length > 0 ? (
-                <div className="flex flex-wrap gap-1.5">
-                  {redes.map(([nombre, url]) => (
-                    <a
-                      key={nombre}
-                      href={url as string}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-1 rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-primary transition-colors hover:bg-muted"
-                    >
-                      <Icon icon="ph:link" className="size-3" aria-hidden="true" />
-                      {nombre}
-                    </a>
-                  ))}
-                </div>
-              ) : (
-                "—"
-              )
-            }
-          />
-          <ConfiguracionField
-            label="Mapa embed"
-            icon="ph:map-trifold"
-            value={
-              data.mapaEmbed ? (
-                <a
-                  href={data.mapaEmbed}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-1 font-medium text-primary underline-offset-3 hover:underline"
-                >
-                  Ver mapa
-                  <Icon icon="ph:arrow-square-out" className="size-3.5" aria-hidden="true" />
-                </a>
-              ) : (
-                "—"
-              )
-            }
-          />
-        </CardContent>
-      </Card>
-
-      <p className="text-xs text-muted-foreground">Última actualización: {formatDateTime(data.actualizado)}</p>
+      <ConfiguracionForm config={data ?? null} />
     </div>
   );
 }

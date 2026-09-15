@@ -4,7 +4,9 @@ export { SOCIAL_PROVIDERS, SOCIAL_LINKS } from "./social";
 export type { ISocialProvider, ISocialLink } from "./social";
 export { UI_ICONS } from "./ui-icons";
 export {
+  buildCloudinaryFolder,
   CLOUDINARY_IMAGE_FOLDERS,
   CLOUDINARY_IMAGE_TYPES,
   CLOUDINARY_MAX_IMAGE_SIZE,
+  isAllowedCloudinaryFolder,
 } from "./cloudinary";

@@ -11,8 +11,8 @@ export function useCondonarCuota() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (cuotaId: string) => {
-      const { error } = await condonarCuota(cuotaId);
+    mutationFn: async ({ cuotaId, motivo }: { cuotaId: string; motivo: string }) => {
+      const { error } = await condonarCuota(cuotaId, motivo);
       if (error) throw new Error(error);
     },
     onSuccess: () => {

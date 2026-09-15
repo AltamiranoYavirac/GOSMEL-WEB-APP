@@ -9,8 +9,8 @@ export function useAnularPago() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (pagoId: string) => {
-      const { error } = await anularPago(pagoId);
+    mutationFn: async ({ pagoId, motivo }: { pagoId: string; motivo: string }) => {
+      const { error } = await anularPago(pagoId, motivo);
       if (error) throw new Error(error);
     },
     onSuccess: () => {

@@ -388,7 +388,7 @@ describe("student-portal mutators", () => {
   })
 
   it("reportStudentPayment inserta pago pendiente de verificación", async () => {
-    createSupabaseBrowserClientMock.mockReturnValue(client())
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase({}, { rpcResults: { reportar_cobro_portal: "p1" } }))
 
     const result = await reportStudentPayment({
       cuotaId: "q1",

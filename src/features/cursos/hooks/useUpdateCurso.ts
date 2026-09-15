@@ -26,6 +26,7 @@ export function useUpdateCurso() {
         folder: "gosmel/cursos",
         currentPublicId,
         removeCurrent: values.quitarPortada,
+        meta: { displayName: `Portada - ${values.nombre}`, tags: [`curso:${id}`] },
         persist: (publicId) => updateCurso(id, buildEditarCursoPayload(values, publicId)),
       });
       if (result.error) throw new Error(result.error);

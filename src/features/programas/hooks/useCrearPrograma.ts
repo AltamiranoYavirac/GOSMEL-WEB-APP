@@ -16,6 +16,7 @@ export function useCrearPrograma() {
       const result = await persistCloudinaryImage({
         file: values.imagenArchivo,
         folder: "gosmel/programas",
+        meta: { displayName: `Imagen - ${values.nombre}`, tags: ["programa:imagen"] },
         persist: (publicId) => crearPrograma(values, publicId),
       });
       if (result.error) throw new Error(result.error);

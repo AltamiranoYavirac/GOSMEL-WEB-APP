@@ -36,16 +36,17 @@ describe("cuotas API", () => {
   it("getCuotas mapea estudiante y saldo", async () => {
     const result = await getCuotas(
       createFakeSupabase({
-        cuotas: [
+        v_estado_cuenta: [
           {
-            id: "q1",
+            cuota_id: "q1",
             periodo_mes: "2026-06",
+            estudiante: "Ada Lovelace",
             monto: 100,
             monto_pagado: 30,
+            saldo: 70,
+            saldo_reservado: 0,
             fecha_vencimiento: "2026-06-05",
             estado: "parcial",
-            acuerdo_id: "a1",
-            acuerdos_pago: { estudiante_id: "e1", estudiantes: { nombres: "Ada", apellidos: "Lovelace" } },
           },
         ],
       }),
@@ -54,43 +55,25 @@ describe("cuotas API", () => {
     expect(result.data![0]).toMatchObject({ estudiante: "Ada Lovelace", saldo: 70, estado: "parcial" })
   })
 
-  it("crearCuota reutiliza el acuerdo vigente", async () => {
-    configure({ acuerdos_pago: [{ id: "a1", estudiante_id: "e1", estado: "vigente" }], cuotas: [] })
+  it("crearCuota registra exclusivamente un cargo extraordinario mediante RPC", async () => {
+    configure({}, { id: "u1" })
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase({}, { rpcResults: { crear_cargo_extraordinario: { id: "q1" } } }))
 
-    const result = await crearCuota({ estudianteId: "e1", monto: 50, periodo: "2026-06", fechaVencimiento: "2026-06-05" })
+    const result = await crearCuota({ estudianteId: "e1", monto: 50, fechaVencimiento: "2026-06-05", concepto: "Materiales" })
 
     expect(result).toEqual({ data: { id: expect.any(String) }, error: null })
   })
 
-  it("crearCuota crea un acuerdo cuando no existe", async () => {
-    const fake = configure({ acuerdos_pago: [], cuotas: [] })
-    const calls: string[] = []
-    const original = fake.from.bind(fake) as (table: string) => unknown
-    fake.from = ((table: string) => {
-      calls.push(table)
-      return original(table)
-    }) as unknown as typeof fake.from
-
-    const result = await crearCuota({ estudianteId: "e1", monto: 50, periodo: "2026-06-01", fechaVencimiento: "2026-06-05" })
-
-    expect(result.error).toBeNull()
-    expect(calls).toEqual(["acuerdos_pago", "acuerdos_pago", "cuotas"])
+  it("crearCuota exige concepto", async () => {
+    configure()
+    await expect(crearCuota({ estudianteId: "e1", monto: 50, fechaVencimiento: "2026-06-05" })).resolves.toEqual({ data: null, error: "El concepto del cargo es obligatorio" })
   })
 
-  it("crearCuota propaga errores de acuerdo y de cuota", async () => {
-    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase.withError("cuotas", "boom cuota", {}))
-    await expect(crearCuota({ estudianteId: "e1", monto: 50, periodo: "2026-06", fechaVencimiento: "2026-06-05" })).resolves.toEqual({
+  it("crearCuota propaga errores de la RPC", async () => {
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase.withError("rpc:crear_cargo_extraordinario", "boom cargo", {}))
+    await expect(crearCuota({ estudianteId: "e1", monto: 50, fechaVencimiento: "2026-06-05", concepto: "Materiales" })).resolves.toEqual({
       data: null,
-      error: "boom cuota",
-    })
-
-    configure({ acuerdos_pago: [] })
-    createSupabaseBrowserClientMock.mockReturnValue(
-      createFakeSupabase.withError("acuerdos_pago", "boom acuerdo", { acuerdos_pago: [], cuotas: [] }),
-    )
-    await expect(crearCuota({ estudianteId: "e1", monto: 50, periodo: "2026-06", fechaVencimiento: "2026-06-05" })).resolves.toEqual({
-      data: null,
-      error: "boom acuerdo",
+      error: "boom cargo",
     })
   })
 
@@ -115,7 +98,7 @@ describe("cuotas API", () => {
   })
 
   it("updateCuota responde error si no existe", async () => {
-    configure({ cuotas: [] })
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase.withError("rpc:editar_cuota", "Cuota no encontrada"))
 
     const result = await updateCuota({ cuotaId: "missing", monto: 10, fechaVencimiento: "2026-06-05" })
 
@@ -123,22 +106,17 @@ describe("cuotas API", () => {
     expect(result.error).toBeTruthy()
   })
 
-  it("registrarPago suma pagos y marca pagada o parcial", async () => {
-    configure({ pagos: [], cuotas: [{ id: "q1", monto: 100 }] })
+  it("registrarPago crea un cobro aprobado con una aplicación", async () => {
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase({ cuotas: [{ id: "q1", estudiante_id: "e1", responsable_representante_id: null }] }, { rpcResults: { registrar_cobro: "c1" } }))
 
     await expect(
       registrarPago("q1", { monto: 50, metodo: "transferencia", fechaPago: "2026-06-01", referencia: " ref ", observacion: "" }),
     ).resolves.toEqual({ data: { id: expect.any(String) }, error: null })
 
-    const fake = configure({ pagos: [{ id: "p1", cuota_id: "q1", monto: 100 }], cuotas: [{ id: "q1", monto: 100 }] })
-    expect(fake).toBeTruthy()
-    await expect(
-      registrarPago("q1", { monto: 100, metodo: "efectivo", fechaPago: "2026-06-02" }),
-    ).resolves.toEqual({ data: { id: expect.any(String) }, error: null })
   })
 
   it("registrarPago propaga errores", async () => {
-    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase.withError("pagos", "boom pago", {}, { user: { id: "u1" } }))
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase.withError("rpc:registrar_cobro", "boom pago", { cuotas: [{ id: "q1", estudiante_id: "e1", responsable_representante_id: null }] }))
 
     await expect(
       registrarPago("q1", { monto: 50, metodo: "efectivo", fechaPago: "2026-06-01" }),
@@ -146,24 +124,20 @@ describe("cuotas API", () => {
   })
 
   it("reactivarCuota recalcula estado y propaga errores", async () => {
-    configure({ pagos: [{ monto: 100, cuota_id: "q1" }], cuotas: [{ id: "q1", monto: 100 }] })
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase({}, { rpcResults: { restaurar_cuota_condonada: null } }))
     await expect(reactivarCuota("q1")).resolves.toEqual({ error: null })
 
-    configure({ pagos: [{ monto: 30, cuota_id: "q1" }], cuotas: [{ id: "q1", monto: 100 }] })
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase({}, { rpcResults: { restaurar_cuota_condonada: null } }))
     await expect(reactivarCuota("q1")).resolves.toEqual({ error: null })
 
-    configure({ pagos: [], cuotas: [] })
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase.withError("rpc:restaurar_cuota_condonada", "Cuota no encontrada"))
     const missing = await reactivarCuota("missing")
     expect(missing.error).toBeTruthy()
   })
 
   it("condonarCuota y eliminarCuota responden", async () => {
-    configure({ cuotas: [{ id: "q1", monto_pagado: 0 }] })
-    await expect(condonarCuota("q1")).resolves.toEqual({ error: null })
-    await expect(eliminarCuota("q1")).resolves.toEqual({ error: null })
-
-    configure({ cuotas: [{ id: "q1", monto_pagado: 50 }] })
-    const blocked = await eliminarCuota("q1")
-    expect(blocked.error).toContain("No se puede eliminar una cuota")
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase({}, { rpcResults: { condonar_cuota: null, anular_cuota: null } }))
+    await expect(condonarCuota("q1", "Beca")).resolves.toEqual({ error: null })
+    await expect(eliminarCuota("q1", "Error administrativo")).resolves.toEqual({ error: null })
   })
 })
