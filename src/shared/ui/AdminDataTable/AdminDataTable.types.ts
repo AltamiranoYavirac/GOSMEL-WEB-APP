@@ -20,6 +20,15 @@ export interface IAdminDataTableSelection {
   onToggleAll: (ids: string[]) => void;
 }
 
+export interface IAdminDataTableMobileCard {
+  /** Column rendered as the card heading. Defaults to the first column. */
+  titleKey?: string;
+  /** Columns visible before the user opens the detail area. */
+  summaryKeys?: string[];
+  /** Columns revealed in the detail area. */
+  detailsKeys?: string[];
+}
+
 export interface IAdminDataTableProps<T> {
   data: T[];
   columns: IAdminColumn<T>[];
@@ -34,4 +43,5 @@ export interface IAdminDataTableProps<T> {
   countLabel?: string;
   pageSize?: number;
   selection?: IAdminDataTableSelection;
+  mobileCard?: IAdminDataTableMobileCard;
 }

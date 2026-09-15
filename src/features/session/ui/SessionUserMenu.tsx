@@ -35,7 +35,7 @@ export default function SessionUserMenu({ session, mode = "dashboard" }: ISessio
   const label = session.displayName || session.email || "Sesión activa"
   const firstName = label.split(" ")[0]
   const avatarUrl = cloudinaryUrl(session.avatarPublicId)
-  const profileRoute = resolveProfileRoute(session.roles)
+  const profileRoute = resolveProfileRoute()
   const panelHref = mode === "public" ? session.homeRoute : "/"
 
   return (
@@ -96,19 +96,17 @@ export default function SessionUserMenu({ session, mode = "dashboard" }: ISessio
           <DropdownMenuLabel className="px-2 text-[10px] uppercase tracking-wider">
             Cuenta
           </DropdownMenuLabel>
-          {profileRoute ? (
-            <DropdownMenuItem asChild className="gap-3 px-2 py-2">
-              <Link href={profileRoute}>
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary-700">
-                  <Icon icon="ph:user-circle" width={17} height={17} aria-hidden="true" />
-                </span>
-                <span className="flex flex-col">
-                  <span className="text-sm font-medium">Perfil</span>
-                  <span className="text-xs text-muted-foreground">Tus datos y preferencias</span>
-                </span>
-              </Link>
-            </DropdownMenuItem>
-          ) : null}
+          <DropdownMenuItem asChild className="gap-3 px-2 py-2">
+            <Link href={profileRoute}>
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary-700">
+                <Icon icon="ph:user-circle" width={17} height={17} aria-hidden="true" />
+              </span>
+              <span className="flex flex-col">
+                <span className="text-sm font-medium">Perfil</span>
+                <span className="text-xs text-muted-foreground">Tus datos y preferencias</span>
+              </span>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem asChild className="gap-3 px-2 py-2">
             <Link href={panelHref}>
               <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary-700">

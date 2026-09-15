@@ -20,7 +20,7 @@ import { formatCurrency } from "@/shared/lib/formatters";
 import { useRechazarPago } from "../hooks/useRechazarPago";
 import type { IRechazarPagoDialogProps } from "./RechazarPagoDialog.types";
 
-export default function RechazarPagoDialog({ pago }: IRechazarPagoDialogProps) {
+export default function RechazarPagoDialog({ pago, trigger }: IRechazarPagoDialogProps) {
   const [open, setOpen] = useState(false);
   const [motivo, setMotivo] = useState("");
   const mutation = useRechazarPago();
@@ -40,15 +40,17 @@ export default function RechazarPagoDialog({ pago }: IRechazarPagoDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="xs"
-          className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/30 gap-1"
-          aria-label={`Rechazar pago de ${pago.estudiante}`}
-        >
-          <Icon icon="ph:x-circle" className="size-3.5" aria-hidden="true" />
-          Rechazar
-        </Button>
+        {trigger ?? (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+            aria-label={`Rechazar pago de ${pago.estudiante}`}
+          >
+            <Icon icon="ph:x-circle" className="size-4" aria-hidden="true" />
+            Rechazar
+          </Button>
+        )}
       </AlertDialogTrigger>
 
       <AlertDialogContent className="w-full max-w-md p-6">

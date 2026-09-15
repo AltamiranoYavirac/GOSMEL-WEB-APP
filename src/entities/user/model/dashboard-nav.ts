@@ -118,11 +118,21 @@ export const DASHBOARD_NAV: Record<TRol, IDashboardNavGroup[]> = {
   representante: STUDENT_NAV,
 }
 
+// Incluye "Mi cuenta" para resolver el breadcrumb de /dashboard/perfil.
+// El link ya no se renderiza en el sidebar (ver DASHBOARD_SIDEBAR_FOOTER) porque
+// es redundante con el acceso "Perfil" del chip de avatar.
 export const DASHBOARD_NAV_FOOTER: Record<TRol, IDashboardNavItem[]> = {
   admin: ADMIN_NAV_FOOTER,
   docente: [CUENTA_NAV_ITEM],
   estudiante: [CUENTA_NAV_ITEM],
   representante: [CUENTA_NAV_ITEM],
+}
+
+export const DASHBOARD_SIDEBAR_FOOTER: Record<TRol, IDashboardNavItem[]> = {
+  admin: ADMIN_NAV_FOOTER.filter((item) => item !== CUENTA_NAV_ITEM),
+  docente: [],
+  estudiante: [],
+  representante: [],
 }
 
 function iterateItems(groups: IDashboardNavGroup[]): IDashboardNavItem[] {

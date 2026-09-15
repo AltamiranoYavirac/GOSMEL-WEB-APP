@@ -48,7 +48,7 @@ export default function CrearCuotaDialog() {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" className="w-full sm:w-auto">
           <Icon icon="ph:receipt-bold" aria-hidden="true" />
           Nueva cuota manual
         </Button>

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 
-import { AdminPageHeader, Input, Skeleton } from "@/shared/ui";
+import { AdminPageHeader, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Skeleton } from "@/shared/ui";
 import { cn } from "@/shared/lib/utils";
 
 import { useEstudiantes } from "../hooks/useEstudiantes";
@@ -17,7 +17,7 @@ export default function EstudiantesList() {
   const { data, isPending } = useEstudiantes();
   const rows = useMemo(() => data ?? [], [data]);
 
-  const [estado, setEstado] = useState<TEstadoFiltro>("activos");
+  const [estado, setEstado] = useState<TEstadoFiltro | "todos">("todos");
   const [search, setSearch] = useState("");
   const [instrumento, setInstrumento] = useState("todos");
 
@@ -41,6 +41,14 @@ export default function EstudiantesList() {
   }, [rows, estado, instrumento, search]);
 
   const activosCount = rows.filter((row) => row.activo).length;
+  const inactivosCount = rows.length - activosCount;
+  const searching = search.trim().length > 0 || instrumento !== "todos" || estado !== "todos";
+
+  const estadoOpciones: { value: TEstadoFiltro | "todos"; label: string; count: number }[] = [
+    { value: "todos", label: "Todos", count: rows.length },
+    { value: "activos", label: "Activos", count: activosCount },
+    { value: "inactivos", label: "Inactivos", count: inactivosCount },
+  ];
 
   return (
     <div className="space-y-6">
@@ -54,62 +62,90 @@ export default function EstudiantesList() {
         <CrearEstudianteDialog />
       </AdminPageHeader>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-[13px] font-medium text-muted-foreground">
-          {activosCount} activos · {rows.length - activosCount} inactivos
-        </span>
-        <div className="mx-1 h-5 w-px bg-border" />
-        {(["activos", "inactivos"] as TEstadoFiltro[]).map((value) => (
-          <button
-            key={value}
-            type="button"
-            onClick={() => setEstado(value)}
-            aria-pressed={estado === value}
-            className={cn(
-              "rounded-full px-4 py-2 text-xs font-bold capitalize transition-colors",
-              estado === value
-                ? "bg-foreground/10 text-foreground"
-                : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
-            )}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <div
+            role="group"
+            aria-label="Filtrar por estado"
+            className="inline-flex items-center gap-1 rounded-lg border border-border bg-card p-1 shadow-xs"
           >
-            {value}
-          </button>
-        ))}
-        <select
-          value={instrumento}
-          onChange={(event) => setInstrumento(event.target.value)}
-          className="rounded-[9px] border border-border bg-sidebar px-3 py-2 text-xs font-semibold text-foreground"
-        >
-          {instrumentos.map((item) => (
-            <option key={item} value={item}>
-              {item === "todos" ? "Instrumento: todos" : item}
-            </option>
-          ))}
-        </select>
-        <Input
-          icon={<Icon icon="ph:magnifying-glass" aria-hidden="true" />}
-          iconPosition="start"
-          placeholder="Buscar estudiante…"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          className="w-full rounded-[9px] border-border bg-sidebar sm:ml-auto sm:w-64"
-        />
+            {estadoOpciones.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => setEstado(option.value)}
+                aria-pressed={estado === option.value}
+                className={cn(
+                  "h-8 rounded-md px-3 text-xs font-semibold whitespace-nowrap transition-colors",
+                  estado === option.value
+                    ? "bg-foreground text-background shadow-xs"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                {option.label} · {option.count}
+              </button>
+            ))}
+          </div>
+          {searching ? (
+            <p className="text-xs text-muted-foreground" role="status">
+              {filtered.length} resultado{filtered.length === 1 ? "" : "s"}
+            </p>
+          ) : null}
+        </div>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="min-w-0 flex-1">
+            <Input
+              icon={<Icon icon="ph:magnifying-glass" aria-hidden="true" />}
+              iconPosition="start"
+              placeholder="Buscar por nombre, cédula, correo…"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              className="h-10 rounded-lg border-border bg-card text-sm shadow-xs"
+            />
+          </div>
+          <Select value={instrumento} onValueChange={setInstrumento}>
+            <SelectTrigger
+              size="sm"
+              aria-label="Filtrar por instrumento"
+              className="h-10 w-full shrink-0 rounded-lg border-border bg-card text-xs font-semibold shadow-xs sm:w-52"
+            >
+              <SelectValue placeholder="Instrumento" />
+            </SelectTrigger>
+            <SelectContent>
+              {instrumentos.map((item) => (
+                <SelectItem key={item} value={item}>
+                  {item === "todos" ? "Todos los instrumentos" : item}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {isPending ? (
-        <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {Array.from({ length: 6 }).map((_, index) => (
-            <Skeleton key={index} className="h-52 w-full rounded-2xl" />
+            <Skeleton key={index} className="h-56 w-full rounded-xl" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-border bg-card py-16 text-center">
-          <Icon icon="ph:student" className="size-8 text-muted-foreground/60" aria-hidden="true" />
-          <p className="font-heading text-lg text-foreground">Sin estudiantes</p>
-          <p className="text-sm text-muted-foreground">Cuando se registren estudiantes aparecerán aquí.</p>
+        <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-border bg-card py-16 text-center">
+          <Icon
+            icon={searching ? "ph:magnifying-glass" : "ph:student"}
+            className="size-8 text-muted-foreground/60"
+            aria-hidden="true"
+          />
+          <p className="font-heading text-lg font-bold text-foreground">
+            {searching ? "Sin resultados" : "Sin estudiantes"}
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {searching
+              ? "Prueba con otro nombre o limpia los filtros."
+              : "Cuando se registren estudiantes aparecerán aquí."}
+          </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+        <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {filtered.map((row) => (
             <EstudianteFichaCard key={row.id} estudiante={row} />
           ))}

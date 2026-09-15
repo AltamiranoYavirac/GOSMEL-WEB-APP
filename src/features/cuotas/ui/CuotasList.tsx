@@ -53,46 +53,58 @@ export default function CuotasList() {
     {
       key: "periodo",
       label: "Período",
-      render: (row) => <span className="font-semibold text-primary">{formatMonthPeriod(row.periodo)}</span>,
+      cellClassName: "whitespace-nowrap tabular-nums",
+      render: (row) => <span className="font-medium text-foreground">{formatMonthPeriod(row.periodo)}</span>,
     },
     {
       key: "estudiante",
       label: "Estudiante",
-      render: (row) => <span className="font-medium">{row.estudiante}</span>,
+      cellClassName: "max-w-[220px]",
+      render: (row) => <span className="block truncate font-medium">{row.estudiante}</span>,
     },
     {
       key: "monto",
       label: "Monto",
+      headerClassName: "text-right",
+      cellClassName: "text-right tabular-nums",
       render: (row) => formatCurrency(row.monto),
     },
     {
       key: "pagado",
       label: "Pagado",
-      render: (row) => <span className="text-muted-foreground">{formatCurrency(row.montoPagado)}</span>,
+      headerClassName: "text-right",
+      cellClassName: "text-right text-muted-foreground tabular-nums",
+      render: (row) => formatCurrency(row.montoPagado),
     },
     {
       key: "saldo",
       label: "Saldo",
+      headerClassName: "text-right",
+      cellClassName: "text-right tabular-nums",
       render: (row) =>
-        row.saldo > 0 ? <span className="font-semibold text-destructive">{formatCurrency(row.saldo)}</span> : (
+        row.saldo > 0 ? <span className="font-medium text-destructive">{formatCurrency(row.saldo)}</span> : (
           <span className="text-muted-foreground">—</span>
         ),
     },
     {
       key: "reservado",
       label: "En verificación",
+      headerClassName: "text-right",
+      cellClassName: "text-right tabular-nums",
       render: (row) => (row.saldoReservado ?? 0) > 0 ? (
-        <span className="font-medium text-amber-700">{formatCurrency(row.saldoReservado)}</span>
+        <span className="font-medium text-amber-700 dark:text-amber-400">{formatCurrency(row.saldoReservado)}</span>
       ) : <span className="text-muted-foreground">—</span>,
     },
     {
       key: "vencimiento",
       label: "Vencimiento",
+      cellClassName: "whitespace-nowrap tabular-nums",
       render: (row) => (row.fechaVencimiento ? formatDate(row.fechaVencimiento) : <span className="text-muted-foreground">—</span>),
     },
     {
       key: "estado",
       label: "Estado",
+      cellClassName: "whitespace-nowrap",
       render: (row) => (
         <Badge variant={CUOTA_ESTADO_BADGE[row.estado].variant}>{CUOTA_ESTADO_BADGE[row.estado].label}</Badge>
       ),
@@ -116,7 +128,7 @@ export default function CuotasList() {
         description="Cuotas mensuales generadas y extraordinarias a partir de los acuerdos de pago."
         icon="ph:receipt"
       >
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
           <CrearCuotaDialog />
           <GenerarCuotasDialog />
         </div>
@@ -128,15 +140,25 @@ export default function CuotasList() {
         loading={isPending}
         keyId={(row) => row.id}
         searchKeys={[(row) => row.estudiante, (row) => row.periodo]}
+        searchPlaceholder="Buscar por estudiante o período…"
         filters={filters}
         emptyTitle="Sin cuotas"
         emptyDescription="Usa «Generar cuotas» o «Nueva cuota manual» para crear cuotas."
         countLabel="cuotas"
+        mobileCard={{
+          titleKey: "estudiante",
+          summaryKeys: ["saldo", "estado", "vencimiento"],
+          detailsKeys: ["periodo", "monto", "pagado", "reservado"],
+        }}
         rowActions={(row) => {
           const conSaldo = row.saldo > 0 && row.estado !== "condonada" && row.estado !== "anulada";
+          const puedeReactivar = row.estado === "condonada";
+          const puedeCondonar = row.estado === "pendiente" || row.estado === "parcial";
+          const puedeAnular = row.montoPagado === 0 && row.estado !== "anulada" && row.estado !== "pagada";
+          const tieneAcciones = puedeReactivar || puedeCondonar || puedeAnular;
 
           return (
-            <div className="flex items-center justify-end gap-1.5">
+            <div className="flex items-center justify-end gap-1">
               {conSaldo ? (
                 <RegistrarPagoDialog cuota={row} />
               ) : null}
@@ -145,12 +167,13 @@ export default function CuotasList() {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon-xs" aria-label="Más acciones">
+                  <Button variant="ghost" size="icon-xs" aria-label="Más acciones" disabled={!tieneAcciones}>
                     <Icon icon="ph:dots-three-vertical" className="size-4" aria-hidden="true" />
                   </Button>
                 </DropdownMenuTrigger>
+                {tieneAcciones ? (
                 <DropdownMenuContent align="end">
-                  {row.estado === "condonada" ? (
+                  {puedeReactivar ? (
                     <DropdownMenuItem
                       disabled={reactivar.isPending}
                       onSelect={() => reactivar.mutate(row.id)}
@@ -160,7 +183,7 @@ export default function CuotasList() {
                     </DropdownMenuItem>
                   ) : null}
 
-                  {row.estado === "pendiente" || row.estado === "parcial" ? (
+                  {puedeCondonar ? (
                     <DropdownMenuItem
                       disabled={condonar.isPending}
                       onSelect={() => { motivoForm.reset(getMotivoCuotaFormDefaults()); setOperacion({ cuota: row, tipo: "condonar" }); }}
@@ -170,7 +193,7 @@ export default function CuotasList() {
                     </DropdownMenuItem>
                   ) : null}
 
-                  {row.montoPagado === 0 ? (
+                  {puedeAnular ? (
                     <DropdownMenuItem
                       variant="destructive"
                       disabled={eliminar.isPending}
@@ -181,6 +204,7 @@ export default function CuotasList() {
                     </DropdownMenuItem>
                   ) : null}
                 </DropdownMenuContent>
+                ) : null}
               </DropdownMenu>
             </div>
           );
