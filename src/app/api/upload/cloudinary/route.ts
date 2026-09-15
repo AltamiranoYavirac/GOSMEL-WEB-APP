@@ -2,15 +2,29 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { requireApiSession } from "@/features/session/server";
 import { cloudinary } from "@/shared/api/cloudinary";
-import type { TCloudinaryImageFolder } from "@/shared/api/cloudinary.types";
 import {
   CLOUDINARY_IMAGE_FOLDERS,
   CLOUDINARY_IMAGE_TYPES,
   CLOUDINARY_MAX_IMAGE_SIZE,
+  isAllowedCloudinaryFolder,
 } from "@/shared/config";
 
-function isAllowedFolder(folder: string): folder is TCloudinaryImageFolder {
-  return (CLOUDINARY_IMAGE_FOLDERS as readonly string[]).includes(folder);
+const MAX_DISPLAY_NAME_LENGTH = 120;
+const MAX_TAGS = 10;
+
+function parseUploadMeta(displayName: FormDataEntryValue | null, tags: FormDataEntryValue | null) {
+  const parsedDisplayName =
+    typeof displayName === "string" ? displayName.trim().slice(0, MAX_DISPLAY_NAME_LENGTH) : "";
+  const parsedTags =
+    typeof tags === "string"
+      ? tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean)
+          .slice(0, MAX_TAGS)
+      : [];
+
+  return { displayName: parsedDisplayName, tags: parsedTags };
 }
 
 function isManagedPublicId(publicId: string): boolean {
@@ -29,7 +43,7 @@ export async function POST(req: NextRequest) {
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "No se proporcionó ningún archivo." }, { status: 400 });
     }
-    if (typeof folder !== "string" || !isAllowedFolder(folder)) {
+    if (typeof folder !== "string" || !isAllowedCloudinaryFolder(folder)) {
       return NextResponse.json({ error: "La carpeta de destino no es válida." }, { status: 400 });
     }
     if (!(CLOUDINARY_IMAGE_TYPES as readonly string[]).includes(file.type)) {
@@ -39,11 +53,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "La imagen supera el límite de 10 MB." }, { status: 400 });
     }
 
+    const meta = parseUploadMeta(formData.get("display_name"), formData.get("tags"));
     const bytes = await file.arrayBuffer();
     const base64Data = `data:${file.type};base64,${Buffer.from(bytes).toString("base64")}`;
     const result = await cloudinary.uploader.upload(base64Data, {
       folder,
       resource_type: "image",
+      ...(meta.displayName ? { display_name: meta.displayName } : {}),
+      ...(meta.tags.length > 0 ? { tags: meta.tags } : {}),
     });
 
     return NextResponse.json({

@@ -1,6 +1,6 @@
 import type { TBadgeVariant } from "@/shared/ui";
 
-export type TEstadoPago = "pendiente_verificacion" | "aprobado" | "rechazado";
+export type TEstadoPago = "pendiente_verificacion" | "aprobado" | "rechazado" | "anulado";
 
 export interface IPagoRow {
   id: string;
@@ -12,6 +12,7 @@ export interface IPagoRow {
   referencia: string | null;
   observacion: string | null;
   comprobanteStoragePath: string | null;
+  numeroRecibo: string | null;
   estado: TEstadoPago;
 }
 
@@ -19,4 +20,5 @@ export const PAGO_ESTADO_BADGE: Record<TEstadoPago, { label: string; variant: TB
   pendiente_verificacion: { label: "Por verificar", variant: "warning" },
   aprobado: { label: "Aprobado", variant: "success" },
   rechazado: { label: "Rechazado", variant: "destructive" },
+  anulado: { label: "Anulado", variant: "ghost" },
 };

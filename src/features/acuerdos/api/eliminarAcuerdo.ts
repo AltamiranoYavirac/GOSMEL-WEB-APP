@@ -1,40 +1,10 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 
-export async function eliminarAcuerdo(
-  acuerdoId: string
-): Promise<{ error: string | null }> {
-  const supabase = createSupabaseBrowserClient();
-
-  const { data: cuotas, error: cuotasError } = await supabase
-    .from("cuotas")
-    .select("id, monto_pagado")
-    .eq("acuerdo_id", acuerdoId);
-
-  if (cuotasError) {
-    return { error: cuotasError.message };
-  }
-
-  const conPagos = (cuotas ?? []).some((c) => Number(c.monto_pagado) > 0);
-  if (conPagos) {
-    return {
-      error:
-        "No se puede eliminar un acuerdo que ya registra cuotas con pagos abonados para preservar el historial contable. Puede cambiar su estado a «Finalizado» o «Suspendido».",
-    };
-  }
-
-  if (cuotas && cuotas.length > 0) {
-    const cuotaIds = cuotas.map((c) => c.id);
-    await supabase.from("cuotas").delete().in("id", cuotaIds);
-  }
-
-  const { error: deleteError } = await supabase
-    .from("acuerdos_pago")
-    .delete()
-    .eq("id", acuerdoId);
-
-  if (deleteError) {
-    return { error: deleteError.message };
-  }
-
-  return { error: null };
+/** Compatibilidad del nombre público: ahora finaliza sin borrar historial. */
+export interface ICierreResolucion { cuotaId: string; accion: "mantener" | "condonar" | "anular"; motivo?: string }
+export async function eliminarAcuerdo(acuerdoId: string, motivo: string, resoluciones: ICierreResolucion[] = []): Promise<{ error: string | null }> {
+  const { error } = await createSupabaseBrowserClient().rpc("cerrar_acuerdo" as never, {
+    p_acuerdo_id: acuerdoId, p_resoluciones: resoluciones.map((r) => ({ cuota_id: r.cuotaId, accion: r.accion, motivo: r.motivo ?? motivo })), p_motivo: motivo,
+  } as never);
+  return { error: error?.message ?? null };
 }

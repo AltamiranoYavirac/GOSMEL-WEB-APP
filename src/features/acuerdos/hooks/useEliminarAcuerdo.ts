@@ -10,15 +10,15 @@ export function useEliminarAcuerdo() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (acuerdoId: string) => {
-      const { error } = await eliminarAcuerdo(acuerdoId);
+    mutationFn: async ({ acuerdoId, motivo, resoluciones }: { acuerdoId: string; motivo: string; resoluciones: import("../api/eliminarAcuerdo").ICierreResolucion[] }) => {
+      const { error } = await eliminarAcuerdo(acuerdoId, motivo, resoluciones);
       if (error) throw new Error(error);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: acuerdosQueryKeys.list() });
       queryClient.invalidateQueries({ queryKey: ["cuotas"] });
       queryClient.invalidateQueries({ queryKey: ["cobranza"] });
-      toast.success("Acuerdo de pago eliminado");
+      toast.success("Acuerdo finalizado; el historial se conserva");
     },
     onError: (error) => toast.error(error.message),
   });

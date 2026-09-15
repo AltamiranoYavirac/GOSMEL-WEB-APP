@@ -1,9 +1,11 @@
 export { getPublicCourseBySlug } from "./api/getPublicCourseBySlug"
+export { getPublicCourseReviews } from "./api/getPublicCourseReviews"
 export { getPublicCourses } from "./api/getPublicCourses"
 export type {
   IPublicCourseCard,
   IPublicCourseDetail,
   IPublicCourseGalleryItem,
+  IPublicCourseReview,
   IPublicCourseTeacher,
   IPublicCourseTestimonial,
   TPublicCourseCategory,

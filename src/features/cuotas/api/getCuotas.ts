@@ -11,9 +11,9 @@ export async function getCuotas(
   error: string | null;
 }> {
   const { data, error } = await supabase
-    .from("cuotas")
+    .from("v_estado_cuenta")
     .select(
-      "id, periodo_mes, monto, monto_pagado, fecha_vencimiento, estado, acuerdo_id, acuerdos_pago!cuotas_acuerdo_id_fkey(estudiante_id, estudiantes!acuerdos_pago_estudiante_id_fkey(nombres, apellidos))"
+      "cuota_id, periodo_mes, estudiante, monto, monto_pagado, saldo, saldo_reservado, fecha_vencimiento, estado"
     )
     .order("periodo_mes", { ascending: false })
     .limit(500);
@@ -23,12 +23,13 @@ export async function getCuotas(
   }
 
   const rows: ICuotaRow[] = (data ?? []).map((cuota) => ({
-    id: cuota.id,
-    periodo: cuota.periodo_mes,
-    estudiante: `${cuota.acuerdos_pago?.estudiantes?.nombres ?? ""} ${cuota.acuerdos_pago?.estudiantes?.apellidos ?? ""}`.trim(),
-    monto: cuota.monto,
-    montoPagado: cuota.monto_pagado,
-    saldo: cuota.monto - cuota.monto_pagado,
+    id: cuota.cuota_id ?? "",
+    periodo: cuota.periodo_mes ?? "",
+    estudiante: cuota.estudiante ?? "Estudiante",
+    monto: Number(cuota.monto) || 0,
+    montoPagado: Number(cuota.monto_pagado) || 0,
+    saldo: Number(cuota.saldo) || 0,
+    saldoReservado: Number(cuota.saldo_reservado) || 0,
     fechaVencimiento: cuota.fecha_vencimiento,
     estado: cuota.estado as TEstadoCuota,
   }));

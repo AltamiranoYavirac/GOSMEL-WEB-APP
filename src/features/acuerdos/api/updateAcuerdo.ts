@@ -8,24 +8,15 @@ export async function updateAcuerdo(
 ): Promise<{ data: { id: string } | null; error: string | null }> {
   const supabase = createSupabaseBrowserClient();
 
-  const { data, error } = await supabase
-    .from("acuerdos_pago")
-    .update({
-      monto_mensual: values.montoMensual,
-      dia_cobro: values.diaCobro || null,
-      fecha_fin: values.fechaFin || null,
-      estado: values.estado,
-      motivo_ajuste: values.motivoAjuste?.trim() || null,
-      observaciones: values.observaciones?.trim() || null,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", acuerdoId)
-    .select("id")
-    .single();
-
-  if (error) {
-    return { data: null, error: error.message };
-  }
-
-  return { data, error: null };
+  const { error } = await supabase.rpc("actualizar_acuerdo_completo" as never, {
+    p_acuerdo_id: acuerdoId,
+    p_monto_mensual: values.montoMensual,
+    p_dia_cobro: values.diaCobro ?? 5,
+    p_vigente_desde: values.vigenteDesde,
+    p_estado: values.estado,
+    p_fecha_fin: values.fechaFin || null,
+    p_motivo: values.motivoAjuste?.trim() || null,
+    p_observaciones: values.observaciones?.trim() || null,
+  } as never);
+  return error ? { data: null, error: error.message } : { data: { id: acuerdoId }, error: null };
 }

@@ -2,9 +2,9 @@ import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 
 import { buildTestimonioPayload, type ITestimonioFormValues } from "../model/TestimonioForm.config";
 
-export async function crearTestimonio(values: ITestimonioFormValues) {
+export async function crearTestimonio(values: ITestimonioFormValues, publicId: string | null) {
   const supabase = createSupabaseBrowserClient();
-  const { data, error } = await supabase.from("testimonios").insert(buildTestimonioPayload(values)).select("id").single();
+  const { data, error } = await supabase.from("testimonios").insert(buildTestimonioPayload(values, publicId)).select("id").single();
   if (error) return { data: null, error: error.message };
   return { data, error: null };
 }

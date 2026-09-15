@@ -17,6 +17,8 @@ import {
 } from "@/shared/ui";
 import { DateField, Form, NumberField, SelectField, TextareaField, TextField, useAppForm } from "@/shared/form";
 import { useEstudianteOptions } from "@/entities/estudiante";
+import { useRepresentantesPorEstudiante } from "@/entities/representante";
+import { useWatch } from "react-hook-form";
 
 import { useCrearAcuerdo } from "../hooks/useCrearAcuerdo";
 import {
@@ -28,7 +30,6 @@ import {
 export default function CrearAcuerdoDialog() {
   const [open, setOpen] = useState(false);
   const { data: estudiantes = [], isLoading: loadingOptions } = useEstudianteOptions(open);
-
   const mutation = useCrearAcuerdo();
 
   const form = useAppForm<ICrearAcuerdoFormValues>({
@@ -36,6 +37,8 @@ export default function CrearAcuerdoDialog() {
     values: getCrearAcuerdoFormDefaults(),
     resetOptions: { keepDirtyValues: false, keepErrors: false },
   });
+  const estudianteId = useWatch({ control: form.control, name: "estudianteId" });
+  const { data: representantes = [] } = useRepresentantesPorEstudiante(estudianteId || null);
 
   const onSubmit = (values: ICrearAcuerdoFormValues) => {
     mutation.mutate(values, {
@@ -67,6 +70,7 @@ export default function CrearAcuerdoDialog() {
             placeholder={loadingOptions ? "Cargando estudiantes..." : "Selecciona un estudiante"}
             options={estudiantes}
           />
+          <SelectField name="responsableRepresentanteId" label="Responsable de pago" placeholder="Estudiante adulto paga por sí mismo" options={representantes.map((r) => ({ value: r.id, label: r.nombre }))} />
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <NumberField

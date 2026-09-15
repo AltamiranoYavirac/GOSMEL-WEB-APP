@@ -17,6 +17,7 @@ import { PAGO_ESTADO_BADGE, type IPagoRow } from "../model/pago.types";
 import AnularPagoDialog from "./AnularPagoDialog";
 import AprobarPagoDialog from "./AprobarPagoDialog";
 import RechazarPagoDialog from "./RechazarPagoDialog";
+import ReciboPagoDialog from "./ReciboPagoDialog";
 
 export default function PagosList() {
   const { data, isPending } = usePagos();
@@ -65,6 +66,11 @@ export default function PagosList() {
           {row.referencia ?? "—"}
         </span>
       ),
+    },
+    {
+      key: "recibo",
+      label: "Recibo",
+      render: (row) => row.numeroRecibo ? <span className="font-mono text-xs font-medium text-primary">{row.numeroRecibo}</span> : <span className="text-muted-foreground">Pendiente</span>,
     },
     {
       key: "estado",
@@ -143,6 +149,7 @@ export default function PagosList() {
                 <RechazarPagoDialog pago={row} />
               </>
             ) : null}
+            <ReciboPagoDialog pago={row} />
             <AnularPagoDialog pago={row} />
           </div>
         )}

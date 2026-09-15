@@ -19,6 +19,7 @@ export function useUpdatePrograma() {
         folder: "gosmel/programas",
         currentPublicId,
         removeCurrent: values.quitarImagen,
+        meta: { displayName: `Imagen - ${values.nombre}`, tags: [`programa:${programaId}`] },
         persist: (publicId) => updatePrograma(programaId, values, publicId),
       });
       if (result.error) throw new Error(result.error);

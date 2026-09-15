@@ -28,6 +28,7 @@ export default function PagoFamiliarDialog({
 
   const { data: cuotas, isPending: loadingCuotas } = useCuotasPendientesFamilia(
     representante?.id ?? "",
+    representante?.responsableTipo ?? "representante",
     Boolean(open && representante)
   );
 
@@ -39,6 +40,8 @@ export default function PagoFamiliarDialog({
     registrarMutation.mutate(
       {
         pagos,
+        responsableId: representante.id,
+        responsableTipo: representante.responsableTipo,
         metodo,
         referencia: referencia || undefined,
         observacion: observacion || undefined,
@@ -67,7 +70,7 @@ export default function PagoFamiliarDialog({
                 Registrar Pago Familiar Consolidado
               </AlertDialogTitle>
               <AlertDialogDescription className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-                Tutor: <strong>{representante.representante}</strong> ({representante.celular ?? "Sin teléfono"}). Seleccione y ajuste los montos a cancelar.
+                Responsable: <strong>{representante.representante}</strong> ({representante.celular ?? "Sin teléfono"}). Seleccione y ajuste los montos a cancelar.
               </AlertDialogDescription>
             </div>
           </div>

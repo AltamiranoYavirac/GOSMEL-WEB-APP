@@ -180,6 +180,7 @@ export interface IStudentCuotaEstado {
   monto: number;
   montoPagado: number;
   saldo: number;
+  saldoReservado: number;
   fechaVencimiento: string | null;
   estadoEfectivo: string;
   diasMora: number;

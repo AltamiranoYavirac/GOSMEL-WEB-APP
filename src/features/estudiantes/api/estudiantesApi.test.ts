@@ -163,13 +163,9 @@ describe("estudiantes write APIs", () => {
   })
 
   it("createEstudiante inserta ficha, vínculo e instrumento", async () => {
-    const fake = configure({ estudiantes: [], estudiante_representante: [], estudiante_instrumento: [] })
-    const calls: string[] = []
-    const original = fake.from.bind(fake) as (table: string) => unknown
-    fake.from = ((table: string) => {
-      calls.push(table)
-      return original(table)
-    }) as unknown as typeof fake.from
+    createSupabaseBrowserClientMock.mockReturnValue(
+      createFakeSupabase({}, { rpcResults: { crear_estudiante_administrativo: "e1" } }),
+    )
 
     const result = await createEstudiante({
       nombres: " Ada ",
@@ -186,11 +182,11 @@ describe("estudiantes write APIs", () => {
 
     expect(result.error).toBeNull()
     expect(result.data).toEqual({ id: expect.any(String) })
-    expect(calls).toEqual(["estudiantes", "estudiante_representante", "estudiante_instrumento"])
+    expect(createSupabaseBrowserClientMock).toHaveBeenCalledTimes(1)
   })
 
   it("createEstudiante propaga error de inserción", async () => {
-    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase.withError("estudiantes", "boom"))
+    createSupabaseBrowserClientMock.mockReturnValue(createFakeSupabase({}, { rpcError: "boom" }))
 
     const result = await createEstudiante({ nombres: "Ada", apellidos: "Lovelace", fecha_nacimiento: "2015-06-15" })
 

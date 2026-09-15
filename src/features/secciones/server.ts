@@ -2,8 +2,11 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/shared/api/supabase/database.types";
 
+import { getPublicSecciones } from "./api/getPublicSecciones";
 import { getSecciones } from "./api/getSecciones";
 import { seccionesQueryKeys } from "./model/query-keys";
+
+export { getPublicSecciones };
 
 export function seccionesListQuery(supabase: SupabaseClient<Database>) {
   return {
