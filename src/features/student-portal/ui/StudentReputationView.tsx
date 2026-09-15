@@ -11,8 +11,9 @@ import { useStudentFavorites } from "../hooks/useStudentFavorites";
 import { useStudentPortal } from "../hooks/useStudentPortal";
 import { useStudentReviews } from "../hooks/useStudentReviews";
 import { useToggleFavorite } from "../hooks/useToggleFavorite";
-import { NIVEL_CURSO_LABEL } from "../model/student-dashboard.types";
+import { NIVEL_CURSO_LABEL, type IStudentResena } from "../model/student-dashboard.types";
 import CrearResenaDialog from "./CrearResenaDialog";
+import RetirarResenaDialog from "./RetirarResenaDialog";
 import StudentNoStudents from "./StudentNoStudents";
 import StudentRatingStars from "./StudentRatingStars";
 
@@ -24,6 +25,17 @@ export default function StudentReputationView() {
   const toggleFavorito = useToggleFavorite();
 
   const [resenaOpen, setResenaOpen] = useState(false);
+  const [resenaEditar, setResenaEditar] = useState<IStudentResena | null>(null);
+
+  const abrirCrear = () => {
+    setResenaEditar(null);
+    setResenaOpen(true);
+  };
+
+  const abrirEditar = (resena: IStudentResena) => {
+    setResenaEditar(resena);
+    setResenaOpen(true);
+  };
 
   if (!isLoading && !estudianteActivo) {
     return <StudentNoStudents />;
@@ -47,7 +59,7 @@ export default function StudentReputationView() {
         description="Comparte tu experiencia y planifica tu siguiente paso."
         icon="ph:trend-up"
       >
-        <Button variant="outline" onClick={() => setResenaOpen(true)}>
+        <Button variant="outline" onClick={abrirCrear}>
           <Icon icon="ph:star" aria-hidden="true" />
           Valorar curso
         </Button>
@@ -66,11 +78,25 @@ export default function StudentReputationView() {
                   <StudentRatingStars value={resena.puntuacion} />
                   {resena.comentario ? <p className="mt-1 text-xs text-muted-foreground">{resena.comentario}</p> : null}
                 </div>
-                <div className="flex flex-col items-end gap-1">
-                  <Badge variant={resena.publicado ? "success" : "secondary"}>
-                    {resena.publicado ? "Publicada" : "En moderación"}
-                  </Badge>
-                  <span className="text-xs text-muted-foreground/70">{formatDate(resena.creadaEn)}</span>
+                <div className="flex items-center gap-3">
+                  <div className="flex flex-col items-end gap-1">
+                    <Badge variant={resena.publicado ? "success" : "secondary"}>
+                      {resena.publicado ? "Publicada" : "En moderación"}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground/70">{formatDate(resena.creadaEn)}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => abrirEditar(resena)}
+                      aria-label={`Editar reseña de ${resena.curso}`}
+                    >
+                      <Icon icon="ph:pencil-simple" aria-hidden="true" />
+                      Editar
+                    </Button>
+                    <RetirarResenaDialog estudianteId={estudianteActivo?.id ?? ""} resena={resena} />
+                  </div>
                 </div>
               </div>
             ))
@@ -109,6 +135,7 @@ export default function StudentReputationView() {
         <CrearResenaDialog
           estudianteId={estudianteActivo.id}
           catedras={catedras ?? []}
+          resena={resenaEditar ?? undefined}
           open={resenaOpen}
           onOpenChange={setResenaOpen}
         />

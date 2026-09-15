@@ -2860,6 +2860,7 @@ export type Database = {
           contenido: string
           id: string
           imagen_public_id: string | null
+          imagen_texto_alt: string | null
           orden: number
           publicado: boolean
           titulo: string
@@ -2871,6 +2872,7 @@ export type Database = {
           contenido: string
           id?: string
           imagen_public_id?: string | null
+          imagen_texto_alt?: string | null
           orden?: number
           publicado?: boolean
           titulo: string
@@ -2882,6 +2884,7 @@ export type Database = {
           contenido?: string
           id?: string
           imagen_public_id?: string | null
+          imagen_texto_alt?: string | null
           orden?: number
           publicado?: boolean
           titulo?: string
@@ -3651,6 +3654,14 @@ export type Database = {
         }
         Returns: undefined
       }
+      editar_resena_propia: {
+        Args: {
+          p_comentario: string
+          p_puntuacion: number
+          p_resena_id: string
+        }
+        Returns: undefined
+      }
       emitir_certificado: {
         Args: { p_forzar?: boolean; p_inscripcion_id: string }
         Returns: string
@@ -3747,6 +3758,10 @@ export type Database = {
       }
       restaurar_cuota_condonada: {
         Args: { p_cuota_id: string; p_motivo: string }
+        Returns: undefined
+      }
+      retirar_resena_propia: {
+        Args: { p_resena_id: string }
         Returns: undefined
       }
       revisar_cobro: {

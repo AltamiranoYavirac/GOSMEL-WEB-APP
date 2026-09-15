@@ -6,20 +6,20 @@ import {
   AdminDataTable,
   AdminPageHeader,
   Badge,
-  Button,
   Switch,
   type IAdminColumn,
   type IAdminDataTableFilter,
 } from "@/shared/ui";
 import { formatDateTime } from "@/shared/lib/formatters";
 
-import { useResenas, useUpdateResenaPublicado, useEliminarResena } from "../hooks/useResenas";
+import { useResenas, useUpdateResenaPublicado } from "../hooks/useResenas";
 import type { IResenaRow } from "../model/resena.types";
+import DetalleResenaDialog from "./DetalleResenaDialog";
+import EliminarResenaDialog from "./EliminarResenaDialog";
 
 export default function ResenasList() {
   const { data, isPending } = useResenas();
   const updatePublicado = useUpdateResenaPublicado();
-  const eliminar = useEliminarResena();
   const rows = data ?? [];
 
   const columns: IAdminColumn<IResenaRow>[] = [
@@ -48,7 +48,7 @@ export default function ResenasList() {
       key: "comentario",
       label: "Comentario",
       render: (row) => (
-        <p className="max-w-xs truncate text-xs text-muted-foreground" title={row.comentario ?? ""}>
+        <p className="line-clamp-2 max-w-xs whitespace-normal text-xs text-muted-foreground" title={row.comentario ?? ""}>
           {row.comentario ?? "—"}
         </p>
       ),
@@ -76,13 +76,30 @@ export default function ResenasList() {
         </div>
       ),
     },
+    {
+      key: "actions",
+      label: "",
+      render: (row) => (
+        <div className="flex items-center justify-end gap-1">
+          <DetalleResenaDialog item={row} />
+          <EliminarResenaDialog item={row} />
+        </div>
+      ),
+    },
   ];
+
+  const cursos = Array.from(new Set(rows.map((row) => row.curso))).sort((a, b) => a.localeCompare(b));
 
   const filters: IAdminDataTableFilter<IResenaRow>[] = [
     { value: "pendientes", label: "Pendientes", match: (row) => !row.publicado },
     { value: "publicadas", label: "Aprobadas", match: (row) => row.publicado },
     { value: "5_estrellas", label: "5 estrellas", match: (row) => row.puntuacion === 5 },
     { value: "bajas", label: "≤ 3 estrellas", match: (row) => row.puntuacion <= 3 },
+    ...cursos.map((curso) => ({
+      value: `curso:${curso}`,
+      label: curso,
+      match: (row: IResenaRow) => row.curso === curso,
+    })),
   ];
 
   return (
@@ -104,19 +121,6 @@ export default function ResenasList() {
         emptyTitle="Sin reseñas"
         emptyDescription="Cuando los estudiantes califiquen cursos aparecerán aquí."
         countLabel="reseñas"
-        rowActions={(row) => (
-          <div className="flex items-center justify-end">
-            <Button
-              size="icon-xs"
-              variant="ghost"
-              disabled={eliminar.isPending}
-              onClick={() => eliminar.mutate(row.id)}
-              aria-label="Eliminar reseña"
-            >
-              <Icon icon="ph:trash" className="size-4 text-muted-foreground hover:text-destructive" aria-hidden="true" />
-            </Button>
-          </div>
-        )}
       />
     </div>
   );

@@ -18,6 +18,7 @@ export function useUpdateGaleriaMedio() {
         file: values.archivo,
         folder: "gosmel/galeria",
         currentPublicId,
+        meta: { displayName: `Galería - ${values.titulo || values.textoAlt}`, tags: [`galeria:${id}`] },
         persist: (publicId) => updateGaleriaMedio(id, values, publicId),
       });
       if (result.error) throw new Error(result.error);

@@ -1,11 +1,19 @@
 import Link from "next/link";
 
+import { getPublicSiteConfig } from "@/entities/site-config/server";
 import { BrandLogo } from "@/shared/ui";
 import { getCurrentYear } from "@/shared/lib";
 
-import { ACADEMIA_LINKS, COURSE_LINKS } from "./Footer.constants";
+import { ACADEMIA_LINKS, COURSE_LINKS, FOOTER_CONTACT_FALLBACK } from "./Footer.constants";
 
-export default function Footer() {
+export default async function Footer() {
+  const { data: config } = await getPublicSiteConfig();
+
+  const direccion = config?.direccion ?? FOOTER_CONTACT_FALLBACK.direccion;
+  const ciudad = config?.ciudad ?? FOOTER_CONTACT_FALLBACK.ciudad;
+  const telefono = config?.telefono ?? FOOTER_CONTACT_FALLBACK.telefono;
+  const email = config?.emailGeneral ?? FOOTER_CONTACT_FALLBACK.email;
+
   return (
     <footer className="border-t border-border bg-background">
       <div className="mx-auto w-full max-w-[1600px] px-[22px] pb-9 pt-11 md:px-14 md:pb-11 md:pt-16">
@@ -53,15 +61,15 @@ export default function Footer() {
             </h2>
             <address className="flex flex-col gap-2.5 text-sm not-italic leading-normal text-foreground/80">
               <span>
-                Av. América E5-30 e<br className="hidden md:block" /> Av. Pérez Guerrero
+                {direccion}
                 <br />
-                Quito — Ecuador
+                {ciudad}
               </span>
-              <a href="tel:+593986023191" className="transition-colors hover:text-primary">
-                +593 98 602 3191
+              <a href={`tel:${telefono.replace(/\s/g, "")}`} className="transition-colors hover:text-primary">
+                {telefono}
               </a>
-              <a href="mailto:andymelabur@gmail.com" className="transition-colors hover:text-primary">
-                andymelabur@gmail.com
+              <a href={`mailto:${email}`} className="transition-colors hover:text-primary">
+                {email}
               </a>
             </address>
           </div>

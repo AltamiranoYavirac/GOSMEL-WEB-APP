@@ -65,4 +65,19 @@ describe("persistCloudinaryImage", () => {
     expect(persist).toHaveBeenCalledWith(null)
     expect(cloudinary.remove).toHaveBeenCalledWith("gosmel/sitio/hero")
   })
+
+  it("propaga display_name y tags a la subida", async () => {
+    const persist = vi.fn().mockResolvedValue({ data: { id: "s1" }, error: null })
+    const file = new File(["image"], "mision.jpg", { type: "image/jpeg" })
+    const meta = { displayName: "Sección - Misión", tags: ["seccion:abc-123"] }
+
+    await persistCloudinaryImage({
+      file,
+      folder: "gosmel/secciones/abc-123",
+      meta,
+      persist,
+    })
+
+    expect(cloudinary.upload).toHaveBeenCalledWith(file, "gosmel/secciones/abc-123", meta)
+  })
 })

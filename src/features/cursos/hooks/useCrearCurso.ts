@@ -17,6 +17,7 @@ export function useCrearCurso() {
       const result = await persistCloudinaryImage({
         file: values.portadaArchivo,
         folder: "gosmel/cursos",
+        meta: { displayName: `Portada - ${values.nombre}`, tags: ["curso:portada"] },
         persist: (publicId) => crearCurso(values, publicId),
       });
       if (result.error) throw new Error(result.error);

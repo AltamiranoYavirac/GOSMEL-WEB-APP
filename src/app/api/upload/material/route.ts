@@ -42,8 +42,10 @@ export async function POST(req: NextRequest) {
     const base64Data = `data:${file.type || "application/octet-stream"};base64,${buffer.toString("base64")}`;
 
     const result = await cloudinary.uploader.upload(base64Data, {
-      folder: "gosmel/materiales",
+      folder: `gosmel/materiales/${auth.session.id}`,
       resource_type: resourceType,
+      display_name: `Material - ${filename}`.slice(0, 120),
+      tags: [`perfil:${auth.session.id}`],
       use_filename: true,
       unique_filename: true,
     });

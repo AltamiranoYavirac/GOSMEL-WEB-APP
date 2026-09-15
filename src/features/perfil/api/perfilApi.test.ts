@@ -82,7 +82,12 @@ describe("subirAvatarServer", () => {
 
     expect(uploadMock).toHaveBeenCalledWith(
       expect.stringMatching(/^data:image\/png;base64,/),
-      expect.objectContaining({ folder: "gosmel/avatares", resource_type: "image" }),
+      expect.objectContaining({
+        folder: "gosmel/avatares/u1",
+        resource_type: "image",
+        display_name: "Avatar - Ada",
+        tags: ["perfil:u1"],
+      }),
     )
     expect(tables.perfiles[0].avatar_public_id).toBe("gosmel/avatares/nuevo")
     expect(result).toEqual({

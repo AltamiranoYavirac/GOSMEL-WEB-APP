@@ -7,6 +7,8 @@ import { AdminDataTable, AdminPageHeader, Switch, type IAdminColumn, type IAdmin
 import { useMetricas } from "../hooks/useMetricas";
 import { useUpdateMetricaPublicado } from "../hooks/useUpdateMetricaPublicado";
 import type { IMetricaRow } from "../model/metrica.types";
+import EliminarMetricaDialog from "./EliminarMetricaDialog";
+import MetricaFormDialog from "./MetricaFormDialog";
 
 export default function MetricasList() {
   const { data, isPending } = useMetricas();
@@ -57,6 +59,16 @@ export default function MetricasList() {
         />
       ),
     },
+    {
+      key: "actions",
+      label: "",
+      render: (row) => (
+        <div className="flex justify-end gap-1">
+          <MetricaFormDialog item={row} />
+          <EliminarMetricaDialog item={row} />
+        </div>
+      ),
+    },
   ];
 
   const filters: IAdminDataTableFilter<IMetricaRow>[] = [
@@ -71,7 +83,9 @@ export default function MetricasList() {
         title="Métricas"
         description="Cifras destacadas de la academia que se muestran en la página de inicio."
         icon="ph:chart-line-up"
-      />
+      >
+        <MetricaFormDialog />
+      </AdminPageHeader>
 
       <AdminDataTable
         data={rows}

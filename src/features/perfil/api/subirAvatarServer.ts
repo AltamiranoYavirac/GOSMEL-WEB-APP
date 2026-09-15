@@ -33,8 +33,10 @@ export async function subirAvatarServer(
     const base64Data = `data:${file.type};base64,${Buffer.from(bytes).toString("base64")}`
 
     const upload = await cloudinary.uploader.upload(base64Data, {
-      folder: AVATAR_FOLDER,
+      folder: `${AVATAR_FOLDER}/${session.id}`,
       resource_type: "image",
+      display_name: `Avatar - ${session.displayName}`.slice(0, 120),
+      tags: [`perfil:${session.id}`],
       transformation: [{ quality: "auto", fetch_format: "auto" }],
     })
 
