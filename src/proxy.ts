@@ -7,7 +7,7 @@ const PROTECTED_PREFIX = "/dashboard"
 const AUTH_ROUTES = ["/login", "/register"]
 
 export async function proxy(request: NextRequest) {
-  const { response, isAuthenticated } = await updateSession(request)
+  const { response, isAuthenticated, hasRoles } = await updateSession(request)
   const { pathname } = request.nextUrl
   const isDashboardRoute = pathname === PROTECTED_PREFIX || pathname.startsWith(`${PROTECTED_PREFIX}/`)
 
@@ -17,7 +17,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  if (AUTH_ROUTES.includes(pathname) && isAuthenticated) {
+  if (AUTH_ROUTES.includes(pathname) && isAuthenticated && hasRoles) {
     return NextResponse.redirect(new URL(PROTECTED_PREFIX, request.url))
   }
 

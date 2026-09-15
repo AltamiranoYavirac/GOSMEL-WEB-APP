@@ -1,6 +1,8 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/shared/api/supabase/database.types";
+import { ACADEMY_TIME_ZONE } from "@/shared/config";
+import { toDateStringInTimeZone } from "@/shared/lib";
 
 import type { ITopbarSummary } from "../model/topbar.types";
 
@@ -12,7 +14,7 @@ interface IGetTopbarSummaryResult {
 export async function getTopbarSummary(
   supabase: SupabaseClient<Database> = createSupabaseBrowserClient(),
 ): Promise<IGetTopbarSummaryResult> {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = toDateStringInTimeZone(new Date(), ACADEMY_TIME_ZONE);
 
   const [solicitudes, cuotas, sesiones, inscripciones, actividades] = await Promise.all([
     supabase

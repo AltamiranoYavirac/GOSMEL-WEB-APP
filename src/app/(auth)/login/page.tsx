@@ -11,6 +11,12 @@ export const metadata = {
   description: "Accede a tu formación musical en GOSMEL Music Academy.",
 };
 
+const NOTICES: Record<string, string> = {
+  inactive: "Tu cuenta está desactivada. Contacta a la academia para solicitar acceso.",
+  sin_rol:
+    "Tu cuenta aún no ha sido inscrita o no tiene un curso activo en la academia. Contacta a la academia para completar tu registro.",
+};
+
 export default async function LoginPage({
   searchParams,
 }: {
@@ -36,10 +42,7 @@ export default async function LoginPage({
           quote="Lo bello de la teoría en la práctica."
         />
       ) : null}
-      <LoginForm
-        nextPath={nextPath}
-        notice={reason === "inactive" ? "Tu cuenta está desactivada. Contacta a la academia para solicitar acceso." : undefined}
-      />
+      <LoginForm nextPath={nextPath} notice={reason ? NOTICES[reason] : undefined} />
     </div>
   );
 }

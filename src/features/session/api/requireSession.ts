@@ -9,6 +9,7 @@ export async function requireSession(allowed?: TRol[]): Promise<ISessionUser> {
   if (result.kind === "error") throw new Error(result.error)
   if (result.kind === "anonymous") redirect("/login")
   if (!result.data.isActive) redirect("/auth/signout?reason=inactive")
+  if (result.data.roles.length === 0) redirect("/auth/signout?reason=sin_rol")
 
   if (allowed && !allowed.some((rol) => result.data.roles.includes(rol))) {
     redirect(resolveHomeRoute(result.data.roles))

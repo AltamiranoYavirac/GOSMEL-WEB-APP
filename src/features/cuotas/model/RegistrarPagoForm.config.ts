@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { toLocalDateString } from "@/shared/lib";
 import type { ISelectFieldOption } from "@/shared/form";
 
 export const registrarPagoFormSchema = z.object({
@@ -16,7 +17,7 @@ export function getRegistrarPagoFormDefaults(saldo: number): IRegistrarPagoFormV
   return {
     monto: saldo,
     metodo: "transferencia",
-    fechaPago: new Date().toISOString().slice(0, 10),
+    fechaPago: toLocalDateString(),
     referencia: "",
     observacion: "",
   };

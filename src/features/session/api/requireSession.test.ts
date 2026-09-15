@@ -55,6 +55,16 @@ describe("requireSession", () => {
     await expect(requireSession()).rejects.toThrow("NEXT_REDIRECT:/auth/signout?reason=inactive")
   })
 
+  it("redirige a signout si la cuenta no tiene ningún rol", async () => {
+    getServerSessionMock.mockResolvedValue({
+      kind: "authenticated",
+      data: buildSession({ roles: [], homeRoute: "/dashboard/student" }),
+      error: null,
+    })
+
+    await expect(requireSession()).rejects.toThrow("NEXT_REDIRECT:/auth/signout?reason=sin_rol")
+  })
+
   it("redirige a la home del rol si no está permitido", async () => {
     getServerSessionMock.mockResolvedValue({
       kind: "authenticated",

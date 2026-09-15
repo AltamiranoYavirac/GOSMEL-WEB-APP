@@ -7,13 +7,11 @@ import { toast } from "sonner";
 import {
   AdminDataTable,
   AdminPageHeader,
-  Badge,
   Button,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
   type IAdminColumn,
 } from "@/shared/ui";
 import { formatDate } from "@/shared/lib/formatters";
@@ -22,6 +20,7 @@ import { useTeacherSesiones } from "../hooks/useTeacherSesiones";
 import { useUpdateTeacherSesionEstado } from "../hooks/useUpdateTeacherSesionEstado";
 import {
   SESION_ESTADO_BADGE,
+  SESION_ESTADO_DOT,
   type ITeacherSesion,
   type TEstadoSesion,
 } from "../model/teacher-dashboard.types";
@@ -104,18 +103,27 @@ export default function TeacherSesionesView({ className }: ITeacherSesionesViewP
           value={row.estado}
           onValueChange={(val) => handleEstadoChange(row.id, val as TEstadoSesion)}
         >
-          <SelectTrigger className="h-7 w-28 text-[11px]">
-            <SelectValue>
-              <Badge variant={SESION_ESTADO_BADGE[row.estado].variant} className="text-[10px]">
-                {SESION_ESTADO_BADGE[row.estado].label}
-              </Badge>
-            </SelectValue>
+          <SelectTrigger className="h-7 w-36 text-[11px]" aria-label="Estado de la sesión">
+            <span className="flex min-w-0 items-center gap-1.5">
+              <span
+                className={`size-2 shrink-0 rounded-full ${SESION_ESTADO_DOT[row.estado]}`}
+                aria-hidden="true"
+              />
+              <span className="truncate">{SESION_ESTADO_BADGE[row.estado].label}</span>
+            </span>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="programada">Programada</SelectItem>
-            <SelectItem value="realizada">Realizada</SelectItem>
-            <SelectItem value="reprogramada">Reprogramada</SelectItem>
-            <SelectItem value="cancelada">Cancelada</SelectItem>
+            {(["programada", "realizada", "reprogramada", "cancelada"] as TEstadoSesion[]).map((estado) => (
+              <SelectItem key={estado} value={estado}>
+                <span className="flex items-center gap-1.5">
+                  <span
+                    className={`size-2 shrink-0 rounded-full ${SESION_ESTADO_DOT[estado]}`}
+                    aria-hidden="true"
+                  />
+                  {SESION_ESTADO_BADGE[estado].label}
+                </span>
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       ),

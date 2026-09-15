@@ -26,7 +26,11 @@ describe("proxy", () => {
   })
 
   it("redirige a /login con next cuando entra anónimo a /dashboard", async () => {
-    updateSessionMock.mockResolvedValue({ response: NextResponse.next(), isAuthenticated: false })
+    updateSessionMock.mockResolvedValue({
+      response: NextResponse.next(),
+      isAuthenticated: false,
+      hasRoles: false,
+    })
 
     const result = await proxy(buildRequest("/dashboard/admin/usuarios", "?page=2"))
 
@@ -36,8 +40,12 @@ describe("proxy", () => {
     expect(location.searchParams.get("next")).toBe("/dashboard/admin/usuarios?page=2")
   })
 
-  it("redirige a /dashboard cuando un autenticado visita /login", async () => {
-    updateSessionMock.mockResolvedValue({ response: NextResponse.next(), isAuthenticated: true })
+  it("redirige a /dashboard cuando un autenticado con rol visita /login", async () => {
+    updateSessionMock.mockResolvedValue({
+      response: NextResponse.next(),
+      isAuthenticated: true,
+      hasRoles: true,
+    })
 
     const result = await proxy(buildRequest("/login"))
 
@@ -45,9 +53,18 @@ describe("proxy", () => {
     expect(new URL(result.headers.get("location")!).pathname).toBe("/dashboard")
   })
 
+  it("deja pasar a /login cuando un autenticado no tiene ningún rol", async () => {
+    const response = NextResponse.next()
+    updateSessionMock.mockResolvedValue({ response, isAuthenticated: true, hasRoles: false })
+
+    const result = await proxy(buildRequest("/login"))
+
+    expect(result).toBe(response)
+  })
+
   it("deja pasar a un autenticado hacia /dashboard", async () => {
     const response = NextResponse.next()
-    updateSessionMock.mockResolvedValue({ response, isAuthenticated: true })
+    updateSessionMock.mockResolvedValue({ response, isAuthenticated: true, hasRoles: true })
 
     const result = await proxy(buildRequest("/dashboard"))
 
@@ -56,7 +73,7 @@ describe("proxy", () => {
 
   it("deja pasar rutas públicas sin sesión", async () => {
     const response = NextResponse.next()
-    updateSessionMock.mockResolvedValue({ response, isAuthenticated: false })
+    updateSessionMock.mockResolvedValue({ response, isAuthenticated: false, hasRoles: false })
 
     const result = await proxy(buildRequest("/cursos"))
 

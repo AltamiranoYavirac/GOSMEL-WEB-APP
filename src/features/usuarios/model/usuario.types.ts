@@ -3,6 +3,8 @@ import type { TBadgeVariant } from "@/shared/ui";
 
 export type TRolUsuario = Database["public"]["Enums"]["rol_usuario"];
 
+export const ADMIN_PROTEGIDO_EMAIL = "altamirano.cristian736@gmail.com";
+
 export interface IUsuarioRow {
   id: string;
   nombre: string;

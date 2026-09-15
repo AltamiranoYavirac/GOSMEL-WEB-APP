@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Icon } from "@iconify/react";
 
 import {
@@ -32,9 +33,11 @@ import {
 } from "../model/horario.types";
 import CrearHorarioDialog from "./CrearHorarioDialog";
 import CrearSesionDialog from "./CrearSesionDialog";
+import GenerarSesionesCatedraDialog from "./GenerarSesionesCatedraDialog";
 import TomarAsistenciaDialog from "./TomarAsistenciaDialog";
 
 export default function HorariosList() {
+  const [genOpen, setGenOpen] = useState(false);
   const recurrentes = useHorariosRecurrentes();
   const sesiones = useSesiones();
   const eliminarHorario = useEliminarHorarioRecurrente();
@@ -131,6 +134,10 @@ export default function HorariosList() {
         />
         <div className="flex items-center gap-2">
           <CrearHorarioDialog />
+          <Button size="sm" variant="outline" onClick={() => setGenOpen(true)}>
+            <Icon icon="ph:calendar-plus" aria-hidden="true" />
+            Generar sesiones
+          </Button>
           <CrearSesionDialog />
         </div>
       </div>
@@ -214,6 +221,8 @@ export default function HorariosList() {
           />
         </TabsContent>
       </Tabs>
+
+      <GenerarSesionesCatedraDialog open={genOpen} onOpenChange={setGenOpen} />
     </div>
   );
 }

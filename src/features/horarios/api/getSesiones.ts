@@ -13,7 +13,8 @@ export async function getSesiones(
   const { data, error } = await supabase
     .from("sesiones")
     .select("id, fecha, hora_inicio, hora_fin, tema, estado, catedra_id, catedras(codigo, cursos(nombre)), asistencias(estado)")
-    .order("fecha", { ascending: false })
+    .order("fecha", { ascending: true })
+    .order("hora_inicio", { ascending: true })
     .limit(300);
 
   if (error) {

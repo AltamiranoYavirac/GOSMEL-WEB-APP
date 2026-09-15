@@ -6,10 +6,6 @@ export async function quitarRol(
   perfilId: string,
   rol: TRolUsuario
 ): Promise<{ data: { perfilId: string } | null; error: string | null }> {
-  if (rol === "admin") {
-    return { data: null, error: "No se puede quitar el rol de administrador" };
-  }
-
   const supabase = createSupabaseBrowserClient();
   const { error } = await supabase
     .from("perfil_rol")

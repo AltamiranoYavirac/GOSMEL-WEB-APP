@@ -43,5 +43,10 @@ export async function signInWithPassword({
 
   const roles = (rolesResult.data ?? []).map((role) => role.rol as TRol)
 
+  if (roles.length === 0) {
+    await supabase.auth.signOut()
+    return { data: null, error: "sin_rol" }
+  }
+
   return { data: { roles }, error: null }
 }

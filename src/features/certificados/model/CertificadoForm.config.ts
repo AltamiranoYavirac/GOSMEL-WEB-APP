@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { toLocalDateString } from "@/shared/lib";
+
 export const certificadoFormSchema = z.object({
   inscripcionId: z.string().min(1, "Debe seleccionar un estudiante matriculado"),
   codigoVerificacion: z.string().min(6, "El código debe tener al menos 6 caracteres"),
@@ -22,7 +24,7 @@ export function getCertificadoFormDefaults(): ICertificadoFormValues {
   return {
     inscripcionId: "",
     codigoVerificacion: generarCodigo(),
-    fechaEmision: new Date().toISOString().slice(0, 10),
+    fechaEmision: toLocalDateString(),
     storagePath: "",
   };
 }
