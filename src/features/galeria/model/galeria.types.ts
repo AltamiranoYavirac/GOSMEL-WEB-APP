@@ -21,3 +21,11 @@ export const CATEGORIA_MEDIO_BADGE: Record<TCategoriaMedio, { label: string; var
   aulas: { label: "Aulas", variant: "outline" },
   general: { label: "General", variant: "ghost" },
 };
+
+export interface IPublicGaleriaItem {
+  id: string;
+  titulo: string | null;
+  alt: string;
+  categoria: TCategoriaMedio;
+  publicId: string;
+}

@@ -8,6 +8,7 @@ import FinalCtaSection from "./FinalCtaSection";
 import HeroSection from "./HeroSection";
 import HighlightsSection from "./HighlightsSection";
 import HowItWorksSection from "./HowItWorksSection";
+import MetricsSection from "./MetricsSection";
 import PhilosophySection from "./PhilosophySection";
 import ProgramsTeaserSection from "./ProgramsTeaserSection";
 import TestimonialsSection from "./TestimonialsSection";
@@ -29,6 +30,7 @@ export default async function LandingPage() {
         coursesCount={coursesResult.data?.length ?? 0}
         programsCount={programsResult.data?.length ?? 0}
       />
+      <MetricsSection />
       <ExperienceGallerySection />
       <CoursesSection courses={coursesResult.data ?? []} />
       <ProgramsTeaserSection programs={programsResult.data ?? []} />

@@ -1,2 +1,2 @@
 export { default as AdminDataTable } from "./AdminDataTable";
-export type { IAdminColumn, IAdminDataTableFilter, IAdminDataTableProps, IAdminDataTableSelection } from "./AdminDataTable.types";
+export type { IAdminColumn, IAdminDataTableFilter, IAdminDataTableMobileCard, IAdminDataTableProps, IAdminDataTableSelection } from "./AdminDataTable.types";

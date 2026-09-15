@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { DASHBOARD_NAV, DASHBOARD_NAV_FOOTER, ROLE_LABEL } from "@/entities/user";
+import { DASHBOARD_NAV, DASHBOARD_SIDEBAR_FOOTER, ROLE_LABEL } from "@/entities/user";
 import { Avatar, AvatarFallback, ScrollArea } from "@/shared/ui";
 
 import DashboardNavGroup from "./DashboardNavGroup";
@@ -16,7 +16,7 @@ const BAR_HEIGHTS = ["h-2", "h-3.5", "h-2.5", "h-4"];
 export default function DashboardSidebar({ role, session, onNavigate }: IDashboardSidebarProps) {
   const pathname = usePathname();
   const groups = DASHBOARD_NAV[role];
-  const footerLinks = DASHBOARD_NAV_FOOTER[role];
+  const footerLinks = DASHBOARD_SIDEBAR_FOOTER[role];
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
@@ -40,7 +40,7 @@ export default function DashboardSidebar({ role, session, onNavigate }: IDashboa
         </span>
       </div>
 
-      <ScrollArea className="flex-1 px-3 py-3.5">
+      <ScrollArea className="min-h-0 flex-1 px-3 py-3.5">
         <nav className="space-y-0.5">
           {groups.map((group) => {
             if (group.href && !group.items) {

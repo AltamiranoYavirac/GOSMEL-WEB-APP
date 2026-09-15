@@ -6,12 +6,14 @@ export async function persistCloudinaryImage<TData>({
   folder,
   currentPublicId,
   removeCurrent = false,
+  deleteCurrentAfterPersist = true,
+  meta,
   persist,
 }: ICloudinaryMutationInput<TData>) {
   let nextPublicId = removeCurrent ? null : currentPublicId ?? null
 
   if (file) {
-    const upload = await uploadCloudinaryImage(file, folder)
+    const upload = await uploadCloudinaryImage(file, folder, meta)
     if (upload.error || !upload.data) {
       return { data: null, error: upload.error ?? "No se pudo subir la imagen.", cleanupError: null }
     }
@@ -25,7 +27,7 @@ export async function persistCloudinaryImage<TData>({
   }
 
   let cleanupError: string | null = null
-  if (currentPublicId && currentPublicId !== nextPublicId) {
+  if (deleteCurrentAfterPersist && currentPublicId && currentPublicId !== nextPublicId) {
     const cleanup = await deleteCloudinaryImage(currentPublicId)
     cleanupError = cleanup.error
   }

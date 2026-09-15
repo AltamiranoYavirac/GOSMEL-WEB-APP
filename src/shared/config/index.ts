@@ -5,7 +5,9 @@ export type { ISocialProvider, ISocialLink } from "./social";
 export { UI_ICONS } from "./ui-icons";
 export { ACADEMY_TIME_ZONE } from "./timezone";
 export {
+  buildCloudinaryFolder,
   CLOUDINARY_IMAGE_FOLDERS,
   CLOUDINARY_IMAGE_TYPES,
   CLOUDINARY_MAX_IMAGE_SIZE,
+  isAllowedCloudinaryFolder,
 } from "./cloudinary";

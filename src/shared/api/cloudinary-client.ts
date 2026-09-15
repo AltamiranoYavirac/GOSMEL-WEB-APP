@@ -1,9 +1,15 @@
-import type { TCloudinaryImageFolder } from "./cloudinary.types"
+import type { ICloudinaryImageMeta, TCloudinaryImageFolder } from "./cloudinary.types"
 
-export async function uploadCloudinaryImage(file: File, folder: TCloudinaryImageFolder) {
+export async function uploadCloudinaryImage(
+  file: File,
+  folder: TCloudinaryImageFolder,
+  meta: ICloudinaryImageMeta = {},
+) {
   const formData = new FormData()
   formData.append("file", file)
   formData.append("folder", folder)
+  if (meta.displayName) formData.append("display_name", meta.displayName)
+  if (meta.tags && meta.tags.length > 0) formData.append("tags", meta.tags.join(","))
 
   const response = await fetch("/api/upload/cloudinary", {
     method: "POST",

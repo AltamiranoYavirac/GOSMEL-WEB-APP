@@ -13,7 +13,7 @@ export async function getAcuerdos(
   const { data, error } = await supabase
     .from("acuerdos_pago")
     .select(
-      "id, monto_mensual, moneda, dia_cobro, fecha_inicio, fecha_fin, motivo_ajuste, observaciones, estado, estudiante_id, estudiantes!acuerdos_pago_estudiante_id_fkey(nombres, apellidos), inscripcion_id, inscripciones!acuerdos_pago_inscripcion_id_fkey(catedra_id, catedras!inscripciones_catedra_id_fkey(codigo, cursos(nombre)))"
+      "id, monto_mensual, moneda, dia_cobro, fecha_inicio, fecha_fin, motivo_ajuste, observaciones, estado, estudiante_id, responsable_representante_id, estudiantes!acuerdos_pago_estudiante_id_fkey(nombres, apellidos), acuerdo_condiciones(vigente_desde, monto_mensual, dia_cobro, motivo), inscripcion_id, inscripciones!acuerdos_pago_inscripcion_id_fkey(catedra_id, catedras!inscripciones_catedra_id_fkey(codigo, cursos(nombre)))"
     )
     .order("created_at", { ascending: false })
     .limit(300);
@@ -28,6 +28,7 @@ export async function getAcuerdos(
 
     return {
       id: acuerdo.id,
+      estudianteId: acuerdo.estudiante_id,
       estudiante: `${acuerdo.estudiantes?.nombres ?? ""} ${acuerdo.estudiantes?.apellidos ?? ""}`.trim(),
       montoMensual: Number(acuerdo.monto_mensual),
       moneda: acuerdo.moneda,
@@ -38,6 +39,13 @@ export async function getAcuerdos(
       observaciones: acuerdo.observaciones,
       inscripcion,
       estado: acuerdo.estado as TEstadoAcuerdo,
+      responsableRepresentanteId: acuerdo.responsable_representante_id,
+      condiciones: (acuerdo.acuerdo_condiciones ?? []).map((condicion) => ({
+        vigenteDesde: condicion.vigente_desde,
+        montoMensual: Number(condicion.monto_mensual),
+        diaCobro: condicion.dia_cobro,
+        motivo: condicion.motivo,
+      })),
     };
   });
 

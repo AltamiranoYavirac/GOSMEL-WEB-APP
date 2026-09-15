@@ -1,4 +1,5 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
+import type { Database } from "@/shared/api/supabase/database.types";
 import { toLocalDateString } from "@/shared/lib";
 
 import type { IReportarPagoFormValues } from "../model/ReportarPagoForm.config";
@@ -13,31 +14,15 @@ export async function reportStudentPayment(input: IReportStudentPaymentInput): P
   error: string | null;
 }> {
   const supabase = createSupabaseBrowserClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   const hoy = toLocalDateString();
-
-  const { data, error } = await supabase
-    .from("pagos")
-    .insert({
-      cuota_id: input.cuotaId,
-      monto: input.values.monto,
-      metodo: input.values.metodo,
-      referencia: input.values.referencia?.trim() || null,
-      comprobante_storage_path: input.values.comprobanteStoragePath?.trim() || null,
-      observacion: input.values.observacion?.trim() || null,
-      registrado_por: user?.id ?? null,
-      fecha_pago: hoy,
-      estado: "pendiente_verificacion",
-    })
-    .select("id")
-    .single();
-
-  if (error) {
-    return { data: null, error: error.message };
-  }
-
-  return { data, error: null };
+  const { data, error } = await supabase.rpc("reportar_cobro_portal", {
+    p_cuota_id: input.cuotaId,
+    p_monto: input.values.monto,
+    p_fecha_pago: hoy,
+    p_metodo: input.values.metodo as Database["public"]["Enums"]["metodo_cobro"],
+    p_referencia: input.values.referencia?.trim() || null,
+    p_comprobante_storage_path: input.values.comprobanteStoragePath?.trim() || "",
+    p_observacion: input.values.observacion?.trim() || null,
+  } as never);
+  return error ? { data: null, error: error.message } : { data: { id: data as string }, error: null };
 }

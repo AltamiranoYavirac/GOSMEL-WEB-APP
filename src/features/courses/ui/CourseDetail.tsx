@@ -3,10 +3,22 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 
 import { Reveal } from "@/shared/ui";
+import { formatDate } from "@/shared/lib/formatters";
 
 import type { ICourseDetailProps } from "./CourseDetail.types";
 
-export default function CourseDetail({ course }: ICourseDetailProps) {
+function RatingStars({ value }: { value: number }) {
+  const rounded = Math.round(value);
+  return (
+    <span className="flex gap-0.5 text-warning" aria-hidden="true">
+      {Array.from({ length: 5 }).map((_, index) => (
+        <Icon key={index} icon={index < rounded ? "ph:star-fill" : "ph:star"} className="size-4" />
+      ))}
+    </span>
+  );
+}
+
+export default function CourseDetail({ course, reviews }: ICourseDetailProps) {
   const classRows = [
     { label: "Formato", value: course.classFormat },
     { label: "Horario", value: course.schedule },
@@ -36,6 +48,15 @@ export default function CourseDetail({ course }: ICourseDetailProps) {
 
         <div>
           <Reveal as="h1" className="text-[42px] font-semibold leading-[1.02] tracking-[-0.035em] md:text-[62px]">{course.title}</Reveal>
+          {course.totalReviews > 0 ? (
+            <Reveal delay={0.05} className="mt-4 flex items-center gap-2.5">
+              <RatingStars value={course.rating} />
+              <span className="text-sm font-semibold">{course.rating.toFixed(1)}</span>
+              <span className="text-sm text-muted-foreground">
+                · {course.totalReviews} {course.totalReviews === 1 ? "reseña" : "reseñas"}
+              </span>
+            </Reveal>
+          ) : null}
           <Reveal as="p" delay={0.08} className="mt-5 max-w-[560px] text-base leading-[1.65] text-muted-foreground md:text-[17px]">{course.description}</Reveal>
           <div className="my-12 h-px bg-border" />
 
@@ -108,6 +129,51 @@ export default function CourseDetail({ course }: ICourseDetailProps) {
             <p className="text-[19px] font-light italic leading-[1.5] md:text-2xl">&ldquo;{course.testimonial.quote}&rdquo;</p>
             <p className="mt-6 text-[13px] font-semibold uppercase tracking-[0.08em] text-primary">{course.testimonial.author} · {course.testimonial.role}</p>
           </Reveal>
+        </section>
+      ) : null}
+
+      {course.totalReviews > 0 ? (
+        <section className="mx-auto mt-[90px] w-full max-w-[1600px] px-[22px] md:mt-[110px] md:px-14" aria-labelledby="course-reviews-title">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <Reveal as="p" className="mb-[18px] font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
+                <span id="course-reviews-title">Reseñas de estudiantes</span>
+              </Reveal>
+              <Reveal delay={0.05} className="flex items-center gap-3">
+                <span className="text-[40px] font-semibold leading-none tracking-[-0.04em]">{course.rating.toFixed(1)}</span>
+                <span>
+                  <RatingStars value={course.rating} />
+                  <span className="mt-1 block text-xs text-muted-foreground">
+                    {course.totalReviews} {course.totalReviews === 1 ? "valoración" : "valoraciones"}
+                  </span>
+                </span>
+              </Reveal>
+            </div>
+          </div>
+
+          {reviews.length ? (
+            <div className="mt-10 grid grid-cols-1 gap-3.5 md:grid-cols-2 lg:grid-cols-3">
+              {reviews.map((review, index) => (
+                <Reveal
+                  key={review.id}
+                  as="article"
+                  delay={Math.min(index * 0.06, 0.3)}
+                  className="flex flex-col rounded-[22px] border border-border bg-card p-5"
+                >
+                  <RatingStars value={review.puntuacion} />
+                  {review.comentario ? (
+                    <p className="mt-3 flex-1 text-sm leading-[1.6] text-muted-foreground">{review.comentario}</p>
+                  ) : (
+                    <p className="mt-3 flex-1 text-sm italic text-muted-foreground/70">Valoración sin comentario</p>
+                  )}
+                  <footer className="mt-4 border-t border-border pt-3 text-xs text-muted-foreground">
+                    Estudiante de GOSMEL
+                    <span className="ml-1.5 text-muted-foreground/70">· {formatDate(review.createdAt)}</span>
+                  </footer>
+                </Reveal>
+              ))}
+            </div>
+          ) : null}
         </section>
       ) : null}
 

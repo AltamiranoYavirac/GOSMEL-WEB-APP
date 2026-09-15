@@ -15,7 +15,7 @@ export async function getStudentAccountStatement(
   const [cuentas, acuerdos, contacto] = await Promise.all([
     supabase
       .from("v_estado_cuenta")
-      .select("cuota_id, periodo_mes, monto, monto_pagado, saldo, fecha_vencimiento, estado_efectivo, dias_mora")
+      .select("cuota_id, periodo_mes, monto, monto_pagado, saldo, saldo_reservado, fecha_vencimiento, estado_efectivo, dias_mora")
       .eq("estudiante_id", estudianteId)
       .order("periodo_mes", { ascending: false }),
     supabase
@@ -42,29 +42,37 @@ export async function getStudentAccountStatement(
 
   let pagos: IStudentPago[] = [];
   if (cuotaIds.length > 0) {
-    const { data, error } = await supabase
-      .from("pagos")
-      .select("id, fecha_pago, monto, metodo, referencia, comprobante_storage_path, estado, observacion, cuota_id, cuotas!pagos_cuota_id_fkey(periodo_mes)")
-      .in("cuota_id", cuotaIds)
-      .order("fecha_pago", { ascending: false })
-      .limit(100);
+    const { data: aplicaciones, error: aplicacionesError } = await supabase
+      .from("cobro_aplicaciones")
+      .select("cobro_id, cuota_id, monto")
+      .in("cuota_id", cuotaIds);
+    if (aplicacionesError) return { data: null, error: aplicacionesError.message };
 
-    if (error) {
-      return { data: null, error: error.message };
-    }
+    const cobroIds = [...new Set((aplicaciones ?? []).map((aplicacion) => aplicacion.cobro_id))];
+    const { data: cobros, error: cobrosError } = cobroIds.length
+      ? await supabase.from("cobros").select("id, fecha_pago, metodo, referencia, comprobante_storage_path, estado, observacion").in("id", cobroIds).order("fecha_pago", { ascending: false })
+      : { data: [], error: null };
+    if (cobrosError) return { data: null, error: cobrosError.message };
 
-    pagos = (data ?? []).map((pago) => ({
-      id: pago.id,
-      fecha: pago.fecha_pago,
-      monto: Number(pago.monto) || 0,
-      metodo: pago.metodo ?? "",
-      referencia: pago.referencia,
-      comprobantePath: pago.comprobante_storage_path,
-      periodo: pago.cuotas?.periodo_mes ?? "",
-      estado: (pago.estado ?? "aprobado") as IStudentPago["estado"],
-      observacion: pago.observacion,
-      cuotaId: pago.cuota_id,
-    }));
+    const cuotaPorId = new Map((cuentas.data ?? []).map((cuota) => [cuota.cuota_id, cuota]));
+    const cobroPorId = new Map((cobros ?? []).map((cobro) => [cobro.id, cobro]));
+    pagos = (aplicaciones ?? []).flatMap((aplicacion) => {
+      const cobro = cobroPorId.get(aplicacion.cobro_id);
+      const cuota = cuotaPorId.get(aplicacion.cuota_id);
+      if (!cobro) return [];
+      return [{
+        id: cobro.id,
+        fecha: cobro.fecha_pago,
+        monto: Number(aplicacion.monto) || 0,
+        metodo: cobro.metodo ?? "",
+        referencia: cobro.referencia,
+        comprobantePath: cobro.comprobante_storage_path,
+        periodo: cuota?.periodo_mes ?? "",
+        estado: cobro.estado as IStudentPago["estado"],
+        observacion: cobro.observacion,
+        cuotaId: aplicacion.cuota_id,
+      }];
+    });
   }
 
   const cuotasConPagoPendiente = new Set(
@@ -98,6 +106,7 @@ export async function getStudentAccountStatement(
         monto: Number(row.monto) || 0,
         montoPagado: Number(row.monto_pagado) || 0,
         saldo: Number(row.saldo) || 0,
+        saldoReservado: Number(row.saldo_reservado) || 0,
         fechaVencimiento: row.fecha_vencimiento,
         estadoEfectivo: row.estado_efectivo ?? "pendiente",
         diasMora: row.dias_mora ?? 0,

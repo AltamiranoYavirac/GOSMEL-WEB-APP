@@ -65,4 +65,36 @@ describe("persistCloudinaryImage", () => {
     expect(persist).toHaveBeenCalledWith(null)
     expect(cloudinary.remove).toHaveBeenCalledWith("gosmel/sitio/hero")
   })
+
+  it("preserva un activo legacy que no pertenece a una carpeta administrada", async () => {
+    const persist = vi.fn().mockResolvedValue({ data: { key: "auth_login" }, error: null })
+    const file = new File(["image"], "login.jpg", { type: "image/jpeg" })
+
+    const result = await persistCloudinaryImage({
+      file,
+      folder: "gosmel/sitio",
+      currentPublicId: "MicrofonoLight_tudvss",
+      deleteCurrentAfterPersist: false,
+      persist,
+    })
+
+    expect(persist).toHaveBeenCalledWith("gosmel/cursos/nueva")
+    expect(cloudinary.remove).not.toHaveBeenCalled()
+    expect(result.cleanupError).toBeNull()
+  })
+
+  it("propaga display_name y tags a la subida", async () => {
+    const persist = vi.fn().mockResolvedValue({ data: { id: "s1" }, error: null })
+    const file = new File(["image"], "mision.jpg", { type: "image/jpeg" })
+    const meta = { displayName: "Sección - Misión", tags: ["seccion:abc-123"] }
+
+    await persistCloudinaryImage({
+      file,
+      folder: "gosmel/secciones/abc-123",
+      meta,
+      persist,
+    })
+
+    expect(cloudinary.upload).toHaveBeenCalledWith(file, "gosmel/secciones/abc-123", meta)
+  })
 })

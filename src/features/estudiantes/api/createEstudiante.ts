@@ -1,5 +1,4 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
-import { toLocalDateString } from "@/shared/lib";
 import type { TNivelCurso } from "../model/estudiante.types";
 
 export interface ICreateEstudianteInput {
@@ -22,44 +21,12 @@ export async function createEstudiante(input: ICreateEstudianteInput): Promise<{
 }> {
   const supabase = createSupabaseBrowserClient();
 
-  const { data: est, error: estError } = await supabase
-    .from("estudiantes")
-    .insert({
-      nombres: input.nombres.trim(),
-      apellidos: input.apellidos.trim(),
-      fecha_nacimiento: input.fecha_nacimiento,
-      cedula: input.cedula?.trim() || null,
-      celular: input.celular?.trim() || null,
-      email: input.email?.trim() || null,
-      nivel_musical: input.nivel_musical || "iniciacion",
-      biografia_corta: input.biografia_corta?.trim() || null,
-      fecha_ingreso: toLocalDateString(),
-      activo: true,
-    })
-    .select("id")
-    .single();
-
-  if (estError || !est) {
-    return { data: null, error: estError?.message ?? "Error al crear estudiante" };
-  }
-
-  if (input.representante_id) {
-    await supabase.from("estudiante_representante").insert({
-      estudiante_id: est.id,
-      representante_id: input.representante_id,
-      parentesco: input.parentesco || "tutor_legal",
-      es_contacto_principal: true,
-      autoriza_retiro: true,
-    });
-  }
-
-  if (input.instrumento_id) {
-    await supabase.from("estudiante_instrumento").insert({
-      estudiante_id: est.id,
-      instrumento_id: input.instrumento_id,
-      nivel: input.nivel_musical || "iniciacion",
-    });
-  }
-
-  return { data: { id: est.id }, error: null };
+  const { data, error } = await supabase.rpc("crear_estudiante_administrativo" as never, {
+    p_nombres: input.nombres, p_apellidos: input.apellidos, p_fecha_nacimiento: input.fecha_nacimiento,
+    p_cedula: input.cedula ?? null, p_celular: input.celular ?? null, p_email: input.email ?? null,
+    p_nivel_musical: input.nivel_musical ?? "iniciacion", p_biografia_corta: input.biografia_corta ?? null,
+    p_representante_id: input.representante_id ?? null, p_parentesco: input.parentesco ?? null,
+    p_instrumento_id: input.instrumento_id ?? null,
+  } as never);
+  return error ? { data: null, error: error.message } : { data: data ? { id: data as string } : null, error: null };
 }

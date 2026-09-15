@@ -14,9 +14,7 @@ import { formatCurrency, formatDate, formatMonthPeriod } from "@/shared/lib/form
 
 import { usePagos } from "../hooks/usePagos";
 import { PAGO_ESTADO_BADGE, type IPagoRow } from "../model/pago.types";
-import AnularPagoDialog from "./AnularPagoDialog";
-import AprobarPagoDialog from "./AprobarPagoDialog";
-import RechazarPagoDialog from "./RechazarPagoDialog";
+import PagoRowActions from "./PagoRowActions";
 
 export default function PagosList() {
   const { data, isPending } = usePagos();
@@ -65,6 +63,11 @@ export default function PagosList() {
           {row.referencia ?? "—"}
         </span>
       ),
+    },
+    {
+      key: "recibo",
+      label: "Recibo",
+      render: (row) => row.numeroRecibo ? <span className="font-mono text-xs font-medium text-primary">{row.numeroRecibo}</span> : <span className="text-muted-foreground">Pendiente</span>,
     },
     {
       key: "estado",
@@ -135,17 +138,7 @@ export default function PagosList() {
         emptyTitle="Sin pagos"
         emptyDescription="Cuando se registren pagos aparecerán aquí."
         countLabel="pagos"
-        rowActions={(row) => (
-          <div className="flex items-center justify-end gap-1.5">
-            {row.estado === "pendiente_verificacion" ? (
-              <>
-                <AprobarPagoDialog pago={row} />
-                <RechazarPagoDialog pago={row} />
-              </>
-            ) : null}
-            <AnularPagoDialog pago={row} />
-          </div>
-        )}
+        rowActions={(row) => <PagoRowActions pago={row} />}
       />
     </div>
   );

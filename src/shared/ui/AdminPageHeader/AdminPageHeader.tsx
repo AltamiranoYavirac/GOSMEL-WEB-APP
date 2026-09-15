@@ -28,7 +28,7 @@ export default function AdminPageHeader({
         ) : null}
       </div>
 
-      {children ? <div className="flex flex-wrap items-center gap-2.5">{children}</div> : null}
+      {children ? <div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">{children}</div> : null}
     </div>
   );
 }

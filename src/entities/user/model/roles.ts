@@ -14,11 +14,6 @@ export const ROLE_LABEL: Record<TRol, string> = {
   representante: "Representante",
 }
 
-export const ROLE_PROFILE_ROUTE: Partial<Record<TRol, string>> = {
-  admin: "/dashboard/admin/configuracion",
-  docente: "/dashboard/teacher/perfil",
-}
-
 const ROLE_PRIORITY: TRol[] = ["admin", "docente", "estudiante", "representante"]
 
 export function resolveHomeRoute(roles: TRol[]): string {
@@ -30,7 +25,6 @@ export function resolvePrimaryRole(roles: TRol[]): TRol {
   return ROLE_PRIORITY.find((rol) => roles.includes(rol)) ?? "estudiante"
 }
 
-export function resolveProfileRoute(roles: TRol[]): string | null {
-  const rol = ROLE_PRIORITY.find((r) => roles.includes(r) && ROLE_PROFILE_ROUTE[r])
-  return rol ? (ROLE_PROFILE_ROUTE[rol] ?? null) : null
+export function resolveProfileRoute(): string {
+  return "/dashboard/perfil"
 }

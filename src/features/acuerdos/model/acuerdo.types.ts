@@ -5,6 +5,7 @@ export type TEstadoAcuerdo = Database["public"]["Enums"]["estado_acuerdo"];
 
 export interface IAcuerdoRow {
   id: string;
+  estudianteId: string;
   estudiante: string;
   montoMensual: number;
   moneda: string;
@@ -15,6 +16,8 @@ export interface IAcuerdoRow {
   observaciones: string | null;
   inscripcion: string | null;
   estado: TEstadoAcuerdo;
+  responsableRepresentanteId: string | null;
+  condiciones: Array<{ vigenteDesde: string; montoMensual: number; diaCobro: number; motivo: string | null }>;
 }
 
 export const ACUERDO_ESTADO_BADGE: Record<TEstadoAcuerdo, { label: string; variant: TBadgeVariant }> = {

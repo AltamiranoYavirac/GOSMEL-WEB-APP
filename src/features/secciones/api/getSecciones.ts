@@ -12,7 +12,7 @@ export async function getSecciones(
 }> {
   const { data, error } = await supabase
     .from("secciones_institucionales")
-    .select("id, titulo, clave, orden, updated_at, publicado")
+    .select("id, titulo, clave, contenido, imagen_public_id, imagen_texto_alt, orden, updated_at, publicado")
     .order("orden", { ascending: true })
     .limit(200);
 
@@ -24,6 +24,9 @@ export async function getSecciones(
     id: seccion.id,
     titulo: seccion.titulo,
     clave: seccion.clave,
+    contenido: seccion.contenido,
+    imagenPublicId: seccion.imagen_public_id,
+    imagenTextoAlt: seccion.imagen_texto_alt,
     orden: seccion.orden,
     actualizado: seccion.updated_at,
     publicado: seccion.publicado,

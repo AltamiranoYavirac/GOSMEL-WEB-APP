@@ -19,6 +19,8 @@ export function useUpdateSiteAsset() {
         folder: "gosmel/sitio",
         currentPublicId,
         removeCurrent: values.removeImage,
+        deleteCurrentAfterPersist: currentPublicId?.startsWith("gosmel/sitio/") ?? false,
+        meta: { displayName: `Sitio - ${key}`, tags: [`sitio:${key}`] },
         persist: (publicId) => updateSiteAsset(key, values, publicId),
       });
       if (result.error) throw new Error(result.error);

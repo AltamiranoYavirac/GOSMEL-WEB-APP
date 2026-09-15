@@ -96,8 +96,8 @@ export async function getDashboardOverview(): Promise<{
     supabase.from("solicitudes").select("id", { count: "exact", head: true }).in("estado", ["nueva", "contactada"]),
     supabase.from("catedras").select("id", { count: "exact", head: true }).eq("estado", "en_curso"),
     supabase.from("sesiones").select("id", { count: "exact", head: true }).eq("fecha", today),
-    supabase.from("pagos").select("monto").gte("fecha_pago", startOfMonth),
-    supabase.from("pagos").select("monto").gte("fecha_pago", startOfPrevMonth).lt("fecha_pago", startOfMonth),
+    supabase.from("cobros").select("monto_total").eq("estado", "aprobado").gte("fecha_pago", startOfMonth),
+    supabase.from("cobros").select("monto_total").eq("estado", "aprobado").gte("fecha_pago", startOfPrevMonth).lt("fecha_pago", startOfMonth),
     supabase
       .from("cuotas")
       .select("id", { count: "exact", head: true })
@@ -109,7 +109,7 @@ export async function getDashboardOverview(): Promise<{
       .select("id", { count: "exact", head: true })
       .gte("fecha_inscripcion", startOfPrevMonth)
       .lt("fecha_inscripcion", startOfMonth),
-    supabase.from("pagos").select("monto, fecha_pago").gte("fecha_pago", sixMonthsAgo),
+    supabase.from("cobros").select("monto_total, fecha_pago").eq("estado", "aprobado").gte("fecha_pago", sixMonthsAgo),
     supabase.from("estudiantes").select("created_at").gte("created_at", sixMonthsAgo),
     supabase.from("solicitudes").select("id", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
     supabase
@@ -128,8 +128,9 @@ export async function getDashboardOverview(): Promise<{
       .order("created_at", { ascending: false })
       .limit(5),
     supabase
-      .from("pagos")
-      .select("id, monto, fecha_pago, created_at, cuotas(acuerdos_pago(estudiantes(nombres, apellidos)))")
+      .from("cobros")
+      .select("id, monto_total, fecha_pago, created_at, cobro_aplicaciones(cuotas(estudiantes(nombres, apellidos)))")
+      .eq("estado", "aprobado")
       .order("fecha_pago", { ascending: false })
       .order("created_at", { ascending: false })
       .limit(5),
@@ -163,8 +164,8 @@ export async function getDashboardOverview(): Promise<{
     return { data: null, error: firstError.message };
   }
 
-  const ingresosDelMes = (pagosDelMes.data ?? []).reduce((sum, pago) => sum + Number(pago.monto), 0);
-  const ingresosMesAnterior = (pagosMesAnterior.data ?? []).reduce((sum, pago) => sum + Number(pago.monto), 0);
+  const ingresosDelMes = (pagosDelMes.data ?? []).reduce((sum, pago) => sum + Number(pago.monto_total), 0);
+  const ingresosMesAnterior = (pagosMesAnterior.data ?? []).reduce((sum, pago) => sum + Number(pago.monto_total), 0);
 
   const revenueByMonth = new Map<string, number>();
   for (const key of monthBuckets) {
@@ -172,7 +173,7 @@ export async function getDashboardOverview(): Promise<{
   }
   for (const pago of pagosSeisMeses.data ?? []) {
     const key = monthKey(new Date(pago.fecha_pago));
-    revenueByMonth.set(key, (revenueByMonth.get(key) ?? 0) + Number(pago.monto));
+    revenueByMonth.set(key, (revenueByMonth.get(key) ?? 0) + Number(pago.monto_total));
   }
   const revenue: IRevenuePoint[] = Array.from(revenueByMonth.entries()).map(([key, total]) => {
     const [year, month] = key.split("-").map(Number);
@@ -240,12 +241,12 @@ export async function getDashboardOverview(): Promise<{
   });
 
   const pagosRecientesItems: IRecentActivityItem[] = (pagosRecientes.data ?? []).map((pago) => {
-    const estudiante = pago.cuotas?.acuerdos_pago?.estudiantes;
+    const estudiante = pago.cobro_aplicaciones?.[0]?.cuotas?.estudiantes;
     const nombre = estudiante ? `${estudiante.nombres} ${estudiante.apellidos}` : "Estudiante";
     return {
       id: pago.id,
       title: nombre,
-      subtitle: `$${Number(pago.monto).toFixed(2)}`,
+      subtitle: `$${Number(pago.monto_total).toFixed(2)}`,
       meta: formatActivityMeta(new Date(pago.fecha_pago)),
       href: "/dashboard/admin/pagos",
       initials: initialsOf(nombre),

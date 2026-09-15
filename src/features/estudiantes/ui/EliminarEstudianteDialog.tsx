@@ -30,9 +30,8 @@ export default function EliminarEstudianteDialog({ estudiante }: IEliminarEstudi
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" size="sm" aria-label={`Eliminar a ${estudiante.nombreCompleto}`}>
+        <Button variant="destructive" size="icon-sm" aria-label={`Eliminar a ${estudiante.nombreCompleto}`}>
           <Icon icon="ph:trash" aria-hidden="true" />
-          Borrar
         </Button>
       </AlertDialogTrigger>
 
