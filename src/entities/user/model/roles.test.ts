@@ -34,20 +34,8 @@ describe("resolvePrimaryRole", () => {
 })
 
 describe("resolveProfileRoute", () => {
-  it("devuelve la ruta de perfil de admin y docente", () => {
-    expect(resolveProfileRoute(["admin"])).toBe("/dashboard/admin/configuracion")
-    expect(resolveProfileRoute(["docente"])).toBe("/dashboard/teacher/perfil")
-  })
-
-  it("devuelve null para roles sin página de perfil", () => {
-    expect(resolveProfileRoute(["estudiante"])).toBeNull()
-    expect(resolveProfileRoute(["representante"])).toBeNull()
-    expect(resolveProfileRoute([])).toBeNull()
-  })
-
-  it("respeta la precedencia de roles", () => {
-    expect(resolveProfileRoute(["docente", "admin"])).toBe("/dashboard/admin/configuracion")
-    expect(resolveProfileRoute(["estudiante", "docente"])).toBe("/dashboard/teacher/perfil")
+  it("siempre devuelve /dashboard/perfil, sin importar el rol", () => {
+    expect(resolveProfileRoute()).toBe("/dashboard/perfil")
   })
 })
 

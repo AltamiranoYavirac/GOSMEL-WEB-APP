@@ -6,6 +6,10 @@ export async function updateSiteConfig(
   values: ISiteConfigUpdate,
 ): Promise<{ data: { updated: string } | null; error: string | null }> {
   const supabase = createSupabaseBrowserClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   const { data, error } = await supabase
     .from("configuracion_sitio")
     .upsert(
@@ -20,6 +24,7 @@ export async function updateSiteConfig(
         horario_atencion: values.horarioAtencion,
         mapa_embed: values.mapaEmbed,
         redes_sociales: values.redesSociales,
+        actualizado_por: user?.id ?? null,
       },
       { onConflict: "id" },
     )
