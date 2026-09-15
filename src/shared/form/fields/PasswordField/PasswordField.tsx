@@ -70,20 +70,22 @@ export function PasswordField<TFieldValues extends Record<string, unknown> = Rec
             {startIcon}
           </span>
         )}
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          onClick={() => setShow((v) => !v)}
-          aria-label={show ? "Ocultar contraseña" : "Mostrar contraseña"}
-          className="absolute right-1.5 top-1/2 z-10 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <Icon
-            icon={show ? "ph:eye-slash" : "ph:eye"}
-            className="size-[18px]"
-            aria-hidden="true"
-          />
-        </Button>
+        <div className="absolute inset-y-0 right-1.5 z-10 flex items-center">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => setShow((v) => !v)}
+            aria-label={show ? "Ocultar contraseña" : "Mostrar contraseña"}
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Icon
+              icon={show ? "ph:eye-slash" : "ph:eye"}
+              className="size-[18px]"
+              aria-hidden="true"
+            />
+          </Button>
+        </div>
       </div>
     </FormField>
   )

@@ -1,5 +1,6 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 import type { Database } from "@/shared/api/supabase/database.types";
+import { toLocalDateString } from "@/shared/lib";
 
 import type { IReportarPagoFormValues } from "../model/ReportarPagoForm.config";
 
@@ -13,7 +14,7 @@ export async function reportStudentPayment(input: IReportStudentPaymentInput): P
   error: string | null;
 }> {
   const supabase = createSupabaseBrowserClient();
-  const hoy = new Date().toISOString().slice(0, 10);
+  const hoy = toLocalDateString();
   const { data, error } = await supabase.rpc("reportar_cobro_portal", {
     p_cuota_id: input.cuotaId,
     p_monto: input.values.monto,

@@ -5,7 +5,7 @@ import { signOutServer } from "@/features/session/server";
 export async function GET(request: NextRequest) {
   const reason = request.nextUrl.searchParams.get("reason");
   const loginUrl = new URL("/login", request.url);
-  if (reason === "inactive") loginUrl.searchParams.set("reason", reason);
+  if (reason === "inactive" || reason === "sin_rol") loginUrl.searchParams.set("reason", reason);
 
   const response = NextResponse.redirect(loginUrl);
   const { error } = await signOutServer(request, response);

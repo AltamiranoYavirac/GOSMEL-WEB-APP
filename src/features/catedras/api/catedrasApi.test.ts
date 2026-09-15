@@ -15,7 +15,6 @@ import { crearCatedra } from "./crearCatedra"
 import { agregarHorarioCatedra, eliminarHorarioCatedra, getCatedraHorarios } from "./catedraHorarios"
 import { eliminarCatedra } from "./eliminarCatedra"
 import { eliminarInscripcionCatedra } from "./eliminarInscripcionCatedra"
-import { generarSesionesCatedra } from "./generarSesionesCatedra"
 import { getCatedraEstudiantes } from "./getCatedraEstudiantes"
 import { filtrarDocentesPorCurso, getCatedraOptions, sugerirCodigoCatedra } from "./getCatedraOptions"
 import { updateCatedra } from "./updateCatedra"
@@ -184,18 +183,6 @@ describe("catedras API", () => {
     })
 
     await expect(eliminarInscripcionCatedra("i1")).resolves.toEqual({ error: null })
-  })
-
-  it("generarSesionesCatedra llama al rpc", async () => {
-    const rpc = vi.fn(() => 4)
-    createSupabaseBrowserClientMock.mockReturnValue(
-      createFakeSupabase({}, { rpcResults: { generar_sesiones_catedra: rpc } }),
-    )
-
-    const result = await generarSesionesCatedra({ catedraId: "c1", fechaDesde: "2026-06-01", fechaHasta: "2026-06-30" })
-
-    expect(result).toEqual({ data: 4, error: null })
-    expect(rpc).toHaveBeenCalledWith({ p_catedra_id: "c1", p_fecha_desde: "2026-06-01", p_fecha_hasta: "2026-06-30" })
   })
 
   it("filtrarDocentesPorCurso filtra por instrumento del curso", () => {

@@ -19,7 +19,6 @@ import CatedraHorariosSheet from "./CatedraHorariosSheet";
 import CrearCatedraDialog from "./CrearCatedraDialog";
 import EditarCatedraDialog from "./EditarCatedraDialog";
 import EliminarCatedraDialog from "./EliminarCatedraDialog";
-import GenerarSesionesCatedraDialog from "./GenerarSesionesCatedraDialog";
 
 export default function CatedrasList() {
   const { data, isPending } = useCatedras();
@@ -27,9 +26,6 @@ export default function CatedrasList() {
 
   const [editTarget, setEditTarget] = useState<ICatedraRow | null>(null);
   const [editOpen, setEditOpen] = useState(false);
-
-  const [genTarget, setGenTarget] = useState<ICatedraRow | null>(null);
-  const [genOpen, setGenOpen] = useState(false);
 
   const [horariosTarget, setHorariosTarget] = useState<ICatedraRow | null>(null);
   const [horariosOpen, setHorariosOpen] = useState(false);
@@ -41,11 +37,6 @@ export default function CatedrasList() {
   const handleOpenEdit = (catedra: ICatedraRow) => {
     setEditTarget(catedra);
     setEditOpen(true);
-  };
-
-  const handleOpenGen = (catedra: ICatedraRow) => {
-    setGenTarget(catedra);
-    setGenOpen(true);
   };
 
   const handleOpenHorarios = (catedra: ICatedraRow) => {
@@ -192,16 +183,6 @@ export default function CatedrasList() {
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => handleOpenGen(row)}
-              title="Generar sesiones del ciclo"
-              className="size-8 p-0"
-            >
-              <Icon icon="ph:calendar-plus" width={16} height={16} aria-hidden="true" />
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
               onClick={() => handleOpenEdit(row)}
               title="Editar condiciones de cátedra"
               className="size-8 p-0"
@@ -218,12 +199,6 @@ export default function CatedrasList() {
         catedra={editTarget}
         open={editOpen}
         onOpenChange={setEditOpen}
-      />
-
-      <GenerarSesionesCatedraDialog
-        catedra={genTarget}
-        open={genOpen}
-        onOpenChange={setGenOpen}
       />
 
       <CatedraHorariosSheet

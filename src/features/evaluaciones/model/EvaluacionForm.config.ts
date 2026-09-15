@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { toLocalDateString } from "@/shared/lib";
+
 import type { TTipoEvaluacion } from "./evaluacion.types";
 
 export const evaluacionFormSchema = z.object({
@@ -27,7 +29,7 @@ export function getEvaluacionFormDefaults(initial?: Partial<IEvaluacionFormValue
     titulo: initial?.titulo ?? "",
     tipo: (initial?.tipo as TTipoEvaluacion) ?? "formativa",
     descripcion: initial?.descripcion ?? "",
-    fecha: initial?.fecha ?? new Date().toISOString().slice(0, 10),
+    fecha: initial?.fecha ?? toLocalDateString(),
     notaMaxima: initial?.notaMaxima ?? 10,
     ponderacion: initial?.ponderacion ?? 20,
   };

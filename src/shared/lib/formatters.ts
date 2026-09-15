@@ -1,3 +1,5 @@
+import { parseLocalDate } from "./date";
+
 const CURRENCY = new Intl.NumberFormat("es", {
   style: "currency",
   currency: "USD",
@@ -29,12 +31,12 @@ export function formatCurrency(value: number | null | undefined): string {
 
 export function formatDate(value: string | null | undefined): string {
   if (!value) return "—";
-  return DATE.format(new Date(value));
+  return DATE.format(parseLocalDate(value));
 }
 
 export function formatDateTime(value: string | null | undefined): string {
   if (!value) return "—";
-  return DATE_TIME.format(new Date(value));
+  return DATE_TIME.format(parseLocalDate(value));
 }
 
 export function formatMonthPeriod(periodo: string): string {
@@ -52,7 +54,7 @@ export function initialsOf(name: string): string {
 
 export function formatDateTimeShort(value: string | null | undefined): string {
   if (!value) return "—";
-  return SHORT_DATE_TIME.format(new Date(value));
+  return SHORT_DATE_TIME.format(parseLocalDate(value));
 }
 
 export function formatTimeAgo(value: string | null | undefined): string {
@@ -80,7 +82,7 @@ export function formatTimeAgo(value: string | null | undefined): string {
 
 export function calculateAge(birthDate: string | null | undefined): number | null {
   if (!birthDate) return null;
-  const birth = new Date(birthDate);
+  const birth = parseLocalDate(birthDate);
   const now = new Date();
   let age = now.getFullYear() - birth.getFullYear();
   const monthDiff = now.getMonth() - birth.getMonth();

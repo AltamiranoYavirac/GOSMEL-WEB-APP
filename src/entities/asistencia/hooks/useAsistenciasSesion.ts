@@ -3,11 +3,11 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { getAsistenciasSesion } from "../api/getAsistenciasSesion";
-import { horariosQueryKeys } from "../model/query-keys";
+import { asistenciaQueryKeys } from "../model/query-keys";
 
 export function useAsistenciasSesion(sesionId: string, enabled = true) {
   return useQuery({
-    queryKey: [...horariosQueryKeys.all, "asistencias", sesionId],
+    queryKey: asistenciaQueryKeys.sesion(sesionId),
     queryFn: async () => {
       const { data, error } = await getAsistenciasSesion(sesionId);
       if (error) throw new Error(error);

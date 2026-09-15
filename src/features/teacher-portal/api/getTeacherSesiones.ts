@@ -42,7 +42,8 @@ export async function getTeacherSesiones(
       "id, fecha, hora_inicio, hora_fin, tema, estado, catedra_id, catedras!sesiones_catedra_id_fkey(codigo, cursos(nombre)), asistencias(estado)"
     )
     .in("catedra_id", catedraIds)
-    .order("fecha", { ascending: false })
+    .order("fecha", { ascending: true })
+    .order("hora_inicio", { ascending: true })
     .limit(200);
 
   if (error) {

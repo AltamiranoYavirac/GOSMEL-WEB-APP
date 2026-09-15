@@ -1,6 +1,8 @@
 import { createSupabaseBrowserClient } from "@/shared/api/supabase/client";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/shared/api/supabase/database.types";
+import { ACADEMY_TIME_ZONE } from "@/shared/config";
+import { toDateStringInTimeZone } from "@/shared/lib";
 
 import type {
   ITeacherCatedra,
@@ -125,7 +127,7 @@ export async function getTeacherDashboard(
   if (inscripcionesRes.error) return { data: null, error: inscripcionesRes.error.message };
   if (evaluacionesRes.error) return { data: null, error: evaluacionesRes.error.message };
 
-  const hoy = new Date().toISOString().slice(0, 10);
+  const hoy = toDateStringInTimeZone(new Date(), ACADEMY_TIME_ZONE);
 
   const estudiantesList: ITeacherEstudiante[] = (inscripcionesRes.data ?? []).flatMap((item) => {
     const est = item.estudiantes;

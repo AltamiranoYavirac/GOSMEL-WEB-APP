@@ -36,6 +36,13 @@ describe("formatDate / formatDateTime / formatDateTimeShort", () => {
     expect(formatDateTime("2026-01-15T10:30:00")).toContain("10:30")
     expect(formatDateTimeShort("2026-01-15T10:30:00")).toContain("10:30")
   })
+
+  it("no corre un día las fechas sin hora", () => {
+    expect(formatDate("2026-10-14")).toContain("14")
+    expect(formatDate("2026-10-14")).toContain("2026")
+    expect(formatDateTime("2026-10-14")).toContain("14")
+    expect(formatDateTimeShort("2026-10-14")).toContain("14")
+  })
 })
 
 describe("formatMonthPeriod", () => {

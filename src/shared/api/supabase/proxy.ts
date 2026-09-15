@@ -8,6 +8,7 @@ import type { Database } from "./database.types"
 export interface IUpdateSessionResult {
   response: NextResponse
   isAuthenticated: boolean
+  hasRoles: boolean
 }
 
 export async function updateSession(request: NextRequest): Promise<IUpdateSessionResult> {
@@ -28,6 +29,7 @@ export async function updateSession(request: NextRequest): Promise<IUpdateSessio
   })
 
   const { data } = await supabase.auth.getClaims()
+  const roles = (data?.claims?.user_roles as string[] | undefined) ?? []
 
-  return { response, isAuthenticated: !!data }
+  return { response, isAuthenticated: !!data, hasRoles: roles.length > 0 }
 }

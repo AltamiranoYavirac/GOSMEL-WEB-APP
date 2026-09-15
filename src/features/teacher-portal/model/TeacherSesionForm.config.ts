@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { toLocalDateString } from "@/shared/lib";
+
 export const teacherSesionFormSchema = z.object({
   catedraId: z.string().min(1, "Debe seleccionar una cátedra"),
   fecha: z.string().min(1, "Debe ingresar una fecha"),
@@ -13,7 +15,7 @@ export type ITeacherSesionFormValues = z.infer<typeof teacherSesionFormSchema>;
 export function getTeacherSesionFormDefaults(defaultCatedraId = ""): ITeacherSesionFormValues {
   return {
     catedraId: defaultCatedraId,
-    fecha: new Date().toISOString().slice(0, 10),
+    fecha: toLocalDateString(),
     horaInicio: "15:00",
     horaFin: "16:00",
     tema: "",

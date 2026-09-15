@@ -3,25 +3,31 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 const api = vi.hoisted(() => ({
   getUsuarios: vi.fn(),
+  getPerfilActual: vi.fn(),
   updateUsuarioContacto: vi.fn(),
   updateUsuarioActivo: vi.fn(),
   quitarRol: vi.fn(),
   asignarRolDocente: vi.fn(),
+  asignarRolAdmin: vi.fn(),
   asignarEstudiante: vi.fn(),
 }))
 
 vi.mock("../api/getUsuarios", () => ({ getUsuarios: api.getUsuarios }))
+vi.mock("../api/getPerfilActual", () => ({ getPerfilActual: api.getPerfilActual }))
 vi.mock("../api/updateUsuarioContacto", () => ({ updateUsuarioContacto: api.updateUsuarioContacto }))
 vi.mock("../api/updateUsuarioActivo", () => ({ updateUsuarioActivo: api.updateUsuarioActivo }))
 vi.mock("../api/quitarRol", () => ({ quitarRol: api.quitarRol }))
 vi.mock("../api/asignarRolDocente", () => ({ asignarRolDocente: api.asignarRolDocente }))
+vi.mock("../api/asignarRolAdmin", () => ({ asignarRolAdmin: api.asignarRolAdmin }))
 vi.mock("../api/asignarEstudiante", () => ({ asignarEstudiante: api.asignarEstudiante }))
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
 
 import { createQueryWrapper, createTestQueryClient } from "@/test/query"
 
 import { useAsignarEstudiante } from "./useAsignarEstudiante"
+import { useAsignarRolAdmin } from "./useAsignarRolAdmin"
 import { useAsignarRolDocente } from "./useAsignarRolDocente"
+import { usePerfilActual } from "./usePerfilActual"
 import { useQuitarRol } from "./useQuitarRol"
 import { useUpdateUsuarioActivo } from "./useUpdateUsuarioActivo"
 import { useUpdateUsuarioContacto } from "./useUpdateUsuarioContacto"
@@ -40,6 +46,9 @@ describe("usuarios hooks", () => {
   it("la query resuelve", async () => {
     const { result } = renderHook(() => useUsuarios(), { wrapper: wrapper() })
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+    const perfil = renderHook(() => usePerfilActual(), { wrapper: wrapper() })
+    await waitFor(() => expect(perfil.result.current.isSuccess).toBe(true))
   })
 
   it("las mutations llaman a la api", async () => {
@@ -48,6 +57,7 @@ describe("usuarios hooks", () => {
       [useUpdateUsuarioActivo, api.updateUsuarioActivo],
       [useQuitarRol, api.quitarRol],
       [useAsignarRolDocente, api.asignarRolDocente],
+      [useAsignarRolAdmin, api.asignarRolAdmin],
       [useAsignarEstudiante, api.asignarEstudiante],
     ]
 

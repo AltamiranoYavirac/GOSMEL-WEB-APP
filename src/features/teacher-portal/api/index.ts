@@ -6,13 +6,6 @@ export { getEstudianteAsistencias } from "./getEstudianteAsistencias";
 export { getTeacherSesiones } from "./getTeacherSesiones";
 export { createTeacherSesion } from "./createTeacherSesion";
 export { updateTeacherSesionEstado } from "./updateTeacherSesionEstado";
-export { getTeacherSesionAsistencia } from "./getTeacherSesionAsistencia";
-export type {
-  ISesionAsistenciaEstudianteItem,
-  ITeacherSesionAsistenciaData,
-} from "./getTeacherSesionAsistencia";
-export { guardarTeacherAsistencias } from "./guardarTeacherAsistencias";
-export type { IGuardarTeacherAsistenciaItem } from "./guardarTeacherAsistencias";
 export { getTeacherEvaluaciones } from "./getTeacherEvaluaciones";
 export { createTeacherEvaluacion } from "./createTeacherEvaluacion";
 export { getTeacherCalificaciones } from "./getTeacherCalificaciones";
