@@ -8,11 +8,15 @@ export const crearResenaFormSchema = z.object({
 
 export type ICrearResenaFormValues = z.infer<typeof crearResenaFormSchema>;
 
-export function getCrearResenaFormDefaults(): ICrearResenaFormValues {
+export function getCrearResenaFormDefaults(resena?: {
+  cursoId: string;
+  puntuacion: number;
+  comentario: string | null;
+}): ICrearResenaFormValues {
   return {
-    cursoId: "",
-    puntuacion: 5,
-    comentario: "",
+    cursoId: resena?.cursoId ?? "",
+    puntuacion: resena?.puntuacion ?? 5,
+    comentario: resena?.comentario ?? "",
   };
 }
 

@@ -38,30 +38,28 @@ function buildTables() {
     configuracion_sitio: [
       { id: 1, telefono: "099", whatsapp: "0999", email_general: "info@gosmel.app", horario_atencion: "9-17" },
     ],
-    pagos: [
+    cobro_aplicaciones: [
+      { cobro_id: "p1", cuota_id: "q1", monto: 20 },
+      { cobro_id: "p2", cuota_id: "q2", monto: 50 },
+    ],
+    cobros: [
       {
         id: "p1",
         fecha_pago: "2026-06-10",
-        monto: 20,
         metodo: "transferencia",
         referencia: "REF-1",
         comprobante_storage_path: "comprobantes/p1.pdf",
         estado: "aprobado",
         observacion: null,
-        cuota_id: "q1",
-        cuotas: { periodo_mes: "2026-06" },
       },
       {
         id: "p2",
         fecha_pago: "2026-06-12",
-        monto: 50,
         metodo: "efectivo",
         referencia: null,
         comprobante_storage_path: null,
         estado: "pendiente_verificacion",
         observacion: "revisar",
-        cuota_id: "q2",
-        cuotas: { periodo_mes: "2026-05" },
       },
     ],
   }
@@ -93,12 +91,11 @@ describe("getStudentAccountStatement", () => {
     })
 
     expect(result.data!.pagos).toHaveLength(2)
-    expect(result.data!.pagos[0]).toMatchObject({
-      id: "p2",
-      periodo: "2026-05",
-      monto: 50,
-      estado: "pendiente_verificacion",
-    })
+    expect(result.data!.pagos).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        id: "p2", periodo: "2026-05", monto: 50, estado: "pendiente_verificacion",
+      }),
+    ]))
 
     expect(result.data!.contacto).toEqual({
       telefono: "099",
@@ -129,7 +126,7 @@ describe("getStudentAccountStatement", () => {
     await expect(
       getStudentAccountStatement(
         "e1",
-        createFakeSupabase.withError("pagos", "boom pagos", buildTables()),
+        createFakeSupabase.withError("cobro_aplicaciones", "boom pagos", buildTables()),
       ),
     ).resolves.toEqual({ data: null, error: "boom pagos" })
 

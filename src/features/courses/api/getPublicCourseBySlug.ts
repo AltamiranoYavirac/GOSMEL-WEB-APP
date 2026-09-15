@@ -24,7 +24,7 @@ export const getPublicCourseBySlug = cache(async (slug: string): Promise<{
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("cursos")
-    .select("id, slug, nombre, resumen, descripcion, categoria, portada_public_id, portada_texto_alt, etiqueta_precio, mostrar_precio, publico_edad, publico_nivel, formato_clase, horario_resumen, cierre_etapa, cta_titulo, cta_descripcion, cta_primario_texto, cta_secundario_texto, orden, instrumentos(icono), curso_habilidades(habilidad, orden), curso_modulos(id, titulo, descripcion, orden, curso_lecciones(id, titulo, orden)), catedras(docente_id, catedra_horarios(dia_semana, hora_inicio, hora_fin), docentes!catedras_docente_id_fkey(slug, titulo_profesional, perfiles!docentes_perfil_id_fkey(nombres, apellidos, avatar_public_id))), galeria_medios(id, public_id, texto_alt, orden), testimonios(autor_nombre, autor_rol, cita, orden)")
+    .select("id, slug, nombre, resumen, descripcion, categoria, portada_public_id, portada_texto_alt, etiqueta_precio, mostrar_precio, publico_edad, publico_nivel, formato_clase, horario_resumen, cierre_etapa, cta_titulo, cta_descripcion, cta_primario_texto, cta_secundario_texto, orden, puntuacion_promedio, total_resenas, instrumentos(icono), curso_habilidades(habilidad, orden), curso_modulos(id, titulo, descripcion, orden, curso_lecciones(id, titulo, orden)), catedras(docente_id, catedra_horarios(dia_semana, hora_inicio, hora_fin), docentes!catedras_docente_id_fkey(slug, titulo_profesional, perfiles!docentes_perfil_id_fkey(nombres, apellidos, avatar_public_id))), galeria_medios(id, public_id, texto_alt, orden), testimonios(autor_nombre, autor_rol, cita, orden)")
     .eq("slug", slug)
     .eq("publicado", true)
     .maybeSingle();
@@ -80,6 +80,8 @@ export const getPublicCourseBySlug = cache(async (slug: string): Promise<{
       image: buildCloudinaryImageUrl(data.portada_public_id, "q_auto,f_auto,w_1200"),
       imageAlt: data.portada_texto_alt ?? `Portada del curso ${data.nombre}`,
       priceLabel: data.mostrar_precio ? data.etiqueta_precio : null,
+      rating: data.puntuacion_promedio,
+      totalReviews: data.total_resenas,
       teachers: Array.from(teachers.values()),
       audienceAge: data.publico_edad ?? "",
       audienceLevel: data.publico_nivel ?? "",

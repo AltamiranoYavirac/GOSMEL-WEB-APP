@@ -15,11 +15,11 @@ import {
   Button,
   Spinner,
 } from "@/shared/ui";
-import { DateField, Form, NumberField, SelectField, useAppForm } from "@/shared/form";
+import { DateField, Form, NumberField, SelectField, TextField, useAppForm } from "@/shared/form";
 import { useEstudianteOptions } from "@/entities/estudiante";
+import { useRepresentantes } from "@/entities/representante";
 
 import { useCrearCuota } from "../hooks/useCrearCuota";
-import { getMonthOptions } from "../model/GenerarCuotasForm.config";
 import {
   crearCuotaFormSchema,
   getCrearCuotaFormDefaults,
@@ -29,6 +29,7 @@ import {
 export default function CrearCuotaDialog() {
   const [open, setOpen] = useState(false);
   const { data: estudiantes = [], isLoading: loadingOptions } = useEstudianteOptions(open);
+  const { data: representantes = [] } = useRepresentantes();
 
   const mutation = useCrearCuota();
 
@@ -68,6 +69,12 @@ export default function CrearCuotaDialog() {
             placeholder={loadingOptions ? "Cargando estudiantes..." : "Selecciona un estudiante"}
             options={estudiantes}
           />
+          <SelectField
+            name="responsableRepresentanteId"
+            label="Responsable de pago"
+            placeholder="Estudiante adulto paga por sí mismo"
+            options={representantes.map((representante) => ({ value: representante.id, label: representante.nombre }))}
+          />
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <NumberField
@@ -77,7 +84,7 @@ export default function CrearCuotaDialog() {
               integerOnly={false}
               startIcon={<Icon icon="ph:currency-dollar" className="size-4" aria-hidden="true" />}
             />
-            <SelectField name="periodo" label="Período" options={getMonthOptions()} />
+            <TextField name="concepto" label="Concepto" placeholder="Ej. Materiales de clase" />
           </div>
 
           <DateField name="fechaVencimiento" label="Fecha de vencimiento" />

@@ -54,6 +54,13 @@ export default function CourseCard({ course, number, total, isFirst, isLast }: I
               {course.priceLabel}
             </span>
           ) : null}
+          {course.totalReviews > 0 ? (
+            <span className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border border-border px-4 text-sm font-semibold text-foreground">
+              <Icon icon="ph:star-fill" className="size-4 text-warning" aria-hidden="true" />
+              {course.rating.toFixed(1)}
+              <span className="font-normal text-muted-foreground">({course.totalReviews})</span>
+            </span>
+          ) : null}
           <Link href={courseHref} className="group/link inline-flex min-h-11 shrink-0 items-center gap-2 rounded-lg border border-primary-700 px-5 text-sm font-bold text-primary-700 outline-none hover:bg-primary-700 hover:text-primary-foreground focus-visible:ring-2 focus-visible:ring-primary">
             Ver curso
             <Icon icon="ph:arrow-right" className="size-4" aria-hidden="true" />

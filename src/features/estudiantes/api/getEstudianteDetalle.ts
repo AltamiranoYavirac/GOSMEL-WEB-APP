@@ -19,7 +19,7 @@ export async function getEstudianteDetalle(
     supabase
       .from("estudiantes")
       .select(
-        "id, nombres, apellidos, email, cedula, celular, fecha_nacimiento, activo, estudiante_instrumento(instrumentos(nombre)), estudiante_representante(representantes(nombres, apellidos), es_contacto_principal)"
+        "id, nombres, apellidos, email, cedula, celular, fecha_nacimiento, activo, estudiante_instrumento(instrumentos(nombre)), estudiante_representante(representante_id, parentesco, es_contacto_principal, autoriza_retiro, representantes(nombres, apellidos))"
       )
       .eq("id", estudianteId)
       .maybeSingle(),
@@ -105,6 +105,14 @@ export async function getEstudianteDetalle(
       representante: representantePrincipal
         ? `${representantePrincipal.nombres} ${representantePrincipal.apellidos}`.trim()
         : null,
+      representanteId: estudiante.data.estudiante_representante?.find((vinculo) => vinculo.es_contacto_principal || vinculo.representantes)?.representante_id ?? null,
+      representantes: (estudiante.data.estudiante_representante ?? []).map((vinculo) => ({
+        representanteId: vinculo.representante_id,
+        nombre: vinculo.representantes ? `${vinculo.representantes.nombres} ${vinculo.representantes.apellidos}`.trim() : "Representante",
+        parentesco: vinculo.parentesco,
+        esContactoPrincipal: vinculo.es_contacto_principal,
+        autorizaRetiro: vinculo.autoriza_retiro,
+      })),
       inscripciones: inscripcionRows,
       cuotas: cuotaRows,
     },

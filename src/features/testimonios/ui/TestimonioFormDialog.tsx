@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
+  ImageUploadField,
   Spinner,
 } from "@/shared/ui";
 
@@ -38,10 +39,12 @@ export default function TestimonioFormDialog({ item }: ITestimonioFormDialogProp
     values: getTestimonioFormDefaults(item),
     resetOptions: { keepDirtyValues: false, keepErrors: false },
   });
+  const file = form.watch("file");
+  const publicId = form.watch("publicId");
 
   const onSubmit = (values: ITestimonioFormValues) => {
     const onSuccess = () => setOpen(false);
-    if (item) updateMutation.mutate({ id: item.id, values }, { onSuccess });
+    if (item) updateMutation.mutate({ id: item.id, values, currentPublicId: item.fotoPublicId }, { onSuccess });
     else createMutation.mutate(values, { onSuccess });
   };
 
@@ -62,6 +65,20 @@ export default function TestimonioFormDialog({ item }: ITestimonioFormDialogProp
         <Form form={form} onSubmit={onSubmit} id={`testimonio-${item?.id ?? "nuevo"}`} className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2"><TextField name="autor" label="Autor" required /><TextField name="rol" label="Rol o descripción" /></div>
           <TextareaField name="cita" label="Testimonio" rows={4} required />
+          <ImageUploadField
+            value={publicId}
+            file={file}
+            onFileChange={(nextFile) => {
+              form.setValue("file", nextFile, { shouldDirty: true });
+              if (nextFile) form.setValue("removeImage", false, { shouldDirty: true });
+            }}
+            onRemove={() => {
+              form.setValue("publicId", "", { shouldDirty: true });
+              form.setValue("removeImage", true, { shouldDirty: true });
+            }}
+            label="Foto (opcional)"
+            disabled={pending}
+          />
           <div className="grid gap-3 sm:grid-cols-2">
             <SelectField name="cursoId" label="Curso" placeholder="Testimonio general" disabled={options.isPending} options={(options.data?.cursos ?? []).map((course) => ({ value: course.id, label: course.nombre }))} />
             <SelectField name="docenteId" label="Docente" placeholder="Sin docente" disabled={options.isPending} options={(options.data?.docentes ?? []).map((docente) => ({ value: docente.id, label: docente.nombre }))} />

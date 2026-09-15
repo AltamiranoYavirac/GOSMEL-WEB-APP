@@ -10,15 +10,15 @@ export function useEliminarCuota() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (cuotaId: string) => {
-      const { error } = await eliminarCuota(cuotaId);
+    mutationFn: async ({ cuotaId, motivo }: { cuotaId: string; motivo: string }) => {
+      const { error } = await eliminarCuota(cuotaId, motivo);
       if (error) throw new Error(error);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: cuotasQueryKeys.list() });
       queryClient.invalidateQueries({ queryKey: ["cobranza"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard-overview"] });
-      toast.success("Cuota eliminada");
+      toast.success("Cuota anulada");
     },
     onError: (error) => toast.error(error.message),
   });

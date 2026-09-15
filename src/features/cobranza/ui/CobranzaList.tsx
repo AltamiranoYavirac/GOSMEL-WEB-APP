@@ -100,8 +100,8 @@ export default function CobranzaList() {
     <div className="space-y-6">
       <AdminPageHeader
         eyebrow="Finanzas · GOSMEL"
-        title="Cobranza Familiar"
-        description="Resumen consolidado de saldos por representante para gestión de cobro multicuota y avisos."
+        title="Cobranza por responsable"
+        description="Saldos consolidados por responsable de pago, incluyendo estudiantes adultos que pagan por sí mismos."
         icon="ph:coins"
       />
 
@@ -113,8 +113,8 @@ export default function CobranzaList() {
         searchKeys={[(row) => row.representante, (row) => row.celular ?? ""]}
         filters={filters}
         emptyTitle="Sin cobranza"
-        emptyDescription="Cuando existan representantes con cuotas aparecerán aquí."
-        countLabel="representantes"
+        emptyDescription="Cuando existan saldos pendientes aparecerán aquí."
+        countLabel="responsables"
         rowActions={(row) => {
           const waUrl = getWhatsAppUrl(row);
           return (

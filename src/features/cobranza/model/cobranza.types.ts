@@ -7,4 +7,5 @@ export interface ICobranzaRow {
   totalMes: number;
   diasMoraMax: number | null;
   periodoMes: string;
+  responsableTipo: "representante" | "estudiante";
 }

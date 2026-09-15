@@ -95,7 +95,7 @@ export default function ReportarPagoDialog({ estudianteId, cuota, contacto, open
           </div>
 
           <div>
-            <p className="mb-1 text-sm font-medium text-foreground">Comprobante (opcional)</p>
+            <p className="mb-1 text-sm font-medium text-foreground">Comprobante <span className="text-destructive">*</span></p>
             <div className="flex items-center gap-2">
               <Button type="button" variant="outline" size="sm" disabled={subiendo} onClick={() => document.getElementById("comprobante-input")?.click()}>
                 {subiendo ? <Spinner className="size-4" /> : <Icon icon="ph:upload-simple" aria-hidden="true" />}

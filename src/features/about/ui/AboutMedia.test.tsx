@@ -5,10 +5,11 @@ import { describe, expect, it, vi } from "vitest";
 import AboutMedia from "./AboutMedia";
 
 vi.mock("next/image", () => ({
-  default: ({ fill: _fill, ...props }: ComponentPropsWithoutRef<"img"> & { fill?: boolean }) => (
+  default: ({ fill, alt = "", ...props }: ComponentPropsWithoutRef<"img"> & { fill?: boolean }) => {
+    void fill;
     // eslint-disable-next-line @next/next/no-img-element
-    <img {...props} />
-  ),
+    return <img alt={alt} {...props} />;
+  },
 }));
 
 vi.mock("@iconify/react", () => ({

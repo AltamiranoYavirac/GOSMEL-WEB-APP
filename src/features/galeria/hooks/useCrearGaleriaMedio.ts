@@ -16,6 +16,7 @@ export function useCrearGaleriaMedio() {
       const result = await persistCloudinaryImage({
         file: values.archivo,
         folder: "gosmel/galeria",
+        meta: { displayName: `Galería - ${values.titulo || values.textoAlt}`, tags: [`galeria:${values.categoria}`] },
         persist: (publicId) => crearGaleriaMedio(values, publicId),
       });
       if (result.error) throw new Error(result.error);

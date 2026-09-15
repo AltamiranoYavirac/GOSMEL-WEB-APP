@@ -2,9 +2,11 @@ import { Icon } from "@iconify/react";
 
 import { Badge } from "@/shared/ui";
 
+import GestionarRepresentantesDialog from "./GestionarRepresentantesDialog";
+
 import type { IExpedienteTabProps } from "./EstudianteExpediente.types";
 
-export default function ExpedientePerfilTab({ detalle }: IExpedienteTabProps) {
+export default function ExpedientePerfilTab({ estudianteId, detalle }: IExpedienteTabProps) {
   const esMenor = detalle.fechaNacimiento
     ? new Date().getFullYear() - new Date(detalle.fechaNacimiento).getFullYear() < 18
     : false;
@@ -32,7 +34,7 @@ export default function ExpedientePerfilTab({ detalle }: IExpedienteTabProps) {
       <div className="rounded-2xl border border-border bg-card p-5">
         <div className="mb-3.5 flex items-center justify-between">
           <span className="text-[15px] font-bold text-foreground">Representante</span>
-          {esMenor ? <Badge variant="warning">Menor de edad</Badge> : null}
+          <div className="flex items-center gap-2">{esMenor ? <Badge variant="warning">Menor de edad</Badge> : null}<GestionarRepresentantesDialog estudianteId={estudianteId} detalle={detalle} /></div>
         </div>
         {detalle.representante ? (
           <div className="rounded-lg bg-foreground/[0.03] px-3.5 py-3 text-[13.5px] font-bold text-foreground">

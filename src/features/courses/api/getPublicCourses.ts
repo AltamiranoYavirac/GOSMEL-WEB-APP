@@ -20,7 +20,7 @@ export async function getPublicCourses(): Promise<{
   const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("cursos")
-    .select("id, slug, nombre, resumen, descripcion, categoria, portada_public_id, portada_texto_alt, etiqueta_precio, mostrar_precio, orden, instrumentos(icono), curso_habilidades(habilidad, orden), catedras(docente_id, docentes!catedras_docente_id_fkey(slug, titulo_profesional, perfiles!docentes_perfil_id_fkey(nombres, apellidos, avatar_public_id)))")
+    .select("id, slug, nombre, resumen, descripcion, categoria, portada_public_id, portada_texto_alt, etiqueta_precio, mostrar_precio, orden, puntuacion_promedio, total_resenas, instrumentos(icono), curso_habilidades(habilidad, orden), catedras(docente_id, docentes!catedras_docente_id_fkey(slug, titulo_profesional, perfiles!docentes_perfil_id_fkey(nombres, apellidos, avatar_public_id)))")
     .eq("publicado", true)
     .order("orden", { ascending: true });
 
@@ -59,6 +59,8 @@ export async function getPublicCourses(): Promise<{
         image: buildCloudinaryImageUrl(course.portada_public_id, "ar_4:3,c_fill,g_auto,w_1200,q_auto,f_auto"),
         imageAlt: course.portada_texto_alt ?? `Portada del curso ${course.nombre}`,
         priceLabel: course.mostrar_precio ? course.etiqueta_precio : null,
+        rating: course.puntuacion_promedio,
+        totalReviews: course.total_resenas,
         teachers: Array.from(teachers.values()),
       };
     }),

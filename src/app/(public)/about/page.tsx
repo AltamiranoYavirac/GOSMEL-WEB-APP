@@ -7,6 +7,10 @@ import {
   AboutValues,
   ABOUT_TESTIMONIALS,
 } from "@/features/about";
+import { PublicGaleriaSection } from "@/features/galeria";
+import { getPublicGaleria } from "@/features/galeria/server";
+import { PublicSeccionesSection } from "@/features/secciones";
+import { getPublicSecciones } from "@/features/secciones/server";
 import { AppImages } from "@/shared/config";
 import { buildCloudinaryImageUrl } from "@/shared/lib";
 import { CtaPanel } from "@/widgets/CtaPanel";
@@ -19,8 +23,14 @@ export const metadata = {
 };
 
 export default async function AboutPage() {
-  const { data: assets, error } = await getPublicSiteAssets();
+  const [{ data: assets, error }, galeriaResult, seccionesResult] = await Promise.all([
+    getPublicSiteAssets(),
+    getPublicGaleria(),
+    getPublicSecciones(),
+  ]);
   if (error) throw new Error(error);
+  if (galeriaResult.error) throw new Error(galeriaResult.error);
+  if (seccionesResult.error) throw new Error(seccionesResult.error);
 
   const hero = assets?.page_hero_about;
   const values = [
@@ -66,6 +76,8 @@ export default async function AboutPage() {
         description="Del salón de práctica al escenario: un vistazo cercano al proceso que viven nuestros estudiantes antes de cada concierto."
       />
       {values.length ? <AboutValues values={values} /> : null}
+      <PublicSeccionesSection items={seccionesResult.data} />
+      <PublicGaleriaSection items={galeriaResult.data} />
       <AboutTestimonials testimonials={ABOUT_TESTIMONIALS} />
       <CtaPanel
         titleId="about-cta-title"

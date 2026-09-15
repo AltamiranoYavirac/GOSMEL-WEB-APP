@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   Button,
+  Textarea,
 } from "@/shared/ui";
 import { formatCurrency } from "@/shared/lib/formatters";
 
@@ -22,11 +23,13 @@ import type { IAnularPagoDialogProps } from "./AnularPagoDialog.types";
 
 export default function AnularPagoDialog({ pago }: IAnularPagoDialogProps) {
   const [open, setOpen] = useState(false);
+  const [motivo, setMotivo] = useState("");
   const mutation = useAnularPago();
 
   const onConfirm = () => {
-    mutation.mutate(pago.id, {
-      onSuccess: () => setOpen(false),
+    if (!motivo.trim()) return;
+    mutation.mutate({ pagoId: pago.id, motivo: motivo.trim() }, {
+      onSuccess: () => { setOpen(false); setMotivo(""); },
     });
   };
 
@@ -44,17 +47,18 @@ export default function AnularPagoDialog({ pago }: IAnularPagoDialogProps) {
             ¿Anular este pago de {formatCurrency(pago.monto)}?
           </AlertDialogTitle>
           <AlertDialogDescription>
-            Se eliminará el pago de <strong>{pago.estudiante}</strong> ({pago.metodo ?? "Pago"}).
-            El saldo de la cuota correspondiente se recalculará y se restaurará de forma automática.
+            El cobro de <strong>{pago.estudiante}</strong> ({pago.metodo ?? "Pago"}) se conservará como anulado.
+            El saldo se recalculará automáticamente. Indica el motivo para la auditoría.
           </AlertDialogDescription>
         </AlertDialogHeader>
+        <Textarea value={motivo} onChange={(event) => setMotivo(event.target.value)} placeholder="Motivo de anulación (obligatorio)" aria-label="Motivo de anulación" />
 
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={onConfirm}
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || !motivo.trim()}
           >
             {mutation.isPending ? "Anulando..." : "Anular pago"}
           </AlertDialogAction>

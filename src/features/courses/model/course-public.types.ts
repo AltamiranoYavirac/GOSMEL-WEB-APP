@@ -23,7 +23,16 @@ export interface IPublicCourseCard {
   image: string | null
   imageAlt: string
   priceLabel: string | null
+  rating: number
+  totalReviews: number
   teachers: IPublicCourseTeacher[]
+}
+
+export interface IPublicCourseReview {
+  id: string
+  puntuacion: number
+  comentario: string | null
+  createdAt: string
 }
 
 export interface IPublicCourseGalleryItem {

@@ -36,6 +36,8 @@ const COURSES: IPublicCourseCard[] = ["Piano", "Guitarra"].map((title, index) =>
   image: `/curso-${index}.jpg`,
   imageAlt: `Portada de ${title}`,
   priceLabel: index === 0 ? "Desde $40 / mes" : null,
+  rating: index === 0 ? 4.5 : 0,
+  totalReviews: index === 0 ? 12 : 0,
   teachers: [{
     id: `d${index}`,
     slug: `docente-${index}`,

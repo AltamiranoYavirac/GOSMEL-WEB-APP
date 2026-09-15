@@ -8,6 +8,7 @@ import { ACUERDO_ESTADO_BADGE, type IAcuerdoRow } from "../model/acuerdo.types";
 import CrearAcuerdoDialog from "./CrearAcuerdoDialog";
 import EditarAcuerdoDialog from "./EditarAcuerdoDialog";
 import EliminarAcuerdoDialog from "./EliminarAcuerdoDialog";
+import CambiarResponsableDialog from "./CambiarResponsableDialog";
 
 export default function AcuerdosList() {
   const { data, isPending } = useAcuerdos();
@@ -48,6 +49,15 @@ export default function AcuerdosList() {
       render: (row) => row.inscripcion ?? <span className="text-muted-foreground">—</span>,
     },
     {
+      key: "condiciones",
+      label: "Historial",
+      render: (row) => row.condiciones.length ? (
+        <span className="text-xs text-muted-foreground" title={row.condiciones.map((c) => `${c.vigenteDesde}: $${c.montoMensual.toFixed(2)} · día ${c.diaCobro}`).join("\n")}>
+          {row.condiciones.length} condición{row.condiciones.length === 1 ? "" : "es"}
+        </span>
+      ) : <span className="text-muted-foreground">—</span>,
+    },
+    {
       key: "estado",
       label: "Estado",
       render: (row) => (
@@ -86,6 +96,7 @@ export default function AcuerdosList() {
         rowActions={(row) => (
           <div className="flex items-center justify-end gap-1.5">
             <EditarAcuerdoDialog acuerdo={row} />
+            {row.estado !== "finalizado" ? <CambiarResponsableDialog acuerdo={row} /> : null}
             <EliminarAcuerdoDialog acuerdo={row} />
           </div>
         )}

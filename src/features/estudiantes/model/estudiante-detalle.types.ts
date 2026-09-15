@@ -32,8 +32,18 @@ export interface IEstudianteDetalle {
   activo: boolean;
   instrumentos: string[];
   representante: string | null;
+  representanteId: string | null;
+  representantes: IRepresentanteVinculoDetalle[];
   inscripciones: IInscripcionDetalle[];
   cuotas: ICuotaDetalle[];
+}
+
+export interface IRepresentanteVinculoDetalle {
+  representanteId: string;
+  nombre: string;
+  parentesco: string;
+  esContactoPrincipal: boolean;
+  autorizaRetiro: boolean;
 }
 
 export const INSCRIPCION_ESTADO_BADGE: Record<TEstadoInscripcion, { label: string; variant: TBadgeVariant }> = {
@@ -49,4 +59,5 @@ export const CUOTA_ESTADO_BADGE: Record<TEstadoCuota, { label: string; variant: 
   parcial: { label: "Parcial", variant: "outline" },
   pagada: { label: "Pagada", variant: "success" },
   condonada: { label: "Condonada", variant: "ghost" },
+  anulada: { label: "Anulada", variant: "destructive" },
 };
