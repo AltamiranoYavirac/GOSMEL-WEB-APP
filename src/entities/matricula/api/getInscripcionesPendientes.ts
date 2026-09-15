@@ -16,7 +16,7 @@ export async function getInscripcionesPendientes(
     )
     .eq("estado", "pendiente")
     .order("fecha_inscripcion", { ascending: true })
-    .limit(50);
+    .limit(300);
 
   if (catedraId) {
     query = query.eq("catedra_id", catedraId);

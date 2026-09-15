@@ -3,20 +3,22 @@
 import { Icon } from "@iconify/react";
 
 import { Avatar, AvatarFallback, AvatarImage, Badge, Button, DataLabel } from "@/shared/ui";
+import { Form, TextareaField, useAppForm } from "@/shared/form";
 import { cn } from "@/shared/lib/utils";
-import {
-  calculateAge,
-  formatDate,
-  formatDateTimeShort,
-  formatTimeAgo,
-  initialsOf,
-} from "@/shared/lib/formatters";
+import { formatDateTimeShort, formatTimeAgo, initialsOf } from "@/shared/lib/formatters";
 
 import {
   SOLICITUD_ESTADO_BADGE,
+  SOLICITUD_ESTADO_REABRIR,
   SOLICITUD_ESTADO_SIGUIENTE,
   SOLICITUD_TIPO_BADGE,
 } from "../model/solicitudes.constants";
+import {
+  mapSolicitudToNotasFormValues,
+  solicitudNotasFormSchema,
+  type ISolicitudNotasFormValues,
+} from "../model/SolicitudNotasForm.config";
+import { useUpdateSolicitudNotas } from "../hooks/useUpdateSolicitudNotas";
 import { solicitudCardVariants } from "./SolicitudCard.variants";
 import type { ISolicitudCardProps } from "./SolicitudCard.types";
 
@@ -36,19 +38,17 @@ export default function SolicitudCard({
   expanded,
   onToggle,
   onMarkNext,
-  onDiscard,
+  onReopen,
+  onRequestDiscard,
   waUrl,
   busy,
 }: ISolicitudCardProps) {
   const estado = SOLICITUD_ESTADO_BADGE[solicitud.estado];
   const tipo = SOLICITUD_TIPO_BADGE[solicitud.tipo];
   const siguiente = SOLICITUD_ESTADO_SIGUIENTE[solicitud.estado];
+  const reabrirA = SOLICITUD_ESTADO_REABRIR[solicitud.estado];
   const cerrada = solicitud.estado === "convertida" || solicitud.estado === "descartada";
   const origenPath = getOrigenPath(solicitud.origenUrl);
-  const edad =
-    solicitud.paraMenor && solicitud.estudianteFechaNacimiento
-      ? calculateAge(solicitud.estudianteFechaNacimiento)
-      : null;
   const puedeDescartar = solicitud.estado === "nueva" || solicitud.estado === "contactada";
   const responsableAvatarUrl = solicitud.responsableAvatarPublicId
     ? solicitud.responsableAvatarPublicId.startsWith("http")
@@ -60,6 +60,17 @@ export default function SolicitudCard({
     closed: cerrada,
     tone: tipo.tone,
   });
+
+  const notasMutation = useUpdateSolicitudNotas();
+  const notasForm = useAppForm<ISolicitudNotasFormValues>({
+    schema: solicitudNotasFormSchema,
+    values: mapSolicitudToNotasFormValues(solicitud),
+    resetOptions: { keepDirtyValues: false, keepErrors: false },
+  });
+
+  const onSubmitNotas = (values: ISolicitudNotasFormValues) => {
+    notasMutation.mutate({ id: solicitud.id, notasInternas: values.notasInternas.trim() });
+  };
 
   return (
     <article className={base()}>
@@ -88,6 +99,9 @@ export default function SolicitudCard({
             <Badge variant={estado.variant} className="h-6 px-3 text-xs">
               {estado.label}
             </Badge>
+            <Badge variant={solicitud.creadaPor ? "info" : "ghost"} className="h-6 px-3 text-xs">
+              {solicitud.creadaPor ? "Usuario registrado" : "Visitante anónimo"}
+            </Badge>
           </span>
 
           {solicitud.interes ? (
@@ -103,15 +117,10 @@ export default function SolicitudCard({
             </span>
           ) : null}
 
-          {solicitud.paraMenor || origenPath ? (
-            <span className="mt-2.5 flex flex-wrap items-center gap-2">
-              {solicitud.paraMenor ? <Badge variant="warning">Solicitud para menor</Badge> : null}
-              {origenPath ? (
-                <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                  <Icon icon="ph:link" className="size-3.5" aria-hidden="true" />
-                  Formulario / {origenPath}
-                </span>
-              ) : null}
+          {origenPath ? (
+            <span className="mt-2.5 inline-flex items-center gap-1 text-xs text-muted-foreground">
+              <Icon icon="ph:link" className="size-3.5" aria-hidden="true" />
+              Formulario / {origenPath}
             </span>
           ) : null}
         </span>
@@ -194,27 +203,6 @@ export default function SolicitudCard({
               </div>
             </section>
 
-            {solicitud.paraMenor ? (
-              <section className="rounded-xl border border-border/70 bg-card p-4">
-                <div className="flex items-center gap-2">
-                  <Icon icon="ph:student" className="size-4 text-primary" aria-hidden="true" />
-                  <DataLabel>Estudiante menor</DataLabel>
-                </div>
-                <p className="mt-3 text-sm font-semibold text-foreground">
-                  {solicitud.estudianteNombre ?? "—"}
-                  {edad !== null ? ` · ${edad} años` : null}
-                </p>
-                {solicitud.parentesco ? (
-                  <p className="mt-1 text-xs text-muted-foreground">Solicitante: {solicitud.parentesco}</p>
-                ) : null}
-                {solicitud.estudianteFechaNacimiento ? (
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Nacimiento: {formatDate(solicitud.estudianteFechaNacimiento)}
-                  </p>
-                ) : null}
-              </section>
-            ) : null}
-
             <section className="rounded-xl border border-border/70 bg-card p-4">
               <div className="flex items-center gap-2">
                 <Icon icon="ph:shield-check" className="size-4 text-primary" aria-hidden="true" />
@@ -237,13 +225,34 @@ export default function SolicitudCard({
           </div>
 
           <section className="mt-3 rounded-xl border border-border/70 bg-muted/60 p-4">
-            <div className="flex items-center gap-2">
-              <Icon icon="ph:notepad" className="size-4 text-primary" aria-hidden="true" />
-              <DataLabel>Notas internas</DataLabel>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <Icon icon="ph:notepad" className="size-4 text-primary" aria-hidden="true" />
+                <DataLabel>Notas internas</DataLabel>
+              </div>
+              <Button
+                form={`solicitud-notas-${solicitud.id}`}
+                type="submit"
+                size="sm"
+                variant="ghost"
+                disabled={notasMutation.isPending}
+              >
+                <Icon icon="ph:floppy-disk" className="size-4" aria-hidden="true" />
+                Guardar
+              </Button>
             </div>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-              {solicitud.notasInternas ?? "Sin notas aún — se le asignará seguimiento."}
-            </p>
+            <Form
+              form={notasForm}
+              onSubmit={onSubmitNotas}
+              id={`solicitud-notas-${solicitud.id}`}
+              className="mt-2"
+            >
+              <TextareaField
+                name="notasInternas"
+                placeholder="Sin notas aún — se le asignará seguimiento."
+                rows={3}
+              />
+            </Form>
           </section>
 
           <div className="mt-5 flex flex-col-reverse gap-2.5 border-t border-border pt-5 sm:flex-row sm:flex-wrap sm:items-center">
@@ -253,13 +262,19 @@ export default function SolicitudCard({
                 size="lg"
                 disabled={busy}
                 className="w-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive sm:w-auto"
-                onClick={onDiscard}
+                onClick={onRequestDiscard}
               >
                 <Icon icon="ph:trash" className="size-4" aria-hidden="true" />
                 Descartar
               </Button>
             ) : null}
             <div className="flex flex-col gap-2.5 sm:ml-auto sm:flex-row">
+              {reabrirA ? (
+                <Button variant="outline" size="lg" disabled={busy} className="w-full sm:w-auto" onClick={onReopen}>
+                  <Icon icon="ph:arrow-counter-clockwise" className="size-4" aria-hidden="true" />
+                  Reabrir
+                </Button>
+              ) : null}
               {siguiente ? (
                 <Button
                   size="lg"

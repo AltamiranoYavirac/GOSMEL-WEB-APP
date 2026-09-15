@@ -51,3 +51,8 @@ export const SOLICITUD_ESTADO_SIGUIENTE: Partial<Record<TSolicitudEstado, TSolic
   nueva: "contactada",
   contactada: "convertida",
 };
+
+export const SOLICITUD_ESTADO_REABRIR: Partial<Record<TSolicitudEstado, TSolicitudEstado>> = {
+  convertida: "contactada",
+  descartada: "contactada",
+};

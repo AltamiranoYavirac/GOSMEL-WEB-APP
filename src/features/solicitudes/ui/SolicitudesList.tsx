@@ -8,8 +8,9 @@ import { cn } from "@/shared/lib/utils";
 
 import { useSolicitudes } from "../hooks/useSolicitudes";
 import { useUpdateSolicitudEstado } from "../hooks/useUpdateSolicitudEstado";
-import { SOLICITUD_ESTADO_SIGUIENTE } from "../model/solicitudes.constants";
+import { SOLICITUD_ESTADO_REABRIR, SOLICITUD_ESTADO_SIGUIENTE } from "../model/solicitudes.constants";
 import type { ISolicitudRow, TSolicitudEstado } from "../model/solicitud.types";
+import DescartarSolicitudDialog from "./DescartarSolicitudDialog";
 import SolicitudCard from "./SolicitudCard";
 
 const FILTROS: Array<{ value: "todas" | TSolicitudEstado; label: string }> = [
@@ -36,6 +37,7 @@ export default function SolicitudesList() {
   const [filtro, setFiltro] = useState<"todas" | TSolicitudEstado>("todas");
   const [search, setSearch] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [descartar, setDescartar] = useState<ISolicitudRow | null>(null);
 
   const counts = useMemo(() => {
     const base: Record<string, number> = { todas: rows.length };
@@ -117,6 +119,7 @@ export default function SolicitudesList() {
         <div className="flex flex-col gap-3">
           {filtered.map((row) => {
             const siguiente = SOLICITUD_ESTADO_SIGUIENTE[row.estado];
+            const reabrirA = SOLICITUD_ESTADO_REABRIR[row.estado];
             return (
               <SolicitudCard
                 key={row.id}
@@ -128,7 +131,10 @@ export default function SolicitudesList() {
                 onMarkNext={() =>
                   siguiente ? mutation.mutate({ id: row.id, estado: siguiente }) : undefined
                 }
-                onDiscard={() => mutation.mutate({ id: row.id, estado: "descartada" })}
+                onReopen={() =>
+                  reabrirA ? mutation.mutate({ id: row.id, estado: reabrirA }) : undefined
+                }
+                onRequestDiscard={() => setDescartar(row)}
                 waUrl={getWhatsAppUrl(row)}
                 busy={mutation.isPending}
               />
@@ -136,6 +142,19 @@ export default function SolicitudesList() {
           })}
         </div>
       )}
+
+      <DescartarSolicitudDialog
+        solicitud={descartar}
+        busy={mutation.isPending}
+        onConfirm={() => {
+          if (!descartar) return;
+          mutation.mutate(
+            { id: descartar.id, estado: "descartada" },
+            { onSuccess: () => setDescartar(null) }
+          );
+        }}
+        onClose={() => setDescartar(null)}
+      />
     </div>
   );
 }

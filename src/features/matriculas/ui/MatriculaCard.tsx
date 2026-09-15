@@ -123,11 +123,11 @@ export default function MatriculaCard({
                 <DataLabel>Origen</DataLabel>
               </div>
               <p className="mt-3 text-sm font-semibold text-foreground">
-                {inscripcion.desdeSolicitud ? "Solicitud de admisión" : "Matrícula directa"}
+                {inscripcion.desdeSolicitud ? "Solicitada desde el portal" : "Matrícula directa"}
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
                 {inscripcion.desdeSolicitud
-                  ? "Generada al convertir una solicitud del sitio público."
+                  ? "La pidió el estudiante o su representante desde su cuenta."
                   : "Registrada directamente por administración."}
               </p>
             </section>
