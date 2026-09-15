@@ -60,7 +60,7 @@ export default function DashboardShell({ role, session, children }: IDashboardSh
           onMenuClick={() => setMobileNavOpen(true)}
           onToggleSidebar={handleToggleCollapsed}
         />
-        <main className="flex-1 overflow-y-auto">
+        <main className="relative flex-1 overflow-y-auto">
           <div className="mx-auto w-full max-w-480 px-4 py-6 sm:px-6 lg:px-8 3xl:px-10">{children}</div>
         </main>
       </div>
